@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<ul class="nav nav-pills">
+			<li class="active"><a href="#overview" data-toggle="tab" th:text="#{header.overview}">Übersicht</a></li>
+			<li><a href="#additionalData" data-toggle="tab" th:text="#{header.additionalData}">Weitere Daten</a></li>
+		</ul>
+	
+		<div class="tab-content">
+			<div id="additionalData" class="tab-pane">
+				<div class="row clearfix">
+					<div class="col-md-12 column" style="margin-top: 10px">
+						<form class="form-horizontal" role="form" id="additionalData" method="post">
+							<fieldset>
+								<!-- Text input-->
+								<div class="form-group">
+									<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
+									<div class="controls">
+										<textarea id="justification" name="justification" rows="6" cols="120" th:text="${rvb.justification}" class="form-control" type="text" disabled="disabled"/> 
+									</div>
+								</div>
+		
+								<!-- Text input-->
+								<div class="form-group">
+									<label class="form-label" for="description" th:text="#{form.label.registerManagerNotes}">Anmerkungen für den Register-Manager</label>
+									<div class="controls">
+										<textarea id="registerManagerNotes" name="registerManagerNotes" rows="6" cols="120" th:text="${rvb.registerManagerNotes}" class="form-control" type="text" disabled="disabled"/> 
+									</div>
+								</div>
+		
+								<!-- Text input-->
+								<div class="form-group">
+									<label class="form-label" for="controlBodyNotes" th:text="#{form.label.controlBodyNotes}">Anmerkungen für den Control-Body</label>
+									<div class="controls">
+										<textarea id="controlBodyNotes" name="controlBodyNotes" rows="6" cols="120" th:text="${rvb.controlBodyNotes}" class="form-control" type="text" disabled="disabled"/> 
+									</div>
+								</div>
+							</fieldset>	
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div id="overview" class="tab-pane active">
+				<div class="row clearfix">
+					<div class="col-md-12 column" style="margin-top: 10px">
+					
+						<div class="panel panel-danger">
+							<div class="panel-heading">
+								<h3 class="panel-title" th:text="#{header.supersededItems}">Superseded items</h3>
+							</div>
+							
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.definition}">Klasse</th>
+										<th th:text="#{tableheader.description}">Klasse</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${rvb.supersededItems}">
+										<td th:text="${item.name}"></td>
+										<td th:text="${item.definition}"></td>
+										<td th:text="${item.description}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3>
+							</div>
+							
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.definition}">Klasse</th>
+										<th th:text="#{tableheader.description}">Klasse</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${rvb.supersedingItems}">
+										<td th:text="${item.name}"></td>
+										<td th:text="${item.definition}"></td>
+										<td th:text="${item.description}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
+	</div>	
+	
+	<script type="text/javascript" th:inline="text">
+		$(document).ready(function() {
+			$('#supersededItemsTable').dataTable({
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 2, "asc" ]],
+				 aoColumns: [
+					{"bSortable" : false},
+					null,
+					null,
+					null
+				]
+			});	
+
+			$('#supersedingItemsTable').dataTable({
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 2, "asc" ]],
+				 aoColumns: [
+					null,
+					null,
+					null
+				]
+			});	
+
+			$('.datatable').each(function(){
+				var datatable = $(this);
+				// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+				var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+				search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+				search_input.addClass('form-control input-sm');
+				// LENGTH - Inline-Form control
+				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+				length_sel.addClass('form-control input-sm');
+			});
+		});
+	</script>
+</body>
+</html>

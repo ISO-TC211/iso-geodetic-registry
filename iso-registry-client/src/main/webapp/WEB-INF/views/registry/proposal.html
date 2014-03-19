@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="span6">
+			<form id="signup" class="form-horizontal" th:object="${proposal}" method="post">
+				<fieldset>
+					<!-- Form Name -->
+					<div th:if="${isNew}">
+						<legend th:text="#{legend.create}">Vorschlag anlegen</legend>
+					</div>
+					<div th:if="!${isEdit} and !${isNew}">
+						<legend th:text="#{legend.view}">Vorschlagdetails</legend>
+					</div>
+					<div th:if="${isEdit}">
+						<legend th:text="#{legend.edit}">Vorschlag bearbeiten</legend>
+					</div>
+
+					<!-- Select field: Item Class -->
+					<div class="form-group" th:if="${proposal.isAddition()} and ${isNew}">
+						<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+						<div class="controls">
+							<div class="input-group">
+								<select id="targetRegister" required="true" th:field="*{itemClassUuid}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'">
+									<option th:each="itemClass : ${itemClasses}"
+											th:value="${itemClass.uuid}"
+											th:text="${itemClass.name}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div th:class="${#fields.hasErrors('name')} ? 'form-group has-error' : 'form-group'" th:unless="${proposal.isRetirement()}">
+						<label class="form-label" for="name" th:text="#{form.label.name}">Name</label>
+						<div class="controls">
+							<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control" required="true" type="text" th:field="*{name}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'" />
+							<span class="help-block">
+								<p th:if="${proposal.getOriginalValue('name')}">Ursprünglicher Inhalt: <span th:text="${proposal.getOriginalValue('name')}"></span></p>
+								<ul th:if="${#fields.hasErrors('name')}">
+									<li th:each="err : ${#fields.errors('name')}" th:text="#{${err}}"></li>
+								</ul>
+							</span>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div th:class="${#fields.hasErrors('definition')} ? 'form-group has-error' : 'form-group'" th:unless="${proposal.isRetirement()}">
+						<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
+						<div class="controls">
+							<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control" required="true" type="text" th:field="*{definition}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'" /> <span
+								class="help-block">
+								<p th:if="${proposal.getOriginalValue('definition')}">Ursprünglicher Inhalt: <span th:text="${proposal.getOriginalValue('definition')}"></span></p>
+								<ul th:if="${#fields.hasErrors('definition')}">
+									<li th:each="err : ${#fields.errors('definition')}" th:text="#{${err}}"></li>
+								</ul>
+							</span>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div th:class="${#fields.hasErrors('description')} ? 'form-group has-error' : 'form-group'" th:unless="${proposal.isRetirement()}">
+						<label class="form-label" for="description" th:text="#{form.label.description}">Beschreibung</label>
+						<div class="controls">
+							<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.description}" class="form-control" type="text" th:field="*{description}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'" /> <span
+								class="help-block">
+								<p th:if="${proposal.getOriginalValue('description')}">Ursprünglicher Inhalt: <span th:text="${proposal.getOriginalValue('description')}"></span></p>
+								<ul th:if="${#fields.hasErrors('description')}">
+									<li th:each="err : ${#fields.errors('description')}" th:text="#{${err}}"></li>
+								</ul>
+							</span>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div th:class="${#fields.hasErrors('description')} ? 'form-group has-error' : 'form-group'">
+						<label class="form-label" for="description" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
+						<div class="controls">
+							<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control" type="text" th:field="*{justification}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'" required="required" /> 
+							<span class="help-block" th:if="${#fields.hasErrors('justification')}">
+								<ul>
+									<li th:each="err : ${#fields.errors('justification')}" th:text="#{${err}}"></li>
+								</ul>
+							</span>
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="form-label" for="description" th:text="#{form.label.registerManagerNotes}">Anmerkungen für den Register-Manager</label>
+						<div class="controls">
+							<textarea id="registerManagerNotes" name="registerManagerNotes" rows="6" cols="120" th:placeholder="#{form.placeholder.registerManagerNotes}" class="form-control" type="text" th:field="*{registerManagerNotes}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'"/> 
+						</div>
+					</div>
+
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="form-label" for="controlBodyNotes" th:text="#{form.label.controlBodyNotes}">Anmerkungen für den Control-Body</label>
+						<div class="controls">
+							<textarea id="controlBodyNotes" name="controlBodyNotes" rows="6" cols="120" th:placeholder="#{form.placeholder.controlBodyNotes}" class="form-control" type="text" th:field="*{controlBodyNotes}" th:disabled="(!${isNew} and !${isEdit}) ? 'disabled'"/> 
+						</div>
+					</div>
+
+					<!-- Button -->
+					<div class="form-group">
+						<div class="controls">
+							<button id="save" th:if="${isNew}" name="save" class="btn btn-primary" th:text="#{button.save}">Speichern</button>
+							<button id="save" th:if="${isEdit}" name="save" class="btn btn-primary" th:text="#{button.update}">Speichern</button>
+						</div>
+					</div>
+					
+					<input type="hidden" th:field="*{itemUuid}"/>
+					<input type="hidden" th:field="*{proposalUuid}"/>
+					<input type="hidden" th:field="*{targetRegisterUuid}"/>
+					<input type="hidden" th:field="*{sponsorUuid}"/>
+					<input type="hidden" th:field="*{proposalType}"/>					
+
+				</fieldset>
+			</form>
+
+			<button id="cancel" th:if="!${isNew} and !${isEdit}" onClick="goback();" name="cancel" class="btn btn-primary" th:text="#{button.back}">Zurück</button>
+		</div>
+	</div>
+</body>
+</html>

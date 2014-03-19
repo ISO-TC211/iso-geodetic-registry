@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+  
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<h3 th:text="${register.name}">Register ABC</h3>
+
+				<div th:if="${revisionDate}" th:unless="${noRevisionAtGivenDate}" class="alert alert-danger">
+					<p th:text="#{alert.historicView}">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</p>
+				</div>
+
+				<div th:if="${noRevisionAtGivenDate}" class="alert alert-danger">
+					<p th:text="#{alert.noRevisionAtGivenDate}">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</p>
+				</div>
+
+				<div th:if="${revision}" class="alert alert-danger">
+					<p>
+						<span th:text="#{alert.historicView}">Es wird historischer Stand der GDI-DE Registry angezeigt</span> (Revision #<span th:text="${revision}">revision</span>).
+					</p>
+				</div>
+
+				<ul class="nav nav-tabs">
+					<li><a href="#overview" data-toggle="tab" th:text="#{tabs.overview}">Übersicht</a></li>
+					<li th:classappend="(${viewMode} == 'contents') ? 'active'"><a href="#contents" data-toggle="tab" th:text="#{tabs.contents}">Inhalte</a></li>
+					<li sec:authorize="isAuthenticated()" th:classappend="(${viewMode} == 'proposals') ? 'active'"><a href="#proposals" data-toggle="tab" th:text="#{tabs.proposals}">Vorgeschlagene Inhalte</a></li>
+				</ul>
+				
+				<div class="tab-content">
+					<div id="overview" class="tab-pane in">
+						<p th:text="#{tabs.overview}">Übersicht</p>
+					</div>
+					
+					<div id="contents" class="tab-pane in" th:classappend="(${viewMode} == 'contents') ? 'active'">
+						<div sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)" th:unless="${revision} or ${revisionDate}">
+							<div class="control-group" style="margin-top: 10px; margin-bottom: 10px">
+								<button id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''" th:text="#{button.addition}">Item registrieren</button>
+								<button id="supersession" class="btn btn-warning" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/supersession'} + '\''" th:text="#{button.supersession}">Item ersetzen</button>
+							</div>
+						</div>
+						<div style="padding: 10px">				
+							<table id="contentsTable" class="datatable table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.itemClassName}">Klasse</th>
+										<th th:text="#{tableheader.submitter}">Einreicher</th>
+										<th th:text="#{tableheader.status}">Status</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${items}">
+										<td th:text="${item.name}"></td>
+										<td th:text="${item.itemClassName}"></td>
+										<td th:text="${item.sponsorName}"></td>
+										<td th:text="#{${item.status}}"></td>
+										<td>
+											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid}} + '\''" th:text="#{button.details}">Details</button>												
+											<div class="btn-group" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)">
+												<button type="button" th:if="${item.isValid()}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu" role="menu">
+													<li><div style="margin-left: 10px"><button th:id="'clarify_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid} + '/clarify'} + '\''" th:text="#{button.clarification}">Klarstellen</button></div></li>
+	<!-- 													<li><div style="margin-left: 10px; margin-top: 5px"><button th:id="'supersede_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.name} + '/proposal/supersession'} + '\''" th:text="#{button.supersession}">Ersetzen</button></div></li> -->
+													<li>
+														<div style="margin-left: 10px; margin-top: 5px">
+	<!-- 															<button th:id="'retire_' + ${item.uuid}" class="btn btn-danger btn-xs" th:onclick="'rest(\'' + ${item.uuid} + '\', \'' + @{${basePath} + '/item/' + ${item.uuid} + '/retire'} + '\');'" th:text="#{button.retirement}">Aufgeben</button> -->
+															<button td:id="'retire_' + ${item.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmretirement-' + ${item.uuid}" data-toggle="modal" th:text="#{button.retirement}">Aufgeben</button>
+														</div>
+														
+													</li>
+												</ul>
+														
+												<div class="modal fade" th:id="'confirmretirement-' + ${item.uuid}" role="dialog">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<form th:action="@{__${basePath}__/item/__${item.uuid}__/retire}" method="get">
+																<div class="modal-header">
+																	<h4 th:text="#{popup.retire.header}">Registereintrag aufgeben</h4>
+																</div>
+																<div class="modal-body">
+																	<p th:text="#{popup.retire.justification}">
+																		Bitte geben Sie eine Begründung für die Aufgabe des Eintrags an.
+																	</p>
+																	
+																	<!-- Text input-->
+																	<div class="form-group">
+																		<div class="controls">
+																			<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+																		</div>
+																	</div>
+																	
+																</div>
+																<div class="modal-footer">
+																	<button id="confirmretirement" type="submit" class="btn btn-warning" th:text="#{button.confirm}">Bestätgigen</button>
+																	<button id="denyretirement" class="btn btn-primary" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+																</div>
+															</form>
+														</div>
+													</div>
+												</div>
+	
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+
+					<div id="proposals" class="tab-pane in" th:classappend="(${viewMode} == 'proposals') ? 'active'">
+						<div style="margin-top: 20px">
+							<table id="proposalsTable" class="datatable table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.itemClassName}">Klasse</th>
+										<th th:text="#{tableheader.proposalType}">Vorschlagsart</th>
+										<th th:text="#{tableheader.submitter}">Vorschlagende Stelle</th>
+										<th th:text="#{tableheader.status}">Status</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${proposedItems}">
+										<td th:text="${item.name}"></td>
+										<td th:text="${item.itemClassName}"></td>
+										<td th:text="#{${item.proposalType}}"></td>
+										<td th:text="${item.sponsorName}"></td>
+										<td th:text="#{${item.proposalStatus}}"></td>
+										<td>
+											<div class="btn-group">
+												<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu" role="menu">
+													<li>
+														<div style="margin: 5px;">
+															<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${@registrySecurity.mayWrite(item.proposalClass, item.proposalUuid)} ? #{button.edit} : #{button.details}">Details</button>												
+														</div>
+													</li>
+													<li th:if="${item.isUnderReview()} or ${item.isPending()}">
+														<div style="margin: 5px;">
+															<button th:id="'withdraw_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdrawProposal}">Zurückziehen</button>
+														</div>
+													</li>
+													<li th:if="${item.isAppealable()}"><div style="margin: 5px">
+														<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button>
+													</div></li>
+												</ul>
+											</div>
+<!-- 											<button sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)" th:id="'withdraw_' + ${item.uuid}" th:if="${item.isUnderReview()} or ${item.isPending()}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdraw}">Zurückziehen</button> -->
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	$(document).ready(function() {
+		var table;
+
+		table = $('#contentsTable').dataTable({
+			"sPaginationType": "bs_normal",
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			"aaSorting": [[ 0, "asc" ]],
+			 aoColumns: [
+				null,
+				null,
+				null,
+				null,
+				{"bSortable" : false}
+			]
+		});	
+
+		table = $('#proposalsTable').dataTable({
+			"sPaginationType": "bs_normal",
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			 "aaSorting": [[ 2, "asc" ]],
+			 aoColumns: [
+				null,
+				null,
+				null,
+				null,
+				null,
+				{"bSortable" : false}
+			]
+		});	
+
+		$('.datatable').each(function(){
+			var datatable = $(this);
+			// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+			var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+			search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+			search_input.addClass('form-control input-sm');
+			// LENGTH - Inline-Form control
+			var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+			length_sel.addClass('form-control input-sm');
+		});
+	});
+</script>
+
+</body>
+</html>

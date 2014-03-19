@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment">
+</head>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{mgmt.controlbody.content.header}">Proposed item</h3>
+					</div>
+					<div style="padding: 10px">
+						<table id="proposalsTable" class="datatable table table-striped">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.date}">Datum</th>
+									<th th:text="#{tableheader.name}">Name</th>
+									<th th:text="#{tableheader.itemClass}">Klasse</th>
+									<th th:text="#{tableheader.proposalType}">Vorschlagstyp</th>
+									<th th:text="#{tableheader.proposalStatus}">Status</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${proposals}">
+									<td th:text="${item.proposalDate}"></td>
+									<td th:text="${item.name}"></td>
+									<td th:text="${item.itemClassName}"></td>
+									<td th:text="#{${item.proposalType}}"></td>											
+									<td th:text="#{${item.proposalStatus}}"></td>
+									<td>
+										<div class="control-group">
+											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
+											<button th:id="'decide_' + ${item.uuid}" th:if="${item.isPending()}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+		<script type="text/javascript" th:inline="text">
+		$(document).ready(function() {
+			var table;
+	
+			table = $('#proposalsTable').dataTable({
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 2, "asc" ]],
+				 aoColumns: [
+					null,
+					null,
+					null,
+					null,
+					null,
+					{"bSortable" : false}
+				]
+			});	
+	
+			$('.datatable').each(function(){
+				var datatable = $(this);
+				// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+				var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+				search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+				search_input.addClass('form-control input-sm');
+				// LENGTH - Inline-Form control
+				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+				length_sel.addClass('form-control input-sm');
+			});
+		});
+	</script>
+	
+</body>
+</html>

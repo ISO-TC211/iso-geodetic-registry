@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head id="headerFragment" th:fragment="headerFragment">
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="Cache-control" content="no-cache"/>
+		<title th:text="#{application.title}">GDI-DE Registry</title>
+		<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{__${basePath}__/resources/js/jquery.js}"></script>
+		<script type="text/javascript" src="../../resources/js/jquery.cookie.js" th:src="@{__${basePath}__/resources/js/jquery.cookie.js}"></script>
+		<script type="text/javascript" src="../../resources/js/jquery.hotkeys.js" th:src="@{__${basePath}__/resources/js/jquery.hotkeys.js}"></script>
+		<script type="text/javascript" src="../../resources/js/jquery.jstree.js" th:src="@{__${basePath}__/resources/js/jquery.jstree.js}"></script>
+		<script type="text/javascript" src="../../resources/js/bootstrap.min.js" th:src="@{__${basePath}__/resources/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" src="../../resources/js/moment.min.js" th:src="@{__${basePath}__/resources/js/moment.min.js}"></script>
+		<script type="text/javascript" src="../../resources/js/bootstrap-datetimepicker.min.js" th:src="@{__${basePath}__/resources/js/bootstrap-datetimepicker.min.js}"></script>
+		<script type="text/javascript" src="../../resources/js/jquery.dataTables.min.js" th:src="@{__${basePath}__/resources/js/jquery.dataTables.min.js}"></script>
+		<script type="text/javascript" src="../../resources/js/datatables.js" th:src="@{__${basePath}__/resources/js/datatables.js}"></script>
+		<script type="text/javascript" src="../../resources/js/registry.js" th:src="@{__${basePath}__/resources/js/registry.js}"></script>
+		<link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{__${basePath}__/resources/css/bootstrap.min.css}" />
+		<link rel="stylesheet" href="../../resources/css/bootstrap-datetimepicker.min.css" th:href="@{__${basePath}__/resources/css/bootstrap-datetimepicker.min.css}" />		
+		<link rel="stylesheet" href="../../resources/css/font-titillium.css" th:href="@{__${basePath}__/resources/css/font-titillium.css}" type="text/css" />
+		<link rel="stylesheet" href="../../resources/css/font-awesome.min.css" th:href="@{__${basePath}__/resources/css/font-awesome.min.css}" type="text/css" />
+		<link rel="stylesheet" href="../../resources/css/datatables.css" th:href="@{__${basePath}__/resources/css/datatables.css}" />
+		<link rel="stylesheet" href="../../resources/css/registry.css" th:href="@{__${basePath}__/resources/css/registry.css}" />
+		<style type="text/css">
+			body {
+				padding-top: 60px;
+				padding-bottom: 40px;
+			}
+			
+ 			.sidebartree {
+ 				padding-left: 20px;
+ 			} 
+			
+			.bs-sidebar1 {
+				padding-top: 9px 0;
+				position: fixed;
+				left: 20px;
+				top: 60px;
+				width: 250px;
+			}
+		</style>
+		<!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> 
+		<![endif]-->
+
+</head>
+
+<body>
+
+	<div id="navbarFragment" th:fragment="navbarFragment">
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button id="collapsenavbar" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" th:href="@{__${basePath}__/}">EPSG Geodetic Parameter Registry</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+<!-- 				<ul class="nav navbar-nav"> -->
+<!-- 										<li class="active"><a href="#">Organisationen</a></li> -->
+<!-- 										<li><a href="#">Link</a></li> -->
+<!-- 										<li class="dropdown"><a href="#" class="dropdown-toggle" -->
+<!-- 											data-toggle="dropdown">Dropdown <b class="caret"></b></a> -->
+<!-- 											<ul class="dropdown-menu"> -->
+<!-- 												<li><a href="#">Action</a></li> -->
+<!-- 												<li><a href="#">Another action</a></li> -->
+<!-- 												<li><a href="#">Something else here</a></li> -->
+<!-- 												<li><a href="#">Separated link</a></li> -->
+<!-- 												<li><a href="#">One more separated link</a></li> -->
+<!-- 											</ul> -->
+<!-- 										</li> -->
+<!-- 				</ul> -->
+
+				<ul class="nav navbar-nav navbar-right">
+					<li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span sec:authentication="principal.emailAddress">Nutzer</span></li>
+					<li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}" th:text="#{navbar.logout}">Abmelden</a></li>
+					<li class="dropdown" sec:authorize="!isAuthenticated()">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.login}">Anmelden</span> <span class="caret"></span></a>
+						<ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
+							<li>
+								<div class="row">
+									<div class="col-md-12">
+										<form class="form" role="form" method="post" th:action="@{__${basePath}__/login}" accept-charset="UTF-8" id="login-nav">
+											<div class="form-group">
+												<label class="sr-only" for="inputEmail" th:text="#{navbar.login.label.email}">E-Mail-Adresse</label> 
+<!-- 												<input type="email" class="form-control" id="inputEmail" th:placeholder="#{navbar.login.label.email}" required="required"></input> -->
+												<input type="text" class="form-control" name="username" id="inputEmail" th:placeholder="#{navbar.login.label.email}" required="required"></input>
+											</div>
+											<div class="form-group">
+												<label class="sr-only" for="inputPassword" th:text="#{navbar.login.label.password}">Password</label> 
+												<input type="password" class="form-control" name="password" id="inputPassword" th:placeholder="#{navbar.login.label.password}" required="required"></input>
+											</div>
+											<div class="form-group">
+												<button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden</button>
+<!-- 												<button type="button" class="btn btn-primary btn-block" th:text="#{navbar.login.button.register}" th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren</button> -->
+											</div>
+										</form>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<div class="navbar-form navbar-right">
+					<div class="btn-group">
+ 						<button id="navbar_lang_DE" th:class="'btn btn-default' + (${#locale.language} eq 'de' ? ' active' : '')">DE</button>
+						<button id="navbar_lang_EN" th:class="'btn btn-default' + (${#locale.language} eq 'en' ? ' active' : '')">EN</button>
+					</div>
+				</div>
+				<script type="text/javascript">
+					$('#navbar_lang_EN').click(function() {
+						$.cookie('siteLanguage', 'en', {
+							path: '/'
+						});
+						location.reload();
+					});
+					$('#navbar_lang_DE').click(function() {
+						$.cookie('siteLanguage', 'de', {
+							path: '/'
+						});
+						location.reload();
+					});
+				</script>
+
+<!-- 				<form class="navbar-form navbar-right" th:action="@{__${basePath}__/}" method="get"> -->
+<!-- 					<div class="form-group"> -->
+<!-- 						<div class="input-group date" id="datetimepicker2"> -->
+<!-- 							<span class="input-group-btn"> -->
+<!-- 								<button id="sethistoricdate" class="btn btn-default" type="submit" th:text="#{navbar.setHistoricDate}">Zeitpunkt setzen</button> -->
+<!-- 							</span> <input name="revisionDate" type="text" class="form-control" data-format="YYYY-MM-DD HH:mm" th:value="${revisionDate}" /> <span class="input-group-addon"><span -->
+<!-- 								class="glyphicon glyphicon-calendar"></span></span> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</form> -->
+				<script type="text/javascript">
+// 					$(function() {
+// 						$('#datetimepicker2').datetimepicker({
+// 							language : 'de'
+// 						});
+// 					});
+ 				</script> 
+
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+
+		<!-- 		<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" -->
+		<!-- 			role="banner"> -->
+		<!-- 			<div class="container"> -->
+		<!-- 				<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation"> -->
+		<!-- 	                <a class="brand" href="/">GDI-DE Registry</a> -->
+		<!-- 					<ul class="nav navbar-nav"> -->
+		<!-- 						<li><a href="../getting-started">Getting started</a></li> -->
+		<!-- 						<li><a href="../css">CSS</a></li> -->
+		<!-- 						<li class="active"><a href="../components">Components</a></li> -->
+		<!-- 						<li><a href="../javascript">JavaScript</a></li> -->
+		<!-- 						<li><a href="../customize">Customize</a></li> -->
+		<!-- 					</ul> -->
+		<!-- 				</nav> -->
+		<!-- 			</div> -->
+		<!-- 		</header> -->
+		<!--     <div class="navbar navbar-inverse navbar-fixed-top"> -->
+		<!--         <div class="navbar-inner"> -->
+		<!--             <div class="container-fluid"> -->
+		<!--                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> -->
+		<!--                     <span class="icon-bar"></span> -->
+		<!--                     <span class="icon-bar"></span> -->
+		<!--                     <span class="icon-bar"></span> -->
+		<!--                 </a> -->
+		<!--                 <a class="brand" href="/">GDI-DE Registry</a> -->
+		<!--                 <div class="nav-collapse collapse"> -->
+		<!--                     <p class="navbar-text pull-right"> -->
+
+		<!--                     </p> -->
+		<!--                     <ul class="nav"> -->
+		<!--                         <li><a href="/">Home</a></li> -->
+		<!--                     </ul> -->
+		<!--                 </div> /.nav-collapse -->
+		<!--             </div> -->
+		<!--         </div> -->
+		<!--     </div> -->
+
+	</div>
+
+	<div th:fragment="left">
+		<!--     <div class="well sidebar-nav span3"> -->
+		<h3>Test</h3>
+		<!--     </div> -->
+	</div>
+
+	<div th:fragment="foot">
+		<!--     <footer> -->
+		<!--         <p>&copy; Bundesamt für Kartographie und Geodäsie</p> -->
+		<!--     </footer> -->
+	</div>
+
+	<div th:fragment="navtree">
+		<div class="sidebartree well">
+			<div class="bs-sidebar affix-top">
+				<div style="overflow: hidden">
+					<div id="demo1" class="demo" style="height: 100%;">
+						<ul>
+							<li id="nav_start"><a th:href="@{__${basePath}__/}">Start</a></li>
+<!-- 							<li id="nav_search"><a href="#" th:text="#{navbar.search}">Suche</a></li> -->
+							<li id="nav_register"><a href="#">Register</a>
+								<ul>
+<!-- 									<li id="nav_register_code"><a href="#">Codelists (Register)</a></li> -->
+<!-- 									<li id="nav_register_moni"><a href="#">Monitoring (Register)</a></li> -->
+<!-- 									<li id="nav_register_namespace"><a href="#" th:text="#{navbar.registers.namespaces}">Namensräume (Register)</a></li> -->
+									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
+									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}"><a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}"></a></li>
+								</ul></li>
+								<li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
+								<ul>
+									<li id="managementsubmitter" sec:authorize="@registrySecurity.hasRoleWith('ROLE_SUBMITTER_')"><a th:href="@{__${basePath}__/management/submitter}" th:text="#{navbar.submittingOrganizations}">Einreichende Organisationen</a></li>
+									<li id="managementmanager" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')"><a th:href="@{__${basePath}__/management/manager}" th:text="#{navbar.registerManager}">Register-Manager</a></li>
+									<li id="managementcontrolbody" sec:authorize="@registrySecurity.hasRoleWith('ROLE_CONTROLBODY_')"><a th:href="@{__${basePath}__/management/controlbody}" th:text="#{navbar.controlBody}">Control-Body</a></li>
+									<li id="managementowner" sec:authorize="@registrySecurity.hasRoleWith('ROLE_OWNER_')"><a th:href="@{__${basePath}__/management/owner}" th:text="#{navbar.registerOwner}">Register-Inhaber</a></li>
+								</ul></li>
+ 							<li id="nav_account" sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/myprofile}" th:text="#{navbar.myAccount}">Mein Benutzerkonto</a></li>
+							<li id="nav_usermgmt" sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" th:text="#{navbar.userManagement}">Benutzerverwaltung</a>
+								<ul>
+									<li id="adminusers"><a th:href="@{__${basePath}__/admin/users}" th:text="#{navbar.userManagement.users}">Benutzer</a></li>
+<!-- 									<li id="adminorganizations"><a th:href="@{__${basePath}__/admin/organizations}" th:text="#{navbar.userManagement.organizations}">Organisationen</a></li> -->
+								</ul>
+							</li>
+							<li id="adminproposals" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{__${basePath}__/admin/proposals}" th:text="#{navbar.proposalManagement}">Vorschlagsverwaltung</a></li>
+						</ul>
+					</div>
+					<script type="text/javascript" th:inline="text">
+						$(function() {
+							var ready = false;
+							
+						    var cancelHashChange = false,
+					        // method sets the selector based off of URL input
+						    setSelector = function (path) {
+                                var basePath = '[[${basePath}]]';
+                                if (basePath !== '') {
+                                        basePath = basePath.replace('~', '');
+                                }
+                                basePath = basePath + '/';
+
+                                var startIndex = path.indexOf(basePath);
+                                if (startIndex > -1) {
+                                    path = path.substr(startIndex + basePath.length);
+                                }
+                                path = path.replace(/\//g, '');
+                                if ($.trim(path) === '') { path = 'nav_start'; }
+                                return '#' + path;
+						    };							
+							
+					    	$("#demo1").jstree({
+								// the `plugins` array allows you to configure the active plugins on this instance
+								"plugins" : [ "themes", "html_data", "ui", "crrm", "hotkeys" ],
+								// each plugin you have included can have its own config object
+								"core" : {
+									"animation" : 100,
+									"initially_open" : [ "nav_register", "nav_mgmt", "nav_usermgmt" ]
+								},
+								"ui" : {
+									//"initially_select" : [ "nav_start" ]
+								},
+								"cookies": {
+									"auto_save": true,
+									"cookie_options": { 
+										"path": '/' 
+									} 
+								},
+								// set a theme
+								"themes" : {
+									"theme" : "proton",
+									"dots" : false
+								},
+							})
+							.bind("reselect.jstree", function() { ready = true; }) 
+							.bind("select_node.jstree", function (e, data) {
+							    var href = data.rslt.obj.children("a").attr("href");
+							    // this will load content into a div:
+							    //$("#contents").load(href);
+							    // this will follow the link:
+							    if (ready) {
+							    	document.location.href = href;
+							    }
+							  }) 
+							  .bind("loaded.jstree", function (event, data) {
+								  	//alert(window.location.pathname);
+						            $.jstree._focused().select_node(setSelector(window.location.pathname));
+							        // when loaded sets initial state based off of priority hash first OR url
+//							        if (window.location.hash) { // if hash defined then set tree state
+//							            $.jstree._focused().select_node(selector);
+//							            $(setSelector(window.location.hash.substr(1)) + ' a:first').trigger('click');
+//							        } else { // otherwise base state off of URL
+//							            $.jstree._focused().select_node(setSelector(window.location.pathname));
+//							        }
+							    });				
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

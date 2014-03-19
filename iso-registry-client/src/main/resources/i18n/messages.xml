@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment />
+	<entry key="application.title">EPSG Geodetic Parameter Registry</entry>
+	
+	<entry key="navbar.setHistoricDate">Historic view</entry>
+	<entry key="navbar.login">Login</entry>
+	<entry key="navbar.logout">Logout</entry>
+	<entry key="navbar.search">Search</entry>
+	<entry key="navbar.submittingOrganizations">Submitting organizations</entry>
+	<entry key="navbar.registerManager">Register manager</entry>
+	<entry key="navbar.controlBody">Control body</entry>
+	<entry key="navbar.registerOwner">Register owner</entry>
+	<entry key="navbar.pointOfContact">Point of Contact</entry>	
+	<entry key="navbar.myAccount">My account</entry>
+	<entry key="navbar.userManagement">User management</entry>
+	<entry key="navbar.userManagement.organizations">Organizations</entry>
+	<entry key="navbar.userManagement.users">Users</entry>
+	<entry key="navbar.proposalManagement">Proposal management</entry>
+	<entry key="navbar.loggedInAs">Logged in as</entry>
+	<entry key="navbar.login.label.email">E-mail address</entry>
+	<entry key="navbar.login.label.password">Password</entry>
+	<entry key="navbar.login.button.register">Register</entry>
+
+	<entry key="mgmt.submitter.content.header">Submitting organization: List of proposals</entry>
+	<entry key="mgmt.manager.content.header">Register manager: List of pending proposals</entry>
+	<entry key="mgmt.controlbody.content.header">Control body: List of proposals waiting for decision</entry>
+	<entry key="mgmt.owner.content.header">Register owner: List of appeals</entry>
+	<entry key="admin.proposals.content.header">Proposal management</entry>
+	<entry key="admin.users.content.header">Users</entry>
+	<entry key="admin.users.alert.userDeleted">The user was deleted.</entry>
+	<entry key="admin.user.main.header">Master data</entry>
+	<entry key="admin.user.groups.header">Group membership</entry>
+	<entry key="admin.organizations.content.header">Organizations</entry>
+	<entry key="admin.organization.main.header">Master data</entry>
+	<entry key="admin.organization.roles.header">Roles</entry>
+	<entry key="admin.organization.users.header">Users</entry>
+	
+	<entry key="tableheader.name">Name</entry>
+	<entry key="tableheader.itemClassName">Item class</entry>
+	<entry key="tableheader.status">Status</entry>
+	<entry key="tableheader.proposalType">Proposal type</entry>
+	<entry key="tableheader.submitter">Submitter</entry>
+	<entry key="tableheader.action">Action</entry>
+	<entry key="tableheader.proposalStatus">Proposal status</entry>
+	<entry key="tableheader.decisionStatus">Decision status</entry>
+	<entry key="tableheader.emailAddress">Email address</entry>
+	<entry key="tableheader.organization">Organization</entry>
+	<entry key="tableheader.date">Date</entry>
+	<entry key="tableheader.itemClass">Item class</entry>
+	<entry key="tableheader.shortName">Short name</entry>
+	<entry key="tableheader.category">Category</entry>
+	<entry key="tableheader.appealStatus">Appeal status</entry>
+	<entry key="tableheader.itemIdentifier">ID</entry>
+	<entry key="tableheader.definition">Definition</entry>
+	<entry key="tableheader.description">Description</entry>
+	<entry key="tableheader.role">Role</entry>
+	<entry key="tableheader.group">Group</entry>
+	<entry key="tableheader.register">Register</entry>
+
+	<entry key="header.supersededItems">Superseded items</entry>	
+	<entry key="header.supersedingItems">Successors</entry>
+	<entry key="header.additionalData">Additional data</entry>
+	<entry key="header.overview">Overview</entry>
+	<entry key="header.proposedItem">Proposal details</entry>
+	<entry key="header.proposalData">Proposal details</entry>
+	<entry key="header.createAddition">Create addition proposal</entry>
+	<entry key="header.editAddition">Edit addition proposal</entry>
+	<entry key="header.createClarification">Create clarification proposal</entry>
+	<entry key="header.editClarification">Edit clarification proposal</entry>
+	<entry key="header.editRetirement">Edit retirement proposal</entry>
+	<entry key="header.createOrganization">Create organization</entry>
+	<entry key="header.editOrganization">Edit organization</entry>
+	<entry key="header.viewOrganization">Organization details</entry>
+	<entry key="header.createUser">Create user</entry>
+	<entry key="header.editUser">Edit user</entry>
+	<entry key="header.signup">Sign up</entry>
+	<entry key="header.proposedChanges">Proposed changes</entry>
+	<entry key="header.proposedItem">Vorgeschlagener Eintrag</entry>
+	<entry key="header.retiredItem">Aufzugebender Eintrag</entry>
+	<entry key="header.managementInformation">Manegement information</entry>
+	<entry key="header.additionInformation">Addition information</entry>
+	<entry key="header.amendmentInformation">Amendment information</entry>
+	<entry key="header.clarificationInformation">Clarification information</entry>
+	<entry key="header.addedOn">Added on {0}</entry>
+	<entry key="header.amendedOn">Amended on {0}</entry>
+	<entry key="header.clarifiedOn">Clarified on {0}</entry>
+	<entry key="header.myProfile">Your user profile</entry>
+	<entry key="header.proposalDetails">Proposal details</entry>
+	<entry key="header.crs">Coordinate Reference System</entry>
+	<entry key="header.area">Area</entry>
+	
+	<entry key="button.reviewProposal">Review</entry>
+	<entry key="button.decideProposal">Decide</entry>
+	<entry key="button.acceptProposal">Accept</entry>
+	<entry key="button.rejectProposal">Reject</entry>
+	<entry key="button.withdrawProposal">Withdraw</entry>
+	<entry key="button.finalizeProposal">End appeal period</entry>
+	<entry key="button.appealProposal">Appeal to owner</entry>
+	<entry key="button.acceptAppeal">Accept appeal</entry>
+	<entry key="button.details">Details</entry>
+	<entry key="button.edit">Edit</entry>
+	<entry key="button.action">Action</entry>
+	<entry key="button.addition">Propose new</entry>
+	<entry key="button.clarification">Clarify</entry>
+	<entry key="button.supersession">Supersede</entry>
+	<entry key="button.retirement">Retire</entry>
+	<entry key="button.newUser">New user</entry>
+	<entry key="button.delete">Delete</entry>
+	<entry key="button.yes">Yes</entry>
+	<entry key="button.ok">Ok</entry>
+	<entry key="button.no">No</entry>
+	<entry key="button.confirm">Confirm</entry>
+	<entry key="button.cancel">Cancel</entry>
+	<entry key="button.withdraw">Withdraw</entry>
+	<entry key="button.submitProposal">Submit proposal</entry>
+	<entry key="button.save">Save</entry>
+	<entry key="button.saving">Saving...</entry>
+	<entry key="button.update">Update proposal</entry>
+	<entry key="button.back">Back</entry>
+	<entry key="button.newOrganization">New organization</entry>
+	<entry key="button.review">Accept proposal for decision</entry>
+	<entry key="button.accept">Accept proposal</entry>
+	<entry key="button.reject">Reject proposal</entry>
+	<entry key="button.addNew">Create new successor</entry>
+	<entry key="button.addExisting">Add existing item as successor</entry>
+	<entry key="button.addSupersededItems">Select items to supersede</entry>
+	<entry key="button.supersede">Supersede</entry>
+	<entry key="button.next">Continue</entry>
+	<entry key="button.signup">Sign up</entry>
+	<entry key="button.delegations">Permissions</entry>
+	<entry key="button.requestDelegation">Request permission</entry>
+	<entry key="button.changeOrganization">Change affiliation</entry>
+
+	<entry key="NOT_VALID">not valid</entry>
+	<entry key="VALID">valid</entry>
+	<entry key="SUPERSEDED">superseded</entry>
+	<entry key="RETIRED">retired</entry>
+	
+	<entry key="ADDITION">Addition</entry>
+	<entry key="CLARIFICATION">Clarification</entry>
+	<entry key="SUPERSESSION">Supersession</entry>
+	<entry key="RETIREMENT">Retirement</entry>
+	
+	<entry key="UNDER_REVIEW">waiting for review by register manager</entry>
+	<entry key="IN_APPROVAL_PROCESS">waiting for approval by control body</entry>
+	<entry key="APPEALABLE">appealable</entry>
+	<entry key="APPEALED">appealed</entry>
+	<entry key="FINISHED">finished</entry>
+	
+	<entry key="PENDING">pending</entry>
+	<entry key="TENTATIVE">tentative</entry>
+	<entry key="FINAL">final</entry>
+
+	<entry key="ACCEPTED">accepted</entry>
+	<entry key="NOT_ACCEPTED">not accepted</entry>
+
+	<entry key="ROLE_ADMIN">Administrator</entry>
+	<entry key="ROLE_MANAGER">Register manager</entry>
+	<entry key="ROLE_CONTROLBODY">Control body</entry>
+	<entry key="ROLE_SUBMITTER">Submitter</entry>
+	<entry key="ROLE_OWNER">Register owner</entry>
+
+	<entry key="alert.userCreated">The user was created successfully.</entry>
+	<entry key="alert.userDeleted">The user was deleted.</entry>
+	<entry key="alert.signedUp">You were successfully signed up. You may now login using your e-mail address {0}</entry>	
+	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
+	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
+	<entry key="alert.organizationCreated">The organization was created successfully.</entry>
+	<entry key="alert.organizationDeleted">The organization was deleted.</entry>
+	<entry key="alert.noSupersededItems">At least one item must be selected.</entry>
+	<entry key="alert.noSupersedingItems">At least one superseding item must be added.</entry>
+	<entry key="alert.registerNotFound">Register "{0}" does not exist.</entry>
+
+	<entry key="popup.newOrganization.header">Details of your organization</entry>
+	<entry key="popup.deleteUser.header">Delete user</entry>
+	<entry key="popup.deleteUser.reallyDelete">Do you really want to delete user {0}?</entry>
+	<entry key="popup.deleteOrganization.header">Delete organization</entry>
+	<entry key="popup.deleteOrganization.reallyDelete">Do you really want to delete organization {0}?</entry>
+	<entry key="popup.retire.header">Retire item</entry>
+	<entry key="popup.retire.justification">Please provide a justification for the retirement:</entry>
+	<entry key="popup.acceptProposal.header">Accept proposal</entry>
+	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Please describe the event where the decision to accept the proposal was made:</entry>
+	<entry key="popup.rejectProposal.header">Accept proposal</entry>
+	<entry key="popup.rejectProposal.controlBodyDecisionEvent">Please describe the event where the decision to reject the proposal was made:</entry>
+	<entry key="popup.delegations.header">Delegated rights</entry>
+	<entry key="popup.delegations.pointOfContact">Point of Contact</entry>
+	<entry key="popup.delegations.member">Membership approved</entry>
+	<entry key="popup.delegations.requested">The user has requested to be assigned the highlighted roles.</entry>
+	<entry key="popup.delegations.deny">Deny this request</entry>
+
+	<entry key="tabs.overview">Overview</entry>
+	<entry key="tabs.item">Item</entry>
+	<entry key="tabs.managementInformation">Management information</entry>
+	<entry key="tabs.contents">Contents</entry>
+	<entry key="tabs.proposals">Proposal contents</entry>
+	<entry key="tabs.predecessors">Predecessors</entry>
+	<entry key="tabs.successors">Successors</entry>
+		
+	<entry key="legend.create">Create new proposal</entry>
+	<entry key="legend.edit">Edit proposal</entry>
+	<entry key="legend.view">Proposed item</entry>
+	
+	<entry key="datatable.sLengthMenu">Show _MENU_ items per page</entry>
+	<entry key="datatable.sEmptyTable">No items found</entry>
+	<entry key="datatable.sZeroRecords">No items found</entry>
+	<entry key="datatable.sInfo">Showing _START_ to _END_ of _TOTAL_ items</entry>
+	<entry key="datatable.sInfoEmpty">No items</entry>
+	<entry key="datatable.sInfoFiltered">(filtered from _MAX_ total items)</entry>
+	<entry key="datatable.searchPlaceholder">Search</entry>
+	<entry key="datatable.sLoadingRecords">Loading...</entry>
+	<entry key="datatable.sProcessing">Processing...</entry>
+	<entry key="datatable.oPaginate.sFirst">First</entry>
+	<entry key="datatable.oPaginate.sPrevious">Previous</entry>
+	<entry key="datatable.oPaginate.sNext">Next</entry>
+	<entry key="datatable.oPaginate.sLast">Last</entry>
+	
+	<entry key="form.label.itemClass">Item class</entry>
+	<entry key="form.label.targetRegister">Target register</entry>
+	<entry key="form.label.name">Name</entry>
+	<entry key="form.label.definition">Definition</entry>
+	<entry key="form.label.description">Description</entry>
+	<entry key="form.label.justification">Justification</entry>
+	<entry key="form.label.registerManagerNotes">Notes for register manager</entry>
+	<entry key="form.label.controlBodyNotes">Notes for control body</entry>
+	<entry key="form.label.impact">Impact when appeal is rejected</entry>
+	<entry key="form.label.situation">Current situation</entry>
+	<entry key="form.label.appealJustification">Appeal justification</entry>
+	<entry key="form.label.shortName">Short name</entry>
+	<entry key="form.label.category">Category</entry>
+	<entry key="form.label.emailAddress">Email address</entry>
+	<entry key="form.label.password">Password</entry>
+	<entry key="form.label.confirmPassword">Confirm password</entry>
+	<entry key="form.label.preferredLanguage">Preferred language</entry>
+	<entry key="form.label.organization">Organization</entry>
+	<entry key="form.label.organizationName">Organization name</entry>
+	<entry key="form.label.organizationNameShortForm">Abbreviated organization name</entry>
+	<entry key="form.label.onlineResourceWebsite">URL to website</entry>
+	<entry key="form.label.onlineResourceLogo">URL to organization logo</entry>
+	<entry key="form.label.isActive">active</entry>
+	<entry key="form.label.linkedOrganization">Linked organization data</entry>
+	<entry key="form.label.code">Code</entry>
+	<entry key="form.label.crsType">CRS type</entry>
+	<entry key="form.label.scope">Scope</entry>
+	
+	<entry key="form.select.choose">-- Select --</entry>
+		
+	<entry key="form.placeholder.name">Name</entry>
+	<entry key="form.placeholder.definition">Definition</entry>
+	<entry key="form.placeholder.description">Description</entry>
+	<entry key="form.placeholder.justification">Justification</entry>
+	<entry key="form.placeholder.registerManagerNotes">Notes for register manager</entry>
+	<entry key="form.placeholder.controlBodyNotes">Notes for control body</entry>
+	<entry key="form.placeholder.impact">Please describe the impact when the appeal is rejected</entry>
+	<entry key="form.placeholder.situation">Please describe the current situation</entry>
+	<entry key="form.placeholder.appealJustification">Please provide a justification for the appeal</entry>
+	<entry key="form.placeholder.shortName">Short name</entry>
+	<entry key="form.placeholder.category">Category</entry>
+	<entry key="form.placeholder.emailAddress">Email address</entry>
+	<entry key="form.placeholder.password">Password</entry>
+	<entry key="form.placeholder.confirmPassword">Confirm password</entry>
+	<entry key="form.placeholder.code">Code</entry>
+	<entry key="form.placeholder.scope">Scope</entry>
+
+	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
+	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
+	<entry key="form.signup.help.organizationName">In case your organization is not listed, please provide it here</entry>
+	<entry key="form.signup.help.organizationNameShortForm">Abbreviation of your organization name (e.g. BKG)</entry>
+
+	<entry key="form.validation.tooShort.user.name">The name must be at least two characters long</entry>
+	<entry key="form.validation.unavailable.user.name">This user name is not available</entry>
+	<entry key="form.validation.unavailable.user.emailAddress">This e-mail address is not available</entry>
+	<entry key="form.validation.confirmPassword">The passwords do not match</entry>
+
+	<entry key="form.signup.validation.organizationNameExists">An organization with this name exists. Please select it from the list on the left and leave this field empty.</entry>
+	
+	<entry key="form.proposal.itemClassNotConfigured">No configuration file exists for this item class. Additional attributes will not be visible.</entry>
+
+	<entry key="form.myprofile.affiliationNotConfirmed">Your affiliation with this organization is still unconfirmed.</entry>
+	<entry key="form.myprofile.affiliationRejected">Your affiliation with this organization was denied. Please change your organization.</entry>
+	<entry key="form.myprofile.delegationRequested">Your request was submitted.</entry>
+
+	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
+	
+	<entry key="home.initializeRegistry">Initialize registry</entry>
+	<entry key="home.addExampleData">Add example data</entry>
+	<entry key="home.emptyRegistry">The registry contains no data.</entry>
+
+	<entry key="tabs.overview">Overview</entry>
+	<entry key="tabs.contents">Contents</entry>
+	<entry key="tabs.proposals">Proposal contents</entry>
+			
+	<entry key="itemIdentifier">ID</entry>
+	<entry key="targetRegister">Target register</entry>
+	<entry key="name">Name</entry>
+	<entry key="definition">Definition</entry>
+	<entry key="description">Description</entry>
+	
+	<entry key="proposalType">Proposal type</entry>
+	<entry key="sponsor">Sponsor</entry>
+	<entry key="justification">Justification</entry>
+	<entry key="registerManagerNotes">Register manager notes</entry>
+	<entry key="controlBodyNotes">Control body notes</entry>
+	<entry key="controlBodyDecisionEvent">Control body decision event</entry>
+
+	<entry key="amendmentType">Amendment type</entry>
+	<entry key="dateProposed">Date proposed</entry>
+	<entry key="dateDisposed">Date disposed</entry>
+	<entry key="disposition">Disposition</entry>
+	<entry key="status">Status</entry>
+	<entry key="proposedChange">Proposed changes</entry>
+
+	<entry key="originalValue">Original value</entry>
+	
+	<entry key="shortName">Short name</entry>
+	<entry key="organizationName">Organization name</entry>
+	<entry key="organizationNameShortForm">Abbreviated organization name</entry>
+	<entry key="onlineResourceWebsite">Organization web site</entry>
+	<entry key="onlineResourceLogo">Organization logo</entry>
+</properties>

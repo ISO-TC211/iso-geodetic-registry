@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="row clearfix">
+			<div class="col-md-6 column" th:object="${proposal}">
+				<div class="panel" th:classappend="${proposal.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${proposal.isSupersession()}">
+					<div class="panel-heading">
+						<h3 th:if="${proposal.isAddition()}" class="panel-title" th:text="#{header.proposedItem}">Proposed item</h3>
+						<h3 th:if="${proposal.isRetirement()}" class="panel-title" th:text="#{header.retiredItem}">Retired item</h3>
+					</div>
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td th:text="#{itemIdentifier}"></td>
+								<td th:text="*{itemIdentifier}"></td>
+							</tr>
+							<tr th:if="${proposal.isAddition()}">
+								<td th:text="#{targetRegister}"></td>
+								<td th:text="*{registerName}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{name}"></td>
+								<td th:text="*{name}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{definition}"></td>
+								<td th:text="*{definition}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{description}"></td>
+								<td th:text="*{description}"></td>
+							</tr>
+							<tr th:each="entry : *{additionalProperties}">
+								<td th:text="#{${entry.key}}"></td>
+								<td th:text="${entry.value}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="panel panel-info" th:if="${proposal.isClarification()}">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{header.proposedChanges}">Proposed changes</h3>
+					</div>
+					<table class="table table-striped">
+						<tbody>
+							<tr th:each="change : ${proposal.getProposedChange()}">
+								<td th:text="#{${change.key}}"></td>
+								<td th:text="${change.value}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="column" th:classappend="${proposal.isSupersession()} ? 'col-md-12' : 'col-md-6'">
+				<div class="panel panel-default" th:object="${proposal}">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{header.proposalData}">Proposal data</h3>
+					</div>
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td th:text="#{proposalType}"></td>
+								<td th:text="#{*{proposalType}}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{sponsor}"></td>
+								<td th:text="*{sponsorName}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{justification}"></td>
+								<td th:text="*{justification}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{registerManagerNotes}"></td>
+								<td th:text="*{registerManagerNotes}"></td>
+							</tr>
+							<tr>
+								<td th:text="#{controlBodyNotes}"></td>
+								<td th:text="*{controlBodyNotes}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="row clearfix" th:if="${proposal.isSupersession()}">
+			<div class="col-md-12 column">
+				<div class="panel panel-danger" th:if="${proposal.isSupersession()}">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{header.supersededItems}">Superseded items</h3>
+					</div>
+					
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th th:text="#{tableheader.name}">Name</th>
+								<th th:text="#{tableheader.definition}">Klasse</th>
+								<th th:text="#{tableheader.description}">Klasse</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item : ${proposal.supersededItems}">
+								<td th:text="${item.name}"></td>
+								<td th:text="${item.definition}"></td>
+								<td th:text="${item.description}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="panel panel-success" th:if="${proposal.isSupersession()}">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3>
+					</div>
+					
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th th:text="#{tableheader.name}">Name</th>
+								<th th:text="#{tableheader.definition}">Klasse</th>
+								<th th:text="#{tableheader.description}">Klasse</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item : ${proposal.supersedingItems}">
+								<td th:text="${item.name}"></td>
+								<td th:text="${item.definition}"></td>
+								<td th:text="${item.description}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="row clearfix">
+			<div class="col-md-12 column">
+				<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
+				<div class="pull-right" th:if="${proposal.isUnderReview()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_MANAGER_', #vars.proposal.registerUuid)">
+					<button class="btn btn-success" th:text="#{button.review}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/review'} + '\', goback);'">Zur Entscheidung annehmen</button>
+				</div>
+				<div class="pull-right" th:if="${proposal.isPending()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_CONTROLBODY_', #vars.proposal.registerUuid)">
+					<button td:id="'accept-' + ${proposal.prpoosalUuid}" class="btn btn-success" th:href="'#confirmaccept-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.accept}">Akzeptieren</button>
+					<button td:id="'reject-' + ${proposal.prpoosalUuid}" class="btn btn-danger" th:href="'#confirmreject-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.reject}">Ablehnen</button>
+					
+
+					
+<!-- 					<button class="btn btn-success" th:text="#{button.accept}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/accept'} + '\', goback);'">Akzeptieren</button> -->
+<!-- 					<button class="btn btn-danger" th:text="#{button.reject}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/reject'} + '\', goback);'">Ablehnen</button> -->
+				</div>
+				
+				<div class="modal fade" th:id="'confirmaccept-' + ${proposal.proposalUuid}" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 th:text="#{popup.acceptProposal.header}">Vorschlag annehmen</h4>
+							</div>
+							<div class="modal-body">
+<!-- 								<form th:action="@{__${basePath}__/proposals/__${proposal.proposalUuid}__/accept}" method="post"> -->
+								<form id="decisionEventForm">
+									<p th:text="#{popup.acceptProposal.controlBodyDecisionEvent}">
+										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
+									</p>
+									
+									<!-- Text input-->
+									<div class="form-group">
+										<div class="controls">
+											<textarea id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-success" th:text="#{button.confirm}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/accept'} + '\', $(\'form#decisionEventForm\').serialize(), goback);'">Bestätigen</button>
+								<button id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+							</div>
+<!-- 							</form> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" th:id="'confirmreject-' + ${proposal.proposalUuid}" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 th:text="#{popup.rejectProposal.header}">Vorschlag annehmen</h4>
+							</div>
+							<div class="modal-body">
+								<form id="decisionEventForm">
+									<p th:text="#{popup.rejectProposal.controlBodyDecisionEvent}">
+										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
+									</p>
+									
+									<!-- Text input-->
+									<div class="form-group">
+										<div class="controls">
+											<textarea id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+										</div>
+									</div>
+								</form>								
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-danger" th:text="#{button.confirm}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/reject'} + '\', $(\'form#decisionEventForm\').serialize(), goback);'">Bestätigen</button>
+								<button id="cancelreject" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

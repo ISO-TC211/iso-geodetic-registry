@@ -1,0 +1,218 @@
+<jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	jaxb:extensionBindingPrefixes="xjc">
+
+	<jaxb:bindings schemaLocation="iso/19136/gml.xsd" 
+		node="/xs:schema">
+		<jaxb:globalBindings
+			fixedAttributeAsConstantProperty="true"
+			typesafeEnumBase="xs:string"
+			typesafeEnumMemberName="generateName"
+			generateElementProperty="false"
+			underscoreBinding="asCharInWord"
+			generateIsSetMethod="true">
+			<xjc:noValidator />
+			<xjc:noValidatingUnmarshaller />
+		</jaxb:globalBindings>
+
+		<jaxb:schemaBindings>
+			<jaxb:package name="net.opengis.gml.v321"/>
+			<jaxb:nameXmlTransform>
+				<jaxb:elementName suffix="Element"/>
+			</jaxb:nameXmlTransform>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19136/geometryPrimitives.xsd" node="/xs:schema">
+
+		<jaxb:bindings>
+			<jaxb:nameXmlTransform>
+				<jaxb:elementName suffix="Element"/>
+			</jaxb:nameXmlTransform>
+			<jaxb:bindings node="//xs:group[@name='PointGrid']/xs:sequence/xs:element[@name='rows']">
+				<jaxb:property name="Arows"/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+	</jaxb:bindings>
+	
+	<jaxb:bindings schemaLocation="iso/19136/datums.xsd" node="/xs:schema">
+		<jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='secondDefiningParameter']">
+				<jaxb:class name="SecondDefiningParameterPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='ellipsoid']">
+				<jaxb:factoryMethod name="EllipsoidPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='primeMeridian']">
+				<jaxb:factoryMethod name="PrimeMeridianPropertyElement"/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19136/coordinateReferenceSystems.xsd" node="/xs:schema">
+		<jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='userDefinedCS']">
+				<jaxb:factoryMethod name="UserDefinedCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='cartesianCS']">
+				<jaxb:factoryMethod name="CartesianCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='sphericalCS']">
+				<jaxb:factoryMethod name="SphericalCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='polarCS']">
+				<jaxb:factoryMethod name="PolarCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='linearCS']">
+				<jaxb:factoryMethod name="LinearCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='verticalCS']">
+				<jaxb:factoryMethod name="VerticalCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='cylindricalCS']">
+				<jaxb:factoryMethod name="CylindricalCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='ellipsoidalCS']">
+				<jaxb:factoryMethod name="EllipsoidalCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='affineCS']">
+				<jaxb:factoryMethod name="AffineCSPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='timeCS']">
+				<jaxb:factoryMethod name="TimeCSPropertyElement"/>
+			</jaxb:bindings>
+
+			<jaxb:bindings node="//xs:element[@name='imageDatum']">
+				<jaxb:factoryMethod name="ImageDatumPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='geodeticDatum']">
+				<jaxb:factoryMethod name="GeodeticDatumPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='temporalDatum']">
+				<jaxb:factoryMethod name="TemporalDatumPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='engineeringDatum']">
+				<jaxb:factoryMethod name="EngineeringDatumPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='verticalDatum']">
+				<jaxb:factoryMethod name="VerticalDatumPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='conversion']">
+				<jaxb:factoryMethod name="ConversionPropertyElement"/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+	</jaxb:bindings>
+	
+	<jaxb:bindings schemaLocation="iso/19136/coordinateOperations.xsd" node="/xs:schema">
+		<jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='coordinateOperationAccuracy']//xs:element[@ref='gmd:AbstractDQ_PositionalAccuracy']">
+				<xjc:dom/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='parameterValue']">
+				<jaxb:factoryMethod name="ParameterValuePropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='operationParameter']">
+				<jaxb:factoryMethod name="OperationParameterPropertyElement"/>
+			</jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='formulaCitation']//xs:element[@ref='gmd:CI_Citation']">
+				<xjc:dom/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19136/referenceSystems.xsd" node="/xs:schema">
+		<jaxb:bindings>
+			<jaxb:bindings node="//xs:element[@name='domainOfValidity']//xs:element[@ref='gmd:EX_Extent']">
+				<xjc:dom/>
+			</jaxb:bindings>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19139/gmd/gmd.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19139.metadata"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19139/gco/gco.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19139.common"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<!--jaxb:bindings schemaLocation="iso/19139/gmx/gmx.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19139.metadata.xml"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings-->
+
+	<jaxb:bindings schemaLocation="iso/19139/gsr/gsr.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19139.spatial.referencing"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19139/gss/gss.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19139.spatial.schema"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19139/gts/gts.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19139.temporal"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="iso/19135/grg.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.isotc211.iso19135"/>
+			
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+	
+	<jaxb:bindings schemaLocation="http://www.w3.org/1999/xlink.xsd">
+		<jaxb:bindings node="//xs:attributeGroup[@name='locatorAttrs']//xs:attribute[@ref='xlink:title']">
+			<jaxb:property name="xlink:title1" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:attributeGroup[@name='arcAttrs']//xs:attribute[@ref='xlink:title']">
+			<jaxb:property name="xlink:title2" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="http://www.w3.org/1999/xlink.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.w3.xlink"/>
+		</jaxb:schemaBindings>
+		<jaxb:bindings node="//xs:attribute[@name='role']">
+			<jaxb:property name="role2"/>
+        </jaxb:bindings>	
+		<jaxb:bindings node="//xs:attributeGroup[@name='extendedAttrs']//xs:attribute[@ref='xlink:role']">
+			<jaxb:property name="xlink:role2" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+<!-- 	<jaxb:bindings schemaLocation="gdide-userservice.xsd"  -->
+<!-- 		node="/xs:schema"> -->
+<!-- 		<jaxb:schemaBindings> -->
+<!-- 			<jaxb:package name="de.bund.bkg.gdide.registry.api.soap"/> -->
+<!-- 		</jaxb:schemaBindings> -->
+<!-- 	</jaxb:bindings> -->
+
+<!-- 	<jaxb:bindings schemaLocation="gdide-registry.xsd"  -->
+<!-- 		node="/xs:schema"> -->
+<!-- 		<jaxb:schemaBindings> -->
+<!-- 			<jaxb:package name="de.bund.bkg.gdide.registry.api"/> -->
+<!-- 		</jaxb:schemaBindings> -->
+<!-- 	</jaxb:bindings> -->
+
+</jaxb:bindings>
