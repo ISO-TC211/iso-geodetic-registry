@@ -268,8 +268,8 @@ public class ProposalsController
 //		}
 		
 		String viewName;
-		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewTemplate())) {
-			viewName = itemClassConfiguration.getViewTemplate();
+		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewProposalTemplate())) {
+			viewName = itemClassConfiguration.getViewProposalTemplate();
 		}
 		else {
 			StringBuilder viewNameBuilder = new StringBuilder("registry/proposal/");

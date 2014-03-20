@@ -7,6 +7,8 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 
 import org.iso.registry.api.AreaItemProposalDTO;
+import org.iso.registry.api.CoordinateReferenceSystemItemProposalDTO;
+import org.iso.registry.core.model.CoordinateSystemType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,7 @@ import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
+import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
@@ -199,7 +202,7 @@ public class SiteController extends AbstractController
 			suborgRepository.save(orgExample);
 			
 			RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
-			RegistryUser ex = createUser("example", "example", "example@example.org");
+			RegistryUser ex = createUser("John Submitter", "s", "submitter@example.org");
 
 			initLog.append("\n");
 			
@@ -237,19 +240,29 @@ public class SiteController extends AbstractController
 			RE_ItemClass icCrs = this.addItemClass("CoordinateReferenceSystem", r);
 			RE_ItemClass icArea = this.addItemClass("Area", r);
 
-			this.registerItem(r, icArea, "World", AreaItemProposalDTO.class, new ParameterizedRunnable<AreaItemProposalDTO>() {
+			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class, new ParameterizedRunnable<AreaItemProposalDTO>() {
 				@Override
 				public void run(AreaItemProposalDTO parameter) {
 					parameter.setCode(1262);
 				}
 			});
-			this.registerItem(r, icArea, "Germany - west of 7.5°", AreaItemProposalDTO.class, new ParameterizedRunnable<AreaItemProposalDTO>() {
+			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class, new ParameterizedRunnable<AreaItemProposalDTO>() {
 				@Override
 				public void run(AreaItemProposalDTO parameter) {
 					parameter.setCode(1624);
 				}
 			});
-			
+
+			this.registerItem(r, icCrs, "WGS 84", CoordinateReferenceSystemItemProposalDTO.class, new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {
+				@Override
+				public void run(CoordinateReferenceSystemItemProposalDTO parameter) {
+					parameter.setCode(4326);
+					parameter.setAreaUuid(worldArea.getUuid());
+					parameter.setScope("Horizontal component of 3D system. Used by the GPS satellite navigation system and for NATO military geodetic surveying.");
+					parameter.setType(CoordinateSystemType.GEOGRAPHIC_2D);
+				}
+			});
+
 			initLog.append("Initialization complete.");
 		}
 		catch (Throwable t) {
@@ -289,7 +302,7 @@ public class SiteController extends AbstractController
 		return ic;
 	}
 
-	public <P extends RegisterItemProposalDTO> void registerItem(RE_Register register, RE_ItemClass itemClass, String name, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
+	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
 		P proposal;
 		proposal = dtoClass.newInstance();
 		proposal.setItemClassUuid(itemClass.getUuid());
@@ -309,6 +322,8 @@ public class SiteController extends AbstractController
 		acceptProposal(ai, decisionEvent);
 		
 		initLog.append("done.\n");
+		
+		return ai.getItem();
 	}
 
 	protected void acceptProposal(Addition ai, String decisionEvent) throws InvalidProposalException {

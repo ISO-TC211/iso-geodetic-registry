@@ -2,9 +2,10 @@
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="Area">
 	<dtoClass>org.iso.registry.api.AreaItemProposalDTO</dtoClass>
 	<viewBeanClass>org.iso.registry.client.AreaItemViewBean</viewBeanClass>
-	<viewTemplate>registry/registers/epsg/area_edit_addition</viewTemplate>
-	<createTemplate>registry/registers/epsg/area_create_addition</createTemplate>
-	<editTemplate>registry/registers/epsg/area_edit_addition</editTemplate>
+	<viewItemTemplate>registry/registers/epsg/area_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/epsg/area_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/epsg/area_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/epsg/area_edit_addition</editProposalTemplate>
 	<property reg:name="code">
 		<reg:labelKey>form.label.code</reg:labelKey>
 		<reg:placeholderKey>form.placeholder.code</reg:placeholderKey>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="CoordinateReferenceSystem">
 	<dtoClass>org.iso.registry.api.CoordinateReferenceSystemItemProposalDTO</dtoClass>
-	<viewBeanClass>org.iso.registry.client.CoordinateSystemItemViewBean</viewBeanClass>
-	<viewTemplate>registry/registers/epsg/edit_addition</viewTemplate>
-	<createTemplate>registry/registers/epsg/create_addition</createTemplate>
-	<editTemplate>registry/registers/epsg/edit_addition</editTemplate>
+	<viewBeanClass>org.iso.registry.client.CoordinateReferenceSystemItemViewBean</viewBeanClass>
+	<viewItemTemplate>registry/registers/epsg/crs_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/epsg/edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/epsg/create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/epsg/edit_addition</editProposalTemplate>
 	<property reg:name="crsCode">
 		<reg:labelKey>form.label.crsCode</reg:labelKey>
 		<reg:placeholderKey>form.placeholder.crsCode</reg:placeholderKey>

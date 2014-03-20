@@ -243,6 +243,7 @@
 	<entry key="form.label.code">Code</entry>
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
+	<entry key="form.label.areaOfUse">Area of Use</entry>
 	
 	<entry key="form.select.choose">-- Select --</entry>
 		
@@ -289,7 +290,7 @@
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.contents">Contents</entry>
-	<entry key="tabs.proposals">Proposal contents</entry>
+	<entry key="tabs.proposals">Proposed contents</entry>
 			
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Target register</entry>

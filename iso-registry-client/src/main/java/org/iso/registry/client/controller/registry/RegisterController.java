@@ -291,8 +291,8 @@ public class RegisterController
 		model.addAttribute("proposal", proposal);
 
 		String viewName;
-		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getCreateTemplate())) {
-			viewName = itemClassConfiguration.getCreateTemplate();
+		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getCreateProposalTemplate())) {
+			viewName = itemClassConfiguration.getCreateProposalTemplate();
 		}
 		else {
 			viewName = "registry/proposal/create_addition";

@@ -49,14 +49,14 @@
 										<div class="col-md-6">
 											<!-- Text input-->
 											<div class="row">
-												<div class="col-md-3">
+												<div class="col-md-6">
 													<div class="form-group has-error has-feedback">
 														<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label>
 														<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.code}" class="form-control required" required="true" type="number" th:field="*{code}"/>
 														<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
 													</div>
 												</div>
-												<div class="col-md-3">
+												<div class="col-md-6">
 													<div class="form-group has-error has-feedback">
 														<label class="control-label" for="crsType" th:text="#{form.label.crsType}">Code</label>
 														<select id="crsType" class="required" required="true" th:field="*{type}">
@@ -67,7 +67,7 @@
 											</div>
 
 											<div class="row">
-												<div class="col-md-6">
+												<div class="col-md-12">
 													<div class="form-group has-error has-feedback">
 														<label class="control-label" for="name" th:text="#{form.label.name}">Name</label>
 														<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control required" required="true" type="text" th:field="*{name}"/>
@@ -78,7 +78,7 @@
 											</div>
 
 											<div class="row">
-												<div class="col-md-6">
+												<div class="col-md-12">
 													<div class="form-group has-error has-feedback">
 														<label class="control-label" for="scope" th:text="#{form.label.scope}">Scope</label>
 														<textarea id="scope" name="scope" rows="2" cols="60" th:placeholder="#{form.placeholder.scope}" class="form-control required" required="required" type="text" th:field="*{scope}"/>
@@ -115,30 +115,18 @@
 
 							<div class="panel-body">
 								<!-- Text input-->
-								<div th:class="${#fields.hasErrors('definition')} ? 'form-group has-error' : 'form-group'">
+								<div class="form-group has-error has-feedback">
 									<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
-									<div class="controls">
-										<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control" required="true" type="text" th:field="*{definition}" /> 
-										<span class="help-block">
-											<ul th:if="${#fields.hasErrors('definition')}">
-												<li th:each="err : ${#fields.errors('definition')}" th:text="#{${err}}"></li>
-											</ul>
-										</span>
-									</div>
+									<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" /> 
+									<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
 								</div>
 			
 								<div th:unless="${partOfSupersession}">
 									<!-- Text input-->
-									<div th:class="${#fields.hasErrors('justification')} ? 'form-group has-error' : 'form-group'">
+									<div class="form-group has-error has-feedback">
 										<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
-										<div class="controls">
-											<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control" type="text" th:field="*{justification}" required="required" /> 
-											<span class="help-block" th:if="${#fields.hasErrors('justification')}">
-												<ul>
-													<li th:each="err : ${#fields.errors('justification')}" th:text="#{${err}}"></li>
-												</ul>
-											</span>
-										</div>
+										<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control required" type="text" th:field="*{justification}" required="required" /> 
+										<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
 									</div>
 				
 								</div>

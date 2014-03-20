@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.client.RegisterItemViewBean;
 import org.iso.registry.client.ViewBeanFactory;
 import org.iso.registry.client.configuration.BasePathRedirectView;
+import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -34,9 +36,13 @@ import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO.ProposalType;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.core.IllegalOperationException;
+import de.geoinfoffm.registry.core.ItemClassConfiguration;
+import de.geoinfoffm.registry.core.ItemClassRegistry;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalFactory;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
+import de.geoinfoffm.registry.core.model.SimpleProposal;
+import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
@@ -74,6 +80,9 @@ public class RegisterItemController
 	
 	@Autowired
 	private ViewBeanFactory viewBeanFactory;
+	
+	@Autowired
+	private ItemClassRegistry itemClassRegistry;
 
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -101,11 +110,22 @@ public class RegisterItemController
 			viewBean = viewBeanFactory.getViewBean(item);
 		}
 
-
 		model.addAttribute("item", viewBean);
 		model.addAttribute("pmiEvaluator", new ProposalManagementInformationEvaluator());
+
+		ItemClassConfiguration itemClassConfiguration = null;
+		itemClassConfiguration = itemClassRegistry.getConfiguration(item.getItemClass().getName());
+		model.addAttribute("itemClassConfiguration", itemClassConfiguration);
+
+		String viewName;
+		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewItemTemplate())) {
+			viewName = itemClassConfiguration.getViewItemTemplate();
+		}
+		else {
+			viewName = "registry/item";
+		}
 		
-		return "registry/item";
+		return viewName;
 	}
 
 	@RequestMapping(value = "/{uuid}/xml", method = RequestMethod.GET)

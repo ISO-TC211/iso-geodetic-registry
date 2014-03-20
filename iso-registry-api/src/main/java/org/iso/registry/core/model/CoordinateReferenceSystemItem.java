@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -32,6 +33,13 @@ public class CoordinateReferenceSystemItem extends RE_RegisterItem
 	@Column(name = "COORD_REF_SYS_KIND")
 	private CoordinateSystemType type;
 	
+	@Basic(optional = false)
+	@Column(name = "CRS_SCOPE")
+	private String scope;
+	
+	@ManyToOne(optional = false)
+	private AreaItem areaOfUse;
+	
 	private CoordinateReferenceSystemItem() {}
 
 	public CoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
@@ -48,5 +56,29 @@ public class CoordinateReferenceSystemItem extends RE_RegisterItem
 
 	public void setCode(Integer code) {
 		this.code = code;
+	}
+
+	public CoordinateSystemType getType() {
+		return type;
+	}
+
+	public void setType(CoordinateSystemType type) {
+		this.type = type;
+	}
+
+	public String getScope() {
+		return scope;
+	}
+
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+
+	public AreaItem getAreaOfUse() {
+		return areaOfUse;
+	}
+
+	public void setAreaOfUse(AreaItem areaOfUse) {
+		this.areaOfUse = areaOfUse;
 	}
 }

@@ -244,6 +244,7 @@
 	<entry key="form.label.code">Code</entry>
 	<entry key="form.label.crsType">CRS-Art</entry>
 	<entry key="form.label.scope">Scope</entry>
+	<entry key="form.label.areaOfUse">Gültigkeitsgebiet</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
+import org.iso.registry.core.model.AreaItem;
 import org.iso.registry.core.model.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.CoordinateSystemType;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
@@ -42,7 +43,12 @@ public class CoordinateReferenceSystemItemProposalDTO extends RegisterItemPropos
 		super.setAdditionalValues(item, entityManager);
 		
 		if (item instanceof CoordinateReferenceSystemItem) {
-			((CoordinateReferenceSystemItem)item).setCode(this.code);
+			CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
+
+			crsItem.setCode(this.code);
+			crsItem.setType(this.type);
+			crsItem.setScope(this.scope);
+			crsItem.setAreaOfUse(entityManager.find(AreaItem.class, this.areaUuid));
 		}
 	}
 
@@ -51,7 +57,12 @@ public class CoordinateReferenceSystemItemProposalDTO extends RegisterItemPropos
 		super.loadAdditionalValues(item);
 		
 		if (item instanceof CoordinateReferenceSystemItem) {
-			this.code = ((CoordinateReferenceSystemItem)item).getCode();
+			CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
+
+			this.code = crsItem.getCode();
+			this.scope = crsItem.getScope();
+			this.type = crsItem.getType();
+			this.areaUuid = crsItem.getAreaOfUse().getUuid();
 		}
 	}
 
