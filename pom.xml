@@ -9,6 +9,9 @@
 		<maven.test.skip>true</maven.test.skip>
 	</properties>	
 	<modules>
+		<module>../registry/src/iso19135/registry-core</module>
+		<module>../registry/src/iso19135/registry-api</module>
+		<module>../registry/src/iso19135/registry-persistence</module>
 		<module>iso-registry-api</module>
 		<module>iso-registry-client</module>
 	</modules>
