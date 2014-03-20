@@ -127,6 +127,9 @@ public class RegisterController
 	@Autowired
 	private ItemClassRegistry itemClassRegistry;
 	
+	@Autowired
+	private ProposalDtoFactory proposalDtoFactory;
+	
 //	@InitBinder
 //	protected void initBinder(WebDataBinder binder) {
 //		binder.setValidator(new ProposalValidator(itemService));
@@ -270,7 +273,7 @@ public class RegisterController
 				model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 			}
 			
-			proposal = ProposalDtoFactory.getInstance().getProposalDto(selectedItemClass);
+			proposal = proposalDtoFactory.getProposalDto(selectedItemClass);
 			if (proposal.getClass().getCanonicalName().equals(RegisterItemProposalDTO.class.getCanonicalName())) {
 				model.addAttribute("itemClassNotConfigured", "true");
 			}

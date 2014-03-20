@@ -71,6 +71,9 @@ public class RegisterItemController
 	
 	@Autowired
 	private ProposalFactory proposalFactory;
+	
+	@Autowired
+	private ViewBeanFactory viewBeanFactory;
 
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -92,10 +95,10 @@ public class RegisterItemController
 			}
 		
 			Proposal proposal = proposalFactory.createProposal(pmis.get(0));
-			viewBean = ViewBeanFactory.getInstance().getViewBean(proposal);
+			viewBean = viewBeanFactory.getViewBean(proposal);
 		}
 		else {
-			viewBean = ViewBeanFactory.getInstance().getViewBean(item);
+			viewBean = viewBeanFactory.getViewBean(item);
 		}
 
 

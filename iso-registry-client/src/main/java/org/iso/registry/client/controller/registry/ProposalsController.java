@@ -115,7 +115,15 @@ public class ProposalsController
 	@Autowired
 	private ApplicationContext context;
 	
-	private ItemClassRegistry itemClassRegistry = new ItemClassRegistry();
+//	private ItemClassRegistry itemClassRegistry = new ItemClassRegistry();
+	@Autowired
+	private ItemClassRegistry itemClassRegistry;
+	
+	@Autowired
+	private ViewBeanFactory viewBeanFactory;
+	
+	@Autowired
+	private ProposalDtoFactory proposalDtoFactory;
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST/*, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE*/)
 	@Transactional
@@ -147,7 +155,7 @@ public class ProposalsController
 			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 		}
 
-		RegisterItemViewBean rvb = ViewBeanFactory.getInstance().getViewBean(proposal);
+		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
 
 		if (itemClassConfiguration != null && rvb.getAdditionalProperties().keySet().contains(propertyName)) {
 			PropertyConfiguration propertyConfiguration = itemClassConfiguration.getProperty(propertyName);
@@ -229,7 +237,7 @@ public class ProposalsController
 			security.assertMayWrite(proposal);
 		}
 		
-		RegisterItemProposalDTO dto = ProposalDtoFactory.getInstance().getProposalDto(proposal);
+		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(proposal);
 		model.addAttribute("proposal", dto);
 		
 		ItemClassConfiguration itemClassConfiguration = null;
@@ -238,7 +246,7 @@ public class ProposalsController
 			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 		}
 
-		RegisterItemViewBean rvb = ViewBeanFactory.getInstance().getViewBean(proposal);
+		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
 		model.addAttribute("rvb", rvb);
 		
 		RE_SubmittingOrganization sponsor = suborgRepository.findOne(rvb.getSponsorUuid());
@@ -395,7 +403,7 @@ public class ProposalsController
 			return "redirect:/registry/proposal/edit_supersession"; 
 		}
 		else {
-			proposalDto = ProposalDtoFactory.getInstance().getProposalDto(proposal);
+			proposalDto = proposalDtoFactory.getProposalDto(proposal);
 			ServletRequestDataBinder binder = new ServletRequestDataBinder(proposalDto);
 			binder.bind(servletRequest);
 			
@@ -579,7 +587,7 @@ public class ProposalsController
 		}
 
 		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
-		RegisterItemProposalDTO dto = ProposalDtoFactory.getInstance().getProposalDto(itemClass);
+		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(itemClass);
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
 		binder.bind(servletRequest);
 
@@ -620,7 +628,7 @@ public class ProposalsController
 		security.assertHasAnyEntityRelatedRoleForAll(Arrays.asList(MANAGER_ROLE_PREFIX, OWNER_ROLE_PREFIX), proposal.getAffectedRegisters());
 
 //		rvb = new RegisterItemViewBean(proposal);
-		rvb = ViewBeanFactory.getInstance().getViewBean(proposal);
+		rvb = viewBeanFactory.getViewBean(proposal);
 		
 		model.addAttribute("proposal", rvb);
 		

@@ -3,6 +3,7 @@ package org.iso.registry.client;
 import java.lang.reflect.Constructor;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
@@ -16,19 +17,10 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class ViewBeanFactory
 {
-	private static ViewBeanFactory instance;
-	
-	private ItemClassRegistry itemClassRegistry = new ItemClassRegistry();
+	@Autowired
+	private ItemClassRegistry itemClassRegistry;
 
-	private ViewBeanFactory() {
-	}
-	
-	public static ViewBeanFactory getInstance() {
-		if (instance == null) {
-			instance = new ViewBeanFactory();
-		}
-		
-		return instance;
+	public ViewBeanFactory() {
 	}
 	
 	private Constructor<?> findConstructor(RE_ItemClass itemClass, Class<?> argumentType) {

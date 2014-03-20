@@ -15,19 +15,12 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 
 public class ProposalDtoFactory
 {
-	private static ProposalDtoFactory instance;
-	
-	private ItemClassRegistry itemClassRegistry = new ItemClassRegistry();
+	private ItemClassRegistry itemClassRegistry;
 
-	private ProposalDtoFactory() {
-	}
+	private ProposalDtoFactory() {}
 	
-	public static ProposalDtoFactory getInstance() {
-		if (instance == null) {
-			instance = new ProposalDtoFactory();
-		}
-		
-		return instance;
+	public ProposalDtoFactory(ItemClassRegistry registry) {
+		this.itemClassRegistry = registry;
 	}
 	
 	public RegisterItemProposalDTO getProposalDto(RE_ItemClass itemClass) {

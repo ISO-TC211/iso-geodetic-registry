@@ -3,7 +3,9 @@ package org.iso.registry.client.configuration.web;
 import java.util.List;
 import java.util.Properties;
 
+import org.iso.registry.client.ProposalDtoFactory;
 import org.iso.registry.client.RegistryClientViewResolver;
+import org.iso.registry.client.ViewBeanFactory;
 import org.iso.registry.client.configuration.ClientConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -36,6 +38,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegisterServiceImpl;
+import de.geoinfoffm.registry.core.ItemClassRegistry;
 import de.geoinfoffm.registry.core.model.iso19103.CharacterString;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
@@ -212,6 +215,17 @@ public class IsoClientConfiguration extends WebMvcConfigurerAdapter
 	@Bean
 	public RegisterService registerService(RegisterRepository registerRepository) {
 		return new RegisterServiceImpl(registerRepository);
+	}
+	
+	@Bean
+	public ViewBeanFactory viewBeanFactory() {
+		return new ViewBeanFactory();
+	}
+	
+	@Autowired
+	@Bean
+	public ProposalDtoFactory proposalDtoFactory(ItemClassRegistry registry) {
+		return new ProposalDtoFactory(registry);
 	}
 
 }
