@@ -1,0 +1,17 @@
+#! /bin/bash
+
+PROFILES=$@
+
+if [ -z $@ ]; then
+    PROFILESARG=""
+else
+    PROFILESARG="-P ${PROFILES}"
+fi
+
+mkdir -p dist
+rm dist/*
+
+# compile
+mvn -Dmaven.test.skip=true ${PROFILESARG} clean package
+cp iso-registry-client/target/*.war dist
+
