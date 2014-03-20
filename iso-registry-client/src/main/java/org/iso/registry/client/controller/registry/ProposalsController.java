@@ -356,7 +356,7 @@ public class ProposalsController
 		model.addAttribute("register", targetRegister);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 
 		model.addAttribute("isNew", "true");
 		model.addAttribute("partOfSupersession", "true");

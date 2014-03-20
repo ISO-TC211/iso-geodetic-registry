@@ -317,7 +317,7 @@ public class RegisterController
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, register);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 		SupersessionState state = new SupersessionState(register, suborg, itemService);
 		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
 
@@ -417,7 +417,7 @@ public class RegisterController
 		model.addAttribute("register", targetRegister);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 
 		model.addAttribute("isNew", "true");
 

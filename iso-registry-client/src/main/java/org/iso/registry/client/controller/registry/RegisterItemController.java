@@ -169,7 +169,7 @@ public class RegisterItemController
 		}
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 
 		itemService.proposeRetirement(item, justification, suborg);
 
@@ -188,7 +188,7 @@ public class RegisterItemController
 		proposal.setItemUuid(itemUuid);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 		
 		proposal.setProposalType(ProposalType.CLARIFICATION);
 		proposal.setSponsorUuid(suborg.getUuid());
