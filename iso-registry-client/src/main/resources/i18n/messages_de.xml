@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">EPSG Geodetic Parameter Registry</entry>
+	<entry key="application.title">Geodetic Codes and Parameters Registry</entry>
 	
 	<entry key="navbar.setHistoricDate">Zeitpunkt setzen</entry>
 	<entry key="navbar.login">Anmelden</entry>

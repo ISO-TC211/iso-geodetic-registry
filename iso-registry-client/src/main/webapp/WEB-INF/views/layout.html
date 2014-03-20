@@ -24,7 +24,7 @@
 		<link rel="stylesheet" href="../../resources/css/registry.css" th:href="@{__${basePath}__/resources/css/registry.css}" />
 		<style type="text/css">
 			body {
-				padding-top: 60px;
+				padding-top: 100px;
 				padding-bottom: 40px;
 			}
 			
@@ -55,11 +55,12 @@
 				<button id="collapsenavbar" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
 					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" th:href="@{__${basePath}__/}">EPSG Geodetic Parameter Registry</a>
+				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left"/>
+				<a class="navbar-brand" th:href="@{__${basePath}__/}">Geodetic Codes and Parameters Registry</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<div class="collapse navbar-collapse navbar-ex1-collapse" style="margin-top: 40px">
 <!-- 				<ul class="nav navbar-nav"> -->
 <!-- 										<li class="active"><a href="#">Organisationen</a></li> -->
 <!-- 										<li><a href="#">Link</a></li> -->
