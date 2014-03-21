@@ -19,25 +19,19 @@ public class BasePathRedirectView extends RedirectView
 			boolean exposeModelAttributes) {
 		super(url, contextRelative, http10Compatible, exposeModelAttributes);
 
-		if (contextRelative) {
-			this.setUrl(ClientConfiguration.getBasePath() + url);
-		}
+		this.setUrl(ClientConfiguration.getBasePath() + url);
 	}
 
 	public BasePathRedirectView(String url, boolean contextRelative, boolean http10Compatible) {
 		super(url, contextRelative, http10Compatible);
 
-		if (contextRelative) {
-			this.setUrl(ClientConfiguration.getBasePath() + url);
-		}
+		this.setUrl(ClientConfiguration.getBasePath() + url);
 	}
 
 	public BasePathRedirectView(String url, boolean contextRelative) {
 		super(url, contextRelative);
 
-		if (contextRelative) {
-			this.setUrl(ClientConfiguration.getBasePath() + url);
-		}
+		this.setUrl(ClientConfiguration.getBasePath() + url);
 	}
 
 }
