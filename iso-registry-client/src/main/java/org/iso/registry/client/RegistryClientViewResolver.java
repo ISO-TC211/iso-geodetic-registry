@@ -25,7 +25,8 @@ public class RegistryClientViewResolver extends ThymeleafViewResolver
         if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
             vrlogger.trace("[GDIREG] View \"{}\" is a redirect, and will not be handled directly by RegistryClientViewResolver.", viewName);
             final String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
-            return new BasePathRedirectView(redirectUrl, isRedirectContextRelative(), isRedirectHttp10Compatible());
+//          return new BasePathRedirectView(redirectUrl, isRedirectContextRelative(), isRedirectHttp10Compatible());
+          return new BasePathRedirectView(redirectUrl, false, isRedirectHttp10Compatible());
         }
         if (viewName.startsWith(FORWARD_URL_PREFIX)) {
         	throw new RuntimeException("Prefix 'forward:' not yet implemented");
