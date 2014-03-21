@@ -214,7 +214,18 @@
 <!-- 									<li id="nav_register_moni"><a href="#">Monitoring (Register)</a></li> -->
 <!-- 									<li id="nav_register_namespace"><a href="#" th:text="#{navbar.registers.namespaces}">Namensräume (Register)</a></li> -->
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
-									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}"><a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}"></a></li>
+									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}">
+										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}"></a>
+										<ul>
+											<li>
+												<a href="#">Contained item classes</a>
+												<ul>
+													<li><a href="#">Area of Use</a></li>
+													<li><a href="#">Coordinate Reference System</a></li>
+												</ul>
+											</li>
+										</ul>
+									</li>
 								</ul></li>
 								<li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
 								<ul>
