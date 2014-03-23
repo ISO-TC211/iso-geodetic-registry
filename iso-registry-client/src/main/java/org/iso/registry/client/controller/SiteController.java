@@ -39,6 +39,8 @@ import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
 import de.geoinfoffm.registry.api.UserRegistrationException;
+import de.geoinfoffm.registry.client.web.AbstractController;
+import de.geoinfoffm.registry.client.web.SignupFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;

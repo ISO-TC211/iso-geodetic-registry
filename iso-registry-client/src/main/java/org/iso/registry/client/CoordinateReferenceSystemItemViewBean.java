@@ -3,6 +3,7 @@ package org.iso.registry.client;
 import org.iso.registry.core.model.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.CoordinateSystemType;
 
+import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;

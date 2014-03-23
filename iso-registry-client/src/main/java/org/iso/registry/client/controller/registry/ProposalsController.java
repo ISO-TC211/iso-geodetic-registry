@@ -17,10 +17,6 @@ import java.util.UUID;
 import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.iso.registry.client.ProposalDtoFactory;
-import org.iso.registry.client.RegisterItemViewBean;
-import org.iso.registry.client.ViewBeanFactory;
-import org.iso.registry.client.configuration.BasePathRedirectView;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +45,10 @@ import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO.ProposalType;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
+import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.ProposalDtoFactory;
+import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
+import de.geoinfoffm.registry.client.web.ViewBeanFactory;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
@@ -115,7 +115,6 @@ public class ProposalsController
 	@Autowired
 	private ApplicationContext context;
 	
-//	private ItemClassRegistry itemClassRegistry = new ItemClassRegistry();
 	@Autowired
 	private ItemClassRegistry itemClassRegistry;
 	

@@ -11,8 +11,6 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import org.iso.registry.client.RegisterItemViewBean;
-import org.iso.registry.client.configuration.BasePathRedirectView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,10 @@ import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.UpdateUserException;
+import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.NotFoundException;
+import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
+import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
