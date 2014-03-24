@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -19,6 +20,7 @@ import de.geoinfoffm.registry.client.web.AbstractWebMvcConfigurerAdapter;
 @ComponentScan(basePackages = { "org.iso.registry", "de.geoinfoffm.registry" })
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableAsync
 @Configuration
 public class IsoClientConfiguration extends AbstractWebMvcConfigurerAdapter
 {

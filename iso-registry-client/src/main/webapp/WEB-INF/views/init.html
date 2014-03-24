@@ -32,7 +32,7 @@
 
 		$.ajax({
 		      type    : 'GET',
-		      url     : basePath + 'initstart',
+		      url     : basePath + 'init/start',
 		      success : function(data) {
 		                }
 		});
@@ -40,7 +40,7 @@
 		timer = setInterval(function(){
 		    $.ajax({
 		      type    	 : 'GET',
-		      url     	 : basePath + 'initstatus',
+		      url     	 : basePath + 'init/status',
 		      statusCode : {
 		    	  206: function(data) {
     	  					$('#initLog').text(data);
