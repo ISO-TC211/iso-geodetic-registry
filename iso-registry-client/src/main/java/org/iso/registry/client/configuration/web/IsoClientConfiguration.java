@@ -19,6 +19,7 @@ import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -53,6 +54,7 @@ import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 @ComponentScan(basePackages = { "org.iso.registry", "de.geoinfoffm.registry" })
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableAsync
 @Configuration
 public class IsoClientConfiguration extends WebMvcConfigurerAdapter
 {

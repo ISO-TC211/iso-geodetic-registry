@@ -124,8 +124,13 @@ public class SiteController extends AbstractController
 	public String homeHandler() {
 		return "home";
 	}
-	
-	@RequestMapping(value = "/initstatus", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/init", method = RequestMethod.GET)
+	public String initialize(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
+		return "init";
+	}
+
+	@RequestMapping(value = "/init/status", method = RequestMethod.GET)
 	public ResponseEntity<String> initStatus(HttpServletRequest request) {
 		if (initLog == null) {
 			return new ResponseEntity<String>("Not initializing.", HttpStatus.NO_CONTENT);
@@ -138,12 +143,7 @@ public class SiteController extends AbstractController
 		}
 	}
 
-	@RequestMapping(value = "/init", method = RequestMethod.GET)
-	public String initialize(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
-		return "init";
-	}
-
-	@RequestMapping(value = "/initstart", method = RequestMethod.GET)
+	@RequestMapping(value = "/init/start", method = RequestMethod.GET)
 	@Transactional
 	public ResponseEntity<String> initializeStart(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
 		isInitializing = true;
