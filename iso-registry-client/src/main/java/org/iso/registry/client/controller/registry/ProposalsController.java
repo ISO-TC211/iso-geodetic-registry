@@ -41,8 +41,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.ItemNotFoundException;
+import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO.ProposalType;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
@@ -56,6 +56,7 @@ import de.geoinfoffm.registry.core.PropertyConfiguration;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -84,7 +85,10 @@ public class ProposalsController
 	
 	@Autowired
 	private RegisterItemService itemService;
-	
+
+	@Autowired
+	private ProposalService proposalService;
+
 	@Autowired
 	private SubmittingOrganizationRepository suborgRepository;
 	
@@ -129,7 +133,7 @@ public class ProposalsController
 	public View createProposal(@ModelAttribute("proposal") RegisterItemProposalDTO proposal, final Model model) throws InvalidProposalException, ItemNotFoundException, IllegalOperationException, UnauthorizedException {
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, proposal.getTargetRegisterUuid());
 		
-		itemService.propose(proposal);
+		proposalService.propose(proposal);
 		
 		return new BasePathRedirectView("/");
 	}
@@ -298,7 +302,7 @@ public class ProposalsController
 			final Model model, 
 			@RequestParam("item") UUID supersedingItem) throws InvalidProposalException, IllegalOperationException, UnauthorizedException {
 		
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -319,7 +323,7 @@ public class ProposalsController
 			final Model model, 
 			@RequestParam Map<String, String> supersededItems) throws InvalidProposalException, IllegalOperationException, UnauthorizedException {
 		
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		RegisterController.addSupersededItemsToSupersession(request, model, supersededItems, itemService);
 		
@@ -332,7 +336,7 @@ public class ProposalsController
 			   @PathVariable("uuid") UUID proposalUuid, 
 			   final Model model) throws ProposalNotFoundException, UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -406,7 +410,7 @@ public class ProposalsController
 			ServletRequestDataBinder binder = new ServletRequestDataBinder(proposalDto);
 			binder.bind(servletRequest);
 			
-			itemService.updateProposal(proposalDto);
+			proposalService.updateProposal(proposalDto);
 			return "redirect:/";
 		}
 	}
@@ -417,7 +421,7 @@ public class ProposalsController
 			@PathVariable("uuid") UUID proposalUuid, 
 			final Model model) throws UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -446,7 +450,7 @@ public class ProposalsController
 			final Model model,
 			@RequestParam Map<String, String> additionalData) throws UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -478,7 +482,7 @@ public class ProposalsController
 			@PathVariable("uuid") UUID proposalUuid,
 			final Model model) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
@@ -515,7 +519,7 @@ public class ProposalsController
 			existingSuccessors.add(supersedingItem);			
 		}
 		
-		itemService.updateSupersession(supersession, supersededItems, existingSuccessors, state.getNewSupersedingItems(), state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes());
+		proposalService.updateSupersession(supersession, supersededItems, existingSuccessors, state.getNewSupersedingItems(), state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes());
 		
 		proposalRepository.saveAndFlush(supersession);
 		
@@ -590,7 +594,7 @@ public class ProposalsController
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
 		binder.bind(servletRequest);
 
-		itemService.updateProposal(proposal);
+		proposalService.updateProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -607,7 +611,7 @@ public class ProposalsController
 		
 		security.assertMayDelete(proposal);
 		
-		itemService.withdrawProposal(proposal);
+		proposalService.withdrawProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -646,7 +650,7 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.reviewProposal(proposal);
+		proposalService.reviewProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -664,7 +668,7 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.acceptProposal(proposal, controlBodyDecisionEvent);
+		proposalService.acceptProposal(proposal, controlBodyDecisionEvent);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -682,7 +686,7 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.rejectProposal(proposal, controlBodyDecisionEvent);
+		proposalService.rejectProposal(proposal, controlBodyDecisionEvent);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -694,7 +698,7 @@ public class ProposalsController
 		
 		logger.debug("GET /proposal/{}/appeal", proposalUuid);
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
@@ -738,7 +742,7 @@ public class ProposalsController
 //			throw new UnauthorizedException("You are not authorized to access this resource");
 //		}
 
-		itemService.appealProposal(proposal, justification, situation, impact);
+		proposalService.appealProposal(proposal, justification, situation, impact);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -755,12 +759,12 @@ public class ProposalsController
 		
 		security.assertHasEntityRelatedRoleForAll(OWNER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		Appeal appeal = itemService.findAppeal(proposal);
+		Appeal appeal = proposalService.findAppeal(proposal);
 		if (appeal == null) {
 			throw new IllegalOperationException("The proposal is not appealed");
 		}
 
-		itemService.acceptAppeal(appeal);
+		proposalService.acceptAppeal(appeal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -777,12 +781,12 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(OWNER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		Appeal appeal = itemService.findAppeal(proposal);
+		Appeal appeal = proposalService.findAppeal(proposal);
 		if (appeal == null) {
 			throw new IllegalOperationException("The proposal is not appealed");
 		}
 
-		itemService.rejectAppeal(appeal);
+		proposalService.rejectAppeal(appeal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -799,7 +803,7 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.concludeProposal(proposal);
+		proposalService.concludeProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

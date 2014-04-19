@@ -82,7 +82,7 @@ public class ManagementController
 
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
-		List<Proposal> proposals = proposalRepository.findByGroupIsNull();
+		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNullAndGroupIsNull();
 		for (Proposal proposal : proposals) {
 			if (proposal.isPending() && proposal.isReviewed()) {
 				proposalViewBeans.add(new RegisterItemViewBean(proposal));
@@ -105,7 +105,7 @@ public class ManagementController
 
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
-		List<Proposal> proposals = proposalRepository.findByGroupIsNull();
+		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
 		for (Proposal proposal : proposals) {
 			if (!security.hasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
 				continue;

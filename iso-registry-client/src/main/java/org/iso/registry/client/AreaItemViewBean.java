@@ -1,7 +1,6 @@
 package org.iso.registry.client;
 
-import org.iso.registry.core.model.AreaItem;
-import org.iso.registry.core.model.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.AreaItem;
 
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;

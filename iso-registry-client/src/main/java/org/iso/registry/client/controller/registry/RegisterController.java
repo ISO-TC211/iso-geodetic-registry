@@ -46,8 +46,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
+import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO.ProposalType;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
@@ -60,8 +60,8 @@ import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
-import de.geoinfoffm.registry.core.model.SimpleProposal;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
@@ -96,6 +96,9 @@ public class RegisterController
 	
 	@Autowired
 	private RegisterItemService itemService;
+	
+	@Autowired
+	private ProposalService proposalService;
 	
 	@Autowired
 	private RegisterService registerService;
@@ -154,7 +157,7 @@ public class RegisterController
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 //		RE_SubmittingOrganization suborg = null;
-		Collection<Proposal> proposals = proposalRepository.findByGroupIsNull();
+		Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
 		List<RegisterItemViewBean> proposedItemViewBeans = new ArrayList<RegisterItemViewBean>();
 		for (Proposal proposal : proposals) {
 			if(!security.may(BasePermission.READ, proposal)) {
@@ -165,7 +168,7 @@ public class RegisterController
 			if (proposal.hasGroup()) continue;
 			
 			if (proposal.isContainedIn(register)) {
-				Appeal appeal = itemService.findAppeal(proposal);
+				Appeal appeal = proposalService.findAppeal(proposal);
 				if (appeal != null) {
 					proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
 				}
@@ -531,7 +534,7 @@ public class RegisterController
 
 		request.removeAttribute("supersession", WebRequest.SCOPE_SESSION);
 		
-		itemService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
+		proposalService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
 				state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes(), state.getSponsor());
 
 		return new BasePathRedirectView("/register/" + registerName + "/proposals");
@@ -565,7 +568,9 @@ public class RegisterController
 		String itemClassUuid = allParams.get("itemClass");
 		proposal = bindAdditionalAttributes(proposal, servletRequest/*, itemClassUuid*/);
 		
-		Addition addition = itemService.proposeAddition(proposal);
+		Addition addition = proposalService.createAdditionProposal(proposal);
+		proposalService.submitProposal(addition);
+		
 		redirectAttributes.addFlashAttribute("createdItem", addition.getItem().getUuid().toString());
 		
 		return "redirect:/register/" + registerName + "/proposals";

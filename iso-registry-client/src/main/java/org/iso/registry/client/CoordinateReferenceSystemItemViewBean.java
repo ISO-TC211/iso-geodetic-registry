@@ -1,7 +1,7 @@
 package org.iso.registry.client;
 
-import org.iso.registry.core.model.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.CoordinateSystemType;
+import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
@@ -50,12 +50,12 @@ public class CoordinateReferenceSystemItemViewBean extends RegisterItemViewBean
 		
 		CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
 		
-		this.setCode(crsItem.getCode());
-		this.setType(crsItem.getType());
-		this.setAreaName(crsItem.getAreaOfUse().getName());
-		this.setScope(crsItem.getScope());
-		
-		this.addAdditionalProperty("code", crsItem.getCode());
+//		this.setCode(crsItem.getCode());
+//		this.setType(crsItem.getType());
+//		this.setAreaName(crsItem.getAreaOfUse().getName());
+//		this.setScope(crsItem.getScope());
+//		
+//		this.addAdditionalProperty("code", crsItem.getCode());
 	}
 
 	public Integer getCode() {

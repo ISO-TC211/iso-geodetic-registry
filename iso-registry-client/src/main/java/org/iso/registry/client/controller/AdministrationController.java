@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.EntityNotFoundException;
+import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.UpdateUserException;
@@ -70,6 +71,9 @@ public class AdministrationController
 
 	@Autowired
 	private RegisterItemService itemService;
+	
+	@Autowired
+	private ProposalService proposalService;
 
 	@Autowired
 	private ProposalRepository proposalRepository;
@@ -257,7 +261,7 @@ public class AdministrationController
 		for (Proposal proposal : proposals) {
 			if (proposal.hasGroup()) continue; // only show top-level proposals
 			
-			Appeal appeal = itemService.findAppeal(proposal);
+			Appeal appeal = proposalService.findAppeal(proposal);
 			if (appeal != null) {
 				proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
 			}

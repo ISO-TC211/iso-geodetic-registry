@@ -3,8 +3,8 @@ package org.iso.registry.api.initialization;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.iso.registry.api.AreaItemProposalDTO;
-import org.iso.registry.api.CoordinateReferenceSystemItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.core.model.CoordinateSystemType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ViewResolver;
 
+import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
@@ -60,6 +61,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 	@Autowired private RegisterService registerService;
 	@Autowired private RoleService roleService;
 	@Autowired private RegisterItemService itemService;
+	@Autowired private ProposalService proposalService;
 	@Autowired private ViewResolver viewResolver;
 	@Autowired private RegistrySecurity security;
 	@Autowired private MutableAclService mutableAclService;
@@ -97,7 +99,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 			suborgRepository.save(orgExample);
 
 			RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
-			RegistryUser ex = createUser("John Submitter", "s", "submitter@example.org");
+			RegistryUser ex = createUser("Sam Submitter", "s", "submitter@example.org");
 
 			String registerName = "EPSG Geodetic Parameter Data Set";
 			RE_Register r = registerService.findByName(registerName);
@@ -126,6 +128,10 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 						@Override
 						public void run(AreaItemProposalDTO parameter) {
 							parameter.setCode(1262);
+							parameter.setSouthBoundLatitude(-90.0);
+							parameter.setNorthBoundLatitude(+90.0);
+							parameter.setWestBoundLongitude(-180.0);
+							parameter.setEastBoundLongitude(+180.0);
 						}
 					});
 			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
@@ -133,6 +139,10 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 						@Override
 						public void run(AreaItemProposalDTO parameter) {
 							parameter.setCode(1624);
+							parameter.setSouthBoundLatitude(49.1);
+							parameter.setNorthBoundLatitude(53.75);
+							parameter.setWestBoundLongitude(5.87);
+							parameter.setEastBoundLongitude(7.5);
 						}
 					});
 
@@ -140,11 +150,11 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 					new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {
 						@Override
 						public void run(CoordinateReferenceSystemItemProposalDTO parameter) {
-							parameter.setCode(4326);
-							parameter.setAreaUuid(worldArea.getUuid());
-							parameter
-									.setScope("Horizontal component of 3D system. Used by the GPS satellite navigation system and for NATO military geodetic surveying.");
-							parameter.setType(CoordinateSystemType.GEOGRAPHIC_2D);
+//							parameter.setCode(4326);
+//							parameter.setArea(new AreaItemProposalDTO(worldArea.getUuid()));
+//							parameter.setScope("Horizontal component of 3D system. Used by the GPS satellite navigation "
+//									+ "system and for NATO military geodetic surveying.");
+//							parameter.setType(CoordinateSystemType.GEOGRAPHIC_2D);
 						}
 					});
 
@@ -197,7 +207,9 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 
 		logger.info("> Adding item {}' of class {}' to register '{}'...", new Object[] { proposal.getName(), itemClass.getName(), register.getName() });
 
-		Addition ai = itemService.proposeAddition(proposal);
+		Addition ai = proposalService.createAdditionProposal(proposal);
+		proposalService.submitProposal(ai);
+		
 		String decisionEvent = "Decision event";
 		acceptProposal(ai, decisionEvent);
 
@@ -206,8 +218,8 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 
 	protected void acceptProposal(Addition ai, String decisionEvent) throws InvalidProposalException {
 		try {
-			itemService.reviewProposal(ai);
-			itemService.acceptProposal(ai, decisionEvent);
+			proposalService.reviewProposal(ai);
+			proposalService.acceptProposal(ai, decisionEvent);
 		}
 		catch (IllegalOperationException e) {
 			// TODO Auto-generated catch block
