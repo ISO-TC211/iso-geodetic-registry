@@ -32,7 +32,7 @@
 									<td th:utext="#{${item.proposalType}}"></td>											
 									<td th:text="#{${item.proposalStatus}}"></td>
 									<td>
-										<div class="btn-group">
+										<div class="btn-group" th:unless="${item.proposalGroupUuid}">
 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
 											</button>

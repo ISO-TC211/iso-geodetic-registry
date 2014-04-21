@@ -2,6 +2,7 @@ package org.iso.registry.api.registry.registers.gcp.crs;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -17,7 +18,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 @Audited @Entity 
 public abstract class ReferenceSystemItem extends IdentifiedItem
 {
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private AreaItem domainOfValidity;
 
 	public ReferenceSystemItem() {

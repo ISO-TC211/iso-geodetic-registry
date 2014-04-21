@@ -1,5 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
@@ -14,10 +17,9 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 
-@ItemFactory({ "GeodeticCRS" })
-public class CoordinateReferenceSystemItemFactory 
-extends RegisterItemFactoryImpl<CoordinateReferenceSystemItem, CoordinateReferenceSystemItemProposalDTO> 
-implements RegisterItemFactory<CoordinateReferenceSystemItem, CoordinateReferenceSystemItemProposalDTO>
+public abstract class CoordinateReferenceSystemItemFactory<I extends CoordinateReferenceSystemItem, D extends CoordinateReferenceSystemItemProposalDTO>
+extends RegisterItemFactoryImpl<I, D> 
+implements RegisterItemFactory<I, D>
 {
 	@Autowired
 	private AreaItemRepository areaRepository;
@@ -25,30 +27,39 @@ implements RegisterItemFactory<CoordinateReferenceSystemItem, CoordinateReferenc
 	@Autowired
 	private ItemClassRepository itemClassRepository;
 	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
 //	@Autowired
 //	private ItemFactoryRegistry itemFactories; 
 	
 	@Override
-	public CoordinateReferenceSystemItem createRegisterItem(CoordinateReferenceSystemItemProposalDTO proposal) {
-		CoordinateReferenceSystemItem result = super.createRegisterItem(proposal);
+	public I createRegisterItem(D proposal) {
+		I result = super.createRegisterItem(proposal);
 
 		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
 
 		AreaItemProposalDTO areaDto = proposal.getDomainOfValidity();
-		
 		AreaItem area;
 		if (areaDto.getReferencedItemUuid() != null) {
 			area = areaRepository.findOne(areaDto.getReferencedItemUuid());
 		}
 		else {
-//			RegisterItemFactory<RE_RegisterItem, RegisterItemProposalDTO> registerItemFactory = 
-//					(RegisterItemFactory<RE_RegisterItem, RegisterItemProposalDTO>)itemFactories.getFactory(itemClass.getName());
-//
-//			area = (AreaItem)registerItemFactory.createRegisterItem(areaDto);
-			area = null;
+			ItemFactoryRegistry itemFactories = context.getBean(ItemFactoryRegistry.class);
+			RegisterItemFactory<RE_RegisterItem, RegisterItemProposalDTO> registerItemFactory = 
+					(RegisterItemFactory<RE_RegisterItem, RegisterItemProposalDTO>)itemFactories.getFactory("Area");
+
+			RE_ItemClass icArea = itemClassRepository.findByName("Area");
+			areaDto.setItemClassUuid(icArea.getUuid());
+			areaDto.setTargetRegisterUuid(proposal.getTargetRegisterUuid());
+			
+			area = (AreaItem)registerItemFactory.createRegisterItem(areaDto);
+			areaDto.setAdditionalValues(area, entityManager);
+			
+			proposal.addDependentItem(area);
 		}
-		
 		result.setDomainOfValidity(area);
+		
 		result.setScope(proposal.getScope());
 		result.setRemarks(proposal.getRemarks());
 		

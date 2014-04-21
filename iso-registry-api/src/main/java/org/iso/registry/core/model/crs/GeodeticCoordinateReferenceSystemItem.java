@@ -33,7 +33,7 @@ public class GeodeticCoordinateReferenceSystemItem extends SingleCoordinateRefer
 	 * Association to the coordinate system used by this geodetic
 	 * CRS.
 	 */
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private CoordinateSystemItem coordinateSystem;
 	
 	protected GeodeticCoordinateReferenceSystemItem() {
@@ -73,7 +73,12 @@ public class GeodeticCoordinateReferenceSystemItem extends SingleCoordinateRefer
 		return coordinateSystem;
 	}
 
-	protected void setCoordinateSystem(CoordinateSystemItem newVal) {
+	public void setCoordinateSystem(CoordinateSystemItem newVal) {
+		if (!((newVal instanceof CartesianCoordinateSystemItem) 
+		       || (newVal instanceof EllipsoidalCoordinateSystemItem) 
+		       || (newVal instanceof SphericalCoordinateSystemItem))) {
+			throw new IllegalArgumentException("Illegal coordinate system type for Geodetic CRS");
+		}
 		coordinateSystem = newVal;
 	}
 	

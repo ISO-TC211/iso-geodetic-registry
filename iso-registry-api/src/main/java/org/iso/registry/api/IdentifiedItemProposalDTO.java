@@ -1,7 +1,10 @@
 package org.iso.registry.api;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.iso.registry.api.registry.registers.gcp.AliasDTO;
 import org.iso.registry.core.model.Alias;
@@ -20,6 +23,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 //	private String nameCodespaceVersion;
 //	private CI_Citation nameCodespaceCitation;
 	
+	private Integer code;
 	private List<AliasDTO> aliases;
 	private String remarks;
 
@@ -42,6 +46,14 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 
 	public IdentifiedItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
 		super(item, sponsor);
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
 	public List<AliasDTO> getAliases() {
@@ -67,16 +79,18 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		this.remarks = remarks;
 	}
 	
-//	@Override
-//	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
-//		super.setAdditionalValues(registerItem, entityManager);
-//		
-//		if (registerItem instanceof IdentifiedItem) {
-//			IdentifiedItem item = (IdentifiedItem)registerItem;
-//
-//			item.setAliases(aliases);
-//		}
-//	}
+	@Override
+	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
+		super.setAdditionalValues(registerItem, entityManager);
+
+		if (registerItem instanceof IdentifiedItem) {
+			IdentifiedItem item = (IdentifiedItem)registerItem;
+			
+			item.setCode(this.getCode());
+			item.setItemIdentifier(BigInteger.valueOf(this.getCode().longValue()));
+			item.setRemarks(this.getRemarks());
+		}
+	}
 
 	@Override
 	public void loadAdditionalValues(RE_RegisterItem registerItem) {
@@ -88,6 +102,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			for (Alias alias : item.getAliases()) {
 				this.addAlias(new AliasDTO(alias));
 			}
+			this.setCode(item.getCode());
 			this.setRemarks(item.getRemarks());
 		}
 	}

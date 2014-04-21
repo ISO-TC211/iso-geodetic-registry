@@ -5,13 +5,34 @@
 <body>
 	<div th:include="layout :: navbarFragment"></div>
 
-	<div class="container">
-		<div class="row clearfix">
-			<div class="col-md-6 column" th:object="${proposal}">
-				<div class="panel" th:classappend="${proposal.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${proposal.isSupersession()}">
+	<div th:if="${proposal.isProposalGroup()}" style="padding: 10px">
+		<div class="row">
+			<div class="col-md-3">
+				<ul class="nav nav-pills nav-stacked">
+					<li th:each="member : ${proposal.memberProposals}" class="proposal-pill">
+						<a th:href="'#' + ${member.uuid}" th:text="${member.name}" data-toggle="pill"></a>
+					</li> 
+				</ul>
+			</div>
+
+			<div class="col-md-9">
+				<div class="tab-content">
+					<div th:each="member : ${proposal.memberProposals}" th:id="${member.uuid}" class="tab-pane in proposal-pane" style="padding-top: 10px" th:with="current=${member}">
+						<div th:include=":: proposalDetails"/>
+					</div>
+				</div>
+			</div>		
+
+		</div>
+	</div>
+
+	<div th:unless="${proposal.isProposalGroup()}" class="container">
+		<div class="row clearfix" th:with="current=${proposal}" th:fragment="proposalDetails">
+			<div class="col-md-6 column" th:object="${current}">
+				<div class="panel" th:classappend="${current.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${current.isSupersession()}">
 					<div class="panel-heading">
-						<h3 th:if="${proposal.isAddition()}" class="panel-title" th:text="#{header.proposedItem}">Proposed item</h3>
-						<h3 th:if="${proposal.isRetirement()}" class="panel-title" th:text="#{header.retiredItem}">Retired item</h3>
+						<h3 th:if="${current.isAddition()}" class="panel-title" th:text="#{header.proposedItem}">Proposed item</h3>
+						<h3 th:if="${current.isRetirement()}" class="panel-title" th:text="#{header.retiredItem}">Retired item</h3>
 					</div>
 					<table class="table table-striped">
 						<tbody>
@@ -19,7 +40,7 @@
 								<td th:text="#{itemIdentifier}"></td>
 								<td th:text="*{itemIdentifier}"></td>
 							</tr>
-							<tr th:if="${proposal.isAddition()}">
+							<tr th:if="${current.isAddition()}">
 								<td th:text="#{targetRegister}"></td>
 								<td th:text="*{registerName}"></td>
 							</tr>
@@ -43,13 +64,13 @@
 					</table>
 				</div>
 
-				<div class="panel panel-info" th:if="${proposal.isClarification()}">
+				<div class="panel panel-info" th:if="${current.isClarification()}">
 					<div class="panel-heading">
 						<h3 class="panel-title" th:text="#{header.proposedChanges}">Proposed changes</h3>
 					</div>
 					<table class="table table-striped">
 						<tbody>
-							<tr th:each="change : ${proposal.getProposedChange()}">
+							<tr th:each="change : ${current.getProposedChange()}">
 								<td th:text="#{${change.key}}"></td>
 								<td th:text="${change.value}"></td>
 							</tr>
@@ -57,8 +78,8 @@
 					</table>
 				</div>
 			</div>
-			<div class="column" th:classappend="${proposal.isSupersession()} ? 'col-md-12' : 'col-md-6'">
-				<div class="panel panel-default" th:object="${proposal}">
+			<div class="column" th:classappend="${current.isSupersession()} ? 'col-md-12' : 'col-md-6'">
+				<div class="panel panel-default" th:object="${current}">
 					<div class="panel-heading">
 						<h3 class="panel-title" th:text="#{header.proposalData}">Proposal data</h3>
 					</div>
@@ -90,9 +111,9 @@
 			</div>
 		</div>
 
-		<div class="row clearfix" th:if="${proposal.isSupersession()}">
+		<div class="row clearfix" th:if="${current.isSupersession()}">
 			<div class="col-md-12 column">
-				<div class="panel panel-danger" th:if="${proposal.isSupersession()}">
+				<div class="panel panel-danger" th:if="${current.isSupersession()}">
 					<div class="panel-heading">
 						<h3 class="panel-title" th:text="#{header.supersededItems}">Superseded items</h3>
 					</div>
@@ -106,7 +127,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="item : ${proposal.supersededItems}">
+							<tr th:each="item : ${current.supersededItems}">
 								<td th:text="${item.name}"></td>
 								<td th:text="${item.definition}"></td>
 								<td th:text="${item.description}"></td>
@@ -115,7 +136,7 @@
 					</table>
 				</div>
 
-				<div class="panel panel-success" th:if="${proposal.isSupersession()}">
+				<div class="panel panel-success" th:if="${current.isSupersession()}">
 					<div class="panel-heading">
 						<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3>
 					</div>
@@ -129,7 +150,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="item : ${proposal.supersedingItems}">
+							<tr th:each="item : ${current.supersedingItems}">
 								<td th:text="${item.name}"></td>
 								<td th:text="${item.definition}"></td>
 								<td th:text="${item.description}"></td>
@@ -139,8 +160,10 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="row clearfix">
+	</div>
+	<div class="row">
+		<div class="col-md-3"/>
+		<div class="col-md-9">
 			<div class="col-md-12 column">
 				<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
 				<div class="pull-right" th:if="${proposal.isUnderReview()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_MANAGER_', #vars.proposal.registerUuid)">
@@ -149,11 +172,6 @@
 				<div class="pull-right" th:if="${proposal.isPending()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_CONTROLBODY_', #vars.proposal.registerUuid)">
 					<button td:id="'accept-' + ${proposal.prpoosalUuid}" class="btn btn-success" th:href="'#confirmaccept-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.accept}">Akzeptieren</button>
 					<button td:id="'reject-' + ${proposal.prpoosalUuid}" class="btn btn-danger" th:href="'#confirmreject-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.reject}">Ablehnen</button>
-					
-
-					
-<!-- 					<button class="btn btn-success" th:text="#{button.accept}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/accept'} + '\', goback);'">Akzeptieren</button> -->
-<!-- 					<button class="btn btn-danger" th:text="#{button.reject}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/reject'} + '\', goback);'">Ablehnen</button> -->
 				</div>
 				
 				<div class="modal fade" th:id="'confirmaccept-' + ${proposal.proposalUuid}" role="dialog">
@@ -163,7 +181,7 @@
 								<h4 th:text="#{popup.acceptProposal.header}">Vorschlag annehmen</h4>
 							</div>
 							<div class="modal-body">
-<!-- 								<form th:action="@{__${basePath}__/proposals/__${proposal.proposalUuid}__/accept}" method="post"> -->
+	<!-- 								<form th:action="@{__${basePath}__/proposals/__${proposal.proposalUuid}__/accept}" method="post"> -->
 								<form id="decisionEventForm">
 									<p th:text="#{popup.acceptProposal.controlBodyDecisionEvent}">
 										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
@@ -181,11 +199,11 @@
 								<button class="btn btn-success" th:text="#{button.confirm}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/accept'} + '\', $(\'form#decisionEventForm\').serialize(), goback);'">Bestätigen</button>
 								<button id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
 							</div>
-<!-- 							</form> -->
+	<!-- 							</form> -->
 						</div>
 					</div>
 				</div>
-
+	
 				<div class="modal fade" th:id="'confirmreject-' + ${proposal.proposalUuid}" role="dialog">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -216,7 +234,14 @@
 				
 			</div>
 		</div>
-
 	</div>
 </body>
+<script type="text/javascript" th:inline="text">
+/* <![CDATA[ */
+	$(document).ready(function() {
+		$('.proposal-pill').first().addClass('active');
+		$('.proposal-pane').first().addClass('active');		
+	});
+	/* ]]> */
+</script>
 </html>

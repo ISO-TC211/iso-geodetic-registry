@@ -1,5 +1,6 @@
 package org.iso.registry.core.model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,13 +8,10 @@ import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 
 import org.hibernate.envers.Audited;
 
-import de.geoinfoffm.registry.core.model.iso19115.RS_Identifier;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
@@ -23,6 +21,8 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 @Audited @Entity
 public abstract class IdentifiedItem extends RE_RegisterItem
 {
+	private Integer code;
+	
 	@ElementCollection
 	private List<Alias> aliases;
 	
@@ -36,6 +36,14 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 			RE_AdditionInformation additionInformation) {
 		
 		super(register, itemClass, name, definition, additionInformation);
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
 	public List<Alias> getAliases() {

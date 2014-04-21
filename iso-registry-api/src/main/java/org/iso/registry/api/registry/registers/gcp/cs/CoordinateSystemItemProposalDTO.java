@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
-import org.iso.registry.core.model.cs.EllipsoidalCoordinateSystemItem;
 
 public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 {

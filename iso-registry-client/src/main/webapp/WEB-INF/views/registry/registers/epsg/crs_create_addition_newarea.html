@@ -1,0 +1,27 @@
+<div th:fragment="newArea">
+	<div id="newAreaPanel" class="panel panel-danger" th:if="${itemClass}">
+		<div class="panel-heading">
+			<h3 class="panel-title" th:text="#{header.area}" style="display: inline;">Details for area</h3>
+			<div class="pull-right">
+				<button id="newAreaPanelDismiss" type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+			</div>
+		</div>
+
+		<div class="panel-body" th:object="${proposal.domainOfValidity}">
+			<ul class="nav nav-tabs">
+  				<li class="active"><a href="#area" data-toggle="tab">Area details</a></li>
+  				<li><a href="#areaMgmt" data-toggle="tab">Management data</a></li>
+			</ul>
+		
+			<div class="tab-content">
+				<div id="area" class="tab-pane in active" style="padding-top: 10px">
+					<div th:include="registry/registers/epsg/area_create_addition :: areaDetails"/>
+				</div>
+				
+				<div id="areaMgmt" class="tab-pane in" style="padding-top: 10px">
+					<div th:include="registry/registers/epsg/area_create_addition :: proposalDetails"/>
+				</div>				
+			</div>
+		</div>		
+	</div>
+</div>

@@ -1,5 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.datum.DatumItem;
@@ -32,7 +35,8 @@ implements RegisterItemFactory<DatumItem, DatumItemProposalDTO>
 	@Autowired
 	private PrimeMeridianItemRepository primeMeridianRepository;
 	
-	
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	@Override
 	public DatumItem createRegisterItem(DatumItemProposalDTO proposal) {
@@ -41,6 +45,7 @@ implements RegisterItemFactory<DatumItem, DatumItemProposalDTO>
 		}
 		else {
 			DatumItem result = super.createRegisterItem(proposal);
+			proposal.setAdditionalValues(result, entityManager);
 			
 			result.setAnchorDefinition(proposal.getAnchorDefinition());
 			if (proposal.getDomainOfValidity() != null && proposal.getDomainOfValidity().getItemUuid() != null) {

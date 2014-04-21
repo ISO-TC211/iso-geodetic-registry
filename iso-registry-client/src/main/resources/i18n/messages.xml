@@ -52,7 +52,7 @@
 	<entry key="tableheader.shortName">Short name</entry>
 	<entry key="tableheader.category">Category</entry>
 	<entry key="tableheader.appealStatus">Appeal status</entry>
-	<entry key="tableheader.itemIdentifier">ID</entry>
+	<entry key="tableheader.itemIdentifier">Item ID</entry>
 	<entry key="tableheader.definition">Definition</entry>
 	<entry key="tableheader.description">Description</entry>
 	<entry key="tableheader.role">Role</entry>
@@ -77,8 +77,8 @@
 	<entry key="header.editUser">Edit user</entry>
 	<entry key="header.signup">Sign up</entry>
 	<entry key="header.proposedChanges">Proposed changes</entry>
-	<entry key="header.proposedItem">Vorgeschlagener Eintrag</entry>
-	<entry key="header.retiredItem">Aufzugebender Eintrag</entry>
+	<entry key="header.proposedItem">Proposed item</entry>
+	<entry key="header.retiredItem">Item to retire</entry>
 	<entry key="header.managementInformation">Manegement information</entry>
 	<entry key="header.additionInformation">Addition information</entry>
 	<entry key="header.amendmentInformation">Amendment information</entry>
@@ -96,6 +96,7 @@
 	<entry key="button.acceptProposal">Accept</entry>
 	<entry key="button.rejectProposal">Reject</entry>
 	<entry key="button.withdrawProposal">Withdraw</entry>
+	<entry key="button.saveProposal">Save proposal</entry>
 	<entry key="button.finalizeProposal">End appeal period</entry>
 	<entry key="button.appealProposal">Appeal to owner</entry>
 	<entry key="button.acceptAppeal">Accept appeal</entry>
@@ -142,7 +143,9 @@
 	<entry key="CLARIFICATION">Clarification</entry>
 	<entry key="SUPERSESSION">Supersession</entry>
 	<entry key="RETIREMENT">Retirement</entry>
+	<entry key="GROUP">Proposal Group</entry>
 	
+	<entry key="NOT_SUBMITTED">not yet submitted</entry>
 	<entry key="UNDER_REVIEW">waiting for review by register manager</entry>
 	<entry key="IN_APPROVAL_PROCESS">waiting for approval by control body</entry>
 	<entry key="APPEALABLE">appealable</entry>
@@ -244,6 +247,15 @@
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Area of Use</entry>
+	<entry key="form.label.datum">Datum</entry>
+	<entry key="form.label.coordinateSystem">Coordinate System</entry>
+	<entry key="form.label.isoA2Code">ISO Alpha-2 Code</entry>
+	<entry key="form.label.isoA3Code">ISO Alpha-3 Code</entry>
+	<entry key="form.label.isoNCode">ISO num. Code</entry>
+	<entry key="form.label.northernLatitude">Northern Lat</entry>
+	<entry key="form.label.southernLatitude">Southern Lat</entry>
+	<entry key="form.label.easternLongitude">Eastern Lon</entry>
+	<entry key="form.label.westernLongitude">Western Lon</entry>
 	
 	<entry key="form.select.choose">-- Select --</entry>
 		
@@ -263,7 +275,15 @@
 	<entry key="form.placeholder.confirmPassword">Confirm password</entry>
 	<entry key="form.placeholder.code">Code</entry>
 	<entry key="form.placeholder.scope">Scope</entry>
-
+	
+	<entry key="form.placeholder.isoA2Code"></entry>
+	<entry key="form.placeholder.isoA3Code"></entry>
+	<entry key="form.placeholder.isoNCode"></entry>
+	<entry key="form.placeholder.northernLatitude"></entry>
+	<entry key="form.placeholder.southernLatitude"></entry>
+	<entry key="form.placeholder.easternLongitude"></entry>
+	<entry key="form.placeholder.westernLongitude"></entry>
+	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
 	<entry key="form.signup.help.organizationName">In case your organization is not listed, please provide it here</entry>
@@ -319,4 +339,14 @@
 	<entry key="organizationNameShortForm">Abbreviated organization name</entry>
 	<entry key="onlineResourceWebsite">Organization web site</entry>
 	<entry key="onlineResourceLogo">Organization logo</entry>
+
+	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
+	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
+	<entry key="UnitOfMeasure">Unit of Measurement</entry>
+	<entry key="GeodeticCRS">Geodetic CRS</entry>
+	<entry key="Ellipsoid">Ellipsoid</entry>
+	<entry key="Area">Area</entry>
+	<entry key="GeodeticDatum">Geodetic Datum</entry>
+	<entry key="PrimeMeridian">Prime Meridian</entry>
+
 </properties>

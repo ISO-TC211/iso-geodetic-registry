@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.Hibernate;
 import org.iso.registry.client.controller.registry.ProposalNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,13 @@ import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalFactory;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
+import de.geoinfoffm.registry.core.model.iso19135.RE_ProposalManagementInformation;
+import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.security.RegistryPermission;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.AppealRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
+import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 
 /**
  * @author Florian.Esser
@@ -49,12 +54,16 @@ public class ManagementController
 
 	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
+
+	@Autowired
+	private SubmittingOrganizationRepository suborgRepository;
 	
 	@Autowired
 	private ProposalFactory proposalFactory;
 	
 	@Autowired
 	private RegistrySecurity security;
+
 	
 	@RequestMapping(value = "/owner", method = RequestMethod.GET)
 	@Transactional
@@ -105,7 +114,7 @@ public class ManagementController
 
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
-		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
+		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNullAndGroupIsNull();
 		for (Proposal proposal : proposals) {
 			if (!security.hasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
 				continue;
@@ -122,36 +131,41 @@ public class ManagementController
 		return "mgmt/manager";
 	}
 
-//	@RequestMapping(value = "/submitter", method = RequestMethod.GET)
-//	@Transactional(readOnly = true)
-//	public String submitterOverview(final Model model) throws UnauthorizedException {
-//		security.assertHasRoleWith(RegistrySecurity.SUBMITTER_ROLE_PREFIX);
-//		
-//		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
-//		
-//		List<Proposal> proposals = proposalRepository.findBySponsorAndGroupIsNull(RegistryUserUtils.getUserSponsor(userRepository));
-//		for (Proposal proposal : proposals) {
-////			if (!security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
-//			if (!security.may(READ, proposal)) {
-//				continue;
-//			}
-//
-//			Appeal appeal = appealRepository.findByAppealedProposal(proposal);
-//			
-//			if (appeal != null && !appeal.isDecided()) {
-//				proposalViewBeans.add(new RegisterItemViewBean(appeal));
-//			}
-//			else {
-//				if (!proposal.isFinal()) {
-//					proposalViewBeans.add(new RegisterItemViewBean(proposal));
-//				}
-//			}
-//		}
-//
-//		model.addAttribute("proposals", proposalViewBeans);
-//
-//		return "mgmt/submitter";
-//	}
+	@RequestMapping(value = "/submitter", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String submitterOverview(final Model model) throws UnauthorizedException {
+		security.assertHasRoleWith(RegistrySecurity.SUBMITTER_ROLE_PREFIX);
+		
+		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
+
+		RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
+		List<Proposal> proposals = proposalRepository.findBySponsorAndGroupIsNull(sponsor);
+		for (Proposal proposal : proposals) {
+//			if (!security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
+//			Hibernate.initialize(proposal.getProposalManagementInformations());
+			if (!security.may(RegistryPermission.READ, proposal)) {
+				continue;
+			}
+
+			Appeal appeal = appealRepository.findByAppealedProposal(proposal);
+			
+			if (appeal != null && !appeal.isDecided()) {
+				proposalViewBeans.add(new RegisterItemViewBean(appeal));
+			}
+			else {
+				if (!proposal.isFinal()) {
+//					for (RE_ProposalManagementInformation pmi : proposal.getProposalManagementInformations()) {
+//						Hibernate.initialize(pmi);
+//					}
+					proposalViewBeans.add(new RegisterItemViewBean(proposal));
+				}
+			}
+		}
+
+		model.addAttribute("proposals", proposalViewBeans);
+
+		return "mgmt/submitter";
+	}
 
 	@RequestMapping(value = "/review/{uuid}", method = RequestMethod.GET)
 	@Transactional

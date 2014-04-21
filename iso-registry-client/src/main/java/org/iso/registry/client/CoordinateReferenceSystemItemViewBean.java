@@ -2,44 +2,42 @@ package org.iso.registry.client;
 
 import org.iso.registry.core.model.CoordinateSystemType;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 
-import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
-public class CoordinateReferenceSystemItemViewBean extends RegisterItemViewBean
+public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBean
 {
 	private Integer code;
 	private CoordinateSystemType type;
 	private String scope;
-	private String areName;
+	private String areaName;
+	private AreaItemViewBean domainOfValidity;
+	private DatumItemViewBean datum;
+	private CoordinateSystemItemViewBean coordinateSystem;
 
 	public CoordinateReferenceSystemItemViewBean(Appeal appeal) {
 		super(appeal);
-		// TODO Auto-generated constructor stub
 	}
 
 	public CoordinateReferenceSystemItemViewBean(Proposal proposal) {
 		super(proposal);
-		// TODO Auto-generated constructor stub
 	}
 
 	public CoordinateReferenceSystemItemViewBean(RE_RegisterItem item) {
 		super(item);
-		// TODO Auto-generated constructor stub
 	}
 
 	public CoordinateReferenceSystemItemViewBean(SimpleProposal proposal) {
 		super(proposal);
-		// TODO Auto-generated constructor stub
 	}
 
 	public CoordinateReferenceSystemItemViewBean(Supersession supersession) {
 		super(supersession);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -49,11 +47,27 @@ public class CoordinateReferenceSystemItemViewBean extends RegisterItemViewBean
 		}
 		
 		CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
+		if (crsItem instanceof GeodeticCoordinateReferenceSystemItem) {
+			switch (((GeodeticCoordinateReferenceSystemItem)crsItem).getCoordinateSystem().getAxes().size()) {
+				case 2:
+					this.setType(CoordinateSystemType.GEOGRAPHIC_2D);
+					break;
+				case 3:
+					this.setType(CoordinateSystemType.GEOGRAPHIC_3D);
+					break;
+			}
+			
+			this.setCoordinateSystem(new CoordinateSystemItemViewBean(((GeodeticCoordinateReferenceSystemItem)crsItem).getCoordinateSystem()));
+			this.setDatum(new DatumItemViewBean(((GeodeticCoordinateReferenceSystemItem)crsItem).getDatum()));
+		}
+		
+		this.setAreaName(crsItem.getDomainOfValidity().getName());
+		this.setDomainOfValidity(new AreaItemViewBean(crsItem.getDomainOfValidity()));
+		this.setScope(crsItem.getScope());
 		
 //		this.setCode(crsItem.getCode());
 //		this.setType(crsItem.getType());
 //		this.setAreaName(crsItem.getAreaOfUse().getName());
-//		this.setScope(crsItem.getScope());
 //		
 //		this.addAdditionalProperty("code", crsItem.getCode());
 	}
@@ -83,10 +97,34 @@ public class CoordinateReferenceSystemItemViewBean extends RegisterItemViewBean
 	}
 
 	public String getAreaName() {
-		return areName;
+		return areaName;
 	}
 
 	public void setAreaName(String areaName) {
-		this.areName = areaName;
+		this.areaName = areaName;
+	}
+
+	public AreaItemViewBean getDomainOfValidity() {
+		return domainOfValidity;
+	}
+
+	public void setDomainOfValidity(AreaItemViewBean domainOfValidity) {
+		this.domainOfValidity = domainOfValidity;
+	}
+
+	public DatumItemViewBean getDatum() {
+		return datum;
+	}
+
+	public void setDatum(DatumItemViewBean datum) {
+		this.datum = datum;
+	}
+
+	public CoordinateSystemItemViewBean getCoordinateSystem() {
+		return coordinateSystem;
+	}
+
+	public void setCoordinateSystem(CoordinateSystemItemViewBean coordinateSystem) {
+		this.coordinateSystem = coordinateSystem;
 	}
 }

@@ -23,63 +23,16 @@
 						</div>
 						
 						<div class="panel-body">
-							<div class="row">
-	
-								<div class="col-md-6">
-									<!-- Text input-->
-									<div class="row">
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label>
-												<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.code}" class="form-control disabled" required="true" type="number" th:field="*{code}" disabled="disabled"/>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="control-label" for="crsType" th:text="#{form.label.crsType}">Code</label>
-												<select id="crsType" class="disabled" required="true" th:field="*{type}" disabled="disabled">
-													<option th:each="crsType : ${T(org.iso.registry.core.model.CoordinateSystemType).values()}" th:value="${crsType}" th:text="#{__${crsType}__}"></option>
-												</select>
-											</div>
-										</div>
-									</div>
-	
-									<div class="row">
-										<div class="col-md-12">
-											<div class="form-group">
-												<label class="control-label" for="name" th:text="#{form.label.name}">Name</label>
-												<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control disabled" required="true" type="text" th:field="*{name}" disabled="disabled"/>
-											</div>
-	
-										</div>
-									</div>
-	
-									<div class="row">
-										<div class="col-md-12">
-											<div class="form-group">
-												<label class="control-label" for="scope" th:text="#{form.label.scope}">Scope</label>
-												<textarea id="scope" name="scope" rows="2" cols="60" th:placeholder="#{form.placeholder.scope}" class="form-control disabled" required="required" type="text" th:field="*{scope}" disabled="disabled"/>
-											</div>
-	
-										</div>
-									</div>
-									
-								</div>
-	
-								<div class="col-md-6">
-									<!-- Text input-->
-									<div class="controls">
-										<div class="form-group">
-											<label class="control-label" for="areaOfUse" th:text="#{form.label.areaOfUse}">Area of Use</label>
-											<input id="areaName" name="areaName" th:placeholder="#{form.placeholder.areaName}" class="form-control disabled" required="true" type="text" th:field="*{areaName}" disabled="disabled"/>
-										</div>
-									</div>
-								</div>
-								
-								</div>
+							<div th:include="registry/registers/epsg/crs_create_addition :: crsDetails"/>
+
+							<!-- Text input-->
+							<div class="form-group">
+								<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
+								<textarea id="definition" name="definition" readonly="readonly" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" /> 
+							</div>
+
 						</div>
 					</div>
-	
 				</div>
 			</div>
 
@@ -253,4 +206,20 @@
 		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 	</div>
 </body>
+<script type="text/javascript" th:inline="text">
+/* <![CDATA[ */
+	$(document).ready(function() {
+		$.each($('.required'), function() {
+	    	$(this).parent().removeClass('has-error');
+	    	$(this).siblings('span').first().hide();
+	    	$(this).attr('readonly', 'readonly');
+		});
+		$.each($('.has-error'), function() {
+	    	$(this).removeClass('has-error');
+	    	$(this).removeClass('has-feedback');
+		});
+	});
+/* ]]> */
+</script>
+
 </html>

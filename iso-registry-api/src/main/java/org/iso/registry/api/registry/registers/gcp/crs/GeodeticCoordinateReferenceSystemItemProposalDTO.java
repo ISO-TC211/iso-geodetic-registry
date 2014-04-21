@@ -4,6 +4,7 @@ import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemPropos
 import org.iso.registry.api.registry.registers.gcp.datum.GeodeticDatumItemProposalDTO;
 import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 
+import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class GeodeticCoordinateReferenceSystemItemProposalDTO extends CoordinateReferenceSystemItemProposalDTO
@@ -20,6 +21,10 @@ public class GeodeticCoordinateReferenceSystemItemProposalDTO extends Coordinate
 	public GeodeticCoordinateReferenceSystemItemProposalDTO(CoordinateSystemItemProposalDTO cs, GeodeticDatumItemProposalDTO datum) {
 		this.coordinateSystem = cs;
 		this.datum = datum;
+	}
+	
+	public GeodeticCoordinateReferenceSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 //	@Override

@@ -108,7 +108,7 @@ public class RegisterController
 
 	@Autowired
 	private ProposalRepository proposalRepository;
-	
+
 	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
 
@@ -137,10 +137,19 @@ public class RegisterController
 //	protected void initBinder(WebDataBinder binder) {
 //		binder.setValidator(new ProposalValidator(itemService));
 //	}
-	
+
 	@RequestMapping(value = "/{register}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public String registerOverview(@PathVariable("register") String registerName, final Model model, final RedirectAttributes redirectAttributes) {
+	public String registerOverview(@PathVariable("register") String registerName, 
+							       final Model model, final RedirectAttributes redirectAttributes) {
+		return registerOverview(registerName, (UUID)null, model, redirectAttributes);
+	}
+
+	@RequestMapping(value = "/{register}/{itemClass}", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String registerOverview(@PathVariable("register") String registerName, 
+								   @PathVariable("itemClass") UUID itemClassUuid,
+								   final Model model, final RedirectAttributes redirectAttributes) {
 		RE_Register register = findRegister(registerName);
 		if (register == null) {
 			redirectAttributes.addFlashAttribute("registerName", registerName);
@@ -148,37 +157,51 @@ public class RegisterController
 		}
 		model.addAttribute("register", register);
 		
+		RE_ItemClass itemClass = null;
+		if (itemClassUuid != null) {
+			itemClass = itemClassRepository.findOne(itemClassUuid);
+		}
+		
 		List<RegisterItemViewBean> containedItemViewBeans = new ArrayList<RegisterItemViewBean>();
-		Set<RE_RegisterItem> containedItems = register.getContainedItems(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
+		Set<RE_RegisterItem> containedItems;
+		if (itemClass == null) {
+			containedItems = register.getContainedItems(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
+		}
+		else {
+			containedItems = register.getContainedItems(itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
+		}
 		for (RE_RegisterItem containedItem : containedItems) {
-			containedItemViewBeans.add(new RegisterItemViewBean(containedItem));
+			containedItemViewBeans.add(new RegisterItemViewBean(containedItem, false));
 		}
 		model.addAttribute("items", containedItemViewBeans);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 //		RE_SubmittingOrganization suborg = null;
-		Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
-		List<RegisterItemViewBean> proposedItemViewBeans = new ArrayList<RegisterItemViewBean>();
-		for (Proposal proposal : proposals) {
-			if(!security.may(BasePermission.READ, proposal)) {
-				continue;
-			}
+//		Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
+		if (security.isLoggedIn()) {
+			Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
+			List<RegisterItemViewBean> proposedItemViewBeans = new ArrayList<RegisterItemViewBean>();
+			for (Proposal proposal : proposals) {
+				if(!security.may(BasePermission.READ, proposal)) {
+					continue;
+				}
 
-			if (proposal.getStatus().equals(RE_DecisionStatus.FINAL)) continue;
-			if (proposal.hasGroup()) continue;
-			
-			if (proposal.isContainedIn(register)) {
-				Appeal appeal = proposalService.findAppeal(proposal);
-				if (appeal != null) {
-					proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
-				}
-				else {
-					proposedItemViewBeans.add(new RegisterItemViewBean(proposal));
+				if (proposal.getStatus().equals(RE_DecisionStatus.FINAL)) continue;
+				if (proposal.hasGroup()) continue;
+				
+				if (proposal.isContainedIn(register)) {
+					Appeal appeal = proposalService.findAppeal(proposal);
+					if (appeal != null) {
+						proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
+					}
+					else {
+						proposedItemViewBeans.add(new RegisterItemViewBean(proposal));
+					}
 				}
 			}
+			
+			model.addAttribute("proposedItems", proposedItemViewBeans);
 		}
-		
-		model.addAttribute("proposedItems", proposedItemViewBeans);
 
 		if (!model.containsAttribute("viewMode")) {
 			model.addAttribute("viewMode", "contents");
@@ -220,7 +243,7 @@ public class RegisterController
 	@Transactional
 	public String registerOverviewProposals(@PathVariable("register") String registerName, final Model model, final RedirectAttributes redirectAttributes) {
 		model.addAttribute("viewMode", "proposals");
-		return registerOverview(registerName, model, redirectAttributes);
+		return registerOverview(registerName, (UUID)null, model, redirectAttributes);
 	}
 
 
@@ -292,6 +315,7 @@ public class RegisterController
 		proposal.setTargetRegisterUuid(register.getUuid());
 		
 		model.addAttribute("proposal", proposal);
+		model.addAttribute("isProposal", "true");
 
 		String viewName;
 		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getCreateProposalTemplate())) {
@@ -569,7 +593,13 @@ public class RegisterController
 		proposal = bindAdditionalAttributes(proposal, servletRequest/*, itemClassUuid*/);
 		
 		Addition addition = proposalService.createAdditionProposal(proposal);
-		proposalService.submitProposal(addition);
+		
+		if (addition.hasGroup()) {
+			proposalService.submitProposal(addition.getGroup());
+		}
+		else {
+			proposalService.submitProposal(addition);
+		}
 		
 		redirectAttributes.addFlashAttribute("createdItem", addition.getItem().getUuid().toString());
 		

@@ -34,7 +34,7 @@
 				
 				<div class="tab-content">
 					<div id="overview" class="tab-pane in">
-						<p th:text="#{tabs.overview}">Ãœbersicht</p>
+						<p th:text="#{tabs.overview}">Übersicht</p>
 					</div>
 					
 					<div id="contents" class="tab-pane in" th:classappend="(${viewMode} == 'contents') ? 'active'">
@@ -48,18 +48,18 @@
 							<table id="contentsTable" class="datatable table table-striped">
 								<thead>
 									<tr>
+										<th th:text="#{tableheader.itemIdentifier}">Item ID</th>
 										<th th:text="#{tableheader.name}">Name</th>
 										<th th:text="#{tableheader.itemClassName}">Klasse</th>
-										<th th:text="#{tableheader.submitter}">Einreicher</th>
 										<th th:text="#{tableheader.status}">Status</th>
 										<th></th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="item : ${items}">
+										<td th:text="${item.itemIdentifier}"></td>
 										<td th:text="${item.name}"></td>
-										<td th:text="${item.itemClassName}"></td>
-										<td th:text="${item.sponsorName}"></td>
+										<td th:text="#{${item.itemClassName}}"></td>
 										<td th:text="#{${item.status}}"></td>
 										<td>
 											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid}} + '\''" th:text="#{button.details}">Details</button>												

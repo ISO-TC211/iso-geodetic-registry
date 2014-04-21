@@ -29,6 +29,7 @@ implements RegisterItemFactory<CoordinateSystemItem, CoordinateSystemItemProposa
 		}
 		else {
 			CoordinateSystemItem result = super.createRegisterItem(proposal);
+			result.setCode(proposal.getCode());
 
 			for (CoordinateSystemAxisProposalDTO axis : proposal.getAxes()) {
 				if (axis.getReferencedItemUuid() != null) {

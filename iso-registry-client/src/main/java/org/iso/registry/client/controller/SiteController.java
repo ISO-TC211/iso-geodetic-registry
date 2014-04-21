@@ -2,6 +2,7 @@ package org.iso.registry.client.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +63,7 @@ import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
+import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
@@ -280,7 +282,7 @@ public class SiteController extends AbstractController
 			 * Areas
 			 */
 			RE_ItemClass icArea = this.addItemClass("Area", r);
-			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
+			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", BigInteger.valueOf(1262L), AreaItemProposalDTO.class,
 					new ParameterizedRunnable<AreaItemProposalDTO>() {
 						@Override
 						public void run(AreaItemProposalDTO parameter) {
@@ -291,7 +293,7 @@ public class SiteController extends AbstractController
 							parameter.setEastBoundLongitude(+180.0);
 						}
 					});
-			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
+			this.registerItem(r, icArea, "Germany - west of 7.5°E", BigInteger.valueOf(1624L), AreaItemProposalDTO.class,
 					new ParameterizedRunnable<AreaItemProposalDTO>() {
 						@Override
 						public void run(AreaItemProposalDTO parameter) {
@@ -309,6 +311,7 @@ public class SiteController extends AbstractController
 			RE_ItemClass icUoM = this.addItemClass("UnitOfMeasure", r);
 			final RE_RegisterItem uom9122 = this.registerItem(r, icUoM,
 					"degree (supplier to define representation)",
+					BigInteger.valueOf(9122L),
 					UnitOfMeasureItemProposalDTO.class,
 					new ParameterizedRunnable<UnitOfMeasureItemProposalDTO>() {
 						@Override
@@ -319,6 +322,7 @@ public class SiteController extends AbstractController
 					});
 			final RE_RegisterItem uom9102 = this.registerItem(r, icUoM,
 					"degree",
+					BigInteger.valueOf(9102L),
 					UnitOfMeasureItemProposalDTO.class,
 					new ParameterizedRunnable<UnitOfMeasureItemProposalDTO>() {
 						@Override
@@ -329,6 +333,7 @@ public class SiteController extends AbstractController
 					});
 			final RE_RegisterItem uom9001 = this.registerItem(r, icUoM,
 					"metre",
+					BigInteger.valueOf(9001L),
 					UnitOfMeasureItemProposalDTO.class,
 					new ParameterizedRunnable<UnitOfMeasureItemProposalDTO>() {
 						@Override
@@ -344,10 +349,12 @@ public class SiteController extends AbstractController
 			RE_ItemClass icAxis = this.addItemClass("CoordinateSystemAxis", r);
 			final RE_RegisterItem axisLat = this.registerItem(r, icAxis,
 					"Geodetic latitude",
+					BigInteger.valueOf(10106L),
 					CoordinateSystemAxisProposalDTO.class,
 					new ParameterizedRunnable<CoordinateSystemAxisProposalDTO>() {
 						@Override
 						public void run(CoordinateSystemAxisProposalDTO parameter) {
+							parameter.setCode(106);
 							parameter.setAxisAbbreviation("Lat");
 							parameter.setAxisDirection(CS_AxisDirection.NORTH);
 							parameter.setAxisUnit(new UnitOfMeasureItemProposalDTO((UnitOfMeasureItem)uom9122));
@@ -355,10 +362,12 @@ public class SiteController extends AbstractController
 					});
 			final RE_RegisterItem axisLon = this.registerItem(r, icAxis,
 					"Geodetic longitude",
+					BigInteger.valueOf(10107L),
 					CoordinateSystemAxisProposalDTO.class,
 					new ParameterizedRunnable<CoordinateSystemAxisProposalDTO>() {
 						@Override
 						public void run(CoordinateSystemAxisProposalDTO parameter) {
+							parameter.setCode(107);
 							parameter.setAxisAbbreviation("Lon");
 							parameter.setAxisDirection(CS_AxisDirection.EAST);
 							parameter.setAxisUnit(new UnitOfMeasureItemProposalDTO((UnitOfMeasureItem)uom9122));
@@ -370,11 +379,13 @@ public class SiteController extends AbstractController
 			 */
 			RE_ItemClass icEllipsoidalCs = this.addItemClass("EllipsoidalCS", r);
 			final RE_RegisterItem cs6422 = this.registerItem(r, icEllipsoidalCs, 
-					"Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree", 
+					"Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree",
+					BigInteger.valueOf(6422L),
 					CoordinateSystemItemProposalDTO.class,
 					new ParameterizedRunnable<CoordinateSystemItemProposalDTO>() {
 						@Override
 						public void run(CoordinateSystemItemProposalDTO p) {
+							p.setCode(6422);
 							p.setRemarks("Coordinates referenced to this CS are in degrees. Any degree representation "
 									+ "(e.g. DMSH, decimal, etc.) may be used but that used must be declared for the "
 									+ "user by the supplier of data. Used in geographic 2D coordinate reference systems.");
@@ -389,10 +400,12 @@ public class SiteController extends AbstractController
 			RE_ItemClass icEllipsoid = this.addItemClass("Ellipsoid", r);
 			final RE_RegisterItem el7030 = this.registerItem(r, icEllipsoid, 
 					"WGS 84", 
+					BigInteger.valueOf(7030L),
 					EllipsoidItemProposalDTO.class,
 					new ParameterizedRunnable<EllipsoidItemProposalDTO>() {
 						@Override
 						public void run(EllipsoidItemProposalDTO p) {
+							p.setCode(7030);
 							p.setRemarks("Inverse flattening derived from four defining parameters (semi-major axis; C20 = -484.16685*10e-6; "
 									+ "earth's angular velocity w = 7292115e11 rad/sec; gravitational constant GM = 3986005e8 m*m*m/s/s).");
 							p.setSemiMajorAxis(6378137.0);
@@ -408,10 +421,12 @@ public class SiteController extends AbstractController
 			RE_ItemClass icPrimeMeridian = this.addItemClass("PrimeMeridian", r);
 			final RE_RegisterItem pm8901 = this.registerItem(r, icPrimeMeridian, 
 					"Greenwich", 
+					BigInteger.valueOf(8901L),
 					PrimeMeridianItemProposalDTO.class,
 					new ParameterizedRunnable<PrimeMeridianItemProposalDTO>() {
 						@Override
 						public void run(PrimeMeridianItemProposalDTO p) {
+							p.setCode(8901);
 							p.setGreenwichLongitude(0.0);
 							p.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO((UnitOfMeasureItem)uom9102));
 						}
@@ -423,10 +438,12 @@ public class SiteController extends AbstractController
 			RE_ItemClass icGeodeticDatum = this.addItemClass("GeodeticDatum", r);
 			final RE_RegisterItem dt6326 = this.registerItem(r, icGeodeticDatum, 
 					"World Geodetic System 1984", 
+					BigInteger.valueOf(6326L),
 					GeodeticDatumItemProposalDTO.class,
 					new ParameterizedRunnable<GeodeticDatumItemProposalDTO>() {
 						@Override
 						public void run(GeodeticDatumItemProposalDTO p) {
+							p.setCode(6326);
 							p.setEllipsoid(new EllipsoidItemProposalDTO((EllipsoidItem)el7030));
 							p.setPrimeMeridian(new PrimeMeridianItemProposalDTO((PrimeMeridianItem)pm8901));
 						}
@@ -436,10 +453,11 @@ public class SiteController extends AbstractController
 			 * Coordinate Reference System
 			 */
 			RE_ItemClass icGeodeticCrs = this.addItemClass("GeodeticCRS", r);
-			this.registerItem(r, icGeodeticCrs, "WGS 84", GeodeticCoordinateReferenceSystemItemProposalDTO.class,
+			this.registerItem(r, icGeodeticCrs, "WGS 84", BigInteger.valueOf(4326L), GeodeticCoordinateReferenceSystemItemProposalDTO.class,
 					new ParameterizedRunnable<GeodeticCoordinateReferenceSystemItemProposalDTO>() {
 						@Override
 						public void run(GeodeticCoordinateReferenceSystemItemProposalDTO p) {
+							p.setCode(4326);
 							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
 							p.setCoordinateSystem(new CoordinateSystemItemProposalDTO((CoordinateSystemItem)cs6422));
 							p.setDatum(new GeodeticDatumItemProposalDTO((GeodeticDatumItem)dt6326));
@@ -491,7 +509,7 @@ public class SiteController extends AbstractController
 		return ic;
 	}
 
-	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
+	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, BigInteger itemIdentifier, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
 		P proposal;
 		proposal = BeanUtils.instantiateClass(dtoClass);
 		proposal.setItemClassUuid(itemClass.getUuid());
@@ -510,15 +528,19 @@ public class SiteController extends AbstractController
 		proposalService.submitProposal(ai);
 		
 		String decisionEvent = "Decision event";
-		acceptProposal(ai, decisionEvent);
+		acceptProposal(ai, decisionEvent, itemIdentifier);
 		
 		initLog.append("done.\n");
 		
 		return ai.getItem();
 	}
 
-	protected void acceptProposal(Addition ai, String decisionEvent) throws InvalidProposalException {
+	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier) throws InvalidProposalException {
 		try {
+			if (itemIdentifier != null) {
+				ai.getItem().setItemIdentifier(itemIdentifier);
+				itemService.saveRegisterItem(ai.getItem());
+			}
 			proposalService.reviewProposal(ai);
 			proposalService.acceptProposal(ai, decisionEvent);
 		}

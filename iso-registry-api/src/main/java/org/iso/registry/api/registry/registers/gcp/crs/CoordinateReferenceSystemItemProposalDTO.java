@@ -1,5 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
+import java.math.BigInteger;
+
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
@@ -52,6 +54,7 @@ public abstract class CoordinateReferenceSystemItemProposalDTO extends Reference
 		if (item instanceof CoordinateReferenceSystemItem) {
 			CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
 
+			this.setScope(crsItem.getScope());
 		}
 	}
 

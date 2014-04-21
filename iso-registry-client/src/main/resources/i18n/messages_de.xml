@@ -52,7 +52,7 @@
 	<entry key="tableheader.shortName">Kurzbezeichnung</entry>
 	<entry key="tableheader.category">Kategorie</entry>
 	<entry key="tableheader.appealStatus">Status des Einspruchs</entry>
-	<entry key="tableheader.itemIdentifier">ID</entry>
+	<entry key="tableheader.itemIdentifier">Item-ID</entry>
 	<entry key="tableheader.definition">Definition</entry>
 	<entry key="tableheader.description">Beschreibung</entry>
 	<entry key="tableheader.role">Rolle</entry>
@@ -95,6 +95,7 @@
 	<entry key="button.acceptProposal">Annehmen</entry>
 	<entry key="button.rejectProposal">Ablehnen</entry>
 	<entry key="button.withdrawProposal">Zurückziehen</entry>
+	<entry key="button.saveProposal">Vorschlag speichern</entry>
 	<entry key="button.finalizeProposal">Einspruchsphase beenden</entry>
 	<entry key="button.appealProposal">Einspruch einlegen</entry>
 	<entry key="button.acceptAppeal">Einspruch stattgeben</entry>
@@ -142,7 +143,9 @@
 	<entry key="CLARIFICATION">Klarstellung</entry>
 	<entry key="SUPERSESSION">Ersetzung</entry>
 	<entry key="RETIREMENT">Aufgabe</entry>
+	<entry key="GROUP">Gruppe</entry>
 	
+	<entry key="NOT_SUBMITTED">noch nicht eingereicht</entry>
 	<entry key="UNDER_REVIEW">wartet auf Zulassung durch Registermanager</entry>
 	<entry key="IN_APPROVAL_PROCESS">wartet auf Control-Body-Entscheidung</entry>
 	<entry key="APPEALABLE">anfechtbar</entry>
@@ -245,6 +248,15 @@
 	<entry key="form.label.crsType">CRS-Art</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Gültigkeitsgebiet</entry>
+	<entry key="form.label.datum">Datum</entry>
+	<entry key="form.label.coordinateSystem">Koordinatensystem</entry>
+	<entry key="form.label.isoA2Code">ISO-Alpha-2-Code</entry>
+	<entry key="form.label.isoA3Code">ISO-Alpha-3-Code</entry>
+	<entry key="form.label.isoNCode">Num. ISO-Code</entry>
+	<entry key="form.label.northernLatitude">Nördl. Breite</entry>
+	<entry key="form.label.southernLatitude">Südl. Breite</entry>
+	<entry key="form.label.easternLongitude">Östl. Länge</entry>
+	<entry key="form.label.westernLongitude">Westl. Länge</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
@@ -268,6 +280,14 @@
 	<entry key="form.placeholder.organizationName">Name Ihrer Organisation</entry>
 	<entry key="form.placeholder.onlineResourceWebsite">z.B. http://www.example.org</entry>
 	<entry key="form.placeholder.onlineResourceLogo">z.B. http://www.example.org/logo.png</entry>
+
+	<entry key="form.placeholder.isoA2Code">ISO-Alpha-2-Code</entry>
+	<entry key="form.placeholder.isoA3Code">ISO-Alpha-3-Code</entry>
+	<entry key="form.placeholder.isoNCode">Num. ISO-Code</entry>
+	<entry key="form.placeholder.northernLatitude">Nördl. Breite</entry>
+	<entry key="form.placeholder.southernLatitude">Südl. Breite</entry>
+	<entry key="form.placeholder.easternLongitude">Östl. Länge</entry>
+	<entry key="form.placeholder.westernLongitude">Westl. Länge</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
@@ -324,4 +344,14 @@
 	<entry key="organizationNameShortForm">Organisationskurzname</entry>
 	<entry key="onlineResourceWebsite">Website der Organisation</entry>
 	<entry key="onlineResourceLogo">Logo der Organisation</entry>
+	
+	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
+	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
+	<entry key="UnitOfMeasure">Unit of Measurement</entry>
+	<entry key="GeodeticCRS">Geodetic CRS</entry>
+	<entry key="Ellipsoid">Ellipsoid</entry>
+	<entry key="Area">Area</entry>
+	<entry key="GeodeticDatum">Geodetic Datum</entry>
+	<entry key="PrimeMeridian">Prime Meridian</entry>
+	
 </properties>

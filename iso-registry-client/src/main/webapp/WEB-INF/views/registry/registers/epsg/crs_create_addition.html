@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="row clearfix" style="margin-top: 0px">
+		
+			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
+				<fieldset>		
+		
+					<div class="col-md-12 column">
+					
+						<!-- Select field: Item Class -->
+						<div class="form-group">
+							<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+							<div class="controls">
+								<div class="input-group">
+									<input type="hidden" th:if="${partOfSupersession}" th:field="*{itemClassUuid}" th:value="${itemClassUuid}"/>
+									<select id="itemClass" required="true" th:field="*{itemClassUuid}" th:disabled="${partOfSupersession}">
+										<option th:text="#{form.select.choose}" value="" th:unless="${itemClassUuid}"/>
+										<option th:each="anItemClass : ${register.getContainedItemClasses()}"
+												th:value="${anItemClass.uuid}"
+												th:text="#{${anItemClass.name}}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+						<div th:unless="${itemClass}">
+							<button id="cancel" onClick="history.back();" type="button" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+						</div>
+					
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title" th:text="#{header.crs}">CRS</h3>
+							</div>
+							
+							<div class="panel-body">
+								<div th:if="${itemClass}">
+									<div th:if="${itemClassNotConfigured}" class="alert alert-danger">
+										<p th:text="#{form.proposal.itemClassNotConfigured}">Konfiguration für Itemklasse nicht vorhanden.</p>
+									</div>
+
+									<div th:fragment="crsDetails">
+	
+										<div class="row">
+		
+											<div class="col-md-6">
+												<div class="row">
+											
+													<div class="col-md-8">
+														<div class="form-group has-error has-feedback">
+															<label class="control-label" for="name" th:text="#{form.label.name}">Name</label>
+															<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control required" required="true" type="text" th:field="*{name}"/>
+															<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+														</div>
+													</div>				
+													
+													<div class="col-md-4">
+														<div class="form-group has-error has-feedback">
+															<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label>
+															<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.code}" class="form-control required" required="true" type="number" th:field="*{code}"/>
+															<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+														</div>
+													</div>
+												
+	<!-- 												<div class="col-md-6"> -->
+	<!-- 													<div class="form-group has-error has-feedback"> -->
+	<!-- 														<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label> -->
+	<!-- 														<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.code}" class="form-control required" required="true" type="number" th:field="*{code}"/> -->
+	<!-- 														<span class="glyphicon glyphicon-hand-left form-control-feedback"></span> -->
+	<!-- 													</div> -->
+	<!-- 												</div> -->
+	<!-- 												<div class="col-md-6"> -->
+	<!-- 													<div class="form-group has-error has-feedback"> -->
+	<!-- 														<label class="control-label" for="crsType" th:text="#{form.label.crsType}">Code</label> -->
+	<!-- 														<select id="crsType" class="required" required="true" th:field="*{type}"> -->
+	<!-- 															<option th:each="crsType : ${T(org.iso.registry.core.model.CoordinateSystemType).values()}" th:value="${crsType}" th:text="#{__${crsType}__}"></option> -->
+	<!-- 														</select> -->
+	<!-- 													</div> -->
+	<!-- 												</div> -->
+												</div>
+	
+	<!-- 											<div class="row"> -->
+	<!-- 												<div class="col-md-12"> -->
+	<!-- 													<div class="form-group has-error has-feedback"> -->
+	<!-- 														<label class="control-label" for="name" th:text="#{form.label.name}">Name</label> -->
+	<!-- 														<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control required" required="true" type="text" th:field="*{name}"/> -->
+	<!-- 														<span class="glyphicon glyphicon-hand-left form-control-feedback"></span> -->
+	<!-- 													</div> -->
+	
+	<!-- 												</div> -->
+	<!-- 											</div> -->
+	
+												<div class="row">
+													<div class="col-md-12">
+														<div class="form-group has-error has-feedback">
+															<label class="control-label" for="scope" th:text="#{form.label.scope}">Scope</label>
+															<textarea id="scope" name="scope" rows="2" cols="60" th:placeholder="#{form.placeholder.scope}" class="form-control required" required="required" type="text" th:field="*{scope}"/>
+															<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+														</div>
+	
+													</div>
+												</div>
+												
+											</div>
+		
+											<div class="col-md-6">
+												<!-- Text input-->
+												<div class="controls">
+													<div class="form-group has-error has-feedback">
+														<label class="control-label" for="areaOfUse" th:text="#{form.label.areaOfUse}">Area of Use</label>
+														<div th:if="${isProposal}" id="areaOfUseGroup" class="input-group">
+															<select id="areaOfUse" class="form-control required" required="true" th:field="*{domainOfValidity.referencedItemUuid}">
+																<option th:each="areaOfUse : ${@areaItemRepository.findAll()}" th:value="${areaOfUse.uuid}" th:text="'[' + ${areaOfUse.code} + '] ' + ${areaOfUse.name}"></option>
+															</select>
+															<span class="input-group-btn">
+	        													<button id="addNewArea" class="btn btn-default" type="button">Add new</button>
+	      													</span>
+														</div>
+														<div th:unless="${isProposal}">
+															<a th:href="@{__${basePath}__/item/__*{domainOfValidity.uuid}__}" th:text="'[' + *{domainOfValidity.code} + '] ' + *{domainOfValidity.name}"></a>
+														</div>
+													</div>
+	
+													<div class="form-group has-error has-feedback">
+														<label class="control-label" for="datum" th:text="#{form.label.datum}">Datum</label>
+														<div th:if="${isProposal}" class="input-group">
+															<select id="datum" class="form-control required" required="true" th:field="*{datum.referencedItemUuid}">
+																<option th:each="datum : ${@datumItemRepository.findAll()}" th:value="${datum.uuid}" th:text="'[' + ${datum.code} + '] ' + ${datum.name}"></option>
+															</select>
+															<span class="input-group-btn">
+	        													<button id="addNewDatum" disabled="disabled" class="btn btn-default disabled" type="button">Add new</button>
+	      													</span>
+														</div>
+														<div th:unless="${isProposal}">
+															<a th:href="@{__${basePath}__/item/__*{datum.uuid}__}" th:text="'[' + *{datum.code} + '] ' + *{datum.name}"></a>
+														</div>
+													</div>
+	
+													<div class="form-group has-error has-feedback">
+														<label class="control-label" for="coordinateSystem" th:text="#{form.label.coordinateSystem}">Coordinate System</label>
+														<div th:if="${isProposal}" class="input-group">
+															<select id="coordinateSystem" class="form-control required" required="true" th:field="*{coordinateSystem.referencedItemUuid}">
+																<option th:each="cs : ${@coordinateSystemItemRepository.findAll()}" th:value="${cs.uuid}" th:text="'[' + ${cs.code} + '] ' + ${cs.name}"></option>
+															</select>
+															<span class="input-group-btn">
+	        													<button id="addNewCS" disabled="disabled" class="btn btn-default disabled" type="button">Add new</button>
+	      													</span>
+														</div>
+														<div th:unless="${isProposal}">
+															<a th:href="@{__${basePath}__/item/__*{coordinateSystem.uuid}__}" th:text="'[' + *{coordinateSystem.code} + '] ' + *{coordinateSystem.name}"></a>
+														</div>
+													</div>
+	
+												</div>
+											</div>
+											
+										</div>
+				
+									</div>
+								</div> <!-- if ${itemClass} -->
+							</div>
+						</div>
+						
+						<div th:include="registry/registers/epsg/crs_create_addition_newarea :: newArea"/>
+			
+						<div class="panel panel-default" th:if="${itemClass}">
+							<div class="panel-heading">
+								<h3 class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
+							</div>
+
+							<div class="panel-body">
+								<!-- Text input-->
+								<div class="form-group has-error has-feedback">
+									<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
+									<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" /> 
+									<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+								</div>
+			
+								<div th:unless="${partOfSupersession}">
+									<!-- Text input-->
+									<div class="form-group has-error has-feedback">
+										<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
+										<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control required" type="text" th:field="*{justification}" required="required" /> 
+										<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+									</div>
+				
+								</div>
+							</div>
+						</div>			
+
+						<!-- Button -->
+						<div class="form-group" th:if="${itemClass}">
+							<div class="controls">
+								<button id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+								<div class="pull-right">
+									<button id="saveProposal" name="saveProposal" class="btn btn-default" th:text="#{button.saveProposal}">Speichern</button>
+									<button id="submit" name="submit" class="btn btn-primary" th:text="#{button.submitProposal}">Speichern</button>
+								</div>
+							</div>
+						</div>
+						
+						<input type="hidden" th:field="*{itemUuid}"/>
+						<input type="hidden" th:field="*{proposalUuid}"/>
+						<input type="hidden" th:field="*{targetRegisterUuid}"/>
+						<input type="hidden" th:field="*{sponsorUuid}"/>
+						<input type="hidden" th:field="*{proposalType}"/>					
+
+					</div>
+					
+				</fieldset>
+			</form>
+			
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			$('#itemClass').on('change', function() {
+		  		//alert( this.value ); // or $(this).val()
+		  		if ([[${param.addNew} ? 'true' : 'false']]) {
+		  			location.href = window.location.pathname + '?addNew=&itemClass=' + this.value;
+		  		}
+		  		else {
+		  			location.href = window.location.pathname + '?itemClass=' + this.value;
+		  		}
+			});
+			
+			$('#proposal .required').blur(function() {
+			    if (!$(this).val()) {
+			    	$(this).parent().addClass('has-error');
+			    	$(this).siblings('span .glyphicon').first().show();
+			    }
+			    else {
+			    	$(this).parent().removeClass('has-error');
+			    	$(this).siblings('span .glyphicon').first().hide();
+			    }
+			});			
+			
+			$('#newAreaPanel').hide();
+			
+			$('#addNewArea').bind('click', function (e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeIn(500);
+				$('#areaOfUse').append('<option value="">New</option>');
+				$('#areaOfUse').val('');
+				
+				$('#areaOfUse').attr('disabled', 'disabled');
+// 				$('#areaOfUseGroup').hide();
+			});
+			
+			$('#newAreaPanelDismiss').bind('click', function(e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeOut(500);
+				$("#areaOfUse option[value='']").remove();
+				
+				$('#areaOfUse').removeAttr('disabled');
+// 				$('#areaOfUseGroup').show();
+				
+			});
+			
+		});
+	/* ]]> */
+	</script>
+	
+</body>
+</html>
