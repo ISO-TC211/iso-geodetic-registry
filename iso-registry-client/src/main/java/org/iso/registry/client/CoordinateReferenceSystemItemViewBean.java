@@ -42,6 +42,8 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 
 	@Override
 	protected void addAdditionalProperties(RE_RegisterItem item) {
+		super.addAdditionalProperties(item);
+		
 		if (!(item instanceof CoordinateReferenceSystemItem)) {
 			return;
 		}
