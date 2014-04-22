@@ -26,7 +26,7 @@ public abstract class SingleCoordinateReferenceSystemItem<D extends DatumItem> e
 	/**
 	 * Derived association to the datum used by this coordinate reference system.
 	 */
-	@ManyToOne
+	@ManyToOne(targetEntity = DatumItem.class)
 	private D datum;
 	
 
