@@ -2,8 +2,6 @@ package org.iso.registry.api.registry.registers.gcp.crs;
 
 import javax.persistence.EntityManager;
 
-import net.opengis.gml.v321.SingleCRSPropertyType;
-
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.core.model.crs.AreaItem;
@@ -13,7 +11,6 @@ import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
-import org.junit.runner.Computer;
 
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
