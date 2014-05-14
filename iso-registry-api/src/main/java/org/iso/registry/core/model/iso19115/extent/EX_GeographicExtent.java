@@ -15,9 +15,9 @@ public abstract class EX_GeographicExtent implements Serializable
 	/**
 	 * Identifies whether the  bounding polygon encompasses an area covered by the data or an area where data is not present 
 	 */
-	private boolean extentTypeCode = true;
+	private Boolean extentTypeCode = true;
 
-	public boolean getExtentTypeCode() {
+	public Boolean getExtentTypeCode() {
 		return extentTypeCode;
 	}
 
@@ -25,7 +25,7 @@ public abstract class EX_GeographicExtent implements Serializable
 	 * 
 	 * @param newVal
 	 */
-	public void setExtentTypeCode(boolean newVal){
+	public void setExtentTypeCode(Boolean newVal){
 		extentTypeCode = newVal;
 	}
 }//end EX_GeographicExtent

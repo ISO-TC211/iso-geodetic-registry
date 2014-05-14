@@ -341,6 +341,9 @@
 	<entry key="onlineResourceLogo">Organization logo</entry>
 
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
+	<entry key="SphericalCS">Spherical Coordinate System</entry>
+	<entry key="CartesianCS">Cartesian Coordinate System</entry>
+	<entry key="VerticalCS">Vertical Coordinate System</entry>
 	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
 	<entry key="UnitOfMeasure">Unit of Measurement</entry>
 	<entry key="GeodeticCRS">Geodetic CRS</entry>

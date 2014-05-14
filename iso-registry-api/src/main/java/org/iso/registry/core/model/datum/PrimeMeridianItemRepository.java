@@ -7,5 +7,5 @@ import de.geoinfoffm.registry.core.EntityRepository;
 @Repository
 public interface PrimeMeridianItemRepository extends EntityRepository<PrimeMeridianItem>
 {
-
+	PrimeMeridianItem findByCode(Integer code);
 }

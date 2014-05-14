@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 
@@ -11,6 +12,7 @@ import de.geoinfoffm.registry.core.ItemClass;
 
 @ItemClass("GeodeticDatum")
 @Access(AccessType.FIELD)
+@Table(name = "GeodeticDatum")
 @Audited @Entity
 public class GeodeticDatumItem extends DatumItem
 {

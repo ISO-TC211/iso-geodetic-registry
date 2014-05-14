@@ -1,7 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.GeodeticDatumItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -10,7 +10,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 public class GeodeticCoordinateReferenceSystemItemProposalDTO extends CoordinateReferenceSystemItemProposalDTO
 {
 	private CoordinateSystemItemProposalDTO coordinateSystem;
-	private GeodeticDatumItemProposalDTO datum;
+	private DatumItemProposalDTO datum;
 
 	public GeodeticCoordinateReferenceSystemItemProposalDTO() { }
 	
@@ -18,7 +18,7 @@ public class GeodeticCoordinateReferenceSystemItemProposalDTO extends Coordinate
 		super(crs);
 	}
 
-	public GeodeticCoordinateReferenceSystemItemProposalDTO(CoordinateSystemItemProposalDTO cs, GeodeticDatumItemProposalDTO datum) {
+	public GeodeticCoordinateReferenceSystemItemProposalDTO(CoordinateSystemItemProposalDTO cs, DatumItemProposalDTO datum) {
 		this.coordinateSystem = cs;
 		this.datum = datum;
 	}
@@ -57,11 +57,11 @@ public class GeodeticCoordinateReferenceSystemItemProposalDTO extends Coordinate
 		this.coordinateSystem = coordinateSystem;
 	}
 
-	public GeodeticDatumItemProposalDTO getDatum() {
+	public DatumItemProposalDTO getDatum() {
 		return datum;
 	}
 
-	public void setDatum(GeodeticDatumItemProposalDTO datum) {
+	public void setDatum(DatumItemProposalDTO datum) {
 		this.datum = datum;
 	}
 

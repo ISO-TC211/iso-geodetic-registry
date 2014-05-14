@@ -9,6 +9,8 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -18,6 +20,7 @@ import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 @Access(AccessType.FIELD)
+@Table(name = "Datum")
 @Audited @Entity
 public abstract class DatumItem extends IdentifiedItem
 {
@@ -41,14 +44,12 @@ public abstract class DatumItem extends IdentifiedItem
 	 * image or the corner of the image. The coordinate system orientation is
 	 * defined through the CS_AxisDirection class.
 	 */
+	@Column(name = "ORIGIN_DESCRIPTION")
 	private String anchorDefinition;
 	/**
 	 * Area or region or timeframe in which this datum is valid.
 	 */
-//	@Embedded
-//	@AttributeOverrides({
-//		@AttributeOverride(name = "description", column = @Column(name = "AREA_DESCRIPTION"))
-//	})
+	@ManyToOne
 	private AreaItem domainOfValidity;
 	/**
 	 * The time after which this datum definition is valid. This time may be
@@ -61,11 +62,13 @@ public abstract class DatumItem extends IdentifiedItem
 	 * upper limit for the validity of the replaced datum.
 	 */
 	@Temporal(TemporalType.DATE)
+	@Column(name = "REALIZATION_EPOCH")
 	private Date realizationEpoch;
 	/**
 	 * Description of usage, or limitations of usage, for which this datum is
 	 * valid. If unknown, enter "not known".
 	 */
+	@Column(name = "DATUM_SCOPE")	
 	private String scope;
 
 	public String getAnchorDefinition() {

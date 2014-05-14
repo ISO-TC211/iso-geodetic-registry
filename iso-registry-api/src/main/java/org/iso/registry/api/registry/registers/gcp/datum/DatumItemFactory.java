@@ -35,9 +35,6 @@ implements RegisterItemFactory<DatumItem, DatumItemProposalDTO>
 	@Autowired
 	private PrimeMeridianItemRepository primeMeridianRepository;
 	
-	@PersistenceContext
-	private EntityManager entityManager;
-	
 	@Override
 	public DatumItem createRegisterItem(DatumItemProposalDTO proposal) {
 		if (proposal.getReferencedItemUuid() != null) {
@@ -47,20 +44,20 @@ implements RegisterItemFactory<DatumItem, DatumItemProposalDTO>
 			DatumItem result = super.createRegisterItem(proposal);
 			proposal.setAdditionalValues(result, entityManager);
 			
-			result.setAnchorDefinition(proposal.getAnchorDefinition());
-			if (proposal.getDomainOfValidity() != null && proposal.getDomainOfValidity().getItemUuid() != null) {
-				AreaItem area = areaRepository.findOne(proposal.getDomainOfValidity().getItemUuid());
-				result.setDomainOfValidity(area);
-			}
-			result.setRealizationEpoch(proposal.getRealizationEpoch());
-
-			if (result instanceof GeodeticDatumItem) {
-				EllipsoidItem e = ellipsoidRepository.findOne(proposal.getEllipsoid().getReferencedItemUuid());
-				PrimeMeridianItem pm = primeMeridianRepository.findOne(proposal.getPrimeMeridian().getReferencedItemUuid());
-
-				((GeodeticDatumItem)result).setEllipsoid(e);
-				((GeodeticDatumItem)result).setPrimeMeridian(pm);
-			}
+//			result.setAnchorDefinition(proposal.getAnchorDefinition());
+//			if (proposal.getDomainOfValidity() != null && proposal.getDomainOfValidity().getItemUuid() != null) {
+//				AreaItem area = areaRepository.findOne(proposal.getDomainOfValidity().getItemUuid());
+//				result.setDomainOfValidity(area);
+//			}
+//			result.setRealizationEpoch(proposal.getRealizationEpoch());
+//
+//			if (result instanceof GeodeticDatumItem) {
+//				EllipsoidItem e = ellipsoidRepository.findOne(proposal.getEllipsoid().getReferencedItemUuid());
+//				PrimeMeridianItem pm = primeMeridianRepository.findOne(proposal.getPrimeMeridian().getReferencedItemUuid());
+//
+//				((GeodeticDatumItem)result).setEllipsoid(e);
+//				((GeodeticDatumItem)result).setPrimeMeridian(pm);
+//			}
 			
 			return result;
 		}

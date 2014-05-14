@@ -28,10 +28,11 @@ implements RegisterItemFactory<CoordinateSystemAxisItem, CoordinateSystemAxisPro
 		}
 		
 		CoordinateSystemAxisItem result = super.createRegisterItem(proposal);
-
-		UnitOfMeasureItem uom = uomRepository.findOne(proposal.getAxisUnit().getReferencedItemUuid());
-		result.setAxisUnit(uom);
-		result.setAxisAbbreviation(proposal.getAxisAbbreviation());
+		proposal.setAdditionalValues(result, entityManager);
+		
+//		UnitOfMeasureItem uom = uomRepository.findOne(proposal.getAxisUnit().getReferencedItemUuid());
+//		result.setAxisUnit(uom);
+//		result.setAxisAbbreviation(proposal.getAxisAbbreviation());
 		
 		return result;
 	}

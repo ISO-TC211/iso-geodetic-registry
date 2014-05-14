@@ -1,22 +1,28 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import javax.persistence.EntityManager;
+
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
+import org.iso.registry.core.model.UnitOfMeasureItem;
+import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.datum.EllipsoidItem;
+
+import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 {
 	/**
 	 * Length of the semi-major axis of the ellipsoid. 
 	 */
-	private double semiMajorAxis;
+	private Double semiMajorAxis;
 	
 	private UnitOfMeasureItemProposalDTO semiMajorAxisUom;
 	
 	/**
 	 * Inverse flattening value of the ellipsoid. 
 	 */
-	private double inverseFlattening;
+	private Double inverseFlattening;
 	
 	private UnitOfMeasureItemProposalDTO inverseFlatteningUom;
 	
@@ -29,7 +35,7 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 	/**
 	 * Length of the semi-minor axis of the ellipsoid. 
 	 */
-	private double semiMinorAxis;
+	private Double semiMinorAxis;
 	
 	private UnitOfMeasureItemProposalDTO semiMinorAxisUom;
 
@@ -39,11 +45,11 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	public double getSemiMajorAxis() {
+	public Double getSemiMajorAxis() {
 		return semiMajorAxis;
 	}
 
-	public void setSemiMajorAxis(double semiMajorAxis) {
+	public void setSemiMajorAxis(Double semiMajorAxis) {
 		this.semiMajorAxis = semiMajorAxis;
 	}
 
@@ -57,11 +63,11 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 		this.inverseFlatteningUom = semiMajorAxisUom;
 	}
 
-	public double getInverseFlattening() {
+	public Double getInverseFlattening() {
 		return inverseFlattening;
 	}
 
-	public void setInverseFlattening(double inverseFlattening) {
+	public void setInverseFlattening(Double inverseFlattening) {
 		this.inverseFlattening = inverseFlattening;
 	}
 
@@ -81,11 +87,11 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 		this.isSphere = isSphere;
 	}
 
-	public double getSemiMinorAxis() {
+	public Double getSemiMinorAxis() {
 		return semiMinorAxis;
 	}
 
-	public void setSemiMinorAxis(double semiMinorAxis) {
+	public void setSemiMinorAxis(Double semiMinorAxis) {
 		this.semiMinorAxis = semiMinorAxis;
 	}
 
@@ -97,5 +103,51 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 		this.semiMinorAxisUom = semiMinorAxisUom;
 	}
 
+	@Override
+	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
+		super.setAdditionalValues(item, entityManager);
+		
+		if (item instanceof EllipsoidItem) {
+			EllipsoidItem el = (EllipsoidItem)item;
+			el.setInverseFlattening(this.getInverseFlattening());
+			if (this.getInverseFlatteningUom() != null) {
+				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getInverseFlatteningUom().getReferencedItemUuid());
+				el.setInverseFlatteningUom(uom);
+			}
+			el.setSemiMajorAxis(this.getSemiMajorAxis());
+			if (this.getSemiMajorAxisUom() != null) {
+				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getSemiMajorAxisUom().getReferencedItemUuid());
+				el.setSemiMajorAxisUom(uom);
+			}
+			el.setSemiMinorAxis(this.getSemiMinorAxis());
+			if (this.getSemiMinorAxisUom() != null) {
+				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getSemiMinorAxisUom().getReferencedItemUuid());
+				el.setSemiMinorAxisUom(uom);
+			}
+			el.setSphere(this.isSphere());
+		}
+	}
+
+	@Override
+	public void loadAdditionalValues(RE_RegisterItem item) {
+		super.loadAdditionalValues(item);
+		
+		if (item instanceof EllipsoidItem) {
+			EllipsoidItem el = (EllipsoidItem)item;
+			this.setInverseFlattening(el.getInverseFlattening());
+			if (el.getInverseFlatteningUom() != null) {
+				this.setInverseFlatteningUom(new UnitOfMeasureItemProposalDTO(el.getInverseFlatteningUom()));
+			}
+			this.setSemiMajorAxis(el.getSemiMajorAxis());
+			if (el.getSemiMajorAxisUom() != null) {
+				this.setSemiMajorAxisUom(new UnitOfMeasureItemProposalDTO(el.getSemiMajorAxisUom()));
+			}
+			this.setSemiMinorAxis(el.getSemiMinorAxis());
+			if (el.getSemiMinorAxisUom() != null) {
+				this.setSemiMinorAxisUom(new UnitOfMeasureItemProposalDTO(el.getSemiMinorAxisUom()));
+			}
+			this.setSphere(el.isSphere());
+		}
+	}
 	
 }

@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.cs.CartesianCoordinateSystemItem;
@@ -26,16 +27,10 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
  */
 @ItemClass("GeodeticCRS")
 @Access(AccessType.FIELD)
+@Table(name = "GeodeticCRS")
 @Audited @Entity
 public class GeodeticCoordinateReferenceSystemItem extends SingleCoordinateReferenceSystemItem<GeodeticDatumItem>
 {
-	/**
-	 * Association to the coordinate system used by this geodetic
-	 * CRS.
-	 */
-	@ManyToOne(optional = false)
-	private CoordinateSystemItem coordinateSystem;
-	
 	protected GeodeticCoordinateReferenceSystemItem() {
 	}
 
@@ -43,9 +38,7 @@ public class GeodeticCoordinateReferenceSystemItem extends SingleCoordinateRefer
 			String definition, RE_AdditionInformation additionInformation, AreaItem domainOfValidity, String scope,
 			GeodeticDatumItem datum, CoordinateSystemItem cs) {
 
-		super(register, itemClass, name, definition, additionInformation, domainOfValidity, scope, datum);
-		
-		this.coordinateSystem = cs;
+		super(register, itemClass, name, definition, additionInformation, domainOfValidity, scope, datum, cs);
 	}
 
 	public GeodeticCoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name,
@@ -69,29 +62,25 @@ public class GeodeticCoordinateReferenceSystemItem extends SingleCoordinateRefer
 		this(register, itemClass, name, definition, additionInformation, domainOfValidity, scope, datum, (CoordinateSystemItem)cs);
 	}
 
-	public CoordinateSystemItem getCoordinateSystem() {
-		return coordinateSystem;
-	}
-
 	public void setCoordinateSystem(CoordinateSystemItem newVal) {
 		if (!((newVal instanceof CartesianCoordinateSystemItem) 
 		       || (newVal instanceof EllipsoidalCoordinateSystemItem) 
 		       || (newVal instanceof SphericalCoordinateSystemItem))) {
 			throw new IllegalArgumentException("Illegal coordinate system type for Geodetic CRS");
 		}
-		coordinateSystem = newVal;
+		super.setCoordinateSystem(newVal);
 	}
 	
 	public void setCoordinateSystem(CartesianCoordinateSystemItem cs) {
-		this.coordinateSystem = cs;
+		super.setCoordinateSystem(cs);
 	}
 
 	public void setCoordinateSystem(EllipsoidalCoordinateSystemItem cs) {
-		this.coordinateSystem = cs;
+		super.setCoordinateSystem(cs);
 	}
 
 	public void setCoordinateSystem(SphericalCoordinateSystemItem cs) {
-		this.coordinateSystem = cs;
+		super.setCoordinateSystem(cs);
 	}
 
 	@Override

@@ -4,8 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.iso.registry.api.IdentifiedItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
+import org.iso.registry.core.model.UnitOfMeasureItem;
+import org.iso.registry.core.model.cs.CartesianCoordinateSystemItem;
+import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
+import org.iso.registry.core.model.cs.EllipsoidalCoordinateSystemItem;
+import org.iso.registry.core.model.cs.SphericalCoordinateSystemItem;
+
+import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -54,6 +64,10 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 		return this.type;
 	}
 	
+	public void setType(CoordinateSystemType type) {
+		this.type = type;
+	}
+	
 	public List<CoordinateSystemAxisProposalDTO> getAxes() {
 		return Collections.unmodifiableList(this.axes);
 	}
@@ -64,4 +78,40 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 		}
 		this.axes.add(axis);
 	}
+	
+	@Override
+	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
+		super.setAdditionalValues(item, entityManager);
+		
+		if (item instanceof CoordinateSystemItem) {
+			CoordinateSystemItem cs = (CoordinateSystemItem)item;
+
+			for (CoordinateSystemAxisProposalDTO axisDto : this.getAxes()) {
+				CoordinateSystemAxisItem axis = entityManager.find(CoordinateSystemAxisItem.class, axisDto.getReferencedItemUuid());
+				cs.addAxis(axis);
+			}
+		}
+	}
+
+	@Override
+	public void loadAdditionalValues(RE_RegisterItem item) {
+		super.loadAdditionalValues(item);
+		
+		if (item instanceof CoordinateSystemItem) {
+			CoordinateSystemItem cs = (CoordinateSystemItem)item;
+			if (item instanceof CartesianCoordinateSystemItem) {
+				this.setType(CoordinateSystemType.CARTESIAN);
+			}
+			else if (item instanceof EllipsoidalCoordinateSystemItem) {
+				this.setType(CoordinateSystemType.ELLIPSOIDAL);
+			}
+			else if (item instanceof SphericalCoordinateSystemItem) {
+				this.setType(CoordinateSystemType.SPHERICAL);
+			}
+			else {
+				this.setType(CoordinateSystemType.USER_DEFINED);
+			}
+		}
+	}
+
 }

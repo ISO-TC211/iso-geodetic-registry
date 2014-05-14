@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -13,13 +14,14 @@ import de.geoinfoffm.registry.core.ItemClass;
 
 @ItemClass("Ellipsoid")
 @Access(AccessType.FIELD)
+@Table(name = "Ellipsoid")
 @Audited @Entity
 public class EllipsoidItem extends IdentifiedItem
 {
 	/**
 	 * Length of the semi-major axis of the ellipsoid. 
 	 */
-	private double semiMajorAxis;
+	private Double semiMajorAxis;
 	
 	@ManyToOne
 	private UnitOfMeasureItem semiMajorAxisUom;
@@ -27,7 +29,7 @@ public class EllipsoidItem extends IdentifiedItem
 	/**
 	 * Inverse flattening value of the ellipsoid. 
 	 */
-	private double inverseFlattening;
+	private Double inverseFlattening;
 	
 	@ManyToOne
 	private UnitOfMeasureItem inverseFlatteningUom;
@@ -41,16 +43,16 @@ public class EllipsoidItem extends IdentifiedItem
 	/**
 	 * Length of the semi-minor axis of the ellipsoid. 
 	 */
-	private double semiMinorAxis;
+	private Double semiMinorAxis;
 	
 	@ManyToOne
 	private UnitOfMeasureItem semiMinorAxisUom;
 
-	public double getSemiMajorAxis() {
+	public Double getSemiMajorAxis() {
 		return semiMajorAxis;
 	}
 
-	public void setSemiMajorAxis(double semiMajorAxis) {
+	public void setSemiMajorAxis(Double semiMajorAxis) {
 		this.semiMajorAxis = semiMajorAxis;
 	}
 
@@ -62,11 +64,11 @@ public class EllipsoidItem extends IdentifiedItem
 		this.semiMajorAxisUom = semiMajorAxisUom;
 	}
 
-	public double getInverseFlattening() {
+	public Double getInverseFlattening() {
 		return inverseFlattening;
 	}
 
-	public void setInverseFlattening(double inverseFlattening) {
+	public void setInverseFlattening(Double inverseFlattening) {
 		this.inverseFlattening = inverseFlattening;
 	}
 
@@ -86,11 +88,11 @@ public class EllipsoidItem extends IdentifiedItem
 		this.isSphere = isSphere;
 	}
 
-	public double getSemiMinorAxis() {
+	public Double getSemiMinorAxis() {
 		return semiMinorAxis;
 	}
 
-	public void setSemiMinorAxis(double semiMinorAxis) {
+	public void setSemiMinorAxis(Double semiMinorAxis) {
 		this.semiMinorAxis = semiMinorAxis;
 	}
 

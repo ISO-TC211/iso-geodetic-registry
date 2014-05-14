@@ -7,5 +7,5 @@ import de.geoinfoffm.registry.core.EntityRepository;
 @Repository
 public interface EllipsoidItemRepository extends EntityRepository<EllipsoidItem>
 {
-
+	EllipsoidItem findByCode(Integer code);
 }

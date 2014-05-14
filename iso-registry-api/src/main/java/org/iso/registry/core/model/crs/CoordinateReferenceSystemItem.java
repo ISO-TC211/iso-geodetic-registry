@@ -4,10 +4,14 @@ import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.api.registry.registers.gcp.crs.ReferenceSystemItem;
@@ -28,9 +32,14 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 //	@ItemClass("TemporalCRS") 
 //})
 @Access(AccessType.FIELD)
+@AttributeOverrides({
+	@AttributeOverride(name = "name", column = @Column(name = "COORD_REF_SYS_NAME"))
+})
+@Table(name = "CRS")
 @Audited @Entity
 public class CoordinateReferenceSystemItem extends ReferenceSystemItem
 {
+	@Column(name = "CRS_SCOPE")
 	private String scope;
 	
 	protected CoordinateReferenceSystemItem() {}

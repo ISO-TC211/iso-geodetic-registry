@@ -17,7 +17,7 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 	private double westBoundLongitude;
 	private String isoA2Code;
 	private String isoA3Code;
-	private String isoNCode;
+	private Integer isoNCode;
 
 	public AreaItemViewBean(Appeal appeal) {
 		super(appeal);
@@ -56,10 +56,12 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 		this.setIsoA2Code(item.getIsoA2Code());
 		this.setIsoA3Code(item.getIsoA3Code());
 		this.setIsoNCode(item.getIsoNCode());
-		this.setEastBoundLongitude(item.getBoundingBox().getEastBoundLongitude());
-		this.setWestBoundLongitude(item.getBoundingBox().getWestBoundLongitude());
-		this.setNorthBoundLatitude(item.getBoundingBox().getNorthBoundLatitude());
-		this.setSouthBoundLatitude(item.getBoundingBox().getSouthBoundLatitude());
+		if (item.getBoundingBox() != null) {
+			this.setEastBoundLongitude(item.getBoundingBox().getEastBoundLongitude());
+			this.setWestBoundLongitude(item.getBoundingBox().getWestBoundLongitude());
+			this.setNorthBoundLatitude(item.getBoundingBox().getNorthBoundLatitude());
+			this.setSouthBoundLatitude(item.getBoundingBox().getSouthBoundLatitude());
+		}
 		this.addAdditionalProperty("code", item.getCode());
 	}
 
@@ -111,11 +113,11 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 		this.isoA3Code = isoA3Code;
 	}
 
-	public String getIsoNCode() {
+	public Integer getIsoNCode() {
 		return isoNCode;
 	}
 
-	public void setIsoNCode(String isoNCode) {
+	public void setIsoNCode(Integer isoNCode) {
 		this.isoNCode = isoNCode;
 	}
 }

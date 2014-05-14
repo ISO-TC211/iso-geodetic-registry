@@ -1,5 +1,8 @@
 package org.iso.registry.core.model;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,9 +25,7 @@ implements RegisterItemFactory<UnitOfMeasureItem, UnitOfMeasureItemProposalDTO>
 		}
 		else {
 			UnitOfMeasureItem result = super.createRegisterItem(proposal);
-			
-			result.setMeasureType(proposal.getMeasureType());
-			result.setSymbol(proposal.getSymbol());
+			proposal.setAdditionalValues(result, entityManager);
 			
 			return result;
 		}

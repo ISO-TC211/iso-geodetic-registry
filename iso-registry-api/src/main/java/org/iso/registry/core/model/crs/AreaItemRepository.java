@@ -8,4 +8,5 @@ import de.geoinfoffm.registry.core.EntityRepository;
 public interface AreaItemRepository extends EntityRepository<AreaItem>
 {
 //	Collection<AreaItem> findAllOrderByName();
+	AreaItem findByCode(Integer code);
 }

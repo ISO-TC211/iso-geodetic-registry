@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -13,6 +14,7 @@ import de.geoinfoffm.registry.core.ItemClass;
 
 @ItemClass("PrimeMeridian")
 @Access(AccessType.FIELD)
+@Table(name = "PrimeMeridian")
 @Audited @Entity
 public class PrimeMeridianItem extends IdentifiedItem
 {
@@ -23,12 +25,12 @@ public class PrimeMeridianItem extends IdentifiedItem
 	 * 
 	 * Note: If the value of the prime meridian name is "Greenwich" then the value of greenwichLongitude shall be 0 degrees.
 	 */
-	private double greenwichLongitude = 0.0;
+	private Double greenwichLongitude = 0.0;
 	
 	@ManyToOne
 	private UnitOfMeasureItem greenwichLongitudeUom;
 
-	public double getGreenwichLongitude() { 
+	public Double getGreenwichLongitude() { 
 		return greenwichLongitude;
 	}
 
@@ -36,7 +38,7 @@ public class PrimeMeridianItem extends IdentifiedItem
 	 * 
 	 * @param newVal
 	 */
-	public void setGreenwichLongitude(double newVal){
+	public void setGreenwichLongitude(Double newVal){
 		greenwichLongitude = newVal;
 	}
 	

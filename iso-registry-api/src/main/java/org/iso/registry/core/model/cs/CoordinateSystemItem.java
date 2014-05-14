@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -14,8 +15,9 @@ import org.iso.registry.core.model.IdentifiedItem;
 import de.geoinfoffm.registry.core.ItemClass;
 
 @Access(AccessType.FIELD)
+@Table(name = "CoordinateSystem")
 @Audited @Entity
-public class CoordinateSystemItem extends IdentifiedItem
+public abstract class CoordinateSystemItem extends IdentifiedItem
 {
 	/**
 	 * Ordered sequence of associations to the coordinate system axes included in a coordinate system.  

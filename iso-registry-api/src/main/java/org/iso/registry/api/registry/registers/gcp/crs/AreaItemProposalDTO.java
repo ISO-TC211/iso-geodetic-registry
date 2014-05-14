@@ -1,29 +1,26 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
-import java.util.UUID;
-
 import javax.persistence.EntityManager;
 
+import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.iso19115.extent.EX_GeographicBoundingBox;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.soap.Addition_Type;
 
-public class AreaItemProposalDTO extends RegisterItemProposalDTO
+public class AreaItemProposalDTO extends IdentifiedItemProposalDTO
 {
-	private Integer code;
-	private double eastBoundLongitude;
-	private double northBoundLatitude;
-	private double southBoundLatitude;
-	private double westBoundLongitude;
+	private Double eastBoundLongitude;
+	private Double northBoundLatitude;
+	private Double southBoundLatitude;
+	private Double westBoundLongitude;
 	private String isoA2Code;
 	private String isoA3Code;
-	private String isoNCode;
+	private Integer isoNCode;
 
 	public AreaItemProposalDTO() {
 		super();
@@ -66,13 +63,19 @@ public class AreaItemProposalDTO extends RegisterItemProposalDTO
 		
 		if (item instanceof AreaItem) {
 			AreaItem area = (AreaItem)item;
-			area.setCode(this.getCode());
-			area.setBoundingBox(new EX_GeographicBoundingBox(
-				this.getEastBoundLongitude(),
-				this.getNorthBoundLatitude(),
-				this.getWestBoundLongitude(),
-				this.getSouthBoundLatitude())
-			);
+			if (this.getEastBoundLongitude() != null 
+				&& this.getNorthBoundLatitude() != null 
+				&& this.getWestBoundLongitude() == null 
+				&& this.getSouthBoundLatitude() == null) {
+				
+				area.setBoundingBox(new EX_GeographicBoundingBox(
+					this.getEastBoundLongitude(),
+					this.getNorthBoundLatitude(),
+					this.getWestBoundLongitude(),
+					this.getSouthBoundLatitude())
+				);
+			}
+				
 			area.setIsoA2Code(this.getIsoA2Code());
 			area.setIsoA3Code(this.getIsoA3Code());
 			area.setIsoNCode(this.getIsoNCode());
@@ -85,7 +88,6 @@ public class AreaItemProposalDTO extends RegisterItemProposalDTO
 		
 		if (item instanceof AreaItem) {
 			AreaItem area = (AreaItem)item;
-			this.setCode(area.getCode());
 			this.setEastBoundLongitude(area.getBoundingBox().getEastBoundLongitude());
 			this.setWestBoundLongitude(area.getBoundingBox().getWestBoundLongitude());
 			this.setSouthBoundLatitude(area.getBoundingBox().getSouthBoundLatitude());
@@ -96,43 +98,35 @@ public class AreaItemProposalDTO extends RegisterItemProposalDTO
 		}
 	}
 
-	public Integer getCode() {
-		return code;
-	}
-
-	public void setCode(Integer code) {
-		this.code = code;
-	}
-
-	public double getEastBoundLongitude() {
+	public Double getEastBoundLongitude() {
 		return eastBoundLongitude;
 	}
 
-	public void setEastBoundLongitude(double eastBoundLongitude) {
+	public void setEastBoundLongitude(Double eastBoundLongitude) {
 		this.eastBoundLongitude = eastBoundLongitude;
 	}
 
-	public double getNorthBoundLatitude() {
+	public Double getNorthBoundLatitude() {
 		return northBoundLatitude;
 	}
 
-	public void setNorthBoundLatitude(double northBoundLatitude) {
+	public void setNorthBoundLatitude(Double northBoundLatitude) {
 		this.northBoundLatitude = northBoundLatitude;
 	}
 
-	public double getSouthBoundLatitude() {
+	public Double getSouthBoundLatitude() {
 		return southBoundLatitude;
 	}
 
-	public void setSouthBoundLatitude(double southBoundLatitude) {
+	public void setSouthBoundLatitude(Double southBoundLatitude) {
 		this.southBoundLatitude = southBoundLatitude;
 	}
 
-	public double getWestBoundLongitude() {
+	public Double getWestBoundLongitude() {
 		return westBoundLongitude;
 	}
 
-	public void setWestBoundLongitude(double westBoundLongitude) {
+	public void setWestBoundLongitude(Double westBoundLongitude) {
 		this.westBoundLongitude = westBoundLongitude;
 	}
 
@@ -152,11 +146,11 @@ public class AreaItemProposalDTO extends RegisterItemProposalDTO
 		this.isoA3Code = isoA3Code;
 	}
 
-	public String getIsoNCode() {
+	public Integer getIsoNCode() {
 		return isoNCode;
 	}
 
-	public void setIsoNCode(String isoNCode) {
+	public void setIsoNCode(Integer isoNCode) {
 		this.isoNCode = isoNCode;
 	}
 

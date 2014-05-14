@@ -12,8 +12,8 @@ import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.GeodeticCoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.GeodeticDatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.AreaItem;
@@ -63,7 +63,6 @@ import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
-import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
@@ -439,10 +438,10 @@ public class SiteController extends AbstractController
 			final RE_RegisterItem dt6326 = this.registerItem(r, icGeodeticDatum, 
 					"World Geodetic System 1984", 
 					BigInteger.valueOf(6326L),
-					GeodeticDatumItemProposalDTO.class,
-					new ParameterizedRunnable<GeodeticDatumItemProposalDTO>() {
+					DatumItemProposalDTO.class,
+					new ParameterizedRunnable<DatumItemProposalDTO>() {
 						@Override
-						public void run(GeodeticDatumItemProposalDTO p) {
+						public void run(DatumItemProposalDTO p) {
 							p.setCode(6326);
 							p.setEllipsoid(new EllipsoidItemProposalDTO((EllipsoidItem)el7030));
 							p.setPrimeMeridian(new PrimeMeridianItemProposalDTO((PrimeMeridianItem)pm8901));
@@ -460,7 +459,7 @@ public class SiteController extends AbstractController
 							p.setCode(4326);
 							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
 							p.setCoordinateSystem(new CoordinateSystemItemProposalDTO((CoordinateSystemItem)cs6422));
-							p.setDatum(new GeodeticDatumItemProposalDTO((GeodeticDatumItem)dt6326));
+							p.setDatum(new DatumItemProposalDTO((GeodeticDatumItem)dt6326));
 							
 //							parameter.setCode(4326);
 //							parameter.setArea(new AreaItemProposalDTO(worldArea.getUuid()));

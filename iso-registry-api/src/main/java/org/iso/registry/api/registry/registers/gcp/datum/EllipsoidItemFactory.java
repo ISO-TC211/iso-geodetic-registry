@@ -26,32 +26,7 @@ public class EllipsoidItemFactory extends RegisterItemFactoryImpl<EllipsoidItem,
 		}
 		
 		EllipsoidItem result = super.createRegisterItem(proposal);
-		
-		result.setInverseFlattening(proposal.getInverseFlattening());		
-		if (proposal.getInverseFlatteningUom().getReferencedItemUuid() != null) {
-			result.setInverseFlatteningUom(uomRepository.findOne(proposal.getInverseFlatteningUom().getReferencedItemUuid()));			
-		}
-		else {
-			throw new RuntimeException("Not yet implemented");
-		}
-
-		result.setSemiMajorAxis(proposal.getSemiMajorAxis());		
-		if (proposal.getSemiMajorAxisUom().getReferencedItemUuid() != null) {
-			result.setSemiMajorAxisUom(uomRepository.findOne(proposal.getSemiMajorAxisUom().getReferencedItemUuid()));			
-		}
-		else {
-			throw new RuntimeException("Not yet implemented");
-		}
-
-		result.setSemiMinorAxis(proposal.getSemiMinorAxis());		
-		if (proposal.getSemiMinorAxisUom().getReferencedItemUuid() != null) {
-			result.setSemiMinorAxisUom(uomRepository.findOne(proposal.getSemiMinorAxisUom().getReferencedItemUuid()));			
-		}
-		else {
-			throw new RuntimeException("Not yet implemented");
-		}
-
-		result.setSphere(proposal.isSphere());
+		proposal.setAdditionalValues(result, entityManager);
 		
 		return result;
 	}

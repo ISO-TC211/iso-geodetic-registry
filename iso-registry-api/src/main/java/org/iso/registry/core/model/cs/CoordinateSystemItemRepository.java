@@ -7,5 +7,5 @@ import de.geoinfoffm.registry.core.EntityRepository;
 @Repository
 public interface CoordinateSystemItemRepository extends EntityRepository<CoordinateSystemItem>
 {
-
+	CoordinateSystemItem findByCode(Integer code);
 }

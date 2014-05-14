@@ -1,10 +1,17 @@
 package org.iso.registry.api.registry.registers.gcp.cs;
 
+import javax.persistence.EntityManager;
+
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
+import org.iso.registry.core.model.UnitOfMeasureItem;
+import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
 import org.iso.registry.core.model.iso19111.cs.CS_RangeMeaning;
+import org.iso.registry.core.model.iso19115.extent.EX_GeographicBoundingBox;
+
+import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class CoordinateSystemAxisProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -111,6 +118,44 @@ public class CoordinateSystemAxisProposalDTO extends IdentifiedItemProposalDTO
 
 	public void setRangeMeaning(CS_RangeMeaning rangeMeaning) {
 		this.rangeMeaning = rangeMeaning;
+	}
+
+	@Override
+	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
+		super.setAdditionalValues(item, entityManager);
+		
+		if (item instanceof CoordinateSystemAxisItem) {
+			CoordinateSystemAxisItem axis = (CoordinateSystemAxisItem)item;
+			
+			axis.setAxisAbbreviation(this.getAxisAbbreviation());
+			axis.setAxisDirection(this.getAxisDirection());
+
+			if (this.getAxisUnit() != null) {
+				UnitOfMeasureItem axisUnit = entityManager.find(UnitOfMeasureItem.class, this.getAxisUnit().getReferencedItemUuid());
+				axis.setAxisUnit(axisUnit);				
+			}
+			
+			axis.setMaximumValue(this.getMaximumValue());
+			axis.setMinimumValue(this.getMinimumValue());
+			axis.setRangeMeaning(this.getRangeMeaning());
+		}
+	}
+
+	@Override
+	public void loadAdditionalValues(RE_RegisterItem item) {
+		super.loadAdditionalValues(item);
+		
+		if (item instanceof CoordinateSystemAxisItem) {
+			CoordinateSystemAxisItem axis = (CoordinateSystemAxisItem)item;
+			this.setAxisAbbreviation(axis.getAxisAbbreviation());
+			this.setAxisDirection(axis.getAxisDirection());
+			if (axis.getAxisUnit() != null) {
+				this.setAxisUnit(new UnitOfMeasureItemProposalDTO(axis.getAxisUnit()));
+			}
+			this.setMaximumValue(axis.getMaximumValue());
+			this.setMinimumValue(axis.getMinimumValue());
+			axis.setRangeMeaning(axis.getRangeMeaning());
+		}
 	}
 
 }

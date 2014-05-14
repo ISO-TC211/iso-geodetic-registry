@@ -26,6 +26,8 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	private Integer code;
 	private List<AliasDTO> aliases;
 	private String remarks;
+	private String informationSource;
+	private String dataSource;
 
 	
 	public IdentifiedItemProposalDTO() {
@@ -79,6 +81,22 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		this.remarks = remarks;
 	}
 	
+	public String getInformationSource() {
+		return informationSource;
+	}
+
+	public void setInformationSource(String informationSource) {
+		this.informationSource = informationSource;
+	}
+
+	public String getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(String dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	@Override
 	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
 		super.setAdditionalValues(registerItem, entityManager);
@@ -89,6 +107,8 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			item.setCode(this.getCode());
 			item.setItemIdentifier(BigInteger.valueOf(this.getCode().longValue()));
 			item.setRemarks(this.getRemarks());
+			item.setInformationSource(this.getInformationSource());
+			item.setDataSource(this.getDataSource());
 		}
 	}
 
@@ -104,6 +124,8 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			}
 			this.setCode(item.getCode());
 			this.setRemarks(item.getRemarks());
+			this.setInformationSource(item.getInformationSource());
+			this.setDataSource(item.getDataSource());
 		}
 	}
 

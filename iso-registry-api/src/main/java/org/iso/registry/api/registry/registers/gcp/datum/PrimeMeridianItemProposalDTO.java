@@ -1,10 +1,15 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
+import org.iso.registry.core.model.UnitOfMeasureItem;
+import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
+
+import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -15,7 +20,7 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 	 * 
 	 * Note: If the value of the prime meridian name is "Greenwich" then the value of greenwichLongitude shall be 0 degrees.
 	 */
-	private double greenwichLongitude = 0.0;
+	private Double greenwichLongitude = 0.0;
 	
 	@ManyToOne
 	private UnitOfMeasureItemProposalDTO greenwichLongitudeUom;
@@ -26,11 +31,11 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	public double getGreenwichLongitude() {
+	public Double getGreenwichLongitude() {
 		return greenwichLongitude;
 	}
 
-	public void setGreenwichLongitude(double greenwichLongitude) {
+	public void setGreenwichLongitude(Double greenwichLongitude) {
 		this.greenwichLongitude = greenwichLongitude;
 	}
 
@@ -40,6 +45,33 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 
 	public void setGreenwichLongitudeUom(UnitOfMeasureItemProposalDTO greenwichLongitudeUom) {
 		this.greenwichLongitudeUom = greenwichLongitudeUom;
+	}
+
+	@Override
+	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
+		super.setAdditionalValues(item, entityManager);
+		
+		if (item instanceof PrimeMeridianItem) {
+			PrimeMeridianItem pm = (PrimeMeridianItem)item;
+			pm.setGreenwichLongitude(this.getGreenwichLongitude());
+			if (this.getGreenwichLongitudeUom() != null) {
+				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getGreenwichLongitudeUom().getReferencedItemUuid());
+				pm.setGreenwichLongitudeUom(uom);
+			}
+		}
+	}
+
+	@Override
+	public void loadAdditionalValues(RE_RegisterItem item) {
+		super.loadAdditionalValues(item);
+		
+		if (item instanceof PrimeMeridianItem) {
+			PrimeMeridianItem pm = (PrimeMeridianItem)item;
+			this.setGreenwichLongitude(pm.getGreenwichLongitude());
+			if (pm.getGreenwichLongitudeUom() != null) {
+				this.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO(pm.getGreenwichLongitudeUom()));
+			}
+		}
 	}
 
 }

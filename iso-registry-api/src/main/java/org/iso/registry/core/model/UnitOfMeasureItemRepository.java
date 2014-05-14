@@ -7,5 +7,5 @@ import de.geoinfoffm.registry.core.EntityRepository;
 @Repository
 public interface UnitOfMeasureItemRepository extends EntityRepository<UnitOfMeasureItem>
 {
-
+	UnitOfMeasureItem findByCode(Integer code);
 }

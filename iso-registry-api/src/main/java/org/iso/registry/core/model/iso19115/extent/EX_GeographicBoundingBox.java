@@ -13,10 +13,10 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 {
 	protected EX_GeographicBoundingBox() { }
 	
-	public EX_GeographicBoundingBox(double eastBoundLongitude,
-									double northBoundLatitude,
-									double westBoundLongitude,
-									double southBoundLatitude) {
+	public EX_GeographicBoundingBox(Double eastBoundLongitude,
+									Double northBoundLatitude,
+									Double westBoundLongitude,
+									Double southBoundLatitude) {
 		this.eastBoundLongitude = eastBoundLongitude;
 		this.northBoundLatitude = northBoundLatitude;
 		this.westBoundLongitude = westBoundLongitude;
@@ -27,36 +27,36 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 	 * Eastern-most coordinate of the limit of the dataset extent expressed in
 	 * longitude, in decimal degrees
 	 */
-	private double eastBoundLongitude;
+	private Double eastBoundLongitude;
 	/**
 	 * Northern-most coordinate of the limit of the dataset extent expressed in
 	 * latitude, in decimal degrees
 	 */
-	private double northBoundLatitude;
+	private Double northBoundLatitude;
 	/**
 	 * Southern-most coordinate of the limit of the dataset extent expressed in
 	 * latitude, in decimal degrees
 	 */
-	private double southBoundLatitude;
+	private Double southBoundLatitude;
 	/**
 	 * Western-most coordinate of the limit of the dataset extent expressed in
 	 * longitude, in decimal degrees
 	 */
-	private double westBoundLongitude;
+	private Double westBoundLongitude;
 
-	public double getEastBoundLongitude() {
+	public Double getEastBoundLongitude() {
 		return eastBoundLongitude;
 	}
 
-	public double getNorthBoundLatitude() {
+	public Double getNorthBoundLatitude() {
 		return northBoundLatitude;
 	}
 
-	public double getSouthBoundLatitude() {
+	public Double getSouthBoundLatitude() {
 		return southBoundLatitude;
 	}
 
-	public double getWestBoundLongitude() {
+	public Double getWestBoundLongitude() {
 		return westBoundLongitude;
 	}
 
@@ -64,7 +64,7 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 	 * 
 	 * @param newVal
 	 */
-	public void setEastBoundLongitude(double newVal) {
+	public void setEastBoundLongitude(Double newVal) {
 		eastBoundLongitude = newVal;
 	}
 
@@ -72,7 +72,7 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 	 * 
 	 * @param newVal
 	 */
-	public void setNorthBoundLatitude(double newVal) {
+	public void setNorthBoundLatitude(Double newVal) {
 		northBoundLatitude = newVal;
 	}
 
@@ -80,7 +80,7 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 	 * 
 	 * @param newVal
 	 */
-	public void setSouthBoundLatitude(double newVal) {
+	public void setSouthBoundLatitude(Double newVal) {
 		southBoundLatitude = newVal;
 	}
 
@@ -88,7 +88,7 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 	 * 
 	 * @param newVal
 	 */
-	public void setWestBoundLongitude(double newVal) {
+	public void setWestBoundLongitude(Double newVal) {
 		westBoundLongitude = newVal;
 	}
 }// end EX_GeographicBoundingBox

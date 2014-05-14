@@ -2,9 +2,15 @@ package org.iso.registry.core.model.cs;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -19,6 +25,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 
 @ItemClass("CoordinateSystemAxis")
 @Access(AccessType.FIELD)
+@Table(name = "Axis")
 @Audited @Entity
 public class CoordinateSystemAxisItem extends IdentifiedItem
 {
@@ -27,6 +34,7 @@ public class CoordinateSystemAxisItem extends IdentifiedItem
 	 * is also used to identify the coordinates in the coordinate tuple.
 	 * Examples are X and Y.
 	 */
+	@Column(name = "COORD_AXIS_ABBREVIATION")
 	private String axisAbbreviation;
 	/**
 	 * Direction of this coordinate system axis (or in the case of Cartesian
@@ -40,12 +48,17 @@ public class CoordinateSystemAxisItem extends IdentifiedItem
 	 * EngineeringCRS often requires specific descriptions of the directions of
 	 * its coordinate system axes.
 	 */
-	@Enumerated(EnumType.STRING)
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "code", column = @Column(name = "COORD_AXIS_ORIENTATION")),
+		@AttributeOverride(name = "codeSpace", column = @Column(name = "COORD_AXIS_ORIENTATION_CODESPACE"))		
+	})
 	private CS_AxisDirection axisDirection;
 	/**
 	 * Identifier of the unit used for this coordinate system axis. The value of
 	 * a coordinate in a coordinate tuple shall be recorded using this unit.
 	 */
+	@ManyToOne
 	private UnitOfMeasureItem axisUnit;
 	/**
 	 * The maximum value normally allowed for this axis, in the unit of measure
