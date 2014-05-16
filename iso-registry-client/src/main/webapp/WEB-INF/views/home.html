@@ -19,7 +19,7 @@
 						</p>
 					</div>
 					
-					<div class="container">
+<!-- 					<div class="container"> -->
 						<div class="jumbotron" th:if="${@registerRepository.findAll().isEmpty()}">
 <!-- 							<h1>Hello, world!</h1> -->
 							<p th:text="#{home.emptyRegistry}"></p>
@@ -27,9 +27,15 @@
 								<a th:href="@{__${basePath}__/init}" class="btn btn-primary btn-lg" role="button" th:text="#{home.initializeRegistry}">GDI-DE Registry initialisieren</a>
 							</p>
 						</div>
+						
+						<p>The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry or, as a downloadable zip files, through OGP's EPSG home page at <a href="http://www.epsg.org">www.epsg.org</a>. The geographic coverage of the data is worldwide, but it is stressed that the dataset does not and cannot record all possible geodetic parameters in use around the world. The EPSG Geodetic Parameter Dataset is maintained by the Geodesy Subcommittee of OGP's Geomatics Committee.</p>
+						<p>The EPSG Geodetic Parameter Dataset, offered through OGP's web pages, may be used free of charge, but its use is subject to the acceptance of the Terms of Use.</p>
+						<p>Registry users may query and view the data and generate printable reports. The Registry supports anonymous (guest) access, but also permits the user to register for additional services, such as the export of the entire dataset as GML 3.2 dictionaries.</p>
+						<p>Additionally the Registry provides a web service interface, permitting geospatial software to query and retrieve geodetic parameters. Information on how to access the service is available in Guidance Note 7-3: EPSG Registry Developers Guide.</p>
+						<p><small>(source: <a href="http://www.epsg-registry.org">www.epsg-registry.org</a>)</small></p>
 					</div>
 				</div>
-			</div>
+<!-- 			</div> -->
 		</div>
 	</div>
 </body>
