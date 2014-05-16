@@ -1,13 +1,7 @@
 package org.iso.registry.client.configuration.web;
 
-import javax.servlet.Filter;
-
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import de.geoinfoffm.registry.client.web.AbstractWebApplicationInitializer;
 import de.geoinfoffm.registry.persistence.PersistenceConfiguration;
