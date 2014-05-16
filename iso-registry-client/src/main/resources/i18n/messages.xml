@@ -347,9 +347,15 @@
 	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
 	<entry key="UnitOfMeasure">Unit of Measurement</entry>
 	<entry key="GeodeticCRS">Geodetic CRS</entry>
+	<entry key="EngineeringCRS">Engineering CRS</entry>
+	<entry key="VerticalCRS">Vertical CRS</entry>
+	<entry key="ProjectedCRS">Projected CRS</entry>
+	<entry key="CompoundCRS">Vertical CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
 	<entry key="Area">Area</entry>
 	<entry key="GeodeticDatum">Geodetic Datum</entry>
+	<entry key="VerticalDatum">Vertical Datum</entry>
+	<entry key="EngineeringDatum">Engineering Datum</entry>
 	<entry key="PrimeMeridian">Prime Meridian</entry>
 
 </properties>
