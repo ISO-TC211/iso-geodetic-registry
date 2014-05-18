@@ -91,7 +91,7 @@ public class ManagementController
 
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
-		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNullAndGroupIsNull();
+		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNullAndGroupIsNullAndIsConcludedIsFalse();
 		for (Proposal proposal : proposals) {
 			if (proposal.isPending() && proposal.isReviewed()) {
 				proposalViewBeans.add(new RegisterItemViewBean(proposal));
@@ -114,7 +114,7 @@ public class ManagementController
 
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
-		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNullAndGroupIsNull();
+		List<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNullAndGroupIsNullAndIsConcludedIsFalse();
 		for (Proposal proposal : proposals) {
 			if (!security.hasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
 				continue;
@@ -139,7 +139,7 @@ public class ManagementController
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
 		RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
-		List<Proposal> proposals = proposalRepository.findBySponsorAndGroupIsNull(sponsor);
+		List<Proposal> proposals = proposalRepository.findBySponsorAndGroupIsNullAndIsConcludedIsFalse(sponsor);
 		for (Proposal proposal : proposals) {
 //			if (!security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
 //			Hibernate.initialize(proposal.getProposalManagementInformations());
