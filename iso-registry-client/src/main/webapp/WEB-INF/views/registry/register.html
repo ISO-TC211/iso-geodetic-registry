@@ -34,7 +34,7 @@
 				
 				<div class="tab-content">
 					<div id="overview" class="tab-pane in">
-						<p th:text="#{tabs.overview}">�bersicht</p>
+						<p th:text="#{tabs.overview}">Übersicht</p>
 					</div>
 					
 					<div id="contents" class="tab-pane in" th:classappend="(${viewMode} == 'contents') ? 'active'">
@@ -55,127 +55,243 @@
 										<th></th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr th:each="item : ${items}">
-										<td th:text="${item.itemIdentifier}"></td>
-										<td th:text="${item.name}"></td>
-										<td th:text="#{${item.itemClassName}}"></td>
-										<td th:text="#{${item.status}}"></td>
-										<td>
-											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid}} + '\''" th:text="#{button.details}">Details</button>												
-											<div class="btn-group" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)">
-												<button type="button" th:if="${item.isValid()}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
-												</button>
-												<ul class="dropdown-menu" role="menu">
-													<li><div style="margin-left: 10px"><button th:id="'clarify_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid} + '/clarify'} + '\''" th:text="#{button.clarification}">Klarstellen</button></div></li>
-	<!-- 													<li><div style="margin-left: 10px; margin-top: 5px"><button th:id="'supersede_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.name} + '/proposal/supersession'} + '\''" th:text="#{button.supersession}">Ersetzen</button></div></li> -->
-													<li>
-														<div style="margin-left: 10px; margin-top: 5px">
-	<!-- 															<button th:id="'retire_' + ${item.uuid}" class="btn btn-danger btn-xs" th:onclick="'rest(\'' + ${item.uuid} + '\', \'' + @{${basePath} + '/item/' + ${item.uuid} + '/retire'} + '\');'" th:text="#{button.retirement}">Aufgeben</button> -->
-															<button td:id="'retire_' + ${item.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmretirement-' + ${item.uuid}" data-toggle="modal" th:text="#{button.retirement}">Aufgeben</button>
-														</div>
+<!-- 								<tbody> -->
+<!-- 									<tr th:each="item : ${items}"> -->
+<!-- 										<td th:text="${item.itemIdentifier}"></td> -->
+<!-- 										<td th:text="${item.name}"></td> -->
+<!-- 										<td th:text="#{${item.itemClassName}}"></td> -->
+<!-- 										<td th:text="#{${item.status}}"></td> -->
+<!-- 										<td> -->
+<!-- 											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid}} + '\''" th:text="#{button.details}">Details</button>												 -->
+<!-- 											<div class="btn-group" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)"> -->
+<!-- 												<button type="button" th:if="${item.isValid()}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
+<!-- 													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
+<!-- 												</button> -->
+<!-- 												<ul class="dropdown-menu" role="menu"> -->
+<!-- 													<li><div style="margin-left: 10px"><button th:id="'clarify_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid} + '/clarify'} + '\''" th:text="#{button.clarification}">Klarstellen</button></div></li> -->
+<!-- 													<li> -->
+<!-- 														<div style="margin-left: 10px; margin-top: 5px"> -->
+<!-- 															<button td:id="'retire_' + ${item.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmretirement-' + ${item.uuid}" data-toggle="modal" th:text="#{button.retirement}">Aufgeben</button> -->
+<!-- 														</div> -->
 														
-													</li>
-												</ul>
+<!-- 													</li> -->
+<!-- 												</ul> -->
 														
-												<div class="modal fade" th:id="'confirmretirement-' + ${item.uuid}" role="dialog">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form th:action="@{__${basePath}__/item/__${item.uuid}__/retire}" method="get">
-																<div class="modal-header">
-																	<h4 th:text="#{popup.retire.header}">Registereintrag aufgeben</h4>
-																</div>
-																<div class="modal-body">
-																	<p th:text="#{popup.retire.justification}">
-																		Bitte geben Sie eine Begründung für die Aufgabe des Eintrags an.
-																	</p>
+<!-- 												<div class="modal fade" th:id="'confirmretirement-' + ${item.uuid}" role="dialog"> -->
+<!-- 													<div class="modal-dialog"> -->
+<!-- 														<div class="modal-content"> -->
+<!-- 															<form th:action="@{__${basePath}__/item/__${item.uuid}__/retire}" method="get"> -->
+<!-- 																<div class="modal-header"> -->
+<!-- 																	<h4 th:text="#{popup.retire.header}">Registereintrag aufgeben</h4> -->
+<!-- 																</div> -->
+<!-- 																<div class="modal-body"> -->
+<!-- 																	<p th:text="#{popup.retire.justification}"> -->
+<!-- 																		Bitte geben Sie eine Begründung für die Aufgabe des Eintrags an. -->
+<!-- 																	</p> -->
 																	
-																	<!-- Text input-->
-																	<div class="form-group">
-																		<div class="controls">
-																			<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text" /> 
-																		</div>
-																	</div>
+<!-- 																	Text input -->
+<!-- 																	<div class="form-group"> -->
+<!-- 																		<div class="controls"> -->
+<!-- 																			<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text" />  -->
+<!-- 																		</div> -->
+<!-- 																	</div> -->
 																	
-																</div>
-																<div class="modal-footer">
-																	<button id="confirmretirement" type="submit" class="btn btn-warning" th:text="#{button.confirm}">Bestätgigen</button>
-																	<button id="denyretirement" class="btn btn-primary" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
-																</div>
-															</form>
-														</div>
-													</div>
-												</div>
+<!-- 																</div> -->
+<!-- 																<div class="modal-footer"> -->
+<!-- 																	<button id="confirmretirement" type="submit" class="btn btn-warning" th:text="#{button.confirm}">Bestätgigen</button> -->
+<!-- 																	<button id="denyretirement" class="btn btn-primary" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button> -->
+<!-- 																</div> -->
+<!-- 															</form> -->
+<!-- 														</div> -->
+<!-- 													</div> -->
+<!-- 												</div> -->
 	
-											</div>
-										</td>
-									</tr>
-								</tbody>
+<!-- 											</div> -->
+<!-- 										</td> -->
+<!-- 									</tr> -->
+<!-- 								</tbody> -->
 							</table>
 						</div>
 					</div>
 
 
-					<div id="proposals" class="tab-pane in" th:classappend="(${viewMode} == 'proposals') ? 'active'">
-						<div style="margin-top: 20px">
-							<table id="proposalsTable" class="datatable table table-striped">
-								<thead>
-									<tr>
-										<th th:text="#{tableheader.name}">Name</th>
-										<th th:text="#{tableheader.itemClassName}">Klasse</th>
-										<th th:text="#{tableheader.proposalType}">Vorschlagsart</th>
-										<th th:text="#{tableheader.submitter}">Vorschlagende Stelle</th>
-										<th th:text="#{tableheader.status}">Status</th>
-										<th></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="item : ${proposedItems}">
-										<td th:text="${item.name}"></td>
-										<td th:text="${item.itemClassName}"></td>
-										<td th:text="#{${item.proposalType}}"></td>
-										<td th:text="${item.sponsorName}"></td>
-										<td th:text="#{${item.proposalStatus}}"></td>
-										<td>
-											<div class="btn-group">
-												<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
-												</button>
-												<ul class="dropdown-menu" role="menu">
-													<li>
-														<div style="margin: 5px;">
-															<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${@registrySecurity.mayWrite(item.proposalClass, item.proposalUuid)} ? #{button.edit} : #{button.details}">Details</button>												
-														</div>
-													</li>
-													<li th:if="${item.isUnderReview()} or ${item.isPending()}">
-														<div style="margin: 5px;">
-															<button th:id="'withdraw_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdrawProposal}">Zurückziehen</button>
-														</div>
-													</li>
-													<li th:if="${item.isAppealable()}"><div style="margin: 5px">
-														<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button>
-													</div></li>
-												</ul>
-											</div>
-<!-- 											<button sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)" th:id="'withdraw_' + ${item.uuid}" th:if="${item.isUnderReview()} or ${item.isPending()}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdraw}">Zurückziehen</button> -->
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
+<!-- 					<div id="proposals" class="tab-pane in" th:classappend="(${viewMode} == 'proposals') ? 'active'"> -->
+<!-- 						<div style="margin-top: 20px"> -->
+<!-- 							<table id="proposalsTable" class="datatable table table-striped"> -->
+<!-- 								<thead> -->
+<!-- 									<tr> -->
+<!-- 										<th th:text="#{tableheader.name}">Name</th> -->
+<!-- 										<th th:text="#{tableheader.itemClassName}">Klasse</th> -->
+<!-- 										<th th:text="#{tableheader.proposalType}">Vorschlagsart</th> -->
+<!-- 										<th th:text="#{tableheader.submitter}">Vorschlagende Stelle</th> -->
+<!-- 										<th th:text="#{tableheader.status}">Status</th> -->
+<!-- 										<th></th> -->
+<!-- 									</tr> -->
+<!-- 								</thead> -->
+<!-- 								<tbody> -->
+<!-- 									<tr th:each="item : ${proposedItems}"> -->
+<!-- 										<td th:text="${item.name}"></td> -->
+<!-- 										<td th:text="${item.itemClassName}"></td> -->
+<!-- 										<td th:text="#{${item.proposalType}}"></td> -->
+<!-- 										<td th:text="${item.sponsorName}"></td> -->
+<!-- 										<td th:text="#{${item.proposalStatus}}"></td> -->
+<!-- 										<td> -->
+<!-- 											<div class="btn-group"> -->
+<!-- 												<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
+<!-- 													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
+<!-- 												</button> -->
+<!-- 												<ul class="dropdown-menu" role="menu"> -->
+<!-- 													<li> -->
+<!-- 														<div style="margin: 5px;"> -->
+<!-- 															<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${@registrySecurity.mayWrite(item.proposalClass, item.proposalUuid)} ? #{button.edit} : #{button.details}">Details</button>												 -->
+<!-- 														</div> -->
+<!-- 													</li> -->
+<!-- 													<li th:if="${item.isUnderReview()} or ${item.isPending()}"> -->
+<!-- 														<div style="margin: 5px;"> -->
+<!-- 															<button th:id="'withdraw_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdrawProposal}">Zurückziehen</button> -->
+<!-- 														</div> -->
+<!-- 													</li> -->
+<!-- 													<li th:if="${item.isAppealable()}"><div style="margin: 5px"> -->
+<!-- 														<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button> -->
+<!-- 													</div></li> -->
+<!-- 												</ul> -->
+<!-- 											</div> -->
+<!-- 										</td> -->
+<!-- 									</tr> -->
+<!-- 								</tbody> -->
+<!-- 							</table> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+					
 				</div>
 			</div>
 		</div>
 	</div>
+
+<script type="text/javascript" th:inline="text">
+/*<![CDATA[ */
+            
+	var datatable2Rest = function(sSource, aoData, fnCallback) {
+	    //extract name/value pairs into a simpler map for use later
+	    var paramMap = {};
+	    for ( var i = 0; i < aoData.length; i++) {
+	        paramMap[aoData[i].name] = aoData[i].value;
+	    }
+
+	    //page calculations
+	    var pageSize = paramMap.iDisplayLength;
+	    var start = paramMap.iDisplayStart;
+	    var pageNum = start / pageSize; // pageNum is 0 based
+
+	    // extract sort information
+	    var sortCol = paramMap.iSortCol_0;
+	    var sortDir = paramMap.sSortDir_0;
+	    var sortName = paramMap['mDataProp_' + sortCol];
+
+	    //create new json structure for parameters for REST request
+	    var restParams = new Array();
+	    restParams.push({"name" : "limit", "value" : pageSize});
+	    restParams.push({"name" : "page", "value" : pageNum });
+	    restParams.push({"name" : "sort", "value" : sortName });
+	    restParams.push({"name" : sortName + ".dir", "value" : sortDir });
+
+	    //if we are searching by name, override the url and add the name parameter
+	    var url = sSource;
+	    alert(url);
+// 	    if (paramMap.sSearch != '') {
+// 	        url = "${baseUrl}rest/customer/search/findByNameContains";
+// 	        restParams.push({ "name" : "name", "value" :  paramMap.sSearch});
+// 	    }
+
+	    //finally, make the request
+	    $.ajax({
+	        "dataType" : 'json',
+	        "type" : "GET",
+	        "url" : url,
+	        "data" : restParams,
+	        "success" : function(data) {
+	            data.iTotalRecords = data.totalCount;
+	            data.iTotalDisplayRecords = data.totalCount;
+
+	            fnCallback(data);
+	        }
+	    });
+	};
+
 	
-	<script type="text/javascript" th:inline="text">
+	var detailsButton = function(item) {
+		return '<button type="button" id="details_' + item.uuid + '" class="btn btn-default btn-xs button-details" data-uuid="' + item.uuid + '">[[#{button.details}]]</button>';
+	};
+
+	var clarifyButton = function(item) {
+		return '<button type="button" id="clarify_' + item.uuid + '" class="btn btn-primary btn-xs button-clarify" data-uuid="' + item.uuid + '">[[#{button.clarification}]]</button>';
+	};
+
+	var retireButton = function(item) {
+		return '<button type="button" id="retire_' + item.uuid + '" class="btn btn-xs btn-danger" href="#confirmretirement-' + item.uuid +'" data-toggle="modal">[[#{button.retirement}]]</button>';
+	};
+	
+	var retirePopup = function(item) {
+		return '<div class="modal fade" id="confirmretirement-' + item.uuid + '" role="dialog">' +
+			      '<div class="modal-dialog">' +
+				    '<div class="modal-content">' +
+					  '<form action="[[@{${basePath}}]]/item/' + item.uuid + '/retire" method="get">' +
+					    '<div class="modal-header"><h4>[[#{popup.retire.header}]]</h4></div>' +
+						  '<div class="modal-body">' +
+							'<p>[[#{popup.retire.justification}]]</p>' +
+							'<div class="form-group">' +
+							  '<div class="controls">' +
+							    '<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+						  '</div>' +
+						  '<div class="modal-footer">' +
+							'<button id="confirmretirement" type="submit" class="btn btn-warning">[[#{button.confirm}]]</button>' +
+							'<button id="denyretirement" class="btn btn-primary" data-dismiss="modal">[[#{button.cancel}]]</button>' +
+						'</div>' +
+					  '</form>' +
+				    '</div>' +
+			      '</div>' +
+		        '</div>' +
+	          '</div>';
+	}
+
+	var dropdownMenu = function(actions) {
+		var result = '<div class="btn-group">' +
+		         '<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+				   '<span>[[#{button.action}]]</span> <span class="caret"></span>' +
+				 '</button>' +
+				 '<ul class="dropdown-menu" role="menu">';
+
+		$.each(actions, function(i, val) {
+			result += '<li><div style="margin-left: 10px; margin-top: 5px">' + val + '</div></li>';	
+		});
+				 
+		result += '</ul></div>';
+		
+		return result;
+	}
+
+	$('#contentsTable').on('click', '.button-details', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{${basePath}}]]/item/' + uuid;
+	});
+
+	$('#contentsTable').on('click', '.button-clarify', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{${basePath}}]]/item/' + uuid + '/clarify';
+	});
+
 	$(document).ready(function() {
 		var table;
-
+		
 		table = $('#contentsTable').dataTable({
+			"sAjaxSource": "[[${basePath}]]/register/[[${register.uuid}]]/containedItems",
+			"bProcessing": true,
+			"bServerSide": true,
+// 			"fnServerData" : datatable2Rest,
 			"sPaginationType": "bs_normal",
+			"bFilter": false,
 			"oLanguage": {
 				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
 				  "sInfo": "[[#{datatable.sInfo}]]",
@@ -192,14 +308,97 @@
 				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
 				    }
 				},
+			"fnDrawCallback": function( oSettings ) {
+// 				alert( 'DataTables has redrawn the table' );
+			},				
 			"aaSorting": [[ 0, "asc" ]],
-			 aoColumns: [
-				null,
-				null,
-				null,
-				null,
-				{"bSortable" : false}
+			"aoColumns": [
+				{ "mDataProp": "itemIdentifier" },
+				{ 
+					"mDataProp": "name",
+					"bSearchable": true
+				},
+				{ 	"mDataProp": "itemClassName",
+				 	"bSortable": false
+				},
+				{ 
+					"mDataProp": "status",
+					"bSortable": false
+				},
+			],
+			"aoColumnDefs": [
+				{ "aTargets": [4],
+				  "mData": null,
+				  "mRender": function (data, type, full) {
+					  var actions = detailsButton(full);
+					  
+					  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]]) {
+						  var dropdownActions = []; 
+						  dropdownActions.push(clarifyButton(full));
+						  dropdownActions.push(retireButton(full));
+						  
+						  actions += dropdownMenu(dropdownActions);
+						  actions += retirePopup(full);
+					  }
+					  
+					  return actions;
+																		
+// 						<div class="btn-group" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)">
+// 							<button type="button" th:if="${item.isValid()}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+// 								<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
+// 							</button>
+// 							<ul class="dropdown-menu" role="menu">
+// 								<li><div style="margin-left: 10px"><button th:id="'clarify_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid} + '/clarify'} + '\''" th:text="#{button.clarification}">Klarstellen</button></div></li>
+// 								<li>
+// 									<div style="margin-left: 10px; margin-top: 5px">
+// 										<button td:id="'retire_' + ${item.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmretirement-' + ${item.uuid}" data-toggle="modal" th:text="#{button.retirement}">Aufgeben</button>
+// 									</div>
+									
+// 								</li>
+// 							</ul>
+									
+// 							<div class="modal fade" th:id="'confirmretirement-' + ${item.uuid}" role="dialog">
+// 								<div class="modal-dialog">
+// 									<div class="modal-content">
+// 										<form th:action="@{__${basePath}__/item/__${item.uuid}__/retire}" method="get">
+// 											<div class="modal-header">
+// 												<h4 th:text="#{popup.retire.header}">Registereintrag aufgeben</h4>
+// 											</div>
+// 											<div class="modal-body">
+// 												<p th:text="#{popup.retire.justification}">
+// 													Bitte geben Sie eine Begründung für die Aufgabe des Eintrags an.
+// 												</p>
+												
+// 												Text input
+// 												<div class="form-group">
+// 													<div class="controls">
+// 														<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+// 													</div>
+// 												</div>
+												
+// 											</div>
+// 											<div class="modal-footer">
+// 												<button id="confirmretirement" type="submit" class="btn btn-warning" th:text="#{button.confirm}">Bestätgigen</button>
+// 												<button id="denyretirement" class="btn btn-primary" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+// 											</div>
+// 										</form>
+// 									</div>
+// 								</div>
+// 							</div>
+
+// 						</div>
+
+					  
+				  }
+				}
 			]
+// 			aoColumns: [
+// 				null,
+// 				null,
+// 				null,
+// 				null,
+// 				{"bSortable" : false}
+// 			]
 		});	
 
 		table = $('#proposalsTable').dataTable({
@@ -242,6 +441,9 @@
 			length_sel.addClass('form-control input-sm');
 		});
 	});
+	
+	
+/* ]]> */
 </script>
 
 </body>
