@@ -291,6 +291,7 @@
 			"bServerSide": true,
 // 			"fnServerData" : datatable2Rest,
 			"sPaginationType": "bs_normal",
+			"bFilter": false,
 			"oLanguage": {
 				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
 				  "sInfo": "[[#{datatable.sInfo}]]",
@@ -313,7 +314,10 @@
 			"aaSorting": [[ 0, "asc" ]],
 			"aoColumns": [
 				{ "mDataProp": "itemIdentifier" },
-				{ "mDataProp": "name" },
+				{ 
+					"mDataProp": "name",
+					"bSearchable": true
+				},
 				{ 	"mDataProp": "itemClassName",
 				 	"bSortable": false
 				},
