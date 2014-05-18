@@ -175,6 +175,7 @@
 	<entry key="alert.noSupersededItems">Es muss mindestens ein zu ersetzender Eintrag ausgewählt werden.</entry>
 	<entry key="alert.noSupersedingItems">Es muss mindestens ein Nachfolger angelegt werden.</entry>
 	<entry key="alert.registerNotFound">Das Register "{0}" existiert nicht.</entry>
+	<entry key="alert.validationFailed">Der Vorgang kann aufgrund von fehlerhaften oder fehlenden Eingaben nicht fortgesetzt werden. Bitte überprüfen Sie alle Eingabefelder.</entry>
 
 	<entry key="popup.newOrganization.header">Details Ihrer Organisation</entry>
 	<entry key="popup.deleteUser.header">Benutzer löschen</entry>
