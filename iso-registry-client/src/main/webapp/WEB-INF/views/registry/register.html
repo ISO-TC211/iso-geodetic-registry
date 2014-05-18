@@ -286,7 +286,7 @@
 		var table;
 		
 		table = $('#contentsTable').dataTable({
-			"sAjaxSource": "[[${basePath}]]/register/[[${register.uuid}]]/containedItems",
+			"sAjaxSource": "[[@{${basePath}}]]/register/[[${register.uuid}]]/containedItems",
 			"bProcessing": true,
 			"bServerSide": true,
 // 			"fnServerData" : datatable2Rest,
