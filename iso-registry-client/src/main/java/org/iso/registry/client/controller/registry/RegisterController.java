@@ -3,7 +3,7 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
