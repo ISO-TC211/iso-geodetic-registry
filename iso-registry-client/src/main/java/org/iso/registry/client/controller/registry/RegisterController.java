@@ -143,7 +143,7 @@ public class RegisterController
 
 	@RequestMapping(value = "/{register}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public String registerOverview(@PathVariable("register") String registerName, 
+	public String registerOverview(@PathVariable("register") String registerName,
 							       final Model model, final RedirectAttributes redirectAttributes, Pageable pageable) {
 		return registerOverview(registerName, (UUID)null, model, redirectAttributes, pageable);
 	}
@@ -201,7 +201,19 @@ public class RegisterController
 			pageable = new PageRequest(0, 10);
 		}
 		
-		Page<RE_RegisterItem> items = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
+		RE_ItemClass itemClass = null;
+		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass"))) {
+			UUID itemClassUuid = UUID.fromString(parameters.get("itemClass"));
+			itemClass = itemClassRepository.findOne(itemClassUuid);
+		}
+		
+		Page<RE_RegisterItem> items;
+		if (itemClass == null) {
+			items = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
+		}
+		else {
+			items = itemService.findByRegisterAndItemClassAndStatus(register, itemClass, RE_ItemStatus.VALID, pageable);			
+		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
 		for (RE_RegisterItem item : items.getContent()) {
 			viewBeans.add(new RegisterItemViewBean(item, false));
@@ -225,28 +237,9 @@ public class RegisterController
 		RE_ItemClass itemClass = null;
 		if (itemClassUuid != null) {
 			itemClass = itemClassRepository.findOne(itemClassUuid);
+			model.addAttribute("itemClass", itemClass);
 		}
 		
-		List<RegisterItemViewBean> containedItemViewBeans = new ArrayList<RegisterItemViewBean>();
-		List<RE_RegisterItem> containedItems;
-		Page<RE_RegisterItem> page; 
-		if (itemClass == null) {
-			page = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
-			containedItems = page.getContent();
-//			containedItems = register.getContainedItems(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
-		}
-		else {
-			page = itemService.findByRegisterAndItemClassAndStatus(register, itemClass, RE_ItemStatus.VALID, pageable);
-			containedItems = page.getContent();
-//			containedItems = register.getContainedItems(itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
-		}
-		
-		model.addAttribute("page", page);
-		
-		for (RE_RegisterItem containedItem : containedItems) {
-			containedItemViewBeans.add(new RegisterItemViewBean(containedItem, false));
-		}
-		model.addAttribute("items", containedItemViewBeans);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 //		RE_SubmittingOrganization suborg = null;
