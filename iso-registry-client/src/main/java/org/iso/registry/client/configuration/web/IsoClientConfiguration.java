@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,7 @@ import de.geoinfoffm.registry.client.web.AbstractWebMvcConfigurerAdapter;
 @EnableTransactionManagement
 @EnableAsync
 @Configuration
+@EnableSpringDataWebSupport
 public class IsoClientConfiguration extends AbstractWebMvcConfigurerAdapter
 {
 	@Override
