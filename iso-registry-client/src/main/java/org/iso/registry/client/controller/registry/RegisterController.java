@@ -8,6 +8,7 @@ import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -148,17 +152,50 @@ public class RegisterController
 	public @ResponseBody DatatablesResult getRegisterContainedItems(@PathVariable("register") String registerName, @RequestParam Map<String, String> parameters) {
 		RE_Register register = findRegister(registerName);
 		
-		String echo = parameters.get("sEcho");
-		String displayStart = parameters.get("iDisplayStart");
-		String displayLength = parameters.get("iDisplayLength");
+		String sEcho = parameters.get("sEcho");
+		String iDisplayStart = parameters.get("iDisplayStart");
+		String iDisplayLength = parameters.get("iDisplayLength");
+		String iColumns = parameters.get("iColumns");
+		String iSortingsCols = parameters.get("iSortingCols");
+		
+		Map<Integer, String> columns = new HashMap<Integer, String>();
+		if (iColumns != null) {
+			int columnCount = Integer.parseInt(iColumns);
+			for (int i = 0; i < columnCount; i++) {
+				columns.put(i, parameters.get("mDataProp_" + Integer.toString(i)));
+			}
+		}
+
+		Map<String, String> sortingColumns = new HashMap<String, String>();
+		if (iSortingsCols != null) {
+			int sortingCols = Integer.parseInt(iSortingsCols);
+			for (int i = 0; i < sortingCols; i++) {
+				String sortingCol = parameters.get("iSortCol_" + Integer.toString(i));
+				String direction = parameters.get("sSortDir_" + Integer.toString(i));
+				sortingColumns.put(columns.get(Integer.parseInt(sortingCol)), direction);
+			}
+		}
 		
 		Pageable pageable;
-		if (displayStart != null && displayLength != null) {
-			int startAt = Integer.parseInt(displayStart);
-			int length = Integer.parseInt(displayLength);
+		if (iDisplayStart != null && iDisplayLength != null) {
+			int startAt = Integer.parseInt(iDisplayStart);
+			int length = Integer.parseInt(iDisplayLength);
 			int pageNo = startAt / length;
 			
-			pageable = new PageRequest(pageNo, length);
+			Sort sort;
+			if (!sortingColumns.isEmpty()) {
+				List<Order> orders = new ArrayList<Order>();
+				for (String property : sortingColumns.keySet()) {
+					Order order = new Order(Direction.fromString(sortingColumns.get(property).toString().toUpperCase()), property);
+					orders.add(order);
+				}
+				sort = new Sort(orders);
+			}
+			else {
+				sort = new Sort(new Order("itemIdentifier"));
+			}
+			
+			pageable = new PageRequest(pageNo, length, sort);
 		}
 		else {
 			pageable = new PageRequest(0, 10);
@@ -170,7 +207,7 @@ public class RegisterController
 			viewBeans.add(new RegisterItemViewBean(item, false));
 		}
 		
-		return new DatatablesResult(items.getTotalElements(), items.getTotalElements(), echo, viewBeans);
+		return new DatatablesResult(items.getTotalElements(), items.getTotalElements(), sEcho, viewBeans);
 	}
 
 	@RequestMapping(value = "/{register}/{itemClass}", method = RequestMethod.GET)
