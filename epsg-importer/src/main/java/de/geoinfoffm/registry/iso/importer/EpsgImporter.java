@@ -34,7 +34,14 @@ public class EpsgImporter
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		Database db = DatabaseBuilder.open(new File("C:/Daten/EPSG_v7_6_original.mdb"));
+		File source;
+		if (args.length == 0) {
+			source = new File("C:/Daten/EPSG_v7_6_original.mdb"); 
+		}
+		else {
+			source = new File(args[0]);
+		}
+		Database db = DatabaseBuilder.open(source);
 		AnnotationConfigApplicationContext context = null;
 		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 		try {
