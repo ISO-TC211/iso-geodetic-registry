@@ -1,5 +1,10 @@
 package org.iso.registry.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.iso.registry.api.registry.registers.gcp.AliasDTO;
+import org.iso.registry.core.model.Alias;
 import org.iso.registry.core.model.IdentifiedItem;
 
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
@@ -11,8 +16,11 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class IdentifiedItemViewBean extends RegisterItemViewBean
 {
-	public Integer code;
+	private Integer code;
 	private String remarks;
+	private List<AliasViewBean> aliases;
+	private String informationSource;
+	private String dataSource;
 
 	public IdentifiedItemViewBean(RE_RegisterItem item) {
 		super(item);
@@ -50,6 +58,11 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 
 		this.setCode(item.getCode());
 		this.setRemarks(item.getRemarks());
+		this.setInformationSource(item.getInformationSource());
+		this.setDataSource(item.getDataSource());
+		for (Alias alias : item.getAliases()) {
+			this.addAlias(new AliasViewBean(alias));
+		}
 	}
 
 	public Integer getCode() {
@@ -66,6 +79,37 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public List<AliasViewBean> getAliases() {
+		return aliases;
+	}
+
+	public void setAliases(List<AliasViewBean> aliases) {
+		this.aliases = aliases;
+	}
+	
+	public void addAlias(AliasViewBean alias) {
+		if (this.aliases == null) {
+			this.aliases = new ArrayList<AliasViewBean>();
+		}
+		this.aliases.add(alias);
+	}
+
+	public String getInformationSource() {
+		return informationSource;
+	}
+
+	public void setInformationSource(String informationSource) {
+		this.informationSource = informationSource;
+	}
+
+	public String getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(String dataSource) {
+		this.dataSource = dataSource;
 	}
 
 }
