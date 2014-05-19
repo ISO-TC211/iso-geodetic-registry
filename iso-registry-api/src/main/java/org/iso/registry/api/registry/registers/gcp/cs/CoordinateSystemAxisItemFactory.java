@@ -28,7 +28,7 @@ implements RegisterItemFactory<CoordinateSystemAxisItem, CoordinateSystemAxisPro
 		}
 		
 		CoordinateSystemAxisItem result = super.createRegisterItem(proposal);
-		proposal.setAdditionalValues(result, entityManager);
+//		proposal.setAdditionalValues(result, entityManager);
 		
 //		UnitOfMeasureItem uom = uomRepository.findOne(proposal.getAxisUnit().getReferencedItemUuid());
 //		result.setAxisUnit(uom);

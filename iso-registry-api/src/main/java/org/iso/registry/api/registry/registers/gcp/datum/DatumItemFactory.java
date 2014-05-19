@@ -39,7 +39,7 @@ implements RegisterItemFactory<DatumItem, DatumItemProposalDTO>
 		}
 		else {
 			DatumItem result = super.createRegisterItem(proposal);
-			proposal.setAdditionalValues(result, entityManager);
+//			proposal.setAdditionalValues(result, entityManager);
 			
 			return result;
 		}

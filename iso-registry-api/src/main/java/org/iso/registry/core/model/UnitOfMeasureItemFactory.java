@@ -25,7 +25,7 @@ implements RegisterItemFactory<UnitOfMeasureItem, UnitOfMeasureItemProposalDTO>
 		}
 		else {
 			UnitOfMeasureItem result = super.createRegisterItem(proposal);
-			proposal.setAdditionalValues(result, entityManager);
+//			proposal.setAdditionalValues(result, entityManager);
 			
 			return result;
 		}
