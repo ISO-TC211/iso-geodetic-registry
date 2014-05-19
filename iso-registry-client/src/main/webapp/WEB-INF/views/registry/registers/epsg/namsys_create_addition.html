@@ -31,22 +31,7 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											
-											<div th:fragment="namingSystemDetails">
-			
-												<div class="row">
-													<div class="col-md-6"> <!-- LEFT -->
-														<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-														<div class="row" th:include="registry/registers/globals :: aliases" />
-													</div>	<!-- END OF LEFT -->
-													
-													<div class="col-md-6"> <!-- RIGHT -->
-														<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-														<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
-														<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
-													</div>	<!-- END OF RIGHT -->									
-												</div>
-											</div>
+											<div th:replace="registry/registers/epsg/namsys_details :: namingSystemDetails"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
