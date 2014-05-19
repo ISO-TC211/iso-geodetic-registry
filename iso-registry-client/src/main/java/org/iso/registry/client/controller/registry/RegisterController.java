@@ -638,7 +638,6 @@ public class RegisterController
 	@RequestMapping(value = "/{register}/proposal/addition", method = RequestMethod.POST)
 	public String submitProposal(WebRequest request, ServletRequest servletRequest, @PathVariable("register") String registerName, 
 			@Valid @ModelAttribute("proposal") RegisterItemProposalDTO proposal,
-			@RequestParam Map<String, String> allParams,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) throws Exception {
 
 		RE_Register register = findRegister(registerName);
@@ -659,8 +658,7 @@ public class RegisterController
 			return "proposal";
 		}
 		
-		String itemClassUuid = allParams.get("itemClass");
-		proposal = bindAdditionalAttributes(proposal, servletRequest/*, itemClassUuid*/);
+		proposal = bindAdditionalAttributes(proposal, servletRequest);
 		
 		Addition addition = proposalService.createAdditionProposal(proposal);
 		
