@@ -13,170 +13,36 @@
 		
 					<div class="col-md-12 column">
 					
-						<!-- Select field: Item Class -->
-						<div class="form-group">
-							<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
-							<div class="controls">
-								<div class="input-group">
-									<input type="hidden" th:if="${partOfSupersession}" th:field="*{itemClassUuid}" th:value="${itemClassUuid}"/>
-									<select id="itemClass" required="true" th:field="*{itemClassUuid}" th:disabled="${partOfSupersession}">
-										<option th:text="#{form.select.choose}" value="" th:unless="${itemClassUuid}"/>
-										<option th:each="anItemClass : ${register.getContainedItemClasses()}"
-												th:value="${anItemClass.uuid}"
-												th:text="#{${anItemClass.name}}"></option>
-									</select>
+						<div th:replace="registry/registers/globals :: itemClassSelector"/> 			
+
+						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
+						
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel">
+										<span class="panel-title" th:text="#{header.area}"></span>									
+									</a>
+									<div class="pull-right">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+
+								<div id="dataPanel" class="panel-collapse collapse in">								
+									<div class="panel-body">
+										<div th:if="${itemClass}">
+											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
+											<div th:replace="registry/registers/epsg/area_details :: areaDetails"/>
+										</div> <!-- if ${itemClass} -->
+									</div>
 								</div>
 							</div>
-						</div>
-						
-						<div th:unless="${itemClass}">
-							<button id="cancel" onClick="history.back();" type="button" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
-						</div>
-					
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title" th:text="#{header.area}">Area</h3>
-							</div>
-							
-							<div class="panel-body">
-								<div th:if="${itemClass}">
-									<div th:if="${itemClassNotConfigured}" class="alert alert-danger">
-										<p th:text="#{form.proposal.itemClassNotConfigured}">Konfiguration für Itemklasse nicht vorhanden.</p>
-									</div>
-									
-									<div th:fragment="areaDetails">
-	
-										<div class="row">
-		
-											<div class="col-md-6">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="name" th:text="#{form.label.name}">Name</label>
-													<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control required" required="true" type="text" th:field="*{name}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>				
-											
-											<div class="col-md-2">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label>
-													<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.code}" class="form-control required" required="true" type="number" th:field="*{code}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>
-	
-											<div class="col-md-3">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="nothernLatitude" th:text="#{form.label.northernLatitude}">Nothern latitude</label>
-													<input id="northernLatitude" name="northernLatitude" th:placeholder="#{form.placeholder.northernLatitude}" class="form-control required text-center" required="true" type="number" th:field="*{northBoundLatitude}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>
-																	
-										</div>
-	
-										<div class="row">
-		
-											<div class="col-md-2">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="isoA2Code" th:text="#{form.label.isoA2Code}">ISO A2 Code</label>
-													<input id="isoA2Code" name="isoA2Code" th:placeholder="#{form.placeholder.isoA2Code}" class="form-control required" required="true" type="text" th:field="*{isoA2Code}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>				
-	
-											<div class="col-md-2">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="isoA3Code" th:text="#{form.label.isoA3Code}">ISO A3 Code</label>
-													<input id="isoA3Code" name="isoA3Code" th:placeholder="#{form.placeholder.isoA3Code}" class="form-control required" required="true" type="text" th:field="*{isoA3Code}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>				
-	
-											<div class="col-md-2">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="isoA3Code" th:text="#{form.label.isoNCode}">ISO N Code</label>
-													<input id="isoNCode" name="isoNCode" th:placeholder="#{form.placeholder.isoNCode}" class="form-control required" required="true" type="text" th:field="*{isoNCode}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>				
-											
-											<div class="col-md-1"/>
-	
-											<div class="col-md-2">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="nothernLatitude" th:text="#{form.label.westernLongitude}">Nothern latitude</label>
-													<input id="westernLongitude" name="westernLongitude" th:placeholder="#{form.placeholder.westernLongitude}" class="form-control required text-center" required="true" type="number" th:field="*{westBoundLongitude}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>
-	
-											<div class="col-md-1"/>
-	
-											<div class="col-md-2">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="nothernLatitude" th:text="#{form.label.easternLongitude}">Nothern latitude</label>
-													<input id="easternLongitude" name="easternLongitude" th:placeholder="#{form.placeholder.easternLongitude}" class="form-control required text-center" required="true" type="number" th:field="*{eastBoundLongitude}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>
-										</div>
-										
-										<div class="row">
-											<div class="col-md-8"/>
-	
-											<div class="col-md-3">
-												<div class="form-group has-error has-feedback">
-													<label class="control-label" for="nothernLatitude" th:text="#{form.label.southernLatitude}">Nothern latitude</label>
-													<input id="southernLatitude" name="southernLatitude" th:placeholder="#{form.placeholder.southernLatitude}" class="form-control required text-center" required="true" type="number" th:field="*{southBoundLatitude}"/>
-													<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-												</div>
-											</div>
-										</div>
-									
-									</div>
-								</div> <!-- if ${itemClass} -->
-							</div>
-						</div>
 			
-						<div class="panel panel-default" th:if="${itemClass}">
-							<div class="panel-heading">
-								<h3 class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
-							</div>
+							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
-							<div class="panel-body">
-								<div th:fragment="proposalDetails">
-									<!-- Text input-->
-									<div class="form-group has-error has-feedback">
-										<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
-										<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" /> 
-										<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-									</div>
-				
-									<div th:unless="${partOfSupersession}">
-										<!-- Text input-->
-										<div class="form-group has-error has-feedback">
-											<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
-											<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control required" type="text" th:field="*{justification}" required="required" /> 
-											<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>			
-
-						<!-- Button -->
-						<div class="form-group" th:if="${itemClass}">
-							<div class="controls">
-								<button id="save" name="save" class="btn btn-primary" th:text="#{button.save}">Speichern</button>
-								<button id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
-							</div>
 						</div>
 						
-						<input type="hidden" th:field="*{itemUuid}"/>
-						<input type="hidden" th:field="*{proposalUuid}"/>
-						<input type="hidden" th:field="*{targetRegisterUuid}"/>
-						<input type="hidden" th:field="*{sponsorUuid}"/>
-						<input type="hidden" th:field="*{proposalType}"/>					
+						<div id="validationFailed" class="alert alert-danger" th:utext="#{alert.validationFailed}"/>
+						<div th:replace="registry/registers/globals :: proposalButtons"/>
 
 					</div>
 					
@@ -186,32 +52,7 @@
 		</div>
 	</div>
 	
-	<script type="text/javascript" th:inline="text">
-	/* <![CDATA[ */
-		$(document).ready(function() {
-			$('#itemClass').on('change', function() {
-		  		//alert( this.value ); // or $(this).val()
-		  		if ([[${param.addNew} ? 'true' : 'false']]) {
-		  			location.href = window.location.pathname + '?addNew=&itemClass=' + this.value;
-		  		}
-		  		else {
-		  			location.href = window.location.pathname + '?itemClass=' + this.value;
-		  		}
-			});
-			
-			$('#proposal .required').blur(function() {
-			    if (!$(this).val()) {
-			    	$(this).parent().addClass('has-error');
-			    	$(this).siblings('span').first().show();
-			    }
-			    else {
-			    	$(this).parent().removeClass('has-error');
-			    	$(this).siblings('span').first().hide();
-			    }
-			});			
-		});
-	/* ]]> */
-	</script>
+	<script th:replace="registry/registers/globals :: js-proposal"/>
 	
 </body>
 </html>
