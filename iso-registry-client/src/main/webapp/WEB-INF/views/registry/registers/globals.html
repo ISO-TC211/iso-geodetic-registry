@@ -1,0 +1,98 @@
+<div th:fragment="itemClassSelector">
+	<div class="form-group">
+		<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+		<div class="controls">
+			<div class="input-group">
+				<input type="hidden" th:if="${partOfSupersession}" th:field="*{itemClassUuid}" th:value="${itemClassUuid}"/>
+				<select id="itemClass" required="true" th:field="*{itemClassUuid}" th:disabled="${partOfSupersession}">
+					<option th:text="#{form.select.choose}" value="" th:unless="${itemClassUuid}"/>
+					<option th:each="anItemClass : ${register.getContainedItemClasses()}"
+							th:value="${anItemClass.uuid}"
+							th:text="#{${anItemClass.name}}"></option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div th:unless="${itemClass}">
+		<button id="cancel" onClick="history.back();" type="button" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+	</div>
+</div>
+
+<div th:fragment="itemClassNotConfiguredWarning">
+	<div th:if="${itemClassNotConfigured}" class="alert alert-danger">
+		<p th:text="#{form.proposal.itemClassNotConfigured}">Konfiguration für Itemklasse nicht vorhanden.</p>
+	</div>
+</div>
+
+<div th:fragment="input (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
+	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}" />
+	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+</div>
+
+<!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
+<div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
+	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:field="*{__${property}__}"/>
+	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+</div>
+
+<div th:fragment="nameAndCode">
+	<div class="col-md-8" th:with="property='name',inputType='text',label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
+		<div th:replace="registry/registers/globals :: input"/>
+	</div>
+	<div class="col-md-4" th:with="property='code',inputType='code',label=#{form.label.code},placeholder=#{form.placeholder.code},isRequired='true'">
+		<div th:replace="registry/registers/globals :: input"/>
+	</div>
+</div>
+
+
+<div th:fragment="remarks (cssClass)">
+	<div th:classappend="${cssClass}" th:with="property='remarks',rows=2,cols=60,label=#{form.label.remarks},placeholder=#{form.placeholder.remarks},isRequired='false'">
+		<div th:replace="registry/registers/globals :: textArea"/>
+	</div>
+</div>
+
+<div th:fragment="informationSource (cssClass)">
+	<div th:classappend="${cssClass}" th:with="property='informationSource',rows=2,cols=60,label=#{form.label.informationSource},placeholder=#{form.placeholder.informationSource},isRequired='false'">
+		<div th:replace="registry/registers/globals :: textArea"/>
+	</div>
+</div>
+
+<div th:fragment="dataSource (cssClass)">
+	<div th:classappend="${cssClass}" th:with="property='dataSource',rows=2,cols=60,label=#{form.label.dataSource},placeholder=#{form.placeholder.dataSource},isRequired='true'">
+		<div th:replace="registry/registers/globals :: textArea"/>
+	</div>
+</div>
+
+<div th:fragment="proposalDetailsPanel" class="panel panel-default" th:if="${itemClass}">
+	<div class="panel-heading">
+		<h3 class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
+	</div>
+
+	<div class="panel-body">
+		<div th:fragment="proposalDetails">
+			<div th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
+				<div th:replace="registry/registers/globals :: textArea"/>
+			</div>
+<!-- 			<div class="form-group has-feedback"> -->
+<!-- 				<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label> -->
+<!-- 				<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" />  -->
+<!-- 				<span class="glyphicon glyphicon-hand-left form-control-feedback"></span> -->
+<!-- 			</div> -->
+
+			<div th:unless="${partOfSupersession}">
+				<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textArea"/>
+				</div>
+
+<!-- 				<div class="form-group has-feedback"> -->
+<!-- 					<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label> -->
+<!-- 					<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control required" type="text" th:field="*{justification}" required="required" />  -->
+<!-- 					<span class="glyphicon glyphicon-hand-left form-control-feedback"></span> -->
+<!-- 				</div> -->
+			</div>
+		</div>
+	</div>
+</div>			
