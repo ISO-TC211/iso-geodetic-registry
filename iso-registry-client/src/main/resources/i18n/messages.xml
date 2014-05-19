@@ -127,6 +127,7 @@
 	<entry key="button.review">Accept proposal for decision</entry>
 	<entry key="button.accept">Accept proposal</entry>
 	<entry key="button.reject">Reject proposal</entry>
+	<entry key="button.addNew">Add new</entry>
 	<entry key="button.addNewSuccessor">Create new successor</entry>
 	<entry key="button.addExistingSuccessor">Add existing item as successor</entry>
 	<entry key="button.addSupersededItems">Select items to supersede</entry>
