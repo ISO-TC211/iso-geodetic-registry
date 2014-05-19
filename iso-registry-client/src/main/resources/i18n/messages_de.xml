@@ -58,6 +58,8 @@
 	<entry key="tableheader.role">Rolle</entry>
 	<entry key="tableheader.group">Gruppe</entry>
 	<entry key="tableheader.register">Register</entry>
+	<entry key="tableheader.code">Code</entry>
+	<entry key="tableheader.alias">Alias</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -262,6 +264,7 @@
 	<entry key="form.label.remarks">Bemerkungen</entry>
 	<entry key="form.label.informationSource">Informationsquelle</entry>
 	<entry key="form.label.dataSource">Datenquelle</entry>
+	<entry key="form.label.aliases">Aliase</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
