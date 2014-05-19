@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -136,6 +137,9 @@ public class RegisterController
 	@Autowired
 	private ProposalDtoFactory proposalDtoFactory;
 	
+	@Autowired
+	private ConversionService conversionService;
+	
 //	@InitBinder
 //	protected void initBinder(WebDataBinder binder) {
 //		binder.setValidator(new ProposalValidator(itemService));
@@ -143,7 +147,7 @@ public class RegisterController
 
 	@RequestMapping(value = "/{register}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public String registerOverview(@PathVariable("register") String registerName, 
+	public String registerOverview(@PathVariable("register") String registerName,
 							       final Model model, final RedirectAttributes redirectAttributes, Pageable pageable) {
 		return registerOverview(registerName, (UUID)null, model, redirectAttributes, pageable);
 	}
@@ -201,7 +205,19 @@ public class RegisterController
 			pageable = new PageRequest(0, 10);
 		}
 		
-		Page<RE_RegisterItem> items = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
+		RE_ItemClass itemClass = null;
+		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass"))) {
+			UUID itemClassUuid = UUID.fromString(parameters.get("itemClass"));
+			itemClass = itemClassRepository.findOne(itemClassUuid);
+		}
+		
+		Page<RE_RegisterItem> items;
+		if (itemClass == null) {
+			items = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
+		}
+		else {
+			items = itemService.findByRegisterAndItemClassAndStatus(register, itemClass, RE_ItemStatus.VALID, pageable);			
+		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
 		for (RE_RegisterItem item : items.getContent()) {
 			viewBeans.add(new RegisterItemViewBean(item, false));
@@ -225,28 +241,9 @@ public class RegisterController
 		RE_ItemClass itemClass = null;
 		if (itemClassUuid != null) {
 			itemClass = itemClassRepository.findOne(itemClassUuid);
+			model.addAttribute("itemClass", itemClass);
 		}
 		
-		List<RegisterItemViewBean> containedItemViewBeans = new ArrayList<RegisterItemViewBean>();
-		List<RE_RegisterItem> containedItems;
-		Page<RE_RegisterItem> page; 
-		if (itemClass == null) {
-			page = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
-			containedItems = page.getContent();
-//			containedItems = register.getContainedItems(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
-		}
-		else {
-			page = itemService.findByRegisterAndItemClassAndStatus(register, itemClass, RE_ItemStatus.VALID, pageable);
-			containedItems = page.getContent();
-//			containedItems = register.getContainedItems(itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
-		}
-		
-		model.addAttribute("page", page);
-		
-		for (RE_RegisterItem containedItem : containedItems) {
-			containedItemViewBeans.add(new RegisterItemViewBean(containedItem, false));
-		}
-		model.addAttribute("items", containedItemViewBeans);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 //		RE_SubmittingOrganization suborg = null;
@@ -642,7 +639,6 @@ public class RegisterController
 	@RequestMapping(value = "/{register}/proposal/addition", method = RequestMethod.POST)
 	public String submitProposal(WebRequest request, ServletRequest servletRequest, @PathVariable("register") String registerName, 
 			@Valid @ModelAttribute("proposal") RegisterItemProposalDTO proposal,
-			@RequestParam Map<String, String> allParams,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) throws Exception {
 
 		RE_Register register = findRegister(registerName);
@@ -663,8 +659,7 @@ public class RegisterController
 			return "proposal";
 		}
 		
-		String itemClassUuid = allParams.get("itemClass");
-		proposal = bindAdditionalAttributes(proposal, servletRequest/*, itemClassUuid*/);
+		proposal = bindAdditionalAttributes(proposal, servletRequest);
 		
 		Addition addition = proposalService.createAdditionProposal(proposal);
 		
@@ -690,7 +685,8 @@ public class RegisterController
 				Class<? extends RegisterItemProposalDTO> dtoClass = 
 						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
 				proposal = BeanUtils.instantiateClass(dtoClass);
-				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal);
+				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
+				binder.setConversionService(conversionService);
 				binder.bind(servletRequest);
 				
 //				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));

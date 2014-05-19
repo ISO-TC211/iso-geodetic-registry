@@ -134,7 +134,7 @@
 																		<option th:each="areaOfUse : ${@areaItemRepository.findAll()}" th:value="${areaOfUse.uuid}" th:text="'[' + ${areaOfUse.code} + '] ' + ${areaOfUse.name}"></option>
 																	</select>
 																	<span class="input-group-btn">
-			        													<button id="addNewArea" class="btn btn-default" type="button">Add new</button>
+			        													<button id="addNewArea" class="btn btn-default" type="button" th:text="#{button.addNew}">Add new</button>
 			      													</span>
 																</div>
 																<div th:unless="${isProposal}">
