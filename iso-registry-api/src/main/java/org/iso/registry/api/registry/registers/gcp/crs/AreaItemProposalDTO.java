@@ -65,8 +65,8 @@ public class AreaItemProposalDTO extends IdentifiedItemProposalDTO
 			AreaItem area = (AreaItem)item;
 			if (this.getEastBoundLongitude() != null 
 				&& this.getNorthBoundLatitude() != null 
-				&& this.getWestBoundLongitude() == null 
-				&& this.getSouthBoundLatitude() == null) {
+				&& this.getWestBoundLongitude() != null 
+				&& this.getSouthBoundLatitude() != null) {
 				
 				area.setBoundingBox(new EX_GeographicBoundingBox(
 					this.getEastBoundLongitude(),
