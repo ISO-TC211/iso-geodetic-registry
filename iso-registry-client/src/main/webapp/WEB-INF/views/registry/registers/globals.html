@@ -38,6 +38,22 @@
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
+<!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll()}  -->
+<div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
+	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
+		<select th:id="${property}" th:name="${property}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__.referencedItemUuid}">
+			<option th:each="item : ${items}" th:value="${item.uuid}" th:text="'[' + ${item.code} + '] ' + ${item.name}"></option>
+		</select>
+		<span class="input-group-btn">
+			<button th:id="'addNew_' + ${property}" class="btn btn-default btn-addnew" type="button" th:text="#{button.addNew}">Add new</button>
+		</span>
+	</div>
+	<div th:unless="${isProposal}" th:with="uuid=*{__${property}__.uuid}">
+		<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.code} + '] ' + *{__${property}__.name}"></a>
+	</div>
+</div>
+
 <div th:fragment="nameAndCode">
 	<div class="col-md-8" th:with="property='name',inputType='text',label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
 		<div th:replace="registry/registers/globals :: input"/>
