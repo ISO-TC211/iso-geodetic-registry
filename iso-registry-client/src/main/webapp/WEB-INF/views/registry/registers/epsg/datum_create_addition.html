@@ -83,24 +83,25 @@
 	<script type="text/javascript" th:inline="text">
 	/* <![CDATA[ */
 		$(document).ready(function() {
-			$('#newAreaPanel').hide();
+			hidePanel('#newAreaPanel');
 			
 			$('#addNew_domainOfValidity').bind('click', function (e) {
 				e.preventDefault();
 				$("#newAreaPanel").fadeIn(500);
 				$('#domainOfValidity').append('<option value="">New</option>');
 				$('#domainOfValidity').val('');
-				
 				$('#domainOfValidity').attr('disabled', 'disabled');
+
+				showPanel('#newAreaPanel');
 			});
 			
 			$('#newAreaPanelDismiss').bind('click', function(e) {
 				e.preventDefault();
 				$("#newAreaPanel").fadeOut(500);
 				$("#domainOfValidity option[value='']").remove();
-				
 				$('#domainOfValidity').removeAttr('disabled');
-				
+
+				hidePanel('#newAreaPanel');
 			});
 		});
 	/* ]]> */
