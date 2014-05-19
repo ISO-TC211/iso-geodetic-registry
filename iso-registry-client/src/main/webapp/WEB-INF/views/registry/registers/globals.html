@@ -28,14 +28,14 @@
 <div th:fragment="input (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
 	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}" />
-	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
 	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
-	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <div th:fragment="nameAndCode">
