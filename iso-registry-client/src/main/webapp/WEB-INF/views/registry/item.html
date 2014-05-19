@@ -230,7 +230,7 @@
 <script type="text/javascript" th:inline="text" th:fragment="js-item">
 /* <![CDATA[ */
 	$(document).ready(function() {
-		$('fieldset :input').attr('disabled', 'disabled');
+		$('.tab-content :input').attr('readonly', 'readonly').removeAttr('placeholder');
 		$('.feedback').hide();
 	});
 /* ]]> */
