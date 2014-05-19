@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="row clearfix" style="margin-top: 0px">
+		
+			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
+				<fieldset>		
+		
+					<div class="col-md-12 column">
+					
+						<!-- Select field: Item Class -->
+						<div class="form-group">
+							<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+							<div class="controls">
+								<div class="input-group">
+									<input type="hidden" th:if="${partOfSupersession}" th:field="*{itemClassUuid}" th:value="${itemClassUuid}"/>
+									<select id="itemClass" th:field="*{itemClassUuid}" th:disabled="${partOfSupersession}">
+										<option th:text="#{form.select.choose}" value="" th:unless="${itemClassUuid}"/>
+										<option th:each="anItemClass : ${register.getContainedItemClasses()}"
+												th:value="${anItemClass.uuid}"
+												th:text="#{${anItemClass.name}}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+						<div th:unless="${itemClass}">
+							<button id="cancel" onClick="history.back();" type="button" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+						</div>
+					
+						<div class="panel-group" id="accordion">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span th:text="#{header.datum}"></span></a>
+									<div class="pull-right">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+								<div id="dataPanel" class="panel-collapse collapse in">								
+									<div class="panel-body">
+										<div th:if="${itemClass}">
+											<div th:if="${itemClassNotConfigured}" class="alert alert-danger">
+												<p th:text="#{form.proposal.itemClassNotConfigured}">Konfiguration für Itemklasse nicht vorhanden.</p>
+											</div>
+		
+											<div th:fragment="datumDetails">
+			
+												<div class="row">
+				
+													<div class="col-md-6">
+														<div class="row">
+													
+															<div class="col-md-8">
+																<div class="form-group has-feedback">
+																	<label class="control-label" for="name" th:text="#{form.label.name}">Name</label>
+																	<input id="name" name="name" th:placeholder="#{form.placeholder.name}" class="form-control" required="required" type="text" th:field="*{name}"/>
+																	<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+																</div>
+															</div>				
+															
+															<div class="col-md-4">
+																<div class="form-group has-feedback">
+																	<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label>
+																	<input id="datumCode" name="datumCode" th:placeholder="#{form.placeholder.code}" class="form-control" required="required" type="number" th:field="*{code}"/>
+																	<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+																</div>
+															</div>
+														</div>
+														
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group has-feedback">
+																	<label class="control-label" for="scope" th:text="#{form.label.scope}">Scope</label>
+																	<textarea id="scope" name="scope" rows="2" cols="60" th:placeholder="#{form.placeholder.scope}" class="form-control" required="required" type="text" th:field="*{scope}"/>
+																	<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+																</div>
+			
+															</div>
+														</div>
+		
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label class="control-label" for="remarks" th:text="#{form.label.originDescription}">originDescription</label>
+																	<textarea id="originDescription" name="originDescription" rows="2" cols="60" th:placeholder="#{form.placeholder.originDescription}" class="form-control" type="text" th:field="*{anchorDefinition}"/>
+																</div>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label class="control-label" for="realizationEpoch" th:text="#{form.label.realizationEpoch}">realizationEpoch</label>
+																	<input id="realizationEpoch" name="realizationEpoch" th:placeholder="#{form.placeholder.realizationEpoch}" class="form-control" required="required" type="number" th:field="*{realizationEpoch}"/>
+																</div>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label class="control-label" for="remarks" th:text="#{form.label.remarks}">Scope</label>
+																	<textarea id="remarks" name="remarks" rows="2" cols="60" th:placeholder="#{form.placeholder.remarks}" class="form-control" type="text" th:field="*{remarks}"/>
+																</div>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label class="control-label" for="informationSource" th:text="#{form.label.informationSource}">informationSource</label>
+																	<textarea id="informationSource" name="informationSource" rows="2" cols="60" th:placeholder="#{form.placeholder.informationSource}" class="form-control" type="text" th:field="*{informationSource}"/>
+																</div>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label class="control-label" for="dataSource" th:text="#{form.label.dataSource}">Data source</label>
+																	<input id="dataSource" name="dataSource" th:placeholder="#{form.placeholder.dataSource}" class="form-control" required="required" type="number" th:field="*{dataSource}"/>
+																</div>
+															</div>
+														</div>
+														
+													</div>
+				
+													<div class="col-md-6">
+														<!-- Text input-->
+														<div class="controls">
+															<div class="form-group has-feedback">
+																<label class="control-label" for="areaOfUse" th:text="#{form.label.areaOfUse}">Area of Use</label>
+																<div th:if="${isProposal}" id="areaOfUseGroup" class="input-group">
+																	<select id="areaOfUse" class="form-control required" required="true" th:field="*{domainOfValidity.referencedItemUuid}">
+																		<option th:each="areaOfUse : ${@areaItemRepository.findAll()}" th:value="${areaOfUse.uuid}" th:text="'[' + ${areaOfUse.code} + '] ' + ${areaOfUse.name}"></option>
+																	</select>
+																	<span class="input-group-btn">
+			        													<button id="addNewArea" class="btn btn-default" type="button">Add new</button>
+			      													</span>
+																</div>
+																<div th:unless="${isProposal}">
+																	<a th:href="@{__${basePath}__/item/__*{domainOfValidity.uuid}__}" th:text="'[' + *{domainOfValidity.code} + '] ' + *{domainOfValidity.name}"></a>
+																</div>
+															</div>
+
+															<div class="form-group has-feedback" th:if="${itemClassName} != null and ${itemClassName} eq 'GeodeticDatum'">
+																<label class="control-label" for="ellipsoid" th:text="#{form.label.ellipsoid}">Ellipsoid</label>
+																<div th:if="${isProposal}" id="ellipsoidGroup" class="input-group">
+																	<select id="ellipsoid" class="form-control required" required="true" th:field="*{ellipsoid.referencedItemUuid}">
+																		<option th:each="ellipsoid : ${@ellipsoidItemRepository.findAll()}" th:value="${ellipsoid.uuid}" th:text="'[' + ${ellipsoid.code} + '] ' + ${ellipsoid.name}"></option>
+																	</select>
+																	<span class="input-group-btn">
+			        													<button id="addNewEllipsoid" class="btn btn-default" type="button">Add new</button>
+			      													</span>
+																</div>
+																<div th:unless="${isProposal}">
+																	<a th:href="@{__${basePath}__/item/__*{ellipsoid.uuid}__}" th:text="'[' + *{ellipsoid.code} + '] ' + *{ellipsoid.name}"></a>
+																</div>
+															</div>
+
+															<div class="form-group has-feedback" th:if="${itemClassName} != null and ${itemClassName} eq 'GeodeticDatum'">
+																<label class="control-label" for="primeMeridian" th:text="#{form.label.primeMeridian}">Prime Meridian</label>
+																<div th:if="${isProposal}" id="primeMeridianGroup" class="input-group">
+																	<select id="primeMeridian" class="form-control required" required="true" th:field="*{primeMeridian.referencedItemUuid}">
+																		<option th:each="primeMeridian : ${@primeMeridianItemRepository.findAll()}" th:value="${primeMeridian.uuid}" th:text="'[' + ${primeMeridian.code} + '] ' + ${primeMeridian.name}"></option>
+																	</select>
+																	<span class="input-group-btn">
+			        													<button id="addNewPrimeMeridian" class="btn btn-default" type="button">Add new</button>
+			      													</span>
+																</div>
+																<div th:unless="${isProposal}">
+																	<a th:href="@{__${basePath}__/item/__*{primeMeridian.uuid}__}" th:text="'[' + *{primeMeridian.code} + '] ' + *{primeMeridian.name}"></a>
+																</div>
+															</div>
+
+														</div>
+													</div>
+													
+												</div>
+						
+											</div>
+										</div> <!-- if ${itemClass} -->
+									</div>
+								</div>
+							</div>
+							
+							<div id="newAreaPanel" class="panel panel-default" th:if="${itemClass}">
+								<div class="panel-heading">
+									<a data-toggle="collapse" data-parent="#accordion" href="#areaPanel"><span th:text="#{header.area}"></span></a>
+									<div class="pull-right">
+										<button id="newAreaPanelDismiss" type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></button>
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+								<div id="areaPanel" class="panel-collapse collapse">								
+									<div class="panel-body" th:object="${proposal.domainOfValidity}">
+										<ul class="nav nav-tabs">
+							  				<li class="active"><a href="#area" data-toggle="tab">Area details</a></li>
+							  				<li><a href="#areaMgmt" data-toggle="tab">Management data</a></li>
+										</ul>
+									
+										<div class="tab-content">
+											<div id="area" class="tab-pane in active" style="padding-top: 10px">
+												<div th:include="registry/registers/epsg/area_create_addition :: areaDetails"/>
+											</div>
+											
+											<div id="areaMgmt" class="tab-pane in" style="padding-top: 10px">
+												<div th:include="registry/registers/epsg/area_create_addition :: proposalDetails"/>
+											</div>				
+										</div>
+									</div>		
+								</div>
+							</div>
+				
+							<div class="panel panel-default" th:if="${itemClass}">
+								<div class="panel-heading">
+<!-- 									<a data-toggle="collapse" data-parent="#accordion" href="#mgmtPanel" th:text="#{header.proposalDetails}">Collapsible Group Item #1</a> -->
+									<a data-toggle="collapse" data-parent="#accordion" href="#mgmtPanel"><span th:text="#{header.proposalDetails}"></span></a>
+<!-- 									<h3 class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3> -->
+									<div class="pull-right">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+								
+								<div id="mgmtPanel" class="panel-collapse collapse">																
+									<div class="panel-body">
+										<!-- Text input-->
+										<div class="form-group has-feedback">
+											<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
+											<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" /> 
+											<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+										</div>
+					
+										<div th:unless="${partOfSupersession}">
+											<!-- Text input-->
+											<div class="form-group has-feedback">
+												<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
+												<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control required" type="text" th:field="*{justification}" required="required" /> 
+												<span class="glyphicon glyphicon-hand-left form-control-feedback"></span>
+											</div>
+						
+										</div>
+									</div>
+								</div>
+							</div>			
+
+						</div>
+						<!-- Button -->
+						<div id="validationFailed" class="alert alert-danger" th:utext="#{alert.validationFailed}"/>
+						<div class="form-group" th:if="${itemClass}">
+							<div class="controls">
+								<button id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+								<div class="pull-right">
+									<button id="saveProposal" name="saveProposal" class="btn btn-default" th:text="#{button.saveProposal}">Speichern</button>
+									<button id="submit" name="submit" class="btn btn-primary" th:text="#{button.submitProposal}">Speichern</button>
+								</div>
+							</div>
+						</div>
+						
+						<input type="hidden" th:field="*{itemUuid}"/>
+						<input type="hidden" th:field="*{proposalUuid}"/>
+						<input type="hidden" th:field="*{targetRegisterUuid}"/>
+						<input type="hidden" th:field="*{sponsorUuid}"/>
+						<input type="hidden" th:field="*{proposalType}"/>					
+
+					</div>
+					
+				</fieldset>
+			</form>
+			
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			$('#itemClass').on('change', function() {
+		  		//alert( this.value ); // or $(this).val()
+		  		if ([[${param.addNew} ? 'true' : 'false']]) {
+		  			location.href = window.location.pathname + '?addNew=&itemClass=' + this.value;
+		  		}
+		  		else {
+		  			location.href = window.location.pathname + '?itemClass=' + this.value;
+		  		}
+			});
+			
+			$('#newAreaPanel').hide();
+			$('#validationFailed').hide();
+			
+			$('#addNewArea').bind('click', function (e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeIn(500);
+				$('#areaOfUse').append('<option value="">New</option>');
+				$('#areaOfUse').val('');
+				
+				$('#areaOfUse').attr('disabled', 'disabled');
+// 				$('#areaOfUseGroup').hide();
+			});
+			
+			$('#newAreaPanelDismiss').bind('click', function(e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeOut(500);
+				$("#areaOfUse option[value='']").remove();
+				
+				$('#areaOfUse').removeAttr('disabled');
+// 				$('#areaOfUseGroup').show();
+				
+			});
+
+			$('#proposal').validate({
+				ignore: '',
+//	 			debug: true,
+				rules: {
+					code: {
+						required: true,
+					},
+					name: {
+						required: true,
+					},
+					scope: {
+						required: true,
+					},
+					areaOfUse: {
+						required: true,
+					},
+					datum: {
+						required: true,
+					},
+					coordinateSystem: {
+						required: true,
+					},
+					definition: {
+						required: true,
+					},
+					justification: {
+						required: true,
+					},
+				},
+				invalidHandler: function(event, validator) {
+					// 'this' refers to the form
+					var errors = validator.numberOfInvalids();
+					
+					$('#validationFailed').show();				
+				},
+				submitHandler: function(form) {
+					$('#pleasewait').show();
+		 			$('button').each(function() {
+						$(this).attr('disabled', 'disabled');
+					});
+					
+//	 				pleasewait.show();
+					form.submit();
+					return true;
+				},
+				messages: {
+					name: "[[#{button.cancel}]]"
+				},
+				errorClass: "has-error",
+				errorPlacement: function(error, element) {
+				},
+				highlight: function(element, errorClass, validClass) {
+					$(element).addClass(errorClass).removeClass(validClass);
+					$(element).closest(".form-group").addClass(errorClass);
+				},
+				unhighlight: function(element, errorClass, validClass) {
+					$(element).removeClass(errorClass).addClass(validClass);
+					$(element).closest(".form-group").removeClass(errorClass);
+				}			
+			});
+
+			
+		});
+	/* ]]> */
+	</script>
+	
+</body>
+</html>
