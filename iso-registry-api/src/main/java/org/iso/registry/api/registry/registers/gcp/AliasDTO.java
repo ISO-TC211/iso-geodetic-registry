@@ -2,33 +2,64 @@ package org.iso.registry.api.registry.registers.gcp;
 
 import java.util.UUID;
 
+import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.core.model.Alias;
 
 public class AliasDTO
 {
+	// Used to reference existing aliases
+	private UUID referencedItemUuid;
+
+	private IdentifiedItemProposalDTO aliasedItem;
+	private Integer code;
 	private String alias;
-	private UUID namingSystemUuid;
+	private NamingSystemItemProposalDTO namingSystem;
+	
+	public AliasDTO() { }
 	
 	public AliasDTO(Alias alias) {
-		this.alias = alias.getAlias();
-		this.namingSystemUuid = alias.getNamingSystem().getUuid();
+		this.referencedItemUuid = alias.getUuid();
 	}
-	
-	public AliasDTO(String alias, UUID namingSystemUuid) {
-		this.alias = alias;
-		this.namingSystemUuid = namingSystemUuid;
+
+	public UUID getReferencedItemUuid() {
+		return referencedItemUuid;
 	}
-	
+
+	public void setReferencedItemUuid(UUID referencedItemUuid) {
+		this.referencedItemUuid = referencedItemUuid;
+	}
+
+	public IdentifiedItemProposalDTO getAliasedItem() {
+		return aliasedItem;
+	}
+
+	public void setAliasedItem(IdentifiedItemProposalDTO aliasedItem) {
+		this.aliasedItem = aliasedItem;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+
 	public String getAlias() {
 		return alias;
 	}
+
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-	public UUID getNamingSystemUuid() {
-		return namingSystemUuid;
+
+	public NamingSystemItemProposalDTO getNamingSystem() {
+		return namingSystem;
 	}
-	public void setNamingSystemUuid(UUID namingSystemUuid) {
-		this.namingSystemUuid = namingSystemUuid;
+
+	public void setNamingSystem(NamingSystemItemProposalDTO namingSystem) {
+		this.namingSystem = namingSystem;
 	}
+	
+	
 }
