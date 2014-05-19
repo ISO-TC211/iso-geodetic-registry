@@ -47,6 +47,64 @@
 	</div>
 </div>
 
+<div th:fragment="aliases">
+	<div class="col-md-12">
+		<div class="panel">
+			<div class="panel-header">
+				<label class="form-label" for="aliasesTable" th:text="#{form.label.aliases}">Aliases</label>
+			</div>
+			<div class="panel-body">
+				<table id="aliasesTable" class="datatable table table-condensed table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{tableheader.code}">Code</th>
+							<th th:text="#{tableheader.alias}">Alias</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="alias : *{aliases}">
+							<td th:text="${alias.code}"/>
+							<td th:text="${alias.alias}"/>
+						</tr>
+					</tbody>
+				</table>
+				<button type="button">Add new</button>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+			table = $('#aliasesTable').dataTable({
+			"sPaginationType": "bs_normal",^
+			"bFilter": false,
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			 "aaSorting": [[ 0, "asc" ]],
+			 aoColumns: [
+				null,
+				null,
+				{"bSortable" : false}
+			]
+		});	
+	/* ]]> */
+	</script>	
+</div>
 
 <div th:fragment="remarks (cssClass)">
 	<div th:classappend="${cssClass}" th:with="property='remarks',rows=2,cols=60,label=#{form.label.remarks},placeholder=#{form.placeholder.remarks},isRequired='false'">
