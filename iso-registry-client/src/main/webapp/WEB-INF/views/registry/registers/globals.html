@@ -28,14 +28,14 @@
 <div th:fragment="input (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
 	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}" />
-	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
 	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
-	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <div th:fragment="nameAndCode">
@@ -57,19 +57,19 @@
 				<table id="aliasesTable" class="datatable table table-condensed table-striped">
 					<thead>
 						<tr>
-							<th th:text="#{tableheader.code}">Code</th>
 							<th th:text="#{tableheader.alias}">Alias</th>
+							<th th:text="#{tableheader.namingSystem}">Naming system</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="alias : *{aliases}">
-							<td th:text="${alias.code}"/>
 							<td th:text="${alias.alias}"/>
+							<td th:text="${alias.namingSystem.name}"/>
 						</tr>
 					</tbody>
 				</table>
-				<button type="button" th:text="#{button.addNew}">Add new</button>
+				<button th:if="!${isReadOnly}" type="button" th:text="#{button.addNew}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
 			</div>
 		</div>
 	</div>
@@ -166,13 +166,13 @@
 	</div>
 </div>
 
-<div th:fragment="defaultProposalHiddenFields">
-	<input type="hidden" th:field="*{itemUuid}"/>
-	<input type="hidden" th:field="*{proposalUuid}"/>
-	<input type="hidden" th:field="*{targetRegisterUuid}"/>
-	<input type="hidden" th:field="*{sponsorUuid}"/>
-	<input type="hidden" th:field="*{proposalType}"/>					
-</div>
+<!-- <div th:fragment="defaultProposalHiddenFields"> -->
+<!-- 	<input type="hidden" th:field="*{itemUuid}"/> -->
+<!-- 	<input type="hidden" th:field="*{proposalUuid}"/> -->
+<!-- 	<input type="hidden" th:field="*{targetRegisterUuid}"/> -->
+<!-- 	<input type="hidden" th:field="*{sponsorUuid}"/> -->
+<!-- 	<input type="hidden" th:field="*{proposalType}"/>					 -->
+<!-- </div> -->
 
 <script th:fragment="js-proposal" type="text/javascript" th:inline="text">
 /* <![CDATA[ */
