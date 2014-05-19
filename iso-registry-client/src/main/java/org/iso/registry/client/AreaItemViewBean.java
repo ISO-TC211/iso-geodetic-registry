@@ -46,6 +46,8 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 
 	@Override
 	protected void addAdditionalProperties(RE_RegisterItem registerItem) {
+		super.addAdditionalProperties(registerItem);
+		
 		if (!(registerItem instanceof AreaItem)) {
 			return;
 		}
@@ -62,6 +64,7 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 			this.setNorthBoundLatitude(item.getBoundingBox().getNorthBoundLatitude());
 			this.setSouthBoundLatitude(item.getBoundingBox().getSouthBoundLatitude());
 		}
+		
 		this.addAdditionalProperty("code", item.getCode());
 	}
 
