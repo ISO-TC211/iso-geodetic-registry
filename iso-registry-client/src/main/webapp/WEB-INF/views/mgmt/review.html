@@ -26,7 +26,7 @@
 		</div>
 	</div>
 
-	<div th:unless="${proposal.isProposalGroup()}" class="container">
+	<div th:unless="${proposal.isProposalGroup()}" class="container" th:with="current=${proposal}">
 		<div class="row clearfix" th:with="current=${proposal}" th:fragment="proposalDetails">
 			<div class="col-md-6 column" th:object="${current}">
 				<div class="panel" th:classappend="${current.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${current.isSupersession()}">
