@@ -34,7 +34,7 @@
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
-	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:field="*{__${property}__}"/>
+	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
 	<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left form-control-feedback"></span>
 </div>
 
@@ -66,33 +66,104 @@
 	</div>
 </div>
 
-<div th:fragment="proposalDetailsPanel" class="panel panel-default" th:if="${itemClass}">
+<div th:fragment="proposalDetailsPanel (isCollapsible)" class="panel panel-default" th:if="${itemClass}">
 	<div class="panel-heading">
-		<h3 class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
+		<div th:if="${isCollapsible}">
+			<a data-toggle="collapse" data-parent="#accordion" href="#managementPanel">
+				<span class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</span>									
+			</a>
+			<div class="pull-right">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+			</div>
+		</div>
+		<h3 th:unless="${isCollapsible}" class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
 	</div>
 
-	<div class="panel-body">
-		<div th:fragment="proposalDetails">
-			<div th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
-				<div th:replace="registry/registers/globals :: textArea"/>
-			</div>
-<!-- 			<div class="form-group has-feedback"> -->
-<!-- 				<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label> -->
-<!-- 				<textarea id="definition" name="definition" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" />  -->
-<!-- 				<span class="glyphicon glyphicon-hand-left form-control-feedback"></span> -->
-<!-- 			</div> -->
-
-			<div th:unless="${partOfSupersession}">
-				<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
+	<div id="managementPanel" th:classappend="${isCollapsible} ? 'panel-collapse collapse'">
+		<div class="panel-body">
+			<div th:fragment="proposalDetails">
+				<div th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
 					<div th:replace="registry/registers/globals :: textArea"/>
 				</div>
-
-<!-- 				<div class="form-group has-feedback"> -->
-<!-- 					<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label> -->
-<!-- 					<textarea id="description" name="description" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control required" type="text" th:field="*{justification}" required="required" />  -->
-<!-- 					<span class="glyphicon glyphicon-hand-left form-control-feedback"></span> -->
-<!-- 				</div> -->
+				<div th:unless="${partOfSupersession}">
+					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
+						<div th:replace="registry/registers/globals :: textArea"/>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>			
+
+<div th:fragment="proposalButtons" class="form-group" th:if="${itemClass}">
+	<div class="controls">
+		<button id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+		<div class="pull-right">
+			<button id="saveProposal" name="saveProposal" class="btn btn-default" th:text="#{button.saveProposal}">Speichern</button>
+			<button id="submit" name="submit" class="btn btn-primary" th:text="#{button.submitProposal}">Speichern</button>
+			<div class="row">
+				<div id="pleaseWait" class="pull-right"><img th:src="@{__${basePath}__/resources/images/loader.gif}"/></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="defaultProposalHiddenFields">
+	<input type="hidden" th:field="*{itemUuid}"/>
+	<input type="hidden" th:field="*{proposalUuid}"/>
+	<input type="hidden" th:field="*{targetRegisterUuid}"/>
+	<input type="hidden" th:field="*{sponsorUuid}"/>
+	<input type="hidden" th:field="*{proposalType}"/>					
+</div>
+
+<script th:fragment="js-proposal" type="text/javascript" th:inline="text">
+/* <![CDATA[ */
+	$(document).ready(function() {
+		$('#itemClass').on('change', function() {
+	  		//alert( this.value ); // or $(this).val()
+	  		if ([[${param.addNew} ? 'true' : 'false']]) {
+	  			location.href = window.location.pathname + '?addNew=&itemClass=' + this.value;
+	  		}
+	  		else {
+	  			location.href = window.location.pathname + '?itemClass=' + this.value;
+	  		}
+		});
+
+		$('#validationFailed').hide();
+		$('#pleaseWait').hide();
+
+		$('#proposal').validate({
+			ignore: '',
+// 			debug: true,
+			invalidHandler: function(event, validator) {
+				// 'this' refers to the form
+				var errors = validator.numberOfInvalids();
+				$('#validationFailed').show();				
+			},
+			submitHandler: function(form) {
+				$('#pleasewait').show();
+	 			$('button').each(function() {
+					$(this).attr('disabled', 'disabled');
+				});
+				
+				form.submit();
+				return true;
+			},
+			messages: {
+				name: "[[#{button.cancel}]]"
+			},
+			errorClass: "has-error",
+			errorPlacement: function(error, element) {
+			},
+			highlight: function(element, errorClass, validClass) {
+				$(element).addClass(errorClass).removeClass(validClass);
+				$(element).closest(".form-group").addClass(errorClass);
+			},
+			unhighlight: function(element, errorClass, validClass) {
+				$(element).removeClass(errorClass).addClass(validClass);
+				$(element).closest(".form-group").removeClass(errorClass);
+			}			
+		});
+	});
+/* ]]> */
+</script>
