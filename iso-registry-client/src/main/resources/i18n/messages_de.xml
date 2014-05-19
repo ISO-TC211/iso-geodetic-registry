@@ -92,6 +92,7 @@
 	<entry key="header.proposalDetails">Vorschlagsdetails</entry>
 	<entry key="header.crs">Koordinatenreferenzsystem</entry>
 	<entry key="header.area">Gebiet</entry>
+	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Namenssystem</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
@@ -264,9 +265,13 @@
 	<entry key="form.label.easternLongitude">Östl. Länge</entry>
 	<entry key="form.label.westernLongitude">Westl. Länge</entry>
 	<entry key="form.label.remarks">Bemerkungen</entry>
+	<entry key="form.label.originDescription">Herkunftsbeschreibung</entry>
 	<entry key="form.label.informationSource">Informationsquelle</entry>
 	<entry key="form.label.dataSource">Datenquelle</entry>
 	<entry key="form.label.aliases">Aliase</entry>
+	<entry key="form.label.realizationEpoch">Epoche</entry>
+	<entry key="form.label.ellipsoid">Ellipsoid</entry>
+	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
@@ -302,6 +307,9 @@
 	<entry key="form.placeholder.remarks">Bemerkungen</entry>
 	<entry key="form.placeholder.informationSource">Informationsquelle</entry>
 	<entry key="form.placeholder.dataSource">Datenquelle</entry>
+	<entry key="form.placeholder.originDescription">Herkunftsbeschreibung</entry>
+	<entry key="form.placeholder.informationSource">Informationsquelle</entry>
+	<entry key="form.placeholder.realizationEpoch">Epoche</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>

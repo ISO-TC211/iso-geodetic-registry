@@ -206,7 +206,7 @@ public class RegisterController
 		}
 		
 		RE_ItemClass itemClass = null;
-		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass"))) {
+		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass")) && !"null".equalsIgnoreCase(parameters.get("itemClass"))) {
 			UUID itemClassUuid = UUID.fromString(parameters.get("itemClass"));
 			itemClass = itemClassRepository.findOne(itemClassUuid);
 		}
@@ -376,6 +376,7 @@ public class RegisterController
 			
 			proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
 			model.addAttribute("itemClass", selectedItemClass.getUuid().toString());
+			model.addAttribute("itemClassName", selectedItemClass.getName());
 		}
 
 		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);

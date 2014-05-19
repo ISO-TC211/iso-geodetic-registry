@@ -1,20 +1,19 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
-import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.AreaItem;
-import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.GeodeticDatumItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
@@ -97,6 +96,11 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	public void setPrimeMeridian(PrimeMeridianItemProposalDTO primeMeridian) {
 		this.primeMeridian = primeMeridian;
 	}
+	
+	@Override
+	public List<RegisterItemProposalDTO> getDependentProposals() {
+		return super.findDependentProposals(this.getDomainOfValidity(), this.getEllipsoid(), this.getPrimeMeridian());
+	}
 
 	@Override
 	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
@@ -107,7 +111,7 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 
 			datum.setAnchorDefinition(this.getAnchorDefinition());
 
-			if (this.getDomainOfValidity() != null) {
+			if (this.getDomainOfValidity() != null && this.getDomainOfValidity().getReferencedItemUuid() != null) {
 				AreaItem area = entityManager.find(AreaItem.class, this.getDomainOfValidity().getReferencedItemUuid());
 				datum.setDomainOfValidity(area);
 			}
