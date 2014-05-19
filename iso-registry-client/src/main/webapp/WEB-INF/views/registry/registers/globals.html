@@ -170,6 +170,12 @@
 </div>			
 
 <div th:fragment="proposalButtons" class="form-group" th:if="${itemClass}">
+	<input type="hidden" th:field="*{itemUuid}"/>
+	<input type="hidden" th:field="*{proposalUuid}"/>
+	<input type="hidden" th:field="*{targetRegisterUuid}"/>
+	<input type="hidden" th:field="*{sponsorUuid}"/>
+	<input type="hidden" th:field="*{proposalType}"/>					
+
 	<div class="controls">
 		<button id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
 		<div class="pull-right">
@@ -181,14 +187,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- <div th:fragment="defaultProposalHiddenFields"> -->
-<!-- 	<input type="hidden" th:field="*{itemUuid}"/> -->
-<!-- 	<input type="hidden" th:field="*{proposalUuid}"/> -->
-<!-- 	<input type="hidden" th:field="*{targetRegisterUuid}"/> -->
-<!-- 	<input type="hidden" th:field="*{sponsorUuid}"/> -->
-<!-- 	<input type="hidden" th:field="*{proposalType}"/>					 -->
-<!-- </div> -->
 
 <script th:fragment="js-proposal" type="text/javascript" th:inline="text">
 /* <![CDATA[ */
