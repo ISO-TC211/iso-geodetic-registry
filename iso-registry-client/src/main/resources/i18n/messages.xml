@@ -348,6 +348,8 @@
 	<entry key="organizationNameShortForm">Abbreviated organization name</entry>
 	<entry key="onlineResourceWebsite">Organization web site</entry>
 	<entry key="onlineResourceLogo">Organization logo</entry>
+	
+	<entry key="mandatoryField">Mandatory field</entry>
 
 	<entry key="Naming System">Naming System</entry>
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>

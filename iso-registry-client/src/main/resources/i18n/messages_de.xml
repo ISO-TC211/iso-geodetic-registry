@@ -355,6 +355,7 @@
 	<entry key="onlineResourceLogo">Logo der Organisation</entry>
 	
 	<entry key="Naming System">Naming System</entry>
+	<entry key="mandatoryField">Verpflichtende Eingabe</entry>
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
 	<entry key="SphericalCS">Spherical Coordinate System</entry>
 	<entry key="CartesianCS">Cartesian Coordinate System</entry>
