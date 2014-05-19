@@ -23,7 +23,7 @@ public class AreaItemProposalDTO extends IdentifiedItemProposalDTO
 	private Integer isoNCode;
 
 	public AreaItemProposalDTO() {
-		super();
+		super("Area");
 	}
 
 	public AreaItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
