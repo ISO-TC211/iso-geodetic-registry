@@ -24,7 +24,7 @@
 						
 						<div class="panel-body">
 						
-							<div th:include="registry/registers/epsg/area_create_addition :: areaDetails"/>
+							<div th:include="registry/registers/epsg/area_details :: areaDetails"/>
 <!-- 							<div class="row"> -->
 
 <!-- 								<div class="col-md-6"> -->
@@ -218,15 +218,5 @@
 		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 	</div>
 </body>
-<script type="text/javascript" th:inline="text">
-/* <![CDATA[ */
-	$(document).ready(function() {
-		$.each($('.required'), function() {
-	    	$(this).parent().removeClass('has-error');
-	    	$(this).siblings('span').first().hide();
-	    	$(this).attr('readonly', 'readonly');
-		});
-	});
-/* ]]> */
-</script>
+<script th:replace="registry/item :: js-item"/>
 </html>
