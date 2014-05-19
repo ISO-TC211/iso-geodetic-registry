@@ -26,7 +26,7 @@ public class EllipsoidItemFactory extends RegisterItemFactoryImpl<EllipsoidItem,
 		}
 		
 		EllipsoidItem result = super.createRegisterItem(proposal);
-		proposal.setAdditionalValues(result, entityManager);
+//		proposal.setAdditionalValues(result, entityManager);
 		
 		return result;
 	}

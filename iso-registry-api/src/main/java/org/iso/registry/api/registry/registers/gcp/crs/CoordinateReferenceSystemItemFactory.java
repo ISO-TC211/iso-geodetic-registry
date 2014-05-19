@@ -32,7 +32,7 @@ implements RegisterItemFactory<I, D>
 	@Override
 	public I createRegisterItem(D proposal) {
 		I result = super.createRegisterItem(proposal);
-		proposal.setAdditionalValues(result, entityManager);
+//		proposal.setAdditionalValues(result, entityManager);
 
 //		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
 //
