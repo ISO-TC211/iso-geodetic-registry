@@ -73,7 +73,8 @@
 							<li>
 								<div class="row">
 									<div class="col-md-12">
-										<form class="form" role="form" method="post" th:action="@{__${basePath}__/login}" accept-charset="UTF-8" id="login-nav">
+										<form class="form login-form" role="form" method="post" th:action="@{__${basePath}__/login}" accept-charset="UTF-8" id="login-nav">
+											<!-- Don't add <fieldset> or login fields may be disabled when viewing a register item (see JS in item.html) -->
 											<div class="form-group">
 												<label class="sr-only" for="inputEmail" th:text="#{navbar.login.label.email}">E-Mail-Adresse</label> 
 <!-- 												<input type="email" class="form-control" id="inputEmail" th:placeholder="#{navbar.login.label.email}" required="required"></input> -->

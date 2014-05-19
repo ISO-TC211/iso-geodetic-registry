@@ -25,7 +25,9 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 	@ManyToOne
 	private UnitOfMeasureItemProposalDTO greenwichLongitudeUom;
 
-	public PrimeMeridianItemProposalDTO() { }
+	public PrimeMeridianItemProposalDTO() { 
+		super("PrimeMeridian");
+	}
 	
 	public PrimeMeridianItemProposalDTO(PrimeMeridianItem item) {
 		super(item);

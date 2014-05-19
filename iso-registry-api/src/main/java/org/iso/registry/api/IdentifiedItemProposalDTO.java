@@ -34,6 +34,10 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		super();
 	}
 	
+	protected IdentifiedItemProposalDTO(String itemClassName) {
+		super(itemClassName);
+	}
+	
 	public IdentifiedItemProposalDTO(IdentifiedItem item) {
 		super(item);
 	}
