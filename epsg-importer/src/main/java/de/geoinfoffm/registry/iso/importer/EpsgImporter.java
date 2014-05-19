@@ -42,6 +42,8 @@ public class EpsgImporter
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			context = new AnnotationConfigApplicationContext("de.geoinfoffm.registry", "org.iso.registry");
+			
+			NamingSystemsImporter namingSystemsImporter = context.getBean(NamingSystemsImporter.class);
 
 			AreasImporter areasImporter = context.getBean(AreasImporter.class);
 
@@ -76,6 +78,9 @@ public class EpsgImporter
 				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", EPSG_REGISTER_NAME));
 			}
 			
+//			Table namingSystemsTable = db.getTable("Naming System");
+//			run(namingSystemsImporter, namingSystemsTable, register, sponsor);
+//			
 //			Table uomTable = db.getTable("Unit of Measure");
 //			run(uomImporter, uomTable, register, sponsor);
 //			
@@ -96,9 +101,9 @@ public class EpsgImporter
 //
 //			Table datumsTable = db.getTable("Datum");
 //			run(datumsImporter, datumsTable, register, sponsor);
-			
-			Table crsTable = db.getTable("Coordinate Reference System");
-			run(crsImporter, crsTable, register, sponsor);
+//			
+//			Table crsTable = db.getTable("Coordinate Reference System");
+//			run(crsImporter, crsTable, register, sponsor);
 		}
 		finally {
 			db.close();
@@ -126,20 +131,20 @@ public class EpsgImporter
 		
 		int rowCount = table.getRowCount();
 		int i = 1;
-//		do {
-//			logger.info(".");
-//			logger.info(".");
-//			logger.info(".");
-//			logger.info("======================================================================");
-//			logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
-//			logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
-//			logger.info("======================================================================");
-//			logger.info(".");
-//			logger.info(".");
-//			logger.info(".");
-//			importer.importRows(cursor, 100, sponsor, register);
-//			i += 100;
-//		} while (i <= rowCount);
+		do {
+			logger.info(".");
+			logger.info(".");
+			logger.info(".");
+			logger.info("======================================================================");
+			logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
+			logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
+			logger.info("======================================================================");
+			logger.info(".");
+			logger.info(".");
+			logger.info(".");
+			importer.importRows(cursor, 100, sponsor, register);
+			i += 100;
+		} while (i <= rowCount);
 		
 		if (importer.mustFixReferences()) {
 			cursor.beforeFirst();
