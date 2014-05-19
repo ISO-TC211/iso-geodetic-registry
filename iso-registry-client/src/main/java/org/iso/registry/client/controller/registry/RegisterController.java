@@ -206,7 +206,7 @@ public class RegisterController
 		}
 		
 		RE_ItemClass itemClass = null;
-		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass"))) {
+		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass")) && !"null".equalsIgnoreCase(parameters.get("itemClass"))) {
 			UUID itemClassUuid = UUID.fromString(parameters.get("itemClass"));
 			itemClass = itemClassRepository.findOne(itemClassUuid);
 		}
