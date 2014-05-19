@@ -11,7 +11,6 @@ public class AliasDTO
 	private UUID referencedItemUuid;
 
 	private IdentifiedItemProposalDTO aliasedItem;
-	private Integer code;
 	private String alias;
 	private NamingSystemItemProposalDTO namingSystem;
 	
@@ -35,14 +34,6 @@ public class AliasDTO
 
 	public void setAliasedItem(IdentifiedItemProposalDTO aliasedItem) {
 		this.aliasedItem = aliasedItem;
-	}
-
-	public Integer getCode() {
-		return code;
-	}
-
-	public void setCode(Integer code) {
-		this.code = code;
 	}
 
 	public String getAlias() {
