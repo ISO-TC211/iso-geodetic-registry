@@ -39,7 +39,9 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	private UnitOfMeasureItemProposalDTO semiMinorAxisUom;
 
-	public EllipsoidItemProposalDTO() { }
+	public EllipsoidItemProposalDTO() { 
+		super("Ellipsoid");
+	}
 	
 	public EllipsoidItemProposalDTO(EllipsoidItem item) {
 		super(item);
