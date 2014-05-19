@@ -60,6 +60,7 @@
 	<entry key="tableheader.register">Register</entry>
 	<entry key="tableheader.code">Code</entry>
 	<entry key="tableheader.alias">Alias</entry>
+	<entry key="tableheader.namingSystem">Naming system</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
