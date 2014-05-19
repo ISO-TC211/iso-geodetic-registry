@@ -90,6 +90,7 @@
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
 	<entry key="header.area">Area</entry>
+	<entry key="header.namingSystem">Naming System</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -257,6 +258,9 @@
 	<entry key="form.label.southernLatitude">Southern Lat</entry>
 	<entry key="form.label.easternLongitude">Eastern Lon</entry>
 	<entry key="form.label.westernLongitude">Western Lon</entry>
+	<entry key="form.label.remarks">Remarks</entry>
+	<entry key="form.label.informationSource">Information Source</entry>
+	<entry key="form.label.dataSource">Data Source</entry>
 	
 	<entry key="form.select.choose">-- Select --</entry>
 		
@@ -284,6 +288,10 @@
 	<entry key="form.placeholder.southernLatitude"></entry>
 	<entry key="form.placeholder.easternLongitude"></entry>
 	<entry key="form.placeholder.westernLongitude"></entry>
+
+	<entry key="form.placeholder.remarks">Remarks</entry>
+	<entry key="form.placeholder.informationSource">Information Source</entry>
+	<entry key="form.placeholder.dataSource">Data Source</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
@@ -341,6 +349,7 @@
 	<entry key="onlineResourceWebsite">Organization web site</entry>
 	<entry key="onlineResourceLogo">Organization logo</entry>
 
+	<entry key="Naming System">Naming System</entry>
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
 	<entry key="SphericalCS">Spherical Coordinate System</entry>
 	<entry key="CartesianCS">Cartesian Coordinate System</entry>
