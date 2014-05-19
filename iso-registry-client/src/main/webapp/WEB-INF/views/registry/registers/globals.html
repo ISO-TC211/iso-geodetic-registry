@@ -192,6 +192,22 @@
 
 <script th:fragment="js-proposal" type="text/javascript" th:inline="text">
 /* <![CDATA[ */
+    var hidePanel = function(selector) {
+		$(selector).hide();
+		
+		$(selector + ' .required').each(function() {
+			$(this).addClass("hidden");
+		});
+	};
+
+    var showPanel = function(selector) {
+		$(selector).show();
+		
+		$(selector + ' .required').each(function() {
+			$(this).removeClass("hidden");
+		});
+	};
+
 	$(document).ready(function() {
 		$('#itemClass').on('change', function() {
 	  		//alert( this.value ); // or $(this).val()
@@ -207,11 +223,12 @@
 		$('#pleaseWait').hide();
 
 		$('#proposal').validate({
-			ignore: '',
+			ignore: '.hidden',
 // 			debug: true,
 			invalidHandler: function(event, validator) {
 				// 'this' refers to the form
 				var errors = validator.numberOfInvalids();
+				alert(errors);
 				$('#validationFailed').show();				
 			},
 			submitHandler: function(form) {
