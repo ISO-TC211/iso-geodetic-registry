@@ -379,6 +379,7 @@ public class RegisterController
 			
 			proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
 			model.addAttribute("itemClass", selectedItemClass.getUuid().toString());
+			model.addAttribute("itemClassName", selectedItemClass.getName());
 		}
 
 		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
