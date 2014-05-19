@@ -58,6 +58,9 @@
 	<entry key="tableheader.role">Role</entry>
 	<entry key="tableheader.group">Group</entry>
 	<entry key="tableheader.register">Register</entry>
+	<entry key="tableheader.code">Code</entry>
+	<entry key="tableheader.alias">Alias</entry>
+	<entry key="tableheader.namingSystem">Naming system</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -90,6 +93,7 @@
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
 	<entry key="header.area">Area</entry>
+	<entry key="header.namingSystem">Naming System</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -124,8 +128,9 @@
 	<entry key="button.review">Accept proposal for decision</entry>
 	<entry key="button.accept">Accept proposal</entry>
 	<entry key="button.reject">Reject proposal</entry>
-	<entry key="button.addNew">Create new successor</entry>
-	<entry key="button.addExisting">Add existing item as successor</entry>
+	<entry key="button.addNew">Add new</entry>
+	<entry key="button.addNewSuccessor">Create new successor</entry>
+	<entry key="button.addExistingSuccessor">Add existing item as successor</entry>
 	<entry key="button.addSupersededItems">Select items to supersede</entry>
 	<entry key="button.supersede">Supersede</entry>
 	<entry key="button.next">Continue</entry>
@@ -257,6 +262,10 @@
 	<entry key="form.label.southernLatitude">Southern Lat</entry>
 	<entry key="form.label.easternLongitude">Eastern Lon</entry>
 	<entry key="form.label.westernLongitude">Western Lon</entry>
+	<entry key="form.label.remarks">Remarks</entry>
+	<entry key="form.label.informationSource">Information Source</entry>
+	<entry key="form.label.dataSource">Data Source</entry>
+	<entry key="form.label.aliases">Aliases</entry>
 	
 	<entry key="form.select.choose">-- Select --</entry>
 		
@@ -284,6 +293,10 @@
 	<entry key="form.placeholder.southernLatitude"></entry>
 	<entry key="form.placeholder.easternLongitude"></entry>
 	<entry key="form.placeholder.westernLongitude"></entry>
+
+	<entry key="form.placeholder.remarks">Remarks</entry>
+	<entry key="form.placeholder.informationSource">Information Source</entry>
+	<entry key="form.placeholder.dataSource">Data Source</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
@@ -340,7 +353,10 @@
 	<entry key="organizationNameShortForm">Abbreviated organization name</entry>
 	<entry key="onlineResourceWebsite">Organization web site</entry>
 	<entry key="onlineResourceLogo">Organization logo</entry>
+	
+	<entry key="mandatoryField">Mandatory field</entry>
 
+	<entry key="NamingSystem">Naming System</entry>
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
 	<entry key="SphericalCS">Spherical Coordinate System</entry>
 	<entry key="CartesianCS">Cartesian Coordinate System</entry>

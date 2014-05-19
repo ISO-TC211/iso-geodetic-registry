@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -135,6 +136,9 @@ public class RegisterController
 	
 	@Autowired
 	private ProposalDtoFactory proposalDtoFactory;
+	
+	@Autowired
+	private ConversionService conversionService;
 	
 //	@InitBinder
 //	protected void initBinder(WebDataBinder binder) {
@@ -634,7 +638,6 @@ public class RegisterController
 	@RequestMapping(value = "/{register}/proposal/addition", method = RequestMethod.POST)
 	public String submitProposal(WebRequest request, ServletRequest servletRequest, @PathVariable("register") String registerName, 
 			@Valid @ModelAttribute("proposal") RegisterItemProposalDTO proposal,
-			@RequestParam Map<String, String> allParams,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) throws Exception {
 
 		RE_Register register = findRegister(registerName);
@@ -655,8 +658,7 @@ public class RegisterController
 			return "proposal";
 		}
 		
-		String itemClassUuid = allParams.get("itemClass");
-		proposal = bindAdditionalAttributes(proposal, servletRequest/*, itemClassUuid*/);
+		proposal = bindAdditionalAttributes(proposal, servletRequest);
 		
 		Addition addition = proposalService.createAdditionProposal(proposal);
 		
@@ -682,7 +684,8 @@ public class RegisterController
 				Class<? extends RegisterItemProposalDTO> dtoClass = 
 						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
 				proposal = BeanUtils.instantiateClass(dtoClass);
-				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal);
+				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
+				binder.setConversionService(conversionService);
 				binder.bind(servletRequest);
 				
 //				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
