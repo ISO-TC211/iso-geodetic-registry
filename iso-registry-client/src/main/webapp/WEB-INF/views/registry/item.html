@@ -6,7 +6,7 @@
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs" th:fragment="itemTabs">
 			<li class="active"><a href="#item" data-toggle="tab" th:text="#{tabs.item}">Eintrag</a></li>
 			<li th:if="!${#maps.isEmpty(item.predecessors)}"><a href="#predecessors" data-toggle="tab" th:text="#{tabs.predecessors}">Vorgänger</a></li>
 			<li th:if="!${#maps.isEmpty(item.successors)}"><a href="#successors" data-toggle="tab" th:text="#{tabs.successors}">Nachfolger</a></li>
@@ -227,4 +227,12 @@
 		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 	</div>
 </body>
+<script type="text/javascript" th:inline="text" th:fragment="js-item">
+/* <![CDATA[ */
+	$(document).ready(function() {
+		$(':input').attr('disabled', 'disabled');
+		$('.feedback').hide();
+	});
+/* ]]> */
+</script>
 </html>
