@@ -289,6 +289,9 @@
 			"sAjaxSource": "[[@{${basePath}}]]/register/[[${register.uuid}]]/containedItems",
 			"bProcessing": true,
 			"bServerSide": true,
+			"fnServerParams": function (aoData) {
+	            aoData.push({ name: "itemClass", value: "[[${itemClass} ? ${itemClass.uuid}]]" });
+	        },
 // 			"fnServerData" : datatable2Rest,
 			"sPaginationType": "bs_normal",
 			"bFilter": false,
