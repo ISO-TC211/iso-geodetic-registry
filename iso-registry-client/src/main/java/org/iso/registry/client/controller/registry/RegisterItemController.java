@@ -293,7 +293,7 @@ public class RegisterItemController
 		return createProposal(targetRegister, itemClassUuid, newItem, model, redirectAttributes);
 	}
 
-	@RequestMapping(value = "/{uuid}/supersede", params={ "save" })
+	@RequestMapping(value = "/{uuid}/supersede", params={ "saveProposal" })
 	@Transactional
 	public String saveNewItem(WebRequest request, HttpServletRequest servletRequest,
 			@PathVariable("uuid") UUID itemUuid, 
