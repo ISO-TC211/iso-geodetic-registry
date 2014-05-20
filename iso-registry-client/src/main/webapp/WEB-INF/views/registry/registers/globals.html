@@ -140,7 +140,7 @@
 </div>
 
 <div th:fragment="remarks (cssClass)">
-	<div th:classappend="${cssClass}" th:with="property='remarks',rows=2,cols=60,label=#{form.label.remarks},placeholder=#{form.placeholder.remarks},isRequired='false'">
+	<div th:classappend="${cssClass}" th:with="property='remarks',rows=5,cols=60,label=#{form.label.remarks},placeholder=#{form.placeholder.remarks},isRequired='false'">
 		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
 </div>
@@ -152,8 +152,8 @@
 </div>
 
 <div th:fragment="dataSource (cssClass)">
-	<div th:classappend="${cssClass}" th:with="property='dataSource',rows=2,cols=60,label=#{form.label.dataSource},placeholder=#{form.placeholder.dataSource},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textArea"/>
+	<div th:classappend="${cssClass}" th:with="property='dataSource',inputType='text',label=#{form.label.dataSource},placeholder=#{form.placeholder.dataSource},isRequired='true'">
+		<div th:replace="registry/registers/globals :: input"/>
 	</div>
 </div>
 

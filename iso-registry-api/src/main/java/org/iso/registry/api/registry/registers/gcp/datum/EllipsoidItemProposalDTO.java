@@ -4,11 +4,17 @@ import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
+import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.datum.EllipsoidItem;
+import org.iso.registry.core.model.iso19103.MeasureType;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
+import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.soap.Addition_Type;
 
 public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -45,6 +51,26 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	public EllipsoidItemProposalDTO(EllipsoidItem item) {
 		super(item);
+	}
+	
+	public EllipsoidItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
+		super(proposal, sponsor);
+	}
+
+	public EllipsoidItemProposalDTO(IdentifiedItem item) {
+		super(item);
+	}
+
+	public EllipsoidItemProposalDTO(Proposal proposal) {
+		super(proposal);
+	}
+
+	public EllipsoidItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
+		super(item, sponsor);
+	}
+
+	public EllipsoidItemProposalDTO(String itemClassName) {
+		super(itemClassName);
 	}
 
 	public Double getSemiMajorAxis() {

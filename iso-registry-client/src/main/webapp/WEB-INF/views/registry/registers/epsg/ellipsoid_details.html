@@ -1,0 +1,53 @@
+<div th:fragment="ellipsoidDetails">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
+			<div class="row" th:include="registry/registers/globals :: aliases" />
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label" th:for="sphere" th:text="#{form.label.shape}"></label>
+						<div class="btn-group" id="sphere" data-toggle="buttons">
+							<label class="btn btn-primary"> 
+								<input type="radio" name="isEllipsoid" id="isEllipsoid" th:field="*{sphere}" value="false">Ellipsoid</input>
+							</label> 
+							<label class="btn btn-primary"> 
+								<input type="radio" name="options" id="option2" th:field="*{sphere}" value="true">Sphere</input>
+							</label> 
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='semiMajorAxis',inputType='number',label=#{form.label.semiMajorAxis},placeholder=#{form.placeholder.semiMajorAxis},isRequired='true'">
+					<div th:replace="registry/registers/globals :: input"/>
+				</div>
+				<div class="col-md-8" th:with="property='semiMajorAxisUom',label=#{form.label.semiMajorAxisUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='true',noAddNew='true'">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='semiMinorAxis',inputType='number',label=#{form.label.semiMinorAxis},placeholder=#{form.placeholder.semiMinorAxis},isRequired='false'">
+					<div th:replace="registry/registers/globals :: input"/>
+				</div>
+<!-- 				<div class="col-md-8" th:with="property='semiMinorAxisUom',label=#{form.label.semiMinorAxisUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
+<!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
+<!-- 				</div> -->
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='inverseFlattening',inputType='number',label=#{form.label.inverseFlattening},placeholder=#{form.placeholder.inverseFlattening},isRequired='false'">
+					<div th:replace="registry/registers/globals :: input"/>
+				</div>
+<!-- 				<div class="col-md-8" th:with="property='inverseFlatteningUom',label=#{form.label.inverseFlatteningUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
+<!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
+<!-- 				</div> -->
+			</div>
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->									
+	</div>
+</div>
