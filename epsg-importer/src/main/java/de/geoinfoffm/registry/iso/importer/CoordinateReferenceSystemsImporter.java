@@ -71,11 +71,6 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 	private RE_ItemClass icProjected;
 	private RE_ItemClass icCompound;
 	
-	private Set<Integer> brokenRefs = new HashSet<Integer>();
-	private Map<Integer, Integer> baseCrsRefs = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> horizontalCrsRefs = new HashMap<Integer, Integer>();
-	private Map<Integer, Integer> verticalCrsRefs = new HashMap<Integer, Integer>();
-
 	@Override
 	@Transactional
 	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {

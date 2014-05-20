@@ -6,6 +6,10 @@ import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
+import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19103.MeasureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +101,34 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		}
 	
 		return this.itemClass;
+	}
+	
+	@Override
+	public boolean mustFixReferences() {
+		return true; 
+	}
+
+	@Override
+	@Transactional
+	protected void fixReference(Row row) {
+		Integer uomCode = (Integer)row.get(UOM_CODE);
+		logger.info("Fixing references for UoM #{}...", uomCode);
+		
+		UnitOfMeasureItem uom = null;
+
+		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
+		if (targetUomCode != null) {
+			uom = uomRepository.findByCode(uomCode);
+			
+			UnitOfMeasureItem targetUom = uomRepository.findByCode(targetUomCode);
+			if (targetUom != null) {
+				uom.setStandardUnit(targetUom);
+			}
+		}
+
+		if (uom != null) {
+			uomRepository.save(uom);
+		}
 	}
 
 	@Override
