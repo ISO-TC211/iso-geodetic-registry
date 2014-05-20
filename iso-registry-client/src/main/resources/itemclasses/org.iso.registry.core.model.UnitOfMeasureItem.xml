@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="UnitOfMeasure">
+	<dtoClass>org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO</dtoClass>
+	<viewBeanClass>org.iso.registry.client.UnitOfMeasureItemViewBean</viewBeanClass>
+	<viewItemTemplate>registry/registers/epsg/uom_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/epsg/uom_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/epsg/uom_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/epsg/uom_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>
