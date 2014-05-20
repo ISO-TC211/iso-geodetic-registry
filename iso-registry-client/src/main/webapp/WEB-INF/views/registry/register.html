@@ -28,8 +28,8 @@
 
 				<ul class="nav nav-tabs">
 					<li><a href="#overview" data-toggle="tab" th:text="#{tabs.overview}">Übersicht</a></li>
-					<li th:classappend="(${viewMode} == 'contents') ? 'active'"><a href="#contents" data-toggle="tab" th:text="#{tabs.contents}">Inhalte</a></li>
-					<li sec:authorize="isAuthenticated()" th:classappend="(${viewMode} == 'proposals') ? 'active'"><a href="#proposals" data-toggle="tab" th:text="#{tabs.proposals}">Vorgeschlagene Inhalte</a></li>
+					<li class="active" <!-- th:classappend="(${viewMode} == 'contents') ? 'active'"-->><a href="#contents" data-toggle="tab" th:text="#{tabs.contents}">Inhalte</a></li>
+<!-- 					<li sec:authorize="isAuthenticated()" th:classappend="(${viewMode} == 'proposals') ? 'active'"><a href="#proposals" data-toggle="tab" th:text="#{tabs.proposals}">Vorgeschlagene Inhalte</a></li> -->
 				</ul>
 				
 				<div class="tab-content">
@@ -230,7 +230,11 @@
 	var retireButton = function(item) {
 		return '<button type="button" id="retire_' + item.uuid + '" class="btn btn-xs btn-danger" href="#confirmretirement-' + item.uuid +'" data-toggle="modal">[[#{button.retirement}]]</button>';
 	};
-	
+
+	var supersedeButton = function(item) {
+		return '<button type="button" id="supersede_' + item.uuid + '" class="btn btn-warning btn-xs button-supersede" data-uuid="' + item.uuid + '">[[#{button.supersession}]]</button>';
+	};
+
 	var retirePopup = function(item) {
 		return '<div class="modal fade" id="confirmretirement-' + item.uuid + '" role="dialog">' +
 			      '<div class="modal-dialog">' +
@@ -280,6 +284,11 @@
 	$('#contentsTable').on('click', '.button-clarify', function(e) {
 		var uuid = $(this).data('uuid');
 		location.href = '[[@{${basePath}}]]/item/' + uuid + '/clarify';
+	});
+
+	$('#contentsTable').on('click', '.button-supersede', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{${basePath}}]]/item/' + uuid + '/supersede';
 	});
 
 	$(document).ready(function() {
@@ -338,6 +347,7 @@
 					  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]]) {
 						  var dropdownActions = []; 
 						  dropdownActions.push(clarifyButton(full));
+						  dropdownActions.push(supersedeButton(full));
 						  dropdownActions.push(retireButton(full));
 						  
 						  actions += dropdownMenu(dropdownActions);

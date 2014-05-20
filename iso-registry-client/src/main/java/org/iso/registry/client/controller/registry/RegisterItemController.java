@@ -3,13 +3,17 @@
  */
 package org.iso.registry.client.controller.registry;
 
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
+
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -36,6 +41,7 @@ import de.geoinfoffm.registry.client.web.ViewBeanFactory;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalFactory;
 import de.geoinfoffm.registry.core.model.ProposalType;
@@ -45,10 +51,12 @@ import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationR
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AmendmentInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ClarificationInformation;
+import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ProposalManagementInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationException;
 
@@ -83,6 +91,9 @@ public class RegisterItemController
 	
 	@Autowired
 	private ItemClassRegistry itemClassRegistry;
+	
+	@Autowired
+	private RegistrySecurity security;
 
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -175,7 +186,42 @@ public class RegisterItemController
 
 		return new BasePathRedirectView("/");
 	}
+
+	@RequestMapping(value = "/{uuid}/supersede", method = RequestMethod.GET)
+	@Transactional
+	public String createSupersessionProposal(final WebRequest request, 
+											 @PathVariable("uuid") UUID itemUuid, 
+											 @ModelAttribute("proposal") RegisterItemProposalDTO proposal, 
+											 final Model model) throws ItemNotFoundException, UnauthorizedException {
+
+		model.addAttribute("isNew", "true");
 	
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		if (item == null) {
+			throw new ItemNotFoundException(itemUuid);
+		}
+		
+		if (!item.isValid()) {
+			throw new IllegalOperationException(String.format("Cannot retire item with status %s", item.getStatus().name()));
+		}
+
+		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, item.getRegister());
+
+//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		SupersessionState state = new SupersessionState(item.getRegister(), suborg, itemService);
+		state.addSupersededItem(item);
+		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
+
+		model.addAttribute("state", state);
+
+		Set<RE_ItemClass> itemClasses = item.getRegister().getContainedItemClasses();
+		itemClasses.size();
+		model.addAttribute("itemClasses", itemClasses);
+
+		return "registry/proposal/create_supersession";
+	}
+
 	@RequestMapping(value = "/{uuid}/clarify", method = RequestMethod.GET)
 	@Transactional
 	public String createClarificationProposal(@PathVariable("uuid") UUID itemUuid, @ModelAttribute("proposal") RegisterItemProposalDTO proposal, final Model model) throws ItemNotFoundException {
