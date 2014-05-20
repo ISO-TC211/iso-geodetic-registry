@@ -201,6 +201,7 @@
 	<entry key="popup.delegations.member">Membership approved</entry>
 	<entry key="popup.delegations.requested">The user has requested to be assigned the highlighted roles.</entry>
 	<entry key="popup.delegations.deny">Deny this request</entry>
+	<entry key="popup.itemclass.header">Please select an item class</entry>
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.item">Item</entry>

@@ -200,6 +200,7 @@
 	<entry key="popup.delegations.member">Organisationszugehörigkeit bestätigt</entry>
 	<entry key="popup.delegations.requested">Der Benutzer hat die Zuteilung der blau unterlegten Benutzerrechte angefordert.</entry>
 	<entry key="popup.delegations.deny">Zustimmung nicht erteilen</entry>
+	<entry key="popup.itemclass.header">Bitte wählen Sie die Item-Klasse</entry>
 
 	<entry key="tabs.overview">Übersicht</entry>
 	<entry key="tabs.item">Eintrag</entry>
