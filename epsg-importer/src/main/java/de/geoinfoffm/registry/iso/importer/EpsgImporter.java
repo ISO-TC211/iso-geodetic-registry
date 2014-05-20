@@ -3,6 +3,7 @@ package de.geoinfoffm.registry.iso.importer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -17,10 +18,8 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import com.healthmarketscience.jackcess.Cursor;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
-import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
-import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
@@ -34,8 +33,10 @@ public class EpsgImporter
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
+		List<String> argList = Arrays.asList(args);
+		
 		File source;
-		if (args.length == 0) {
+		if (argList.isEmpty()) {
 			source = new File("C:/Daten/EPSG_v7_6_original.mdb"); 
 		}
 		else {
@@ -71,7 +72,9 @@ public class EpsgImporter
 			CoordinateReferenceSystemsImporter crsImporter = context.getBean(CoordinateReferenceSystemsImporter.class);
 
 			RegistryInitializer initializer = context.getBean(RegistryInitializer.class);
-//			initializer.initializeRegistry();
+			if (argList.contains("all") || argList.contains("init")) {
+				initializer.initializeRegistry();
+			}
 
 			SubmittingOrganizationRepository suborgRepository = context.getBean(SubmittingOrganizationRepository.class);
 			RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
@@ -85,32 +88,50 @@ public class EpsgImporter
 				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", EPSG_REGISTER_NAME));
 			}
 			
-//			Table namingSystemsTable = db.getTable("Naming System");
-//			run(namingSystemsImporter, namingSystemsTable, register, sponsor);
-//			
-//			Table uomTable = db.getTable("Unit of Measure");
-//			run(uomImporter, uomTable, register, sponsor);
-//			
-//			Table axesTable = db.getTable("Coordinate Axis");
-//			run(axesImporter, axesTable, register, sponsor);
-//			
-//			Table csTable = db.getTable("Coordinate System");
-//			run(csImporter, csTable, register, sponsor);
-//			
-//			Table elTable = db.getTable("Ellipsoid");
-//			run(ellipsoidsImporter, elTable, register, sponsor);
-//
-//			Table pmTable = db.getTable("Prime Meridian");
-//			run(pmImporter, pmTable, register, sponsor);
-//
-//			Table areasTable = db.getTable("Area");
-//			run(areasImporter, areasTable, register, sponsor);
-//
-//			Table datumsTable = db.getTable("Datum");
-//			run(datumsImporter, datumsTable, register, sponsor);
-//			
-//			Table crsTable = db.getTable("Coordinate Reference System");
-//			run(crsImporter, crsTable, register, sponsor);
+			if (argList.contains("all") || argList.contains("1")) {
+				Table namingSystemsTable = db.getTable("Naming System");
+				run(namingSystemsImporter, namingSystemsTable, register, sponsor);
+			}				
+
+			if (argList.contains("all") || argList.contains("2")) {
+				Table uomTable = db.getTable("Unit of Measure");
+				run(uomImporter, uomTable, register, sponsor);
+			}				
+				
+			if (argList.contains("all") || argList.contains("3")) {
+				Table axesTable = db.getTable("Coordinate Axis");
+				run(axesImporter, axesTable, register, sponsor);
+			}				
+				
+			if (argList.contains("all") || argList.contains("4")) {
+				Table csTable = db.getTable("Coordinate System");
+				run(csImporter, csTable, register, sponsor);
+			}				
+				
+			if (argList.contains("all") || argList.contains("5")) {
+				Table elTable = db.getTable("Ellipsoid");
+				run(ellipsoidsImporter, elTable, register, sponsor);
+			}				
+	
+			if (argList.contains("all") || argList.contains("6")) {
+				Table pmTable = db.getTable("Prime Meridian");
+				run(pmImporter, pmTable, register, sponsor);
+			}				
+	
+			if (argList.contains("all") || argList.contains("7")) {
+				Table areasTable = db.getTable("Area");
+				run(areasImporter, areasTable, register, sponsor);
+			}				
+	
+			if (argList.contains("all") || argList.contains("8")) {
+				Table datumsTable = db.getTable("Datum");
+				run(datumsImporter, datumsTable, register, sponsor);
+			}				
+				
+			if (argList.contains("all") || argList.contains("9")) {
+				Table crsTable = db.getTable("Coordinate Reference System");
+				run(crsImporter, crsTable, register, sponsor);
+			}				
 		}
 		finally {
 			db.close();
