@@ -84,6 +84,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
 		proposal.setCode(crsCode);
 		proposal.setName((String)row.get(COORD_REF_SYS_NAME));
+		proposal.setScope((String)row.get(CRS_SCOPE));
 		
 		String crsType = (String)row.get(COORD_REF_SYS_KIND);
 		if (crsType.equalsIgnoreCase("GEOGRAPHIC 2D") || crsType.equalsIgnoreCase("GEOGRAPHIC 3D") || crsType.equalsIgnoreCase("GEOCENTRIC")) {
