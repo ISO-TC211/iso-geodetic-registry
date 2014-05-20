@@ -80,14 +80,14 @@
 	</div>
 </div>
 
-<div th:fragment="aliases">
+<div th:fragment="aliases(modifier)">
 	<div class="col-md-12">
 		<div class="panel">
 			<div class="panel-header">
-				<label class="form-label" for="aliasesTable" th:text="#{form.label.aliases}">Aliases</label>
+				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label>
 			</div>
 			<div class="panel-body">
-				<table id="aliasesTable" class="datatable table table-condensed table-striped">
+				<table th:id="'aliasesTable_' + ${modifier}" class="datatable table table-condensed table-striped">
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.alias}">Alias</th>
