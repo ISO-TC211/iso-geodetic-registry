@@ -51,8 +51,12 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 		
 		CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
 		if (crsItem instanceof SingleCoordinateReferenceSystemItem<?>) {
-			this.setCoordinateSystem(new CoordinateSystemItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getCoordinateSystem()));
-			this.setDatum(new DatumItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getDatum()));
+			if (((SingleCoordinateReferenceSystemItem)crsItem).getCoordinateSystem() != null) {
+				this.setCoordinateSystem(new CoordinateSystemItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getCoordinateSystem()));
+			}
+			if (((SingleCoordinateReferenceSystemItem)crsItem).getDatum() != null) {
+				this.setDatum(new DatumItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getDatum()));
+			}
 		}
 		if (crsItem instanceof GeodeticCoordinateReferenceSystemItem) {
 			switch (((GeodeticCoordinateReferenceSystemItem)crsItem).getCoordinateSystem().getAxes().size()) {
