@@ -371,7 +371,7 @@ public class RegisterItemController
 	@RequestMapping(value = "/{uuid}/supersede", params={ "submit" })
 	@Transactional
 	public View submitSupersessionProposal(WebRequest request,
-			@PathVariable("register") String registerName,
+			@PathVariable("uuid") UUID itemUuid, 
 			final Model model) throws InvalidProposalException, IllegalOperationException {
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
@@ -393,7 +393,7 @@ public class RegisterItemController
 		proposalService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
 				state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes(), state.getSponsor());
 
-		return new BasePathRedirectView("/register/" + registerName + "/proposals");
+		return new BasePathRedirectView("/management/submitter");
 	}
 	
 

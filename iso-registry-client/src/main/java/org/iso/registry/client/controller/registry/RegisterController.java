@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -139,6 +140,9 @@ public class RegisterController
 	
 	@Autowired
 	private ConversionService conversionService;
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 //	@InitBinder
 //	protected void initBinder(WebDataBinder binder) {
@@ -632,7 +636,8 @@ public class RegisterController
 		proposalService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
 				state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes(), state.getSponsor());
 
-		return new BasePathRedirectView("/register/" + registerName + "/proposals");
+		return new BasePathRedirectView("/management/submitter");
+//		return new BasePathRedirectView("/register/" + registerName + "/proposals");
 //		return "redirect:/register/" + registerName + "/proposals";
 	}
 	
@@ -672,7 +677,8 @@ public class RegisterController
 		
 		redirectAttributes.addFlashAttribute("createdItem", addition.getItem().getUuid().toString());
 		
-		return "redirect:/register/" + registerName + "/proposals";
+		return "redirect:/management/submitter";
+//		return "redirect:/register/" + registerName + "/proposals";
 	}
 
 	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
