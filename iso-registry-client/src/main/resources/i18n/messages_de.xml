@@ -94,6 +94,7 @@
 	<entry key="header.area">Gebiet</entry>
 	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Namenssystem</entry>
+	<entry key="header.uom">Maßeinheit</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
@@ -272,6 +273,10 @@
 	<entry key="form.label.realizationEpoch">Epoche</entry>
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
+	<entry key="form.label.standardUnit">Standard-Zielmaßeinheit</entry>
+	<entry key="form.label.factorB">Faktor B</entry>
+	<entry key="form.label.factorC">Faktor C</entry>
+	<entry key="form.label.measureType">Maßeinheitenart</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
@@ -310,6 +315,9 @@
 	<entry key="form.placeholder.originDescription">Herkunftsbeschreibung</entry>
 	<entry key="form.placeholder.informationSource">Informationsquelle</entry>
 	<entry key="form.placeholder.realizationEpoch">Epoche</entry>
+
+	<entry key="form.placeholder.factorB">Faktor B</entry>
+	<entry key="form.placeholder.factorC">Faktor C</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
@@ -368,6 +376,7 @@
 	<entry key="onlineResourceLogo">Logo der Organisation</entry>
 	
 	<entry key="mandatoryField">Verpflichtende Eingabe</entry>
+	<entry key="undefined">nicht definiert</entry>
 	
 	<entry key="NamingSystem">Naming System</entry>
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
