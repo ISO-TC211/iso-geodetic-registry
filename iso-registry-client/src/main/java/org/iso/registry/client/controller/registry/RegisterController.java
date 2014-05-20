@@ -713,7 +713,8 @@ public class RegisterController
 		public SupersessionState(RE_Register register, RE_SubmittingOrganization sponsor, RegisterItemService itemService) {
 			this.sponsor = sponsor;
 			
-			step = "supersededItems";
+//			step = "supersededItems";
+			step = "supersedingItems";
 			
 //			validItems = new HashSet<RegisterItemViewBean>();			
 //			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID);
@@ -724,8 +725,9 @@ public class RegisterController
 		
 		public SupersessionState(Supersession proposal, RegisterItemService itemService) {
 			this.sponsor = proposal.getSponsor();
-			step = "supersededItems";
-			
+//			step = "supersededItems";
+			step = "supersedingItems";
+		
 //			validItems = new HashSet<RegisterItemViewBean>();			
 //			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(proposal.getTargetRegister(), RE_ItemStatus.VALID);
 //			for (RE_RegisterItem validItem : validItemsDb) {

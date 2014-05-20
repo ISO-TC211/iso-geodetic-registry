@@ -106,6 +106,7 @@
 	<entry key="button.finalizeProposal">End appeal period</entry>
 	<entry key="button.appealProposal">Appeal to owner</entry>
 	<entry key="button.acceptAppeal">Accept appeal</entry>
+	<entry key="button.rejectAppeal">Reject appeal</entry>
 	<entry key="button.details">Details</entry>
 	<entry key="button.edit">Edit</entry>
 	<entry key="button.action">Action</entry>
