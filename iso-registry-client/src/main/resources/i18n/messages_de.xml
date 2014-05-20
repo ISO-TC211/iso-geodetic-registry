@@ -390,7 +390,7 @@
 	<entry key="EngineeringCRS">Engineering CRS</entry>
 	<entry key="VerticalCRS">Vertical CRS</entry>
 	<entry key="ProjectedCRS">Projected CRS</entry>
-	<entry key="CompoundCRS">Vertical CRS</entry>
+	<entry key="CompoundCRS">Compound CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
 	<entry key="Area">Area</entry>
 	<entry key="GeodeticDatum">Geodetic Datum</entry>
