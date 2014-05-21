@@ -5,8 +5,18 @@
 	<artifactId>epsg-importer</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<properties>
-		<basePackages>de.geoinfoffm.registry,org.iso.registry</basePackages>
+		<java-version>1.7</java-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
+		<org.springframework-version>4.0.2.RELEASE</org.springframework-version>
+		<org.springframework.security-version>3.2.1.RELEASE</org.springframework.security-version>
+		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
+		<hibernate.connection.username>isoreg</hibernate.connection.username>
+		<hibernate.connection.password>isoreg</hibernate.connection.password>
+		<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg-import</hibernate.connection.url>
+		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
+		<client.basepath></client.basepath>
+		<basePackages>de.geoinfoffm.registry,org.iso.registry</basePackages>
 	</properties>
 	<build>
 		<resources>
