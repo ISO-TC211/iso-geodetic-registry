@@ -1,24 +1,3 @@
-<div th:fragment="itemClassSelector">
-	<div class="form-group">
-		<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
-		<div class="controls">
-			<div class="input-group">
-				<input type="hidden" th:if="${partOfSupersession}" th:field="*{itemClassUuid}" th:value="${itemClassUuid}"/>
-				<select id="itemClass" required="true" th:field="*{itemClassUuid}" th:disabled="${partOfSupersession}">
-					<option th:text="#{form.select.choose}" value="" th:unless="${itemClassUuid}"/>
-					<option th:each="anItemClass : ${register.getContainedItemClasses()}"
-							th:value="${anItemClass.uuid}"
-							th:text="#{${anItemClass.name}}"></option>
-				</select>
-			</div>
-		</div>
-	</div>
-
-	<div th:unless="${itemClass}">
-		<button id="cancel" onClick="history.back();" type="button" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
-	</div>
-</div>
-
 <div th:fragment="itemClassNotConfiguredWarning">
 	<div th:if="${itemClassNotConfigured}" class="alert alert-danger">
 		<p th:text="#{form.proposal.itemClassNotConfigured}">Konfiguration für Itemklasse nicht vorhanden.</p>
