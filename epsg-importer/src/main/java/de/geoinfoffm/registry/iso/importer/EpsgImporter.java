@@ -70,6 +70,8 @@ public class EpsgImporter
 			DatumsImporter datumsImporter = context.getBean(DatumsImporter.class);
 			
 			CoordinateReferenceSystemsImporter crsImporter = context.getBean(CoordinateReferenceSystemsImporter.class);
+			
+			AliasesImporter aliasesImporter = context.getBean(AliasesImporter.class);
 
 			RegistryInitializer initializer = context.getBean(RegistryInitializer.class);
 			if (argList.contains("all") || argList.contains("init")) {
@@ -131,6 +133,11 @@ public class EpsgImporter
 			if (argList.contains("all") || argList.contains("9")) {
 				Table crsTable = db.getTable("Coordinate Reference System");
 				run(crsImporter, crsTable, register, sponsor);
+			}				
+
+			if (argList.contains("all") || argList.contains("10")) {
+				Table aliasTable = db.getTable("Alias");
+				run(aliasesImporter, aliasTable, register, sponsor);
 			}				
 		}
 		finally {

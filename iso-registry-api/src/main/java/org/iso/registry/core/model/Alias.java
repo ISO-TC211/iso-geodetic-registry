@@ -26,9 +26,19 @@ public class Alias extends de.geoinfoffm.registry.core.Entity
 	@Column(name = "REMARKS")
 	private String remarks;
 
+	protected Alias() { }
+	
 	public Alias(String alias, NamingSystemItem namingSystem) {
 		this.alias = alias;
 		this.namingSystem = namingSystem;
+	}
+
+	public IdentifiedItem getAliasedItem() {
+		return aliasedItem;
+	}
+
+	public void setAliasedItem(IdentifiedItem aliasedItem) {
+		this.aliasedItem = aliasedItem;
 	}
 
 	public NamingSystemItem getNamingSystem() {

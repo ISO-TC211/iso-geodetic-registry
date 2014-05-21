@@ -19,7 +19,7 @@
 
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"></label> <small><a th:id="${property} + '_bycode'" href="#">[by Code]</a></small>  <small><a th:id="${property} + '_byname'" href="#">[by Name]</a></small> <img th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
+	<label class="control-label" th:for="${property}" th:text="${label}"></label> <div th:if="${isProposal}"><small><a th:id="${property} + '_bycode'" href="#">[by Code]</a></small>  <small><a th:id="${property} + '_byname'" href="#">[by Name]</a></small> <img th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/></div>
 	
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
 		<select th:id="${property}" th:name="${property}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__.referencedItemUuid}">
@@ -120,17 +120,18 @@
 </div>
 
 <div th:fragment="aliases(modifier)">
-	<div class="col-md-12">
+	<div class="col-md-12" th:unless="!*{aliases} and !${isProposal}">
 		<div class="panel">
-			<div class="panel-header">
-				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label>
-			</div>
+<!-- 			<div class="panel-header"> -->
+<!-- 				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label> -->
+<!-- 			</div> -->
 			<div class="panel-body">
 				<table th:id="'aliasesTable_' + ${modifier}" class="datatable table table-condensed table-striped">
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.alias}">Alias</th>
 							<th th:text="#{tableheader.namingSystem}">Naming system</th>
+							<th th:text="#{tableheader.remarks}">Remarks</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -138,10 +139,11 @@
 						<tr th:each="alias : *{aliases}">
 							<td th:text="${alias.alias}"/>
 							<td th:text="${alias.namingSystem.name}"/>
+							<td th:text="${alias.remarks}"/>
 						</tr>
 					</tbody>
 				</table>
-				<button th:if="!${isReadOnly}" type="button" th:text="#{button.addNew}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
+				<button th:if="${isProposal}" type="button" th:text="#{button.addAlias}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
 			</div>
 		</div>
 	</div>

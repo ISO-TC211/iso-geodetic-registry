@@ -61,6 +61,7 @@
 	<entry key="tableheader.code">Code</entry>
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Bezeichnungssystem</entry>
+	<entry key="tableheader.remarks">Anmerkungen</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -133,6 +134,7 @@
 	<entry key="button.reject">Ablehnen</entry>
 	<entry key="button.addNew">Hinzufügen</entry>
 	<entry key="button.addNewSuccessor">Neuen Nachfolger erstellen</entry>
+	<entry key="button.addAlias">Alias hinzufügen</entry>
 	<entry key="button.addExistingSuccessor">Vorhandenen Eintrag als Nachfolger hinzufügen</entry>
 	<entry key="button.addSupersededItems">Zu ersetzende Einträge wählen</entry>
 	<entry key="button.supersede">Ersetzen</entry>
