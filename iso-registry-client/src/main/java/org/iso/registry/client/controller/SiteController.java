@@ -3,9 +3,13 @@ package org.iso.registry.client.controller;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
@@ -55,8 +59,10 @@ import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
+import de.geoinfoffm.registry.api.UpdateUserException;
 import de.geoinfoffm.registry.api.UserRegistrationException;
 import de.geoinfoffm.registry.client.web.AbstractController;
+import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.client.web.SignupFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ParameterizedRunnable;
@@ -134,9 +140,12 @@ public class SiteController extends AbstractController
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-//		if (binder.getTarget() instanceof SignupFormBean) {
-//			binder.setValidator(new SignupValidator(userService));
-//		}
+		if (binder.getTarget() instanceof SignupFormBean) {
+			binder.setValidator(new SignupValidator(userService));
+		}
+		if (binder.getTarget() instanceof RegistryUserFormBean) {
+			binder.setValidator(new AdministrationValidator(userService));
+		}
 	}
 
 	/**
@@ -200,6 +209,110 @@ public class SiteController extends AbstractController
 		request.removeAttribute("signupData", WebRequest.SCOPE_SESSION);
 		
 		return "signup";
+	}
+	
+	@RequestMapping(value = "/myprofile", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String viewUserProfile(WebRequest request, HttpServletRequest servletRequest,
+								@ModelAttribute("user") final RegistryUserFormBean userData,
+							    final BindingResult bindingResult,
+							    final Model model) throws Exception {
+		if (!security.isLoggedIn()) {
+			return "redirect:/";
+		}		
+		
+		RegistryUser user = security.getCurrentUser();
+		user = userService.findOne(user.getUuid());
+		
+		List<String> groups = new ArrayList<String>();
+		List<String> roles = new ArrayList<String>();
+		for (Role role : user.getRoles()) {
+			if (role instanceof RegistryUserGroup) {
+				groups.add(role.getName());
+			}
+			else {
+				roles.add(role.getName());
+			}
+		}
+		model.addAttribute("groups", groups);
+		model.addAttribute("roles", roles);
+		
+//		List<String> organizationRoles = new ArrayList<String>();
+//		for (Role role : user.getOrganization().getRoles()) {
+//			organizationRoles.add(role.getName());
+//		}
+//		model.addAttribute("orgRoles", organizationRoles);
+//		
+//		model.addAttribute("delegations", delegationRepository.findByActor(user));
+
+		userData.initializeFromUser(user);
+		
+		model.addAttribute("user", userData);
+		model.addAttribute("userObj", user);
+		
+		return "myprofile";
+	}
+
+	@RequestMapping(value = "/myprofile", method = RequestMethod.PUT) 
+	public String updateUserProfile(WebRequest request,
+					       		  @Valid @ModelAttribute("user") final RegistryUserFormBean userData,
+					       		  final BindingResult bindingResult,
+								  final RedirectAttributes redirectAttributes,
+					       		  final Model model) throws Exception {
+		
+		if (!security.isLoggedIn()) {
+			return "redirect:/";
+		}
+		
+		RegistryUser user = security.getCurrentUser();
+		user = userService.findOne(user.getUuid());
+		
+		if (bindingResult.hasErrors()) {
+			List<String> groups = new ArrayList<String>();
+			List<String> roles = new ArrayList<String>();
+			for (Role role : user.getRoles()) {
+				if (role instanceof RegistryUserGroup) {
+					groups.add(role.getName());
+				}
+				else {
+					roles.add(role.getName());
+				}
+			}
+			model.addAttribute("groups", groups);
+			model.addAttribute("roles", roles);
+			
+//			List<String> organizationRoles = new ArrayList<String>();
+//			for (Role role : user.getOrganization().getRoles()) {
+//				organizationRoles.add(role.getName());
+//			}
+//			model.addAttribute("orgRoles", organizationRoles);
+//			
+//			model.addAttribute("delegations", delegationRepository.findByActor(user));
+			
+			RegistryUserFormBean userBean = new RegistryUserFormBean(user);
+			
+			model.addAttribute("user", userBean);
+			model.addAttribute("userObj", user);
+			
+			return "myprofile";
+		}
+		
+		user = userService.updateUser(userData.toUpdateDTO(user.getUuid()));
+//		if (userData.getOrganizationUuid() != null && !userData.getOrganizationUuid().equals(user.getOrganization().getUuid())) {
+//			Organization organization = organizationRepository.findOne(UUID.fromString(userData.getOrganizationUuid()));
+//			if (organization == null) {
+//				throw new UpdateUserException(String.format("User references non-existent organization %s", userData.getOrganizationUuid()));
+//			}
+//			user.setOrganization(organization);
+//			user = userRepository.save(user);
+//		}
+		
+//		Iterable<Organization> orgs = organizationService.findAll();
+//		model.addAttribute("organizations", orgs);
+		
+		redirectAttributes.addFlashAttribute("userProfileUpdated", user);
+		
+		return "redirect:/";
 	}
 
 	@Transactional
