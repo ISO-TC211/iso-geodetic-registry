@@ -120,6 +120,7 @@
 	<entry key="button.ok">Ok</entry>
 	<entry key="button.no">No</entry>
 	<entry key="button.confirm">Confirm</entry>
+	<entry key="button.confirmRejection">Confirm rejection</entry>
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
@@ -160,6 +161,8 @@
 	<entry key="APPEALED">appealed</entry>
 	<entry key="FINISHED">finished</entry>
 	
+	<entry key="REJECTED_BY_MANAGER">rejected by register manager</entry>
+	
 	<entry key="PENDING">pending</entry>
 	<entry key="TENTATIVE">tentative</entry>
 	<entry key="FINAL">final</entry>
@@ -194,7 +197,8 @@
 	<entry key="popup.retire.justification">Please provide a justification for the retirement:</entry>
 	<entry key="popup.acceptProposal.header">Accept proposal</entry>
 	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Please describe the event where the decision to accept the proposal was made:</entry>
-	<entry key="popup.rejectProposal.header">Accept proposal</entry>
+	<entry key="popup.rejectProposal.header">Reject proposal</entry>
+	<entry key="popup.rejectProposal.registerManagerNote">Please describe why the proposal is being rejected and, if applicable, provide guidance as to how the submitter may improve the proposal:</entry>
 	<entry key="popup.rejectProposal.controlBodyDecisionEvent">Please describe the event where the decision to reject the proposal was made:</entry>
 	<entry key="popup.delegations.header">Delegated rights</entry>
 	<entry key="popup.delegations.pointOfContact">Point of Contact</entry>

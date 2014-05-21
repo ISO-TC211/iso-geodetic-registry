@@ -119,6 +119,7 @@
 	<entry key="button.no">Nein</entry>
 	<entry key="button.ok">Ok</entry>
 	<entry key="button.confirm">Bestätigen</entry>
+	<entry key="button.confirmRejection">Ablehnung bestätigen</entry>
 	<entry key="button.cancel">Abbrechen</entry>
 	<entry key="button.withdraw">Zurückziehen</entry>
 	<entry key="button.save">Speichern</entry>
@@ -158,6 +159,8 @@
 	<entry key="APPEALABLE">zurückgewiesen/anfechtbar</entry>
 	<entry key="APPEALED">angefochten</entry>
 	<entry key="FINISHED">abgeschlossen</entry>
+
+	<entry key="REJECTED_BY_MANAGER">vom Register-Manager zurückgewiesen</entry>
 	
 	<entry key="PENDING">offen</entry>
 	<entry key="TENTATIVE">vorläufig</entry>
@@ -194,6 +197,7 @@
 	<entry key="popup.acceptProposal.header">Vorschlag annehmen</entry>
 	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:</entry>
 	<entry key="popup.rejectProposal.header">Vorschlag ablehnen</entry>
+	<entry key="popup.rejectProposal.registerManagerNote">Bitte geben Sie, weshalb Sie den Vorschlag ablehnen und wie die einreichende Stelle ihn ggf. verbessern kann:</entry>
 	<entry key="popup.rejectProposal.controlBodyDecisionEvent">Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag abzulehnen, gefällt wurde:</entry>
 	<entry key="popup.delegations.header">Delegierte Rechte</entry>
 	<entry key="popup.delegations.pointOfContact">Organisationsverwalter</entry>
