@@ -248,8 +248,11 @@ public class ProposalsController
 			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 		}
 
-		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
+		RegisterItemProposalDTO rvb = proposalDtoFactory.getProposalDto(proposal);
+//		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
 		model.addAttribute("rvb", rvb);
+		
+		model.addAttribute("isProposal", "true");
 		
 		RE_SubmittingOrganization sponsor = suborgRepository.findOne(rvb.getSponsorUuid());
 //		if (rvb.getProposalType().equals(ProposalType.SUPERSESSION)) {
@@ -533,7 +536,7 @@ public class ProposalsController
 	 */
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
 	@Transactional
-	public ResponseEntity<Void> updateProposal(
+	public Object updateProposal(
 			@PathVariable("uuid") UUID proposalUuid,
 			@RequestParam(value = "op", required = false) String operation,
 			@RequestParam(value = "item", required = false) String itemUuid,
@@ -595,7 +598,8 @@ public class ProposalsController
 
 		proposalService.updateProposal(proposal);
 		
-		return new ResponseEntity<Void>(HttpStatus.OK);
+//		return new ResponseEntity<Void>(HttpStatus.OK);
+		return "redirect:/management/submitter";
 	}
 
 	@RequestMapping(value = "/{uuid}/withdraw", method = RequestMethod.POST)
