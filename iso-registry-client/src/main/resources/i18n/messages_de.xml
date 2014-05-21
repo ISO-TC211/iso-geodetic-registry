@@ -155,7 +155,7 @@
 	<entry key="NOT_SUBMITTED">noch nicht eingereicht</entry>
 	<entry key="UNDER_REVIEW">wartet auf Zulassung durch Registermanager</entry>
 	<entry key="IN_APPROVAL_PROCESS">wartet auf Control-Body-Entscheidung</entry>
-	<entry key="APPEALABLE">anfechtbar</entry>
+	<entry key="APPEALABLE">zurückgewiesen/anfechtbar</entry>
 	<entry key="APPEALED">angefochten</entry>
 	<entry key="FINISHED">abgeschlossen</entry>
 	
