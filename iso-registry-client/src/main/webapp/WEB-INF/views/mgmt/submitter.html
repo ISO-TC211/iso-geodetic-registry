@@ -27,6 +27,13 @@
 							</thead>
 							<tbody>
 								<tr th:each="item : ${proposals}">
+									<div class="modal fade" th:id="'dialog-submit-' + ${item.proposalUuid}" role="dialog">
+										<div th:include="mgmt/submitter_popup_submit :: popup"/>
+									</div>
+									<div class="modal fade" th:id="'dialog-withdraw-' + ${item.proposalUuid}" role="dialog">
+										<div th:include="mgmt/submitter_popup_withdraw :: popup"/>
+									</div>
+
 									<td th:text="${item.name}"></td>
 									<td th:text="${item.itemClassName}"></td>
 									<td th:utext="#{${item.proposalType}}"></td>											
@@ -40,8 +47,18 @@
 												<li><div style="margin: 5px;">
 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${item.isEditable()} ? #{button.edit} : #{button.details}">Details</button>												
 												</div></li>
+												<li th:if="${item.isNotSubmitted()} or (${item.proposalStatus} eq 'REJECTED_BY_MANAGER')">
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a> -->
+<!-- 													</div> -->
+													<div style="margin: 5px;">
+														<a th:href="'#dialog-submit-' + ${item.proposalUuid}" th:id="'submit_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-success btn-xs" th:text="#{button.submitProposal}">Einreichen</a>
+													</div>
+												</li>
 												<li th:if="${item.isUnderReview()} or ${item.isPending()}"><div style="margin: 5px;">
-													<button th:id="'withdraw_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdrawProposal}">Begutachten</button>
+													<div style="margin: 5px;">
+														<a th:href="'#dialog-withdraw-' + ${item.proposalUuid}" th:id="'withdraw_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-warning btn-xs" th:text="#{button.withdrawProposal}">Einreichen</a>
+													</div>
 												</div></li>
 												<li th:if="${item.isAppealable()}"><div style="margin: 5px">
 													<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button>
