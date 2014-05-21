@@ -16,19 +16,19 @@
 
 		<div class="col-md-6">
 			<div class="row">
-				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},items=${@areaItemRepository.findAll()},isRequired='true'">
+				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},isRequired='true',ajaxPath='AreaItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},items=${@datumItemRepository.findAll()},isRequired='true'">
+				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',ajaxPath='DatumItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},items=${@coordinateSystemItemRepository.findAll()},isRequired='true'">
+				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',ajaxPath='CoordinateReferenceSystemItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
