@@ -16,7 +16,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 
 @Configuration
-@ComponentScan(basePackages = "de.geoinfoffm.registry, org.iso.registry")
+@ComponentScan(basePackages = { "de.geoinfoffm.registry", "org.iso.registry" })
 @PropertySources({
 	@PropertySource("classpath:hibernate.connection.xml"),
 	@PropertySource("classpath:hibernate.properties.xml")
