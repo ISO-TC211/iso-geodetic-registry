@@ -311,7 +311,7 @@
 				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
 				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
 				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
-				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
 				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
 				  "oPaginate": {
 				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
@@ -325,16 +325,23 @@
 			},				
 			"aaSorting": [[ 0, "asc" ]],
 			"aoColumns": [
-				{ "mDataProp": "itemIdentifier" },
+				{ 
+					"mDataProp": "itemIdentifier",
+					"sWidth": "5%"
+				},
 				{ 
 					"mDataProp": "name",
+					"sWidth": "50%",
 					"bSearchable": true
 				},
-				{ 	"mDataProp": "itemClassName",
+				{ 	
+					"mDataProp": "itemClassName",
+					"sWidth": "15%",
 				 	"bSortable": false
 				},
 				{ 
 					"mDataProp": "status",
+					"sWidth": "10%",
 					"bSortable": false
 				},
 			],
@@ -423,7 +430,7 @@
 				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
 				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
 				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
-				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sProcessing": "<img src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
 				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
 				  "oPaginate": {
 				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",

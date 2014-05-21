@@ -374,7 +374,7 @@ public class ProposalsController
 		model.addAttribute("proposal", newItem);
 		model.addAttribute("register", targetRegister);
 		
-		Set<RE_ItemClass> itemClasses = targetRegister.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = targetRegister.getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 

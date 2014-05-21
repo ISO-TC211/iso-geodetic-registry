@@ -6,6 +6,7 @@ package org.iso.registry.client.controller.registry;
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -234,7 +235,7 @@ public class RegisterItemController
 
 		model.addAttribute("state", state);
 
-		Set<RE_ItemClass> itemClasses = item.getRegister().getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = item.getRegister().getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 
@@ -500,7 +501,7 @@ public class RegisterItemController
 
 		model.addAttribute("register", register);
 
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		if (itemClasses.size() == 1) {
 			itemClassUuid = itemClasses.toArray(new RE_ItemClass[] {})[0].getUuid().toString();
 			model.addAttribute("itemClassUuid", itemClassUuid);
