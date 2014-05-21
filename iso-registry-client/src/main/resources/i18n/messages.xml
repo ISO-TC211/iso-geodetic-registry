@@ -156,7 +156,7 @@
 	<entry key="NOT_SUBMITTED">not yet submitted</entry>
 	<entry key="UNDER_REVIEW">waiting for review by register manager</entry>
 	<entry key="IN_APPROVAL_PROCESS">waiting for approval by control body</entry>
-	<entry key="APPEALABLE">appealable</entry>
+	<entry key="APPEALABLE">rejected/appealable</entry>
 	<entry key="APPEALED">appealed</entry>
 	<entry key="FINISHED">finished</entry>
 	
