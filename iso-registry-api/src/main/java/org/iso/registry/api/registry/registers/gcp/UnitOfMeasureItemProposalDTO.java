@@ -3,10 +3,15 @@ package org.iso.registry.api.registry.registers.gcp;
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
+import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.iso19103.MeasureType;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
+import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.soap.Addition_Type;
 
 public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -21,8 +26,24 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	public UnitOfMeasureItemProposalDTO() { }
 
-	public UnitOfMeasureItemProposalDTO(UnitOfMeasureItem uom) {
-		super(uom);
+	public UnitOfMeasureItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
+		super(proposal, sponsor);
+	}
+
+	public UnitOfMeasureItemProposalDTO(IdentifiedItem item) {
+		super(item);
+	}
+
+	public UnitOfMeasureItemProposalDTO(Proposal proposal) {
+		super(proposal);
+	}
+
+	public UnitOfMeasureItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
+		super(item, sponsor);
+	}
+
+	public UnitOfMeasureItemProposalDTO(String itemClassName) {
+		super(itemClassName);
 	}
 
 	public MeasureType getMeasureType() {
