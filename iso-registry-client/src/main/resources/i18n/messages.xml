@@ -61,6 +61,7 @@
 	<entry key="tableheader.code">Code</entry>
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Naming system</entry>
+	<entry key="tableheader.remarks">Remarks</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -134,6 +135,7 @@
 	<entry key="button.reject">Reject proposal</entry>
 	<entry key="button.addNew">Add new</entry>
 	<entry key="button.addNewSuccessor">Create new successor</entry>
+	<entry key="button.addAlias">Add alias</entry>
 	<entry key="button.addExistingSuccessor">Add existing item as successor</entry>
 	<entry key="button.addSupersededItems">Select items to supersede</entry>
 	<entry key="button.supersede">Supersede</entry>

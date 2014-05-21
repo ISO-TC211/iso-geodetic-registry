@@ -4,5 +4,5 @@ import de.geoinfoffm.registry.core.EntityRepository;
 
 public interface NamingSystemItemRepository extends EntityRepository<NamingSystemItem>
 {
-
+	NamingSystemItem findByCode(Integer code);
 }
