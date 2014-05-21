@@ -203,7 +203,7 @@ public class RegisterItemController
 
 		proposalService.proposeRetirement(item, justification, suborg);
 
-		return new BasePathRedirectView("/");
+		return new BasePathRedirectView("/management/submitter");
 	}
 
 	@RequestMapping(value = "/{uuid}/supersede", method = RequestMethod.GET)
@@ -441,7 +441,7 @@ public class RegisterItemController
 
 		proposalService.proposeClarification(item, proposal.calculateProposedChanges(item), proposal.getJustification(), suborg);
 		
-		return new BasePathRedirectView("/");
+		return new BasePathRedirectView("/management/submitter");
 	}
 
 	public static class ProposalManagementInformationEvaluator {

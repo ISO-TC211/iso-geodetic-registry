@@ -135,7 +135,7 @@ public class ProposalsController
 		
 		proposalService.propose(proposal);
 		
-		return new BasePathRedirectView("/");
+		return new BasePathRedirectView("/management/submitter");
 	}
 
 	@RequestMapping(value = "/{uuid}/{property}", method = RequestMethod.GET)
@@ -411,7 +411,7 @@ public class ProposalsController
 			binder.bind(servletRequest);
 			
 			proposalService.updateProposal(proposalDto);
-			return "redirect:/";
+			return "redirect:/management/submitter";
 		}
 	}
 
@@ -526,7 +526,7 @@ public class ProposalsController
 //		itemService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
 //				state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes(), state.getSponsor());
 		
-		return new BasePathRedirectView("/");
+		return new BasePathRedirectView("/management/submitter");
 	}
 	
 	/*
