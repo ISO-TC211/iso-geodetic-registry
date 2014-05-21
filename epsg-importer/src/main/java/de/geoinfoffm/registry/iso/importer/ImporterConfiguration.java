@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 
 @Configuration
+@ComponentScan(basePackages = "de.geoinfoffm.registry, org.iso.registry")
 @PropertySources({
 	@PropertySource("classpath:hibernate.connection.xml"),
 	@PropertySource("classpath:hibernate.properties.xml")

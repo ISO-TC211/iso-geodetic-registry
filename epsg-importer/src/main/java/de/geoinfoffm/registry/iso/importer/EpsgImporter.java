@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -160,20 +159,20 @@ public class EpsgImporter
 		
 		int rowCount = table.getRowCount();
 		int i = 1;
-//		do {
-//			logger.info(".");
-//			logger.info(".");
-//			logger.info(".");
-//			logger.info("======================================================================");
-//			logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
-//			logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
-//			logger.info("======================================================================");
-//			logger.info(".");
-//			logger.info(".");
-//			logger.info(".");
-//			importer.importRows(cursor, 100, sponsor, register);
-//			i += 100;
-//		} while (i <= rowCount);
+		do {
+			logger.info(".");
+			logger.info(".");
+			logger.info(".");
+			logger.info("======================================================================");
+			logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
+			logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
+			logger.info("======================================================================");
+			logger.info(".");
+			logger.info(".");
+			logger.info(".");
+			importer.importRows(cursor, 100, sponsor, register);
+			i += 100;
+		} while (i <= rowCount);
 		
 		if (importer.mustFixReferences()) {
 			cursor.beforeFirst();
