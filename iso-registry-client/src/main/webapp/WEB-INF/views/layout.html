@@ -145,9 +145,41 @@
 										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}"></a>
 										<ul>
 											<li>
-												<a th:id="'register' + ${register.key} + 'ItemClasses'" href="#">Contained item classes</a>
+												<a th:id="'register' + ${register.key} + 'Conversions'" href="#">Coordinate Transformations</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}">
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Operation')}">
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+													</li>
+												</ul>
+											</li>
+											<li>
+												<a th:id="'register' + ${register.key} + 'CRS'" href="#">Coordinate Reference Systems</a>
+												<ul>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CRS')}">
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+													</li>
+												</ul>
+											</li>
+											<li>
+												<a th:id="'register' + ${register.key} + 'CS'" href="#">Coordinate Systems</a>
+												<ul>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CS')}">
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+													</li>
+												</ul>
+											</li>
+											<li>
+												<a th:id="'register' + ${register.key} + 'Datums'" href="#">Datums</a>
+												<ul>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'Datum')}">
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+													</li>
+												</ul>
+											</li>
+											<li>
+												<a th:id="'register' + ${register.key} + 'Other'" href="#">Other</a>
+												<ul>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Operation')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')}">
 														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
 													</li>
 												</ul>

@@ -4,18 +4,18 @@
 			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
 			<div class="row" th:include="registry/registers/globals :: aliases('uom')" />
 			<div class="row">
-				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},items=${@unitOfMeasureItemRepository.findAll()},isRequired='true',noAddNew='true'">
+				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12" th:with="property='scaleToStandardUnitNumerator',inputType='number',label=#{form.label.factorB},placeholder=#{form.placeholder.factorB},isRequired='true'">
-					<div th:replace="registry/registers/globals :: input"/>
+					<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12" th:with="property='scaleToStandardUnitDenominator',inputType='number',label=#{form.label.factorC},placeholder=#{form.placeholder.factorC},isRequired='true'">
-					<div th:replace="registry/registers/globals :: input"/>
+					<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 		</div>	<!-- END OF LEFT -->
