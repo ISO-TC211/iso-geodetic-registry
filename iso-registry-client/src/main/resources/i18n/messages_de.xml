@@ -178,6 +178,7 @@
 	<entry key="alert.userCreated">Der Benutzer wurde erfolgreich angelegt.</entry>
 	<entry key="alert.userDeleted">Der Benutzer wurde gelöscht.</entry>
 	<entry key="alert.signedUp">Sie wurden erfolgreich registriert und können sich jetzt mit Ihrer E-Mail-Adresse ({0}) anmelden.</entry>	
+	<entry key="alert.userProfileUpdated">Ihr Profil wurde aktualisiert.</entry>	
 	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
 	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
 	<entry key="alert.organizationCreated">Die Organisation wurde erfolgreich angelegt</entry>

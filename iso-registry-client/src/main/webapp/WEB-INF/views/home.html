@@ -18,6 +18,18 @@
 							<span th:text="#{alert.signedUp(${signedUp})}">Der Benutzer wurde erfolgreich angelegt</span>
 						</p>
 					</div>
+
+					<div th:if="${userProfileUpdated}" class="alert alert-success">
+						<p>
+							<span th:text="#{alert.userProfileUpdated}">Der Benutzer wurde erfolgreich angelegt</span>
+						</p>
+					</div>
+
+					<div th:if="${accountDeleted}" class="alert alert-warning">
+						<p>
+							<span th:text="#{alert.userDeleted}">Der Benutzer wurde gelöscht.</span>
+						</p>
+					</div>
 					
 <!-- 					<div class="container"> -->
 						<div class="jumbotron" th:if="${@registerRepository.findAll().isEmpty()}">
