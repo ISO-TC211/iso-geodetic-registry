@@ -4,7 +4,7 @@
 			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
 			<div class="row" th:include="registry/registers/globals :: aliases('uom')" />
 			<div class="row">
-				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},items=${@unitOfMeasureItemRepository.findAll()},isRequired='true',noAddNew='true'">
+				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>

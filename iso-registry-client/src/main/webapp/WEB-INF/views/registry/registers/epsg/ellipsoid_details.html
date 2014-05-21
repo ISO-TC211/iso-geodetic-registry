@@ -22,7 +22,7 @@
 				<div class="col-md-4" th:with="property='semiMajorAxis',inputType='number',label=#{form.label.semiMajorAxis},placeholder=#{form.placeholder.semiMajorAxis},isRequired='true'">
 					<div th:replace="registry/registers/globals :: input"/>
 				</div>
-				<div class="col-md-8" th:with="property='semiMajorAxisUom',label=#{form.label.semiMajorAxisUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='true',noAddNew='true'">
+				<div class="col-md-8" th:with="property='semiMajorAxisUom',label=#{form.label.semiMajorAxisUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
