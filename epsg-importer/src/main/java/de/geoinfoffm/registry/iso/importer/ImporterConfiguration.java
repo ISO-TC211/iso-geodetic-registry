@@ -2,6 +2,8 @@ package de.geoinfoffm.registry.iso.importer;
 
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +12,6 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import de.geoinfoffm.registry.core.CoreConfiguration;
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 
 @Configuration
@@ -20,6 +21,8 @@ import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 })
 public class ImporterConfiguration
 {
+	private static final Logger logger = LoggerFactory.getLogger(ImporterConfiguration.class);
+	
 	@Bean
 	@Autowired
 	public HibernateConfiguration hibernateConfiguration(final Environment env) {
@@ -27,6 +30,10 @@ public class ImporterConfiguration
 			
 			public DriverManagerDataSource dataSource() {
 				DriverManagerDataSource dataSource = new DriverManagerDataSource();
+				
+				logger.info(env.getProperty("hibernate.connection.url"));
+				logger.info(env.getProperty("hibernate.connection.username"));
+				
 				dataSource.setDriverClassName(env.getProperty("hibernate.connection.driver_class"));
 				dataSource.setUrl(env.getProperty("hibernate.connection.url"));
 				dataSource.setUsername(env.getProperty("hibernate.connection.username"));

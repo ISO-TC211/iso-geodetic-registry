@@ -172,7 +172,7 @@
 			<properties>
 				<hibernate.connection.username>isoreg</hibernate.connection.username>
 				<hibernate.connection.password>isoreg</hibernate.connection.password>
-				<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg</hibernate.connection.url>
+				<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg-import</hibernate.connection.url>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<client.basepath></client.basepath>
 				<mail.enabled>true</mail.enabled>
