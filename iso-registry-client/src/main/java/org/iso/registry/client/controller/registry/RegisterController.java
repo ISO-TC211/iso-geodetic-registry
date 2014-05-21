@@ -7,6 +7,7 @@ import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -347,7 +348,7 @@ public class RegisterController
 
 		model.addAttribute("register", register);
 		
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		if (itemClasses.size() == 1) {
 			itemClassUuid = itemClasses.toArray(new RE_ItemClass[] {})[0].getUuid().toString();
 			model.addAttribute("itemClassUuid", itemClassUuid);
@@ -425,7 +426,7 @@ public class RegisterController
 
 		model.addAttribute("state", state);
 
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 
@@ -448,7 +449,7 @@ public class RegisterController
 
 		addSupersededItemsToSupersession(request, model, supersededItems, itemService);
 
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 
@@ -659,7 +660,7 @@ public class RegisterController
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("isNew", "true");
 			
-			Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+			Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 			model.addAttribute("itemClasses", itemClasses);
 			return "proposal";
 		}
