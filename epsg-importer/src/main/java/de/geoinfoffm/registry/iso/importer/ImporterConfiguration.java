@@ -15,7 +15,7 @@ import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 
 @Configuration
 @PropertySources({
-	@PropertySource("classpath:hibernate.configuration.xml"),
+	@PropertySource("classpath:hibernate.connection.xml"),
 	@PropertySource("classpath:hibernate.properties.xml")
 })
 public class ImporterConfiguration
