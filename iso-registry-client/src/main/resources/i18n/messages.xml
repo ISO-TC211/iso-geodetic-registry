@@ -106,6 +106,7 @@
 	<entry key="button.finalizeProposal">End appeal period</entry>
 	<entry key="button.appealProposal">Appeal to owner</entry>
 	<entry key="button.acceptAppeal">Accept appeal</entry>
+	<entry key="button.rejectAppeal">Reject appeal</entry>
 	<entry key="button.details">Details</entry>
 	<entry key="button.edit">Edit</entry>
 	<entry key="button.action">Action</entry>
@@ -200,6 +201,7 @@
 	<entry key="popup.delegations.member">Membership approved</entry>
 	<entry key="popup.delegations.requested">The user has requested to be assigned the highlighted roles.</entry>
 	<entry key="popup.delegations.deny">Deny this request</entry>
+	<entry key="popup.itemclass.header">Please select an item class</entry>
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.item">Item</entry>
@@ -384,7 +386,7 @@
 	<entry key="EngineeringCRS">Engineering CRS</entry>
 	<entry key="VerticalCRS">Vertical CRS</entry>
 	<entry key="ProjectedCRS">Projected CRS</entry>
-	<entry key="CompoundCRS">Vertical CRS</entry>
+	<entry key="CompoundCRS">Compound CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
 	<entry key="Area">Area</entry>
 	<entry key="GeodeticDatum">Geodetic Datum</entry>

@@ -80,14 +80,14 @@
 	</div>
 </div>
 
-<div th:fragment="aliases">
+<div th:fragment="aliases(modifier)">
 	<div class="col-md-12">
 		<div class="panel">
 			<div class="panel-header">
-				<label class="form-label" for="aliasesTable" th:text="#{form.label.aliases}">Aliases</label>
+				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label>
 			</div>
 			<div class="panel-body">
-				<table id="aliasesTable" class="datatable table table-condensed table-striped">
+				<table th:id="'aliasesTable_' + ${modifier}" class="datatable table table-condensed table-striped">
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.alias}">Alias</th>
@@ -110,7 +110,7 @@
 	<script type="text/javascript" th:inline="text">
 	/* <![CDATA[ */
 			table = $('#aliasesTable').dataTable({
-			"sPaginationType": "bs_normal",^
+			"sPaginationType": "bs_normal",
 			"bFilter": false,
 			"oLanguage": {
 				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
@@ -224,7 +224,7 @@
 			invalidHandler: function(event, validator) {
 				// 'this' refers to the form
 				var errors = validator.numberOfInvalids();
-				alert(errors);
+// 				alert(errors);
 				$('#validationFailed').show();				
 			},
 			submitHandler: function(form) {
