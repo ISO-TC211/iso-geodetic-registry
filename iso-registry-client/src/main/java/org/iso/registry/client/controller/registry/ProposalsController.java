@@ -3,12 +3,10 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.CONTROLBODY_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.OWNER_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +15,7 @@ import java.util.UUID;
 import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.iso.registry.api.registry.IsoProposalService;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +40,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.ItemNotFoundException;
-import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
@@ -87,7 +85,7 @@ public class ProposalsController
 	private RegisterItemService itemService;
 
 	@Autowired
-	private ProposalService proposalService;
+	private IsoProposalService proposalService;
 
 	@Autowired
 	private SubmittingOrganizationRepository suborgRepository;
@@ -242,6 +240,7 @@ public class ProposalsController
 		
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(proposal);
 		model.addAttribute("proposal", dto);
+		model.addAttribute("itemClass", dto.getItemClassUuid());
 		
 		ItemClassConfiguration itemClassConfiguration = null;
 		if (proposal instanceof SimpleProposal) {
@@ -675,7 +674,7 @@ public class ProposalsController
 
 	@RequestMapping(value = "/{uuid}/reject", method = RequestMethod.POST)
 	@Transactional
-	public ResponseEntity<Void> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
+	public ResponseEntity<?> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
 											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 		logger.debug("POST /proposal/{}/reject", proposalUuid);
 
@@ -683,10 +682,19 @@ public class ProposalsController
 		if (proposal == null) {
 			throw new ProposalNotFoundException(proposalUuid);
 		}
-
-		security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
-
-		proposalService.rejectProposal(proposal, controlBodyDecisionEvent);
+		
+		if (proposal.isUnderReview()) {
+			security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.rejectProposal(proposal, controlBodyDecisionEvent);
+		}
+		else if (proposal.isPending()) {
+			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.rejectProposal(proposal, controlBodyDecisionEvent);			
+		}
+		else {
+			// cannot be rejected: wrong status
+			return new ResponseEntity<String>(String.format("The proposal %s cannot be rejected: wrong status", proposal.getUuid().toString()), HttpStatus.FORBIDDEN);			
+		}
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
