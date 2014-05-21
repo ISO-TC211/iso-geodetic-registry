@@ -14,13 +14,13 @@
 		</div>
 	
 		<div class="row">
-			<div class="col-md-2" th:with="property='isoA2Code',inputType='text',label=#{form.label.isoA2Code},placeholder=#{form.placeholder.isoA2Code},isRequired='true'">
+			<div class="col-md-2" th:with="property='isoA2Code',inputType='text',label=#{form.label.isoA2Code},placeholder=#{form.placeholder.isoA2Code},isRequired='false'">
 				<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 			</div>
-			<div class="col-md-2" th:with="property='isoA3Code',inputType='text',label=#{form.label.isoA3Code},placeholder=#{form.placeholder.isoA3Code},isRequired='true'">
+			<div class="col-md-2" th:with="property='isoA3Code',inputType='text',label=#{form.label.isoA3Code},placeholder=#{form.placeholder.isoA3Code},isRequired='false'">
 				<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 			</div>
-			<div class="col-md-2" th:with="property='isoNCode',inputType='number',label=#{form.label.isoNCode},placeholder=#{form.placeholder.isoNCode},isRequired='true'">
+			<div class="col-md-2" th:with="property='isoNCode',inputType='number',label=#{form.label.isoNCode},placeholder=#{form.placeholder.isoNCode},isRequired='false'">
 				<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 			</div>
 			<div class="col-md-1"/>
