@@ -6,12 +6,7 @@
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#item" data-toggle="tab" th:text="#{tabs.item}">Eintrag</a></li>
-			<li th:if="!${#maps.isEmpty(item.predecessors)}"><a href="#predecessors" data-toggle="tab" th:text="#{tabs.predecessors}">Vorgänger</a></li>
-			<li th:if="!${#maps.isEmpty(item.successors)}"><a href="#successors" data-toggle="tab" th:text="#{tabs.successors}">Nachfolger</a></li>
-			<li><a href="#managementInformation" data-toggle="tab" th:text="#{tabs.managementInformation}">Verwaltungsinformationen</a></li>
-		</ul>
+		<div th:replace="registry/item :: itemTabs"/>
 
 		<div class="tab-content">
 			<div id="item" class="tab-pane in active" style="padding-top: 10px">
@@ -23,203 +18,20 @@
 						</div>
 						
 						<div class="panel-body">
-							<div th:include="registry/registers/epsg/crs_create_addition :: crsDetails"/>
-
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
-								<textarea id="definition" name="definition" readonly="readonly" rows="6" cols="120" th:placeholder="#{form.placeholder.definition}" class="form-control required" required="true" type="text" th:field="*{definition}" /> 
-							</div>
-
+							<div th:include="registry/registers/epsg/crs_details :: crsDetails"/>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div id="predecessors" class="tab-pane in" style="padding-top: 10px">
-				<ul>
-					<li th:each="predecessor : ${item.predecessors}"><a th:href="@{${basePath} + '/item/' + ${predecessor.key}}"><span th:text="${predecessor.value}"></span></a></li>
-				</ul>
-			</div>
+			<div th:replace="registry/item :: #predecessors"/>
+			<div th:replace="registry/item :: #successors"/>
+			<div th:replace="registry/item :: #managementInformation"/>
 
-			<div id="successors" class="tab-pane in" style="padding: 10px">
-				<ul>
-					<li th:each="successor : ${item.successors}"><a th:href="@{${basePath} + '/item/' + ${successor.key}}"><span th:text="${successor.value}"></span></a></li>
-				</ul>
-			</div>
-			
-			<div id="managementInformation" class="tab-pane in" style="padding-top: 10px">
-				<div class="panel-group" id="accordion">
-					<div th:each="pmi : ${item.sortedProposalManagementInformations}">
-						<div th:switch="${#strings.toString(pmiEvaluator.evaluate(pmi))}">
-							
-							<div th:case="'ADDITION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-success' : 'panel-default'">
-								<div class="panel-heading">
-									<h3 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordion" th:href="'#additionInformation_' + ${pmi.uuid}" th:text="${pmi.dateDisposed} ? #{header.addedOn(${#calendars.format(pmi.dateDisposed, 'dd.MM.yyyy')})} : #{header.additionInformation}"></a>
-									</h3>
-								</div>
-								<div class="panel-collapse collapse" th:id="'additionInformation_' + ${pmi.uuid}">
-									<table class="table table-striped" th:object="${pmi}">
-										<tbody>
-											<tr th:if="*{dateProposed}">
-												<td th:text="#{dateProposed}"></td>
-												<td th:text="*{#calendars.format(dateProposed, 'dd.MM.yyyy')}"></td>
-											</tr>
-											<tr th:if="*{dateDisposed}">
-												<td th:text="#{dateDisposed}"></td>
-												<td th:text="*{#calendars.format(dateDisposed, 'dd.MM.yyyy')}"></td>
-											</tr>
-											<tr th:if="*{disposition}">
-												<td th:text="#{disposition}"></td>
-												<td th:text="#{*{disposition}}"></td>
-											</tr>
-											<tr th:if="*{status}">
-												<td th:text="#{status}"></td>
-												<td th:text="#{*{status}}"></td>
-											</tr>
-											<tr th:if="*{controlBodyDecisionEvent}">
-												<td th:text="#{controlBodyDecisionEvent}"></td>
-												<td th:text="*{controlBodyDecisionEvent}"></td>
-											</tr>
-											<tr>
-												<td th:text="#{justification}"></td>
-												<td th:text="*{justification}"></td>
-											</tr>
-											<tr th:if="*{registerManagerNotes}">
-												<td th:text="#{registerManagerNotes}"></td>
-												<td th:text="*{registerManagerNotes}"></td>
-											</tr>
-											<tr th:if="*{controlBodyNotes}">
-												<td th:text="#{controlBodyNotes}"></td>
-												<td th:text="*{controlBodyNotes}"></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-	
-							<div th:case="'RETIREMENT' or 'SUPERSESSION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-warning' : 'panel-default'">
-								<div class="panel-heading">
-									<h3 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordion" th:href="'#amendmentInformation_' + ${pmi.uuid}">
-											<span th:if="${pmi.dateDisposed}" th:text="#{header.amendedOn(#{${pmi.amendmentType}}, ${#calendars.format(pmi.dateDisposed, 'dd.MM.yyyy')})}"></span>
-											<span th:if="!${pmi.dateDisposed}" th:text="#{header.amendmentInformation}"></span>
-										</a>
-									</h3>
-								</div>
-								<div class="panel-collapse collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
-									<table class="table table-striped" th:object="${pmi}" th:id="'amendmentInformation_' + ${pmi.uuid}">
-										<tbody>
-											<tr>
-												<td th:text="#{amendmentType}"></td>
-												<td th:text="#{*{amendmentType}}"></td>
-											</tr>
-											<tr th:if="*{dateProposed}">
-												<td th:text="#{dateProposed}"></td>
-												<td th:text="*{#calendars.format(dateProposed, 'dd.MM.yyyy')}"></td>
-											</tr>
-											<tr th:if="*{dateDisposed}">
-												<td th:text="#{dateDisposed}"></td>
-												<td th:text="*{#calendars.format(dateDisposed, 'dd.MM.yyyy')}"></td>
-											</tr>
-											<tr th:if="*{disposition}">
-												<td th:text="#{disposition}"></td>
-												<td th:text="#{*{disposition}}"></td>
-											</tr>
-											<tr>
-												<td th:text="#{status}"></td>
-												<td th:text="#{*{status}}"></td>
-											</tr>
-											<tr>
-												<td th:text="#{justification}"></td>
-												<td th:text="*{justification}"></td>
-											</tr>
-											<tr th:if="*{registerManagerNotes}">
-												<td th:text="#{registerManagerNotes}"></td>
-												<td th:text="*{registerManagerNotes}"></td>
-											</tr>
-											<tr th:if="*{controlBodyNotes}">
-												<td th:text="#{controlBodyNotes}"></td>
-												<td th:text="*{controlBodyNotes}"></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-
-							<div th:case="'CLARIFICATION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-primary' : 'panel-default'">
-								<div class="panel-heading">
-									<h3 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordion" th:href="'#clarificationInformation_' + ${pmi.uuid}">
-											<span th:if="${pmi.dateDisposed}" th:text="#{header.clarifiedOn(${#calendars.format(pmi.dateDisposed, 'dd.MM.yyyy')})}" th:classappend="${pmi.isNotAccepted()} ? 'strikethrough'"></span>
-											<span th:if="!${pmi.dateDisposed}" th:text="#{header.clarificationInformation}"></span>
-										</a>
-									</h3>
-								</div>
-								<div class="panel-collapse collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
-									<table class="table table-striped" th:object="${pmi}" th:id="'clarificationInformation_' + ${pmi.uuid}">
-										<tbody>
-											<tr>
-												<td th:text="#{proposedChange}"></td>
-												<td th:text="*{proposedChange}"></td>
-											</tr>
-											<tr th:if="*{dateProposed}">
-												<td th:text="#{dateProposed}"></td>
-												<td th:text="*{#calendars.format(dateProposed, 'dd.MM.yyyy')}"></td>
-											</tr>
-											<tr th:if="*{dateDisposed}">
-												<td th:text="#{dateDisposed}"></td>
-												<td th:text="*{#calendars.format(dateDisposed, 'dd.MM.yyyy')}"></td>
-											</tr>
-											<tr th:if="*{disposition}">
-												<td th:text="#{disposition}"></td>
-												<td th:text="#{*{disposition}}"></td>
-											</tr>
-											<tr>
-												<td th:text="#{status}"></td>
-												<td th:text="#{*{status}}"></td>
-											</tr>
-											<tr>
-												<td th:text="#{justification}"></td>
-												<td th:text="*{justification}"></td>
-											</tr>
-											<tr th:if="*{registerManagerNotes}">
-												<td th:text="#{registerManagerNotes}"></td>
-												<td th:text="*{registerManagerNotes}"></td>
-											</tr>
-											<tr th:if="*{controlBodyNotes}">
-												<td th:text="#{controlBodyNotes}"></td>
-												<td th:text="*{controlBodyNotes}"></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 
 		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 	</div>
 </body>
-<script type="text/javascript" th:inline="text">
-/* <![CDATA[ */
-	$(document).ready(function() {
-		$.each($('.required'), function() {
-	    	$(this).parent().removeClass('has-error');
-	    	$(this).siblings('span').first().hide();
-	    	$(this).attr('readonly', 'readonly');
-		});
-		$.each($('.has-error'), function() {
-	    	$(this).removeClass('has-error');
-	    	$(this).removeClass('has-feedback');
-		});
-	});
-/* ]]> */
-</script>
-
+<script th:replace="registry/item :: js-item"/>
 </html>

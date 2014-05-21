@@ -3,6 +3,7 @@ package org.iso.registry.client;
 import org.iso.registry.core.model.CoordinateSystemType;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -49,6 +50,14 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 		}
 		
 		CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
+		if (crsItem instanceof SingleCoordinateReferenceSystemItem<?>) {
+			if (((SingleCoordinateReferenceSystemItem)crsItem).getCoordinateSystem() != null) {
+				this.setCoordinateSystem(new CoordinateSystemItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getCoordinateSystem()));
+			}
+			if (((SingleCoordinateReferenceSystemItem)crsItem).getDatum() != null) {
+				this.setDatum(new DatumItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getDatum()));
+			}
+		}
 		if (crsItem instanceof GeodeticCoordinateReferenceSystemItem) {
 			switch (((GeodeticCoordinateReferenceSystemItem)crsItem).getCoordinateSystem().getAxes().size()) {
 				case 2:
@@ -58,9 +67,6 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 					this.setType(CoordinateSystemType.GEOGRAPHIC_3D);
 					break;
 			}
-			
-			this.setCoordinateSystem(new CoordinateSystemItemViewBean(((GeodeticCoordinateReferenceSystemItem)crsItem).getCoordinateSystem()));
-			this.setDatum(new DatumItemViewBean(((GeodeticCoordinateReferenceSystemItem)crsItem).getDatum()));
 		}
 		
 		this.setAreaName(crsItem.getDomainOfValidity().getName());

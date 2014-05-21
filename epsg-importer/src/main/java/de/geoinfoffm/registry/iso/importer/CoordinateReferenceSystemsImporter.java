@@ -84,6 +84,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
 		proposal.setCode(crsCode);
 		proposal.setName((String)row.get(COORD_REF_SYS_NAME));
+		proposal.setScope((String)row.get(CRS_SCOPE));
 		
 		String crsType = (String)row.get(COORD_REF_SYS_KIND);
 		if (crsType.equalsIgnoreCase("GEOGRAPHIC 2D") || crsType.equalsIgnoreCase("GEOGRAPHIC 3D") || crsType.equalsIgnoreCase("GEOCENTRIC")) {
@@ -269,43 +270,72 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 	@Transactional
 	protected void fixReference(Row row) {
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
+		logger.info(".");
+		logger.info(".");
 		logger.info("Fixing references for CRS #{}...", crsCode);
 		
 		CoordinateReferenceSystemItem crs = null;
 
-		Integer baseCrsCode = (Integer)row.get(SOURCE_GEOGCRS_CODE);
-		if (baseCrsCode != null) {
+//		Integer csCode = (Integer)row.get(COORD_SYS_CODE);
+//		logger.info(">>> data references CS {}", csCode);
+//		if (csCode != null) {
+//			crs = crsRepository.findByCode(crsCode);
+//			
+//			CoordinateSystemItem cs = csRepository.findByCode(csCode);
+//			if (cs != null) {
+//				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setCoordinateSystem(cs);
+//				logger.info(">>> fixed reference to CS {}", csCode);
+//			}
+//		}
+
+		Integer datumCode = (Integer)row.get(DATUM_CODE);
+		logger.info(">>> data references Datum {}", datumCode);
+		if (datumCode != null) {
 			crs = crsRepository.findByCode(crsCode);
 			
-			CoordinateReferenceSystemItem baseCrs = crsRepository.findByCode(baseCrsCode);
-			if (baseCrs != null) {
-				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)baseCrs);
+			DatumItem datum = datumRepository.findByCode(datumCode);
+			if (datum != null) {
+				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setDatum(datum);
+				logger.info(">>> fixed reference to Datum {}", datumCode);
 			}
-		}
+			else {
+				logger.error(">>> CRS #{} referenced non-existent Datum #{}", crsCode, datumCode);				
+			}
+		}		
 
-		Integer horizontalCrsCode = (Integer)row.get(CMPD_HORIZCRS_CODE);
-		if (horizontalCrsCode != null) {
-			if (crs == null) {
-				crs = crsRepository.findByCode(crsCode);
-			}
-			
-			CoordinateReferenceSystemItem horizontalCrs = crsRepository.findByCode(horizontalCrsCode);
-			if (horizontalCrs == null) {
-				((CompoundCoordinateReferenceSystemItem)crs).addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
-			}
-		}
-		
-		Integer verticalCrsCode = (Integer)row.get(CMPD_VERTCRS_CODE);
-		if (horizontalCrsCode != null) {
-			if (crs == null) {
-				crs = crsRepository.findByCode(crsCode);
-			}
-			
-			CoordinateReferenceSystemItem verticalCrs = crsRepository.findByCode(verticalCrsCode);
-			if (verticalCrs == null) {
-				((CompoundCoordinateReferenceSystemItem)crs).addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
-			}
-		}
+//		Integer baseCrsCode = (Integer)row.get(SOURCE_GEOGCRS_CODE);
+//		if (baseCrsCode != null) {
+//			crs = crsRepository.findByCode(crsCode);
+//			
+//			CoordinateReferenceSystemItem baseCrs = crsRepository.findByCode(baseCrsCode);
+//			if (baseCrs != null) {
+//				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)baseCrs);
+//			}
+//		}
+//
+//		Integer horizontalCrsCode = (Integer)row.get(CMPD_HORIZCRS_CODE);
+//		if (horizontalCrsCode != null) {
+//			if (crs == null) {
+//				crs = crsRepository.findByCode(crsCode);
+//			}
+//			
+//			CoordinateReferenceSystemItem horizontalCrs = crsRepository.findByCode(horizontalCrsCode);
+//			if (horizontalCrs == null) {
+//				((CompoundCoordinateReferenceSystemItem)crs).addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
+//			}
+//		}
+//		
+//		Integer verticalCrsCode = (Integer)row.get(CMPD_VERTCRS_CODE);
+//		if (horizontalCrsCode != null) {
+//			if (crs == null) {
+//				crs = crsRepository.findByCode(crsCode);
+//			}
+//			
+//			CoordinateReferenceSystemItem verticalCrs = crsRepository.findByCode(verticalCrsCode);
+//			if (verticalCrs == null) {
+//				((CompoundCoordinateReferenceSystemItem)crs).addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
+//			}
+//		}
 
 		if (crs != null) {
 			crsRepository.save(crs);
