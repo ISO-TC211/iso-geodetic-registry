@@ -612,9 +612,26 @@ public class ProposalsController
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 		
-		security.assertMayDelete(proposal);
+//		security.assertMayDelete(proposal);
 		
 		proposalService.withdrawProposal(proposal);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}	
+
+	@RequestMapping(value = "/{uuid}/submit", method = RequestMethod.POST)
+	@Transactional
+	public ResponseEntity<Void> submitProposal(@PathVariable("uuid") UUID proposalUuid) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+		logger.debug("POST /proposal/{}/submit", proposalUuid);
+		
+		Proposal proposal = proposalService.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+
+//		security.assertMaySubmit(proposal);
+
+		proposalService.submitProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
