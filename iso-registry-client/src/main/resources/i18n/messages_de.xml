@@ -297,44 +297,48 @@
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
-	<entry key="form.placeholder.name">Name</entry>
-	<entry key="form.placeholder.definition">Definition</entry>
-	<entry key="form.placeholder.description">Beschreibung</entry>
-	<entry key="form.placeholder.justification">Begründung des Registrierungsvorschlags</entry>
-	<entry key="form.placeholder.registerManagerNotes">Anmerkungen für den Register-Manager</entry>
-	<entry key="form.placeholder.controlBodyNotes">Anmerkungen für den Control-Body</entry>
+	<entry key="form.placeholder.name"></entry>
+	<entry key="form.placeholder.definition"></entry>
+	<entry key="form.placeholder.description"></entry>
+	<entry key="form.placeholder.justification"></entry>
+	<entry key="form.placeholder.registerManagerNotes"></entry>
+	<entry key="form.placeholder.controlBodyNotes"></entry>
 	<entry key="form.placeholder.impact">Bitte beschreiben Sie die Auswirkungen für den Fall, dass der Einspruch abgelehnt wird</entry>
 	<entry key="form.placeholder.situation">Bitte beschreiben Sie den derzeitigen Sachstand</entry>
 	<entry key="form.placeholder.appealJustification">Begründung des Einspruchs</entry>
-	<entry key="form.placeholder.shortName">Kurzname</entry>
-	<entry key="form.placeholder.category">Kategorie</entry>
-	<entry key="form.placeholder.emailAddress">E-Mail-Adresse</entry>
-	<entry key="form.placeholder.password">Passwort</entry>
-	<entry key="form.placeholder.confirmPassword">Passwort bestätigen</entry>
-	<entry key="form.placeholder.code">Code</entry>
-	<entry key="form.placeholder.scope">Scope</entry>
+	<entry key="form.placeholder.shortName"></entry>
+	<entry key="form.placeholder.category"></entry>
+	<entry key="form.placeholder.emailAddress"></entry>
+	<entry key="form.placeholder.password"></entry>
+	<entry key="form.placeholder.confirmPassword"></entry>
+	<entry key="form.placeholder.code"></entry>
+	<entry key="form.placeholder.scope">
 
-	<entry key="form.placeholder.organizationName">Name Ihrer Organisation</entry>
+	<entry key="form.placeholder.organizationName"></entry>
 	<entry key="form.placeholder.onlineResourceWebsite">z.B. http://www.example.org</entry>
 	<entry key="form.placeholder.onlineResourceLogo">z.B. http://www.example.org/logo.png</entry>
 
-	<entry key="form.placeholder.isoA2Code">ISO-Alpha-2-Code</entry>
-	<entry key="form.placeholder.isoA3Code">ISO-Alpha-3-Code</entry>
-	<entry key="form.placeholder.isoNCode">Num. ISO-Code</entry>
-	<entry key="form.placeholder.northernLatitude">Nördl. Breite</entry>
-	<entry key="form.placeholder.southernLatitude">Südl. Breite</entry>
-	<entry key="form.placeholder.easternLongitude">Östl. Länge</entry>
-	<entry key="form.placeholder.westernLongitude">Westl. Länge</entry>
+	<entry key="form.placeholder.isoA2Code"></entry>
+	<entry key="form.placeholder.isoA3Code"></entry>
+	<entry key="form.placeholder.isoNCode"></entry>
+	<entry key="form.placeholder.northernLatitude"></entry>
+	<entry key="form.placeholder.southernLatitude"></entry>
+	<entry key="form.placeholder.easternLongitude"></entry>
+	<entry key="form.placeholder.westernLongitude"></entry>
 
-	<entry key="form.placeholder.remarks">Bemerkungen</entry>
-	<entry key="form.placeholder.informationSource">Informationsquelle</entry>
-	<entry key="form.placeholder.dataSource">Datenquelle</entry>
-	<entry key="form.placeholder.originDescription">Herkunftsbeschreibung</entry>
-	<entry key="form.placeholder.informationSource">Informationsquelle</entry>
-	<entry key="form.placeholder.realizationEpoch">Epoche</entry>
+	<entry key="form.placeholder.remarks"></entry>
+	<entry key="form.placeholder.informationSource"></entry>
+	<entry key="form.placeholder.dataSource"></entry>
+	<entry key="form.placeholder.originDescription"></entry>
+	<entry key="form.placeholder.informationSource"></entry>
+	<entry key="form.placeholder.realizationEpoch"></entry>
 
-	<entry key="form.placeholder.factorB">Faktor B</entry>
-	<entry key="form.placeholder.factorC">Faktor C</entry>
+	<entry key="form.placeholder.factorB"></entry>
+	<entry key="form.placeholder.factorC"></entry>
+
+	<entry key="form.placeholder.semiMajorAxis"></entry>
+	<entry key="form.placeholder.semiMinorAxis"></entry>
+	<entry key="form.placeholder.inverseFlattening"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
