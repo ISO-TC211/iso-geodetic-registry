@@ -7,6 +7,7 @@ import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.ProjectedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
@@ -190,9 +191,35 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 			CoordinateReferenceSystemItem crsItem = (CoordinateReferenceSystemItem)item;
 
 			this.setScope(crsItem.getScope());
+
+			if (crsItem instanceof SingleCoordinateReferenceSystemItem<?>) {
+				SingleCoordinateReferenceSystemItem<?> scrsItem = (SingleCoordinateReferenceSystemItem<?>)crsItem;
+			
+				if (scrsItem.getCoordinateSystem() != null) {
+					this.setCoordinateSystem(new CoordinateSystemItemProposalDTO(scrsItem.getCoordinateSystem()));
+				}
+				
+				if (scrsItem.getDatum() != null) {
+					this.setDatum(new DatumItemProposalDTO(scrsItem.getDatum())); 
+				}
+				
+				if (scrsItem.getBaseCrs() != null) {
+					this.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(scrsItem.getBaseCrs()));
+				}
+
+			}
+			
+			if (crsItem instanceof CompoundCoordinateReferenceSystemItem) {
+				CompoundCoordinateReferenceSystemItem ccrsItem = (CompoundCoordinateReferenceSystemItem)crsItem;
+
+				if (ccrsItem.getComponentReferenceSystem().size() > 0) {
+					this.setHorizontalCrs(new CoordinateReferenceSystemItemProposalDTO(ccrsItem.getComponentReferenceSystem().get(0)));
+				}
+				if (ccrsItem.getComponentReferenceSystem().size() > 1) {
+					this.setVerticalCrs(new CoordinateReferenceSystemItemProposalDTO(ccrsItem.getComponentReferenceSystem().get(1)));
+				}
+			}
 		}
-		
-		throw new RuntimeException("Not yet implemented");
 	}
 
 
