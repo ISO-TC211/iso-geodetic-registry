@@ -360,6 +360,12 @@
 
 	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
 
+	<entry key="orderBy">sortieren</entry>
+	<entry key="orderByCode">[Code]</entry>
+	<entry key="orderByName">[Name]</entry>
+	<entry key="tooltip.orderByCode">Nach Code sortieren</entry>
+	<entry key="tooltip.orderByName">Nach Namen sortieren</entry>
+
 	<entry key="home.initializeRegistry">Registry initialisieren</entry>
 	<entry key="home.addExampleData">Beispieldaten hinzufügen</entry>
 	<entry key="home.emptyRegistry">Die Registry enthält keine Daten.</entry>
