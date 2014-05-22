@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">Geodetic Codes and Parameters Registry</entry>
+	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
 	
 	<entry key="navbar.setHistoricDate">Historic view</entry>
 	<entry key="navbar.login">Login</entry>
@@ -414,7 +414,7 @@
 	<entry key="ProjectedCRS">Projected CRS</entry>
 	<entry key="CompoundCRS">Compound CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
-	<entry key="Area">Area</entry>
+	<entry key="Area">Area of Use</entry>
 	<entry key="GeodeticDatum">Geodetic Datum</entry>
 	<entry key="VerticalDatum">Vertical Datum</entry>
 	<entry key="EngineeringDatum">Engineering Datum</entry>
