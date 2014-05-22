@@ -20,7 +20,7 @@
 
 			<div class="row">
 				<div class="col-md-12" th:with="property='realizationEpoch',inputType='date',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='true'">
-					<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 		</div>	<!-- END OF LEFT -->

@@ -4,9 +4,9 @@
 	</div>
 </div>
 
-<div th:fragment="input (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
+<div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
-	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}" />
+	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -111,10 +111,10 @@
 
 <div th:fragment="nameAndCode">
 	<div class="col-md-8" th:with="property='name',inputType='text',label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
-		<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 	<div class="col-md-4" th:with="property='code',inputType='number',label=#{form.label.code},placeholder=#{form.placeholder.code},isRequired='true'">
-		<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
 
@@ -193,7 +193,7 @@
 
 <div th:fragment="dataSource (cssClass)">
 	<div th:classappend="${cssClass}" th:with="property='dataSource',inputType='text',label=#{form.label.dataSource},placeholder=#{form.placeholder.dataSource},isRequired='true'">
-		<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
 
