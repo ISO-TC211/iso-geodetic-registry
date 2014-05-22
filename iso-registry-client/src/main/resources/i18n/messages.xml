@@ -355,6 +355,12 @@
 	<entry key="form.myprofile.delegationRequested">Your request was submitted.</entry>
 
 	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
+
+	<entry key="orderBy">order by</entry>
+	<entry key="orderByCode">[code]</entry>
+	<entry key="orderByName">[name]</entry>
+	<entry key="tooltip.orderByCode">Order list entries by code</entry>
+	<entry key="tooltip.orderByName">Order list entries by name</entry>
 	
 	<entry key="home.initializeRegistry">Initialize registry</entry>
 	<entry key="home.addExampleData">Add example data</entry>
