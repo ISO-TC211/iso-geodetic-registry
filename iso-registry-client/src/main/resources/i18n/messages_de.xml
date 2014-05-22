@@ -210,6 +210,7 @@
 	<entry key="popup.itemClass.header">Bitte wählen Sie die Item-Klasse</entry>
 	<entry key="popup.submitProposal.header">Vorschlag einreichen</entry>
 	<entry key="popup.submitProposal.reallySubmit">Möchten Sie den Vorschlag "{0}" einreichen?</entry>
+	<entry key="popup.createProposal.header">Vorschlag erstellen</entry>
 
 	<entry key="tabs.overview">Übersicht</entry>
 	<entry key="tabs.item">Eintrag</entry>

@@ -211,6 +211,7 @@
 	<entry key="popup.itemClass.header">Please select an item class</entry>
 	<entry key="popup.submitProposal.header">Submit proposal</entry>
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
+	<entry key="popup.createProposal.header">Create proposal</entry>
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.item">Item</entry>
