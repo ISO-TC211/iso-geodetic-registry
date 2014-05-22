@@ -34,13 +34,13 @@
 
 			<div th:if="${itemClassName} != null and ${itemClassName} eq 'GeodeticDatum'">
 				<div class="row">
-					<div class="col-md-12" th:with="property='ellipsoid',label=#{form.label.ellipsoid},isRequired='true',ajaxPath='EllipsoidItem'">
+					<div class="col-md-12" th:with="property='ellipsoid',label=#{form.label.ellipsoid},isRequired='true',ajaxPath='EllipsoidItem',noAddNew='true'">
 						<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col-md-12" th:with="property='primeMeridian',label=#{form.label.primeMeridian},isRequired='true',ajaxPath='PrimeMeridianItem'">
+					<div class="col-md-12" th:with="property='primeMeridian',label=#{form.label.primeMeridian},isRequired='true',ajaxPath='PrimeMeridianItem',noAddNew='true'">
 						<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 					</div>
 				</div>
