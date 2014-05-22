@@ -1,7 +1,6 @@
 package org.iso.registry.api;
 
-import static org.springframework.security.acls.domain.BasePermission.READ;
-import static org.springframework.security.acls.domain.BasePermission.WRITE;
+import static org.springframework.security.acls.domain.BasePermission.*;
 
 import java.util.Arrays;
 
@@ -13,14 +12,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.geoinfoffm.registry.api.RegisterService;
-import de.geoinfoffm.registry.core.ProposalSubmittedEvent;
+import de.geoinfoffm.registry.core.ProposalCreatedEvent;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
 
 @Transactional
 @Component
-public class ProposalSubmittedEventListener implements ApplicationListener<ProposalSubmittedEvent> 
+public class ProposalCreatedEventListener implements ApplicationListener<ProposalCreatedEvent> 
 {
 	@Autowired
 	private ProposalRepository proposalRepository;
@@ -29,7 +28,7 @@ public class ProposalSubmittedEventListener implements ApplicationListener<Propo
 	private RegisterService registerService;
 	
 	@Override
-	public void onApplicationEvent(ProposalSubmittedEvent event) {
+	public void onApplicationEvent(ProposalCreatedEvent event) {
 		if (event.isAnnotated(this.getClass())) return;
 		
 		Proposal proposal = event.getSource();
