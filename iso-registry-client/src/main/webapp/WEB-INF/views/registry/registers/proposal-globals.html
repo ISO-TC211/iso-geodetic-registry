@@ -20,7 +20,7 @@
 </div>
 
 <div th:fragment="itemClassSelector">
-	<div class="form-group">
+	<div class="form-group" th:if="${proposal.isAddition()}">
 		<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
 		<div class="controls">
 			<div class="input-group">

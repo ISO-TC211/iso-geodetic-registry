@@ -19,15 +19,35 @@
 
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
-	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
+	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
+	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group" th:with="isClarification=${proposal.isClarification()}">
+		<!-- form-backing bean: RegisterItemProposalDTO -->
 		<input hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}"/>
-		<select th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}">
-<!-- 			<option th:each="item : ${items}" th:value="${item.uuid}" th:text="'[' + ${item.code} + '] ' + ${item.name}" data-code="${item.code}" data-name="${item.name}"></option> -->
-		</select>
-		<span th:unless="${noAddNew}" class="input-group-btn">
+		<select th:unless="${isClarification}" th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}"></select>
+		<span th:unless="${noAddNew} or ${isClarification}" class="input-group-btn">
 			<button th:id="'addNew_' + ${property}" class="btn btn-default btn-addnew" type="button" th:text="#{button.addNew}">Add new</button>
 		</span>
+		<div th:if="${isClarification}" th:with="uuid=*{__${property}__.referencedItemUuid}">
+			<div th:if="${uuid}">
+				<a th:id="${property} + '_refLink'" th:href="@{__${basePath}__/item/__${uuid}__}">Link</a>
+				<script type="text/javascript" charset="utf-8" th:inline="text">
+				/* <![CDATA[ */
+					$(function() {
+						$.getJSON(
+								"[[@{${basePath}}]]/entities/byUuid/[[${uuid}]]",
+								{
+								},
+								function(j) {
+									$('#[[${property}]]_refLink').text('[' + j[0][1] + '] ' + j[0][2]);
+								});
+					});
+				/* ]]> */
+				</script>
+			</div>
+			<div th:unless="${uuid}">
+				[<span th:text="#{undefined}"></span>]
+			</div>
+		</div>
 		
 		<script type="text/javascript" charset="utf-8" th:inline="text">
 		/* <![CDATA[ */
@@ -47,7 +67,7 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/data/" + ajaxPath + "?orderBy=name",
+							"[[@{${basePath}}]]/entities/byClass/" + ajaxPath + "?orderBy=name",
 							{
 								id : $(this).val(),
 								ajax : 'true'
@@ -80,7 +100,7 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/data/" + ajaxPath + "?orderBy=code",
+							"[[@{${basePath}}]]/entities/byClass/" + ajaxPath + "?orderBy=code",
 							{
 								id : $(this).val(),
 								ajax : 'true'
@@ -115,6 +135,7 @@
 		</script>
 	</div>
 	<div th:unless="${isProposal}">
+		<!-- form-backing bean: RegisterItemViewBean -->
 		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
 			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.code} + '] ' + *{__${property}__.name}"></a>
 		</div>
@@ -145,9 +166,9 @@
 	</div>
 </div>
 
-<div th:fragment="aliases(modifier)">
+<div th:fragment="aliasesTable(modifier)">
 	<div class="col-md-12" th:unless="!*{aliases} and !${isProposal}">
-		<div class="panel">
+		<div class="panel" th:if="${proposal}">
 <!-- 			<div class="panel-header"> -->
 <!-- 				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label> -->
 <!-- 			</div> -->
@@ -169,7 +190,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<button th:if="${isProposal}" type="button" th:text="#{button.addAlias}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
+				<button th:if="${isProposal} and !${proposal.isClarification()}" type="button" th:text="#{button.addAlias}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
 			</div>
 		</div>
 	</div>
@@ -245,6 +266,12 @@
 				</div>
 				<div th:unless="${partOfSupersession}">
 					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
+						<div th:replace="registry/registers/globals :: textArea"/>
+					</div>
+					<div th:with="property='registerManagerNotes',rows=6,cols=120,label=#{form.label.registerManagerNotes},placeholder=#{form.placeholder.registerManagerNotes},isRequired='false'">
+						<div th:replace="registry/registers/globals :: textArea"/>
+					</div>
+					<div th:with="property='controlBodyNotes',rows=6,cols=120,label=#{form.label.controlBodyNotes},placeholder=#{form.placeholder.controlBodyNotes},isRequired='false'">
 						<div th:replace="registry/registers/globals :: textArea"/>
 					</div>
 				</div>

@@ -4,7 +4,7 @@
 		<div class="col-md-6"> <!-- LEFT -->
 
 			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-			<div class="row" th:include="registry/registers/globals :: aliases('datum')" />
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('datum')" />
 
 			<div class="row">
 				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
