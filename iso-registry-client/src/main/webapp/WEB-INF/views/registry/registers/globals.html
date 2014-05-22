@@ -21,7 +21,8 @@
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
-		<select th:id="${property}" th:name="${property}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__.referencedItemUuid}">
+		<input hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}"/>
+		<select th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}">
 <!-- 			<option th:each="item : ${items}" th:value="${item.uuid}" th:text="'[' + ${item.code} + '] ' + ${item.name}" data-code="${item.code}" data-name="${item.name}"></option> -->
 		</select>
 		<span th:unless="${noAddNew}" class="input-group-btn">
@@ -31,7 +32,12 @@
 		<script th:if="${ajaxPath}" type="text/javascript" charset="utf-8" th:inline="text">
 		/* <![CDATA[ */
 			$(function() {
+				$('#[[${property}]]_select').change(function(e) {
+					$('#[[${property}]]').val($(this).val());		
+				});
+					
 				$('#[[${property}]]_byname').click(function(e) {
+					var currentValue = $('#[[${property}]]').val();
 					$("select#[[${ajaxPath}]]").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
@@ -47,16 +53,18 @@
 											+ j[i][2] + ' [' + j[i][1] + ']'
 											+ '</option>';
 								}
-								$("select#[[${property}]]").html(options);
-								$("select#[[${property}]]").removeAttr('disabled');
+								$("select#[[${property}]]_select").html(options);
+								$("select#[[${property}]]_select").removeAttr('disabled');
 	
 								$('#[[${property}]]_byname').addClass('bold');
 								$('#[[${property}]]_bycode').removeClass('bold');
 								$('#[[${property}]]_loader').hide();
+								$('#[[${property}]]_select').val(currentValue);		
 							});
 				});
 	
 				$('#[[${property}]]_bycode').click(function(e) {
+					var currentValue = $('#[[${property}]]').val();
 					$("select#[[${property}]]").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
@@ -72,12 +80,13 @@
 											+ '[' + j[i][1] + '] ' + j[i][2] 
 											+ '</option>';
 								}
-								$("select#[[${property}]]").html(options);
-								$("select#[[${property}]]").removeAttr('disabled');
+								$("select#[[${property}]]_select").html(options);
+								$("select#[[${property}]]_select").removeAttr('disabled');
 	
 								$('#[[${property}]]_bycode').addClass('bold');
 								$('#[[${property}]]_byname').removeClass('bold');
 								$('#[[${property}]]_loader').hide();
+								$('#[[${property}]]_select').val(currentValue);		
 							});
 				});
 	
