@@ -243,18 +243,28 @@
 					  '<form action="[[@{${basePath}}]]/item/' + item.uuid + '/retire" method="get">' +
 					    '<div class="modal-header"><h4>[[#{popup.retire.header}]]</h4></div>' +
 						  '<div class="modal-body">' +
-							'<p>[[#{popup.retire.justification}]]</p>' +
 							'<div class="form-group">' +
+							  '<label class="form-label" for="justification">[[#{popup.retire.justification}]]</label>' +
 							  '<div class="controls">' +
-							    '<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text"></textarea>' +  
-							    '<textarea id="registerManagerNotes" name="registerManagerNotes" rows="2" cols="40" class="form-control" required="false" type="text"></textarea>' +  
-							    '<textarea id="controlBodyNotes" name="controlBodyNotes" rows="2" cols="40" class="form-control" required="false" type="text"></textarea>' +  
+							    '<textarea id="justification" name="justification" rows="4" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="registerManagerNotes">[[#{popup.retire.registerManagerNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="registerManagerNotes" name="registerManagerNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="controlBodyNotes">[[#{popup.retire.controlBodyNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="controlBodyNotes" name="controlBodyNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
 							  '</div>' +
 							'</div>' +
 						  '</div>' +
 						  '<div class="modal-footer">' +
-							'<button id="confirmretirement" type="submit" class="btn btn-warning">[[#{button.confirm}]]</button>' +
-							'<button id="denyretirement" class="btn btn-primary" data-dismiss="modal">[[#{button.cancel}]]</button>' +
+							'<button id="confirmretirement" type="submit" class="btn btn-danger">[[#{button.confirm}]]</button>' +
+							'<button id="denyretirement" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					  '</form>' +
 				    '</div>' +
