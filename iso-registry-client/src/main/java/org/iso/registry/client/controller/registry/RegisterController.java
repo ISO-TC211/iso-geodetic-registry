@@ -649,7 +649,10 @@ public class RegisterController
 	@RequestMapping(value = "/{register}/proposal/addition", method = RequestMethod.POST)
 	public String submitProposal(WebRequest request, ServletRequest servletRequest, @PathVariable("register") String registerName, 
 			@Valid @ModelAttribute("proposal") RegisterItemProposalDTO proposal,
+			@RequestParam Map<String, String> allParams,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) throws Exception {
+
+		boolean submitProposal = !allParams.containsKey("saveProposal");
 
 		RE_Register register = findRegister(registerName);
 		if (register == null) {
@@ -673,17 +676,13 @@ public class RegisterController
 		
 		Addition addition = proposalService.createAdditionProposal(proposal);
 		
-		if (addition.hasGroup()) {
-			proposalService.submitProposal(addition.getGroup());
-		}
-		else {
+		if (submitProposal) {
 			proposalService.submitProposal(addition);
 		}
 		
 		redirectAttributes.addFlashAttribute("createdItem", addition.getItem().getUuid().toString());
 		
 		return "redirect:/management/submitter";
-//		return "redirect:/register/" + registerName + "/proposals";
 	}
 
 	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
