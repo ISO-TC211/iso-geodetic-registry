@@ -401,6 +401,7 @@
 	
 	<entry key="mandatoryField">Mandatory field</entry>
 	<entry key="undefined">undefined</entry>
+	<entry key="itemDetails">Link to item details</entry>
 
 	<entry key="NamingSystem">Naming System</entry>
 	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
