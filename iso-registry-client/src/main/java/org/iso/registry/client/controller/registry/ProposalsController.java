@@ -693,6 +693,34 @@ public class ProposalsController
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
 
+	@RequestMapping(value = "/{uuid}/return", method = RequestMethod.POST)
+	@Transactional
+	public ResponseEntity<?> returnProposal(@PathVariable("uuid") UUID proposalUuid,
+											@RequestParam("noteToSubmitter") String noteToSubmitter) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+		logger.debug("POST /proposal/{}/return", proposalUuid);
+
+		Proposal proposal = proposalRepository.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+
+		if (proposal.isUnderReview()) {
+			security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.returnProposal(proposal, noteToSubmitter);
+		}
+		else if (proposal.isPending()) {
+			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.returnProposal(proposal, noteToSubmitter);			
+		}
+		else {
+			// cannot be rejected: wrong status
+			return new ResponseEntity<String>(String.format("The proposal %s cannot be rejected: wrong status", proposal.getUuid().toString()), HttpStatus.FORBIDDEN);			
+		}
+
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/{uuid}/reject", method = RequestMethod.POST)
 	@Transactional
 	public ResponseEntity<?> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
@@ -704,11 +732,7 @@ public class ProposalsController
 			throw new ProposalNotFoundException(proposalUuid);
 		}
 		
-		if (proposal.isUnderReview()) {
-			security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
-			proposalService.rejectProposal(proposal, controlBodyDecisionEvent);
-		}
-		else if (proposal.isPending()) {
+		if (proposal.isPending()) {
 			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 			proposalService.rejectProposal(proposal, controlBodyDecisionEvent);			
 		}

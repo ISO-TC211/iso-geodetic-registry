@@ -177,10 +177,11 @@
 				<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
 				<div class="pull-right" th:if="${proposal.isUnderReview()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_MANAGER_', #vars.proposal.registerUuid)">
 					<button class="btn btn-success" th:text="#{button.review}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/review'} + '\', goback);'">Zur Entscheidung annehmen</button>
-					<button type="button" th:id="'reject-' + ${proposal.proposalUuid}" class="btn btn-danger" th:href="'#confirmreject-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.reject}">Ablehnen</button>
+					<button type="button" th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}"></button>
 				</div>
 				<div class="pull-right" th:if="${proposal.isPending()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_CONTROLBODY_', #vars.proposal.registerUuid)">
 					<button th:id="'accept-' + ${proposal.proposalUuid}" class="btn btn-success" th:href="'#confirmaccept-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.accept}">Akzeptieren</button>
+					<button th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}">Ablehnen</button>
 					<button th:id="'reject-' + ${proposal.proposalUuid}" class="btn btn-danger" th:href="'#confirmreject-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.reject}">Ablehnen</button>
 				</div>
 				
@@ -222,9 +223,6 @@
 							</div>
 							<div class="modal-body">
 								<form id="decisionEventForm">
-									<p th:if="${proposal.isUnderReview()}" th:text="#{popup.rejectProposal.registerManagerNote}">
-										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
-									</p>
 									<p th:if="${proposal.isPending()}" th:text="#{popup.rejectProposal.controlBodyDecisionEvent}">
 										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
 									</p>
@@ -232,15 +230,40 @@
 									<!-- Text input-->
 									<div class="form-group">
 										<div class="controls">
-											<textarea th:if="${proposal.isUnderReview()}" id="registerManagerNote" name="registerManagerNote" rows="3" cols="40" class="form-control" required="required" type="text" /> 
 											<textarea th:if="${proposal.isPending()}" id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="required" type="text" /> 
 										</div>
 									</div>
 								</form>								
 							</div>
 							<div class="modal-footer">
-								<button class="btn btn-danger btn-reject" th:text="#{button.confirmRejection}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/reject'} + '\', $(\'form#decisionEventForm\').serialize(), goback);'">Bestätigen</button>
+								<button class="btn btn-warning btn-reject" th:text="#{button.confirmRejection}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/reject'} + '\', $(\'form#decisionEventForm\').serialize(), goback);'">Bestätigen</button>
 								<button id="cancelreject" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" th:id="'confirmreturn-' + ${proposal.proposalUuid}" role="dialog">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 th:text="#{popup.returnProposal.header}"></h4>
+							</div>
+							<div class="modal-body">
+								<form id="noteToSubmitterForm">
+									<p th:text="#{popup.returnProposal.noteToSubmitter}"></p>
+									
+									<!-- Text input-->
+									<div class="form-group">
+										<div class="controls">
+											<textarea id="noteToSubmitter" name="noteToSubmitter" rows="3" cols="40" class="form-control" required="required" type="text" /> 
+										</div>
+									</div>
+								</form>								
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-warning btn-return" th:text="#{button.confirmReturn}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/return'} + '\', $(\'form#noteToSubmitterForm\').serialize(), goback);'">Bestätigen</button>
+								<button id="cancelreturn" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
 							</div>
 						</div>
 					</div>

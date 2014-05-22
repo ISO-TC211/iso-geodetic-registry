@@ -164,7 +164,8 @@
 	<entry key="APPEALED">angefochten</entry>
 	<entry key="FINISHED">abgeschlossen</entry>
 
-	<entry key="REJECTED_BY_MANAGER">vom Register-Manager zurückgewiesen</entry>
+	<entry key="RETURNED_BY_MANAGER">vom Register-Manager zurückgegeben</entry>
+	<entry key="RETURNED_BY_CONTROLBODY">vom Control-Body zurückgegeben</entry>
 	
 	<entry key="PENDING">offen</entry>
 	<entry key="TENTATIVE">vorläufig</entry>

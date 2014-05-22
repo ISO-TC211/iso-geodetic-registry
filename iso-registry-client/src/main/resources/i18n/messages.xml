@@ -105,6 +105,7 @@
 	<entry key="button.decideProposal">Decide</entry>
 	<entry key="button.acceptProposal">Accept</entry>
 	<entry key="button.rejectProposal">Reject</entry>
+	<entry key="button.returnProposal">Return</entry>
 	<entry key="button.withdrawProposal">Withdraw</entry>
 	<entry key="button.saveProposal">Save proposal</entry>
 	<entry key="button.finalizeProposal">End appeal period</entry>
@@ -125,6 +126,7 @@
 	<entry key="button.no">No</entry>
 	<entry key="button.confirm">Confirm</entry>
 	<entry key="button.confirmRejection">Confirm rejection</entry>
+	<entry key="button.confirmReturn">Confirm return to submitter</entry>
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
@@ -136,6 +138,7 @@
 	<entry key="button.review">Accept proposal for decision</entry>
 	<entry key="button.accept">Accept proposal</entry>
 	<entry key="button.reject">Reject proposal</entry>
+	<entry key="button.return">Return to submitter</entry>
 	<entry key="button.addNew">Add new</entry>
 	<entry key="button.addNewSuccessor">Create new successor</entry>
 	<entry key="button.addAlias">Add alias</entry>
@@ -166,7 +169,8 @@
 	<entry key="APPEALED">appealed</entry>
 	<entry key="FINISHED">finished</entry>
 	
-	<entry key="REJECTED_BY_MANAGER">rejected by register manager</entry>
+	<entry key="RETURNED_BY_MANAGER">returned by register manager</entry>
+	<entry key="RETURNED_BY_CONTROLBODY">returned by control body</entry>
 	
 	<entry key="PENDING">pending</entry>
 	<entry key="TENTATIVE">tentative</entry>
@@ -201,11 +205,16 @@
 	<entry key="popup.deleteOrganization.reallyDelete">Do you really want to delete organization {0}?</entry>
 	<entry key="popup.retire.header">Retire item</entry>
 	<entry key="popup.retire.justification">Please provide a justification for the retirement:</entry>
+	<entry key="popup.retire.registerManagerNotes">Notes for the register manager:</entry>
+	<entry key="popup.retire.controlBodyNotes">Notes for the control body:</entry>
 	<entry key="popup.acceptProposal.header">Accept proposal</entry>
 	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Please describe the event where the decision to accept the proposal was made:</entry>
 	<entry key="popup.rejectProposal.header">Reject proposal</entry>
-	<entry key="popup.rejectProposal.registerManagerNote">Please describe why the proposal is being rejected and, if applicable, provide guidance as to how the submitter may improve the proposal:</entry>
+<!-- 	<entry key="popup.rejectProposal.registerManagerNote">Please describe why the proposal is being rejected and, if applicable, provide guidance as to how the submitter may improve the proposal:</entry> -->
 	<entry key="popup.rejectProposal.controlBodyDecisionEvent">Please describe the event where the decision to reject the proposal was made:</entry>
+	<entry key="popup.returnProposal.header">Return proposal to submitter</entry>
+	<entry key="popup.returnProposal.noteToSubmitter">Please describe why the proposal is being returned and provide guidance as to how the submitter may improve the proposal:</entry>
+	<entry key="popup.returnProposal.controlBodyDecisionEvent">Please describe the event where the decision to reject the proposal was made:</entry>
 	<entry key="popup.delegations.header">Delegated rights</entry>
 	<entry key="popup.delegations.pointOfContact">Point of Contact</entry>
 	<entry key="popup.delegations.member">Membership approved</entry>
@@ -303,8 +312,8 @@
 	<entry key="form.placeholder.definition"></entry>
 	<entry key="form.placeholder.description"></entry>
 	<entry key="form.placeholder.justification"></entry>
-	<entry key="form.placeholder.registerManagerNotes">Notes for register manager</entry>
-	<entry key="form.placeholder.controlBodyNotes">Notes for control body</entry>
+	<entry key="form.placeholder.registerManagerNotes"></entry>
+	<entry key="form.placeholder.controlBodyNotes"></entry>
 	<entry key="form.placeholder.impact">Please describe the impact when the appeal is rejected</entry>
 	<entry key="form.placeholder.situation">Please describe the current situation</entry>
 	<entry key="form.placeholder.appealJustification">Please provide a justification for the appeal</entry>
