@@ -596,7 +596,7 @@ public class ProposalsController
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
 		binder.bind(servletRequest);
 
-		proposalService.updateProposal(proposal);
+		proposalService.updateProposal(dto);
 		
 //		return new ResponseEntity<Void>(HttpStatus.OK);
 		return "redirect:/management/submitter";
