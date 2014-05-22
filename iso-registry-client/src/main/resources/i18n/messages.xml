@@ -97,6 +97,7 @@
 	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Naming System</entry>
 	<entry key="header.uom">Unit of Measure</entry>
+	<entry key="header.ellipsoid">Ellipsoid</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -288,6 +289,11 @@
 	<entry key="form.label.factorB">Factor B</entry>
 	<entry key="form.label.factorC">Factor C</entry>
 	<entry key="form.label.measureType">Measure type</entry>
+	<entry key="form.label.shape">Shape</entry>
+	<entry key="form.label.semiMajorAxis">Semi major axis</entry>
+	<entry key="form.label.semiMajorAxisUom">Unit of Measure</entry>
+	<entry key="form.label.semiMinorAxis">Semi minor axis</entry>
+	<entry key="form.label.inverseFlattening">Inverse flattening</entry>
 	
 	<entry key="form.select.choose">-- Select --</entry>
 		

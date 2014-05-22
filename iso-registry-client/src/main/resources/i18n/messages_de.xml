@@ -96,6 +96,7 @@
 	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Namenssystem</entry>
 	<entry key="header.uom">Maßeinheit</entry>
+	<entry key="header.ellipsoid">Ellipsoid</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
@@ -288,6 +289,11 @@
 	<entry key="form.label.factorB">Faktor B</entry>
 	<entry key="form.label.factorC">Faktor C</entry>
 	<entry key="form.label.measureType">Maßeinheitenart</entry>
+	<entry key="form.label.shape">Form</entry>
+	<entry key="form.label.semiMajorAxis">Hauptachse</entry>
+	<entry key="form.label.semiMajorAxisUom">Maßeinheit</entry>
+	<entry key="form.label.semiMinorAxis">Nebenachse</entry>
+	<entry key="form.label.inverseFlattening">Verflachung</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
