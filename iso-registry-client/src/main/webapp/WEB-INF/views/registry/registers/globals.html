@@ -19,7 +19,7 @@
 
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
+	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
 		<input hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}"/>
 		<select th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}">
@@ -29,19 +29,25 @@
 			<button th:id="'addNew_' + ${property}" class="btn btn-default btn-addnew" type="button" th:text="#{button.addNew}">Add new</button>
 		</span>
 		
-		<script th:if="${ajaxPath}" type="text/javascript" charset="utf-8" th:inline="text">
+		<script type="text/javascript" charset="utf-8" th:inline="text">
 		/* <![CDATA[ */
 			$(function() {
 				$('#[[${property}]]_select').change(function(e) {
 					$('#[[${property}]]').val($(this).val());		
 				});
-					
+
+				$('#[[${property}]]_ajaxPath').change(function(e) {
+					$('#[[${property}]]').val("");
+					$('#[[${property}]]_bycode').click();
+				});
+
 				$('#[[${property}]]_byname').click(function(e) {
+					var ajaxPath = $('#[[${property}]]_ajaxPath').val();
 					var currentValue = $('#[[${property}]]').val();
-					$("select#[[${ajaxPath}]]").attr('disabled', 'disabled');
+					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/data/[[${ajaxPath}]]?orderBy=name",
+							"[[@{${basePath}}]]/data/" + ajaxPath + "?orderBy=name",
 							{
 								id : $(this).val(),
 								ajax : 'true'
@@ -59,16 +65,22 @@
 								$('#[[${property}]]_byname').addClass('bold');
 								$('#[[${property}]]_bycode').removeClass('bold');
 								$('#[[${property}]]_loader').hide();
-								$('#[[${property}]]_select').val(currentValue);		
+								if (!currentValue || currentValue === "") {
+									$('#[[${property}]]').val($('#[[${property}]]_select').val());
+								}
+								else {
+									$('#[[${property}]]_select').val(currentValue);		
+								}
 							});
 				});
 	
 				$('#[[${property}]]_bycode').click(function(e) {
+					var ajaxPath = $('#[[${property}]]_ajaxPath').val();
 					var currentValue = $('#[[${property}]]').val();
-					$("select#[[${property}]]").attr('disabled', 'disabled');
+					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/data/[[${ajaxPath}]]?orderBy=code",
+							"[[@{${basePath}}]]/data/" + ajaxPath + "?orderBy=code",
 							{
 								id : $(this).val(),
 								ajax : 'true'
@@ -86,7 +98,13 @@
 								$('#[[${property}]]_bycode').addClass('bold');
 								$('#[[${property}]]_byname').removeClass('bold');
 								$('#[[${property}]]_loader').hide();
-								$('#[[${property}]]_select').val(currentValue);		
+
+								if (!currentValue || currentValue === "") {
+									$('#[[${property}]]').val($('#[[${property}]]_select').val());
+								}
+								else {
+									$('#[[${property}]]_select').val(currentValue);		
+								}
 							});
 				});
 	

@@ -420,4 +420,15 @@
 	<entry key="EngineeringDatum">Engineering Datum</entry>
 	<entry key="PrimeMeridian">Prime Meridian</entry>
 
+	<entry key="CoordinateSystemItem">all Coordinate Systems</entry>
+	<entry key="EllipsoidalCoordinateSystemItem">Ellipsoidal Coordinate Systems</entry>
+	<entry key="SphericalCoordinateSystemItem">Spherical Coordinate Systems</entry>
+	<entry key="CartesianCoordinateSystemItem">Cartesian Coordinate Systems</entry>
+	<entry key="VerticalCoordinateSystemItem">Vertical Coordinate Systems</entry>
+
+	<entry key="DatumItem">all Datums</entry>
+	<entry key="EngineeringDatumItem">Engineering Datums</entry>
+	<entry key="GeodeticDatumItem">Geodetic Datums</entry>
+	<entry key="VerticalDatumItem">Vertical Datums</entry>
+
 </properties>
