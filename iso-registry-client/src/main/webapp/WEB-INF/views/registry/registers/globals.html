@@ -56,7 +56,7 @@
 								var options = '';
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i][0] + '">'
-											+ j[i][2] + ' [' + j[i][1] + ']'
+											+ (j[i][2]).trunc(100) + ' [' + j[i][1] + ']'
 											+ '</option>';
 								}
 								$("select#[[${property}]]_select").html(options);
@@ -89,7 +89,7 @@
 								var options = '';
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i][0] + '">'
-											+ '[' + j[i][1] + '] ' + j[i][2] 
+											+ '[' + j[i][1] + '] ' + (j[i][2]).trunc(100) 
 											+ '</option>';
 								}
 								$("select#[[${property}]]_select").html(options);
