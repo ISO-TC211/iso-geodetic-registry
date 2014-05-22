@@ -20,7 +20,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='semiMajorAxis',inputType='number',label=#{form.label.semiMajorAxis},placeholder=#{form.placeholder.semiMajorAxis},isRequired='true'">
-					<div th:replace="registry/registers/globals :: input"/>
+					<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-8" th:with="property='semiMajorAxisUom',label=#{form.label.semiMajorAxisUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
@@ -28,7 +28,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='semiMinorAxis',inputType='number',label=#{form.label.semiMinorAxis},placeholder=#{form.placeholder.semiMinorAxis},isRequired='false'">
-					<div th:replace="registry/registers/globals :: input"/>
+					<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 <!-- 				<div class="col-md-8" th:with="property='semiMinorAxisUom',label=#{form.label.semiMinorAxisUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
 <!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
@@ -36,7 +36,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='inverseFlattening',inputType='number',label=#{form.label.inverseFlattening},placeholder=#{form.placeholder.inverseFlattening},isRequired='false'">
-					<div th:replace="registry/registers/globals :: input"/>
+					<div th:replace="registry/registers/globals :: input(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 <!-- 				<div class="col-md-8" th:with="property='inverseFlatteningUom',label=#{form.label.inverseFlatteningUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
 <!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
