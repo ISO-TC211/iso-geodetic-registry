@@ -172,7 +172,7 @@
 											<li>
 												<a th:id="'register' + ${register.key} + 'Conversions'" href="#">Coordinate Transformations</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Operation')}">
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Operation')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
 														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
@@ -180,7 +180,7 @@
 											<li>
 												<a th:id="'register' + ${register.key} + 'Other'" href="#">Other</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Operation')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')}">
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Operation')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
 														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
