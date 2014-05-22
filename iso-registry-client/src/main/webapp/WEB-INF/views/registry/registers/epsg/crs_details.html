@@ -22,13 +22,13 @@
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',ajaxPath='DatumItem'">
+				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',ajaxPath='CoordinateReferenceSystemItem'">
+				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
