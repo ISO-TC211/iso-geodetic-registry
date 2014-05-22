@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head th:include="layout :: headerFragment" />
-<body>
+<body th:with="isNew='true'">
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
@@ -88,9 +88,10 @@
 			$('#addNew_domainOfValidity').bind('click', function (e) {
 				e.preventDefault();
 				$("#newAreaPanel").fadeIn(500);
-				$('#domainOfValidity').append('<option value="">New</option>');
 				$('#domainOfValidity').val('');
-				$('#domainOfValidity').attr('disabled', 'disabled');
+				$('#domainOfValidity_select').append('<option value="">New</option>');
+				$('#domainOfValidity_select').val('');
+				$('#domainOfValidity_select').attr('disabled', 'disabled');
 
 				showPanel('#newAreaPanel');
 			});
@@ -98,8 +99,9 @@
 			$('#newAreaPanelDismiss').bind('click', function(e) {
 				e.preventDefault();
 				$("#newAreaPanel").fadeOut(500);
-				$("#domainOfValidity option[value='']").remove();
-				$('#domainOfValidity').removeAttr('disabled');
+				$("#domainOfValidity_select option[value='']").remove();
+				$('#domainOfValidity_select').removeAttr('disabled');
+				$('#domainOfValidity_bycode').click();
 
 				hidePanel('#newAreaPanel');
 			});

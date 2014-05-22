@@ -62,9 +62,10 @@
 			$('#addNew_domainOfValidity').bind('click', function (e) {
 				e.preventDefault();
 				$("#newAreaPanel").fadeIn(500);
-				$('#domainOfValidity').append('<option value="">New</option>');
+				$('#domainOfValidity_select').append('<option value="">New</option>');
+				$('#domainOfValidity_select').val('');
+				$('#domainOfValidity_select').attr('disabled', 'disabled');
 				$('#domainOfValidity').val('');
-				$('#domainOfValidity').attr('disabled', 'disabled');
 
 				showPanel('#newAreaPanel');
 			});
@@ -72,8 +73,9 @@
 			$('#newAreaPanelDismiss').bind('click', function(e) {
 				e.preventDefault();
 				$("#newAreaPanel").fadeOut(500);
-				$("#domainOfValidity option[value='']").remove();
-				$('#domainOfValidity').removeAttr('disabled');
+				$("#domainOfValidity_select option[value='']").remove();
+				$('#domainOfValidity_select').removeAttr('disabled');
+				$('#domainOfValidity_bycode').click();
 
 				hidePanel('#newAreaPanel');
 			});
@@ -81,9 +83,10 @@
 			$('#addNew_datum').bind('click', function (e) {
 				e.preventDefault();
 				$("#newDatumPanel").fadeIn(500);
-				$('#datum').append('<option value="">New</option>');
+				$('#datum_select').append('<option value="">New</option>');
+				$('#datum_select').val('');
+				$('#datum_select').attr('disabled', 'disabled');
 				$('#datum').val('');
-				$('#datum').attr('disabled', 'disabled');
 
 				showPanel('#newDatumPanel');
 			});
@@ -91,8 +94,9 @@
 			$('#newDatumPanelDismiss').bind('click', function(e) {
 				e.preventDefault();
 				$("#newDatumPanel").fadeOut(500);
-				$("#datum option[value='']").remove();
-				$('#datum').removeAttr('disabled');
+				$("#datum_select option[value='']").remove();
+				$('#datum_select').removeAttr('disabled');
+				$('#datum_bycode').click();
 
 				hidePanel('#newDatumPanel');
 			});
