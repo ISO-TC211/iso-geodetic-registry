@@ -10,7 +10,7 @@
 				</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" th:text="#{button.submitProposal}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/submit'} + '\', $(\'form#submissionForm\').serialize(), function() { location.href = \'' + @{${basePath}} + '/management/submitter\');'">Bestätigen</button>
+				<button type="button" class="btn btn-success" th:text="#{button.submitProposal}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/submit'} + '\', $(\'form#submissionForm\').serialize(), function() { location.href = \'' + @{${basePath}} + '/management/submitter\'; });'">Bestätigen</button>
 				<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
 			</div>
 		</div>
