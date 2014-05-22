@@ -40,7 +40,8 @@
 					<div id="contents" class="tab-pane in" th:classappend="(${viewMode} == 'contents') ? 'active'">
 						<div sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)" th:unless="${revision} or ${revisionDate}">
 							<div class="control-group" style="margin-top: 10px; margin-bottom: 10px">
-								<button id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''" th:text="#{button.addition}">Item registrieren</button>
+								<button th:unless="${itemClass}" id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''" th:text="#{button.addition}">Item registrieren</button>
+								<button th:if="${itemClass}" id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition?itemClass=' + ${itemClass.uuid}} + '\''" th:text="#{button.addition}">Item registrieren</button>
 <!-- 								<button id="supersession" class="btn btn-warning" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/supersession'} + '\''" th:text="#{button.supersession}">Item ersetzen</button> -->
 							</div>
 						</div>
