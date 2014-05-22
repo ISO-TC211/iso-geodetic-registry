@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -225,7 +226,10 @@ public class RegisterController
 		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
 		for (RE_RegisterItem item : items.getContent()) {
-			viewBeans.add(new RegisterItemViewBean(item, false));
+			RegisterItemViewBean rvb = new RegisterItemViewBean(item, false);
+			rvb.setStatus(messageSource.getMessage(item.getStatus().toString(), null, LocaleContextHolder.getLocale()));
+			rvb.setItemClassName(messageSource.getMessage(item.getItemClass().getName().toString(), null, LocaleContextHolder.getLocale()));
+			viewBeans.add(rvb);
 		}
 		
 		return new DatatablesResult(items.getTotalElements(), items.getTotalElements(), sEcho, viewBeans);
