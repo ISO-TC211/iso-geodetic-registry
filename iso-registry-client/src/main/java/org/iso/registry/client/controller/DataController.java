@@ -1,6 +1,7 @@
 package org.iso.registry.client.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
@@ -16,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
-
 @Controller
-@RequestMapping("/data")
+@RequestMapping("/entities")
 public class DataController
 {
 	@Autowired private AreaItemRepository areaRepository;
@@ -29,13 +28,20 @@ public class DataController
 	@Autowired
 	private EntityManager entityManager;
 	
-	@RequestMapping(value = "/{entityName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/byClass/{className}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public @ResponseBody List<Object[]> findAll(@PathVariable("entityName") String entityName, @RequestParam(value = "orderBy", defaultValue = "code") String orderBy) {
-		String jpql = "SELECT i.uuid, i.code, i.name FROM " + entityName + " i ORDER BY i." + orderBy;
+	public @ResponseBody List<Object[]> findAll(@PathVariable("className") String className, @RequestParam(value = "orderBy", defaultValue = "code") String orderBy) {
+		String jpql = "SELECT i.uuid, i.code, i.name FROM " + className + " i ORDER BY i." + orderBy;
 		return entityManager.createQuery(jpql).getResultList();
 	}
-	
+
+	@RequestMapping(value = "/byUuid/{itemUuid}", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody List<Object[]> findByUuid(@PathVariable("itemUuid") UUID uuid, @RequestParam(value = "orderBy", defaultValue = "code") String orderBy) {
+		String jpql = "SELECT i.uuid, i.code, i.name FROM RE_RegisterItem i WHERE uuid = '" + uuid.toString() + "' ORDER BY i." + orderBy;
+		return entityManager.createQuery(jpql).getResultList();
+	}
+
 
 //	@RequestMapping(value = "/area", method = RequestMethod.GET/*, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE*/)
 //	@Transactional(readOnly = true)

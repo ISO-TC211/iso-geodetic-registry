@@ -79,6 +79,7 @@
 	<entry key="header.createUser">Benutzer anlegen</entry>
 	<entry key="header.editUser">Benutzer bearbeiten</entry>
 	<entry key="header.signup">Registrieren</entry>
+	<entry key="header.clarifiedItem">Klarzustellender Eintrag</entry>
 	<entry key="header.proposedChanges">Vorgeschlagene Änderungen</entry>
 	<entry key="header.proposedItem">Vorgeschlagener Eintrag</entry>
 	<entry key="header.retiredItem">Aufzugebender Eintrag</entry>

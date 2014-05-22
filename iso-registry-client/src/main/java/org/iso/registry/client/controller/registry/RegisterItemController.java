@@ -51,6 +51,7 @@ import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.model.Clarification;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalFactory;
 import de.geoinfoffm.registry.core.model.ProposalType;
@@ -185,7 +186,9 @@ public class RegisterItemController
 	@RequestMapping(value = "/{uuid}/retire", method = RequestMethod.GET)
 	@Transactional
 	public View proposeItemRetirement(@PathVariable("uuid") UUID itemUuid,
-													  @RequestParam(value = "justification", required = true) String justification) throws IllegalOperationException, ItemNotFoundException {
+									  @RequestParam(value = "justification", required = true) String justification,
+									  @RequestParam(value = "registerManagerNotes", required = false) String registerManagerNotes,
+									  @RequestParam(value = "controlBodyNotes", required = false) String controlBodyNotes) throws IllegalOperationException, ItemNotFoundException {
 		if (StringUtils.isEmpty(justification)) {
 			throw new IllegalOperationException("Cannot accept empty justification.");
 		}
@@ -202,7 +205,7 @@ public class RegisterItemController
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 
-		proposalService.proposeRetirement(item, justification, suborg);
+		proposalService.proposeRetirement(item, justification, registerManagerNotes, controlBodyNotes, suborg);
 
 		return new BasePathRedirectView("/management/submitter");
 	}
@@ -400,15 +403,24 @@ public class RegisterItemController
 
 	@RequestMapping(value = "/{uuid}/clarify", method = RequestMethod.GET)
 	@Transactional
-	public String createClarificationProposal(@PathVariable("uuid") UUID itemUuid, @ModelAttribute("proposal") RegisterItemProposalDTO proposal, final Model model) throws ItemNotFoundException {
+	public String createClarificationProposal(@PathVariable("uuid") UUID itemUuid, final Model model) throws ItemNotFoundException {
 		model.addAttribute("isNew", "true");
-		
+		model.addAttribute("isProposal", "true");
+
 		RE_RegisterItem clarifiedItem = itemService.findOne(itemUuid);
 		if (clarifiedItem == null) {
 			throw new ItemNotFoundException(itemUuid);
 		}
-		proposal.setItemUuid(itemUuid);
+		RE_ItemClass itemClass = clarifiedItem.getItemClass();
 		
+		RegisterItemProposalDTO proposal = proposalDtoFactory.getProposalDto(itemClass);
+		if (proposal.getClass().getCanonicalName().equals(RegisterItemProposalDTO.class.getCanonicalName())) {
+			model.addAttribute("itemClassNotConfigured", "true");
+		}
+
+		proposal.setItemUuid(itemUuid);
+		proposal.setItemClassUuid(itemClass.getUuid());
+
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 		
@@ -419,16 +431,39 @@ public class RegisterItemController
 		proposal.setDefinition(clarifiedItem.getDefinition());
 		proposal.setDescription(clarifiedItem.getDescription());
 		
-		return "registry/proposal/create_clarification";
+		proposal.loadAdditionalValues(clarifiedItem);
+		
+		ItemClassConfiguration itemClassConfiguration = itemClassRegistry.getConfiguration(itemClass.getName());
+		if (itemClassConfiguration != null) {
+			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
+		}
+
+		model.addAttribute("itemClass", itemClass.getUuid().toString());
+		model.addAttribute("itemClassName", itemClass.getName());
+		model.addAttribute("proposal", proposal);
+		model.addAttribute("register", clarifiedItem.getRegister());
+
+		String viewName;
+		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getCreateProposalTemplate())) {
+			viewName = itemClassConfiguration.getCreateProposalTemplate();
+		}
+		else {
+			viewName = "registry/proposal/create_clarification";
+		}
+
+		return viewName;
 	}
 
 	@RequestMapping(value = "/{uuid}/clarify", method = RequestMethod.POST)
 	@Transactional
-	public View proposeItemClarification(
+	public View proposeItemClarification(final ServletRequest servletRequest,
 			@PathVariable("uuid") UUID itemUuid,
 			@ModelAttribute("proposal") final RegisterItemProposalDTO proposal, 
+			@RequestParam Map<String, String> allParams,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) throws IllegalOperationException, ItemNotFoundException {
-		
+
+		boolean submitProposal = !allParams.containsKey("saveProposal");
+
 		RE_RegisterItem item = itemService.findOne(itemUuid);
 		if (item == null) {
 			throw new ItemNotFoundException(itemUuid);
@@ -439,8 +474,15 @@ public class RegisterItemController
 		}
 		
 		RE_SubmittingOrganization suborg = suborgRepository.findOne(proposal.getSponsorUuid());
+		
+		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(item.getItemClass());
+		dto = bindAdditionalAttributes(dto, servletRequest); new Object();
 
-		proposalService.proposeClarification(item, proposal.calculateProposedChanges(item), proposal.getJustification(), suborg);
+		Clarification clarification = proposalService.proposeClarification(item, dto.calculateProposedChanges(item), dto.getJustification(), 
+				dto.getRegisterManagerNotes(), dto.getControlBodyNotes(), suborg);
+		if (submitProposal) {
+			proposalService.submitProposal(clarification);
+		}
 		
 		return new BasePathRedirectView("/management/submitter");
 	}

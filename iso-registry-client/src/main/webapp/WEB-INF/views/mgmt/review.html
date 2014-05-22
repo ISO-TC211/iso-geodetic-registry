@@ -32,10 +32,15 @@
 				<div class="panel" th:classappend="${current.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${current.isSupersession()}">
 					<div class="panel-heading">
 						<h3 th:if="${current.isAddition()}" class="panel-title"><span th:text="#{header.proposedItem}">Proposed item</span></h3>
+						<h3 th:if="${current.isClarification()}" class="panel-title"><span th:text="#{header.clarifiedItem}">Clarified item</span></h3>
 						<h3 th:if="${current.isRetirement()}" class="panel-title" th:text="#{header.retiredItem}">Retired item</h3>
 					</div>
 					<table class="table table-striped">
 						<tbody>
+							<tr>
+								<td th:text="#{tableheader.itemClassName}"></td>
+								<td th:text="#{*{itemClassName}}"></td>
+							</tr>
 							<tr>
 								<td th:text="#{itemIdentifier}"></td>
 								<td th:text="*{itemIdentifier}"></td>
@@ -60,7 +65,7 @@
 								<td th:text="#{${entry.key}}"></td>
 								<td th:text="${entry.value}"></td>
 							</tr>
-							<tr th:if="${current.isAddition()}">
+							<tr th:if="${current.isAddition()} or ${current.isClarification()}">
 								<td th:text="#{itemDetails}"></td>
 								<td><a target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${current.uuid}__}"></a></td>
 							</tr>

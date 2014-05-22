@@ -7,13 +7,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.cs.CartesianCoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.cs.EllipsoidalCoordinateSystemItem;
 import org.iso.registry.core.model.cs.SphericalCoordinateSystemItem;
+import org.iso.registry.core.model.cs.VerticalCoordinateSystemItem;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
@@ -40,16 +39,6 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	public CoordinateSystemItemProposalDTO(CoordinateSystemItem item) {
 		super(item);
-//		if (item instanceof EllipsoidalCoordinateSystemItem) {
-//			this.type = CoordinateSystemType.ELLIPSOIDAL;
-//		}
-//		else {
-//			throw new RuntimeException("Not yet implemented");
-//		}
-//		
-//		for (CoordinateSystemAxisItem axis : item.getAxes()) {
-//			this.addAxis(new CoordinateSystemAxisProposalDTO(axis));
-//		}
 	}
 	
 	public CoordinateSystemItemProposalDTO(CoordinateSystemType type, CoordinateSystemAxisProposalDTO firstAxis, CoordinateSystemAxisProposalDTO... otherAxes) {

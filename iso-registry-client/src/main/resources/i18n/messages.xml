@@ -81,6 +81,7 @@
 	<entry key="header.createUser">Create user</entry>
 	<entry key="header.editUser">Edit user</entry>
 	<entry key="header.signup">Sign up</entry>
+	<entry key="header.clarifiedItem">Clarified Item</entry>
 	<entry key="header.proposedChanges">Proposed changes</entry>
 	<entry key="header.proposedItem">Proposed item</entry>
 	<entry key="header.retiredItem">Item to retire</entry>
