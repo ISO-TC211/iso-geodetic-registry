@@ -153,7 +153,8 @@
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'CRS'" href="#">Coordinate Reference Systems</a>
+												<a th:id="'registerEPSGCRS'" href="#">Coordinate Reference Systems</a>
+<!-- 												<a th:id="'register' + ${register.key} + 'CRS'" href="#">Coordinate Reference Systems</a> -->
 												<ul>
 													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CRS')}">
 														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
@@ -231,7 +232,7 @@
 								// each plugin you have included can have its own config object
 								"core" : {
 									"animation" : 100,
-									"initially_open" : [ "nav_register", "nav_mgmt", "nav_usermgmt" ]
+									"initially_open" : [ "nav_register", "nav_mgmt", "nav_usermgmt", "registerEPSGCRS" ]
 								},
 								"ui" : {
 									//"initially_select" : [ "nav_start" ]
