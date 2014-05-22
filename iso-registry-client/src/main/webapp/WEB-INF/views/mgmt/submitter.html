@@ -15,6 +15,53 @@
 						<h3 class="panel-title" th:text="#{mgmt.submitter.content.header}">Proposed item</h3>
 					</div>
 					<div style="padding: 10px">
+						<div class="control-group" style="margin-top: 10px; margin-bottom: 10px">
+							<button id="proposeNew" class="btn btn-success" data-toggle="modal" href="#addNewItem" th:text="#{button.addition}">Item registrieren</button>
+
+								<div class="modal fade" th:id="addNewItem" role="dialog">
+									<div class="modal-dialog">
+										<form method="post">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 th:text="#{popup.createProposal.header}">Itemklasse wählen</h4>
+												</div>
+												<div class="modal-body">
+	
+													<div class="form-group">
+														<label class="form-label" for="register" th:text="#{form.label.targetRegister}">Item-Klasse</label>
+														<div class="controls">
+															<div class="input-group">
+																<select id="register" name="register" required="true">
+																	<option th:each="register : ${@registerRepository.findAll()}"
+																			th:value="${register.uuid}"
+																			th:text="${register.name}"></option>
+																</select>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+														<div class="input-group">
+															<select id="itemClass" name="itemClass" required="true">
+<!-- 																<option th:text="#{form.select.choose}" value=""/> -->
+																<option th:each="anItemClass : ${@itemClassRepository.findAllOrderByName()}"
+																		th:value="${anItemClass[0]}"
+																		th:text="#{${anItemClass[1]}}"></option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" id="addition" class="btn btn-success" th:text="#{button.addition}">Item registrieren</button>
+													<button type="button" name="cancel" data-dismiss="modal" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+
+
+						</div>
 						<table id="proposalsTable" class="datatable table table-striped">
 							<thead>
 								<tr>
@@ -119,6 +166,12 @@
 				// LENGTH - Inline-Form control
 				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
 				length_sel.addClass('form-control input-sm');
+			});
+			
+			$('#addition').click(function (e) {
+				var register = $('#register').val();
+				var itemClass = $('#itemClass').val();
+				location.href = '[[@{${basePath}}]]/register/' + register + '/proposal/addition?itemClass=' + itemClass;
 			});
 		});
 	</script>
