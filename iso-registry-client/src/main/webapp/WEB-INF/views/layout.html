@@ -25,7 +25,8 @@
 		<link rel="stylesheet" href="../../resources/css/font-awesome.min.css" th:href="@{__${basePath}__/resources/css/font-awesome.min.css}" type="text/css" />
 		<link rel="stylesheet" href="../../resources/css/datatables.css" th:href="@{__${basePath}__/resources/css/datatables.css}" />
 		<link rel="stylesheet" href="../../resources/css/registry.css" th:href="@{__${basePath}__/resources/css/registry.css}" />
-		<style type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css"/>		
+		<style type="text/css" th:inline="text">
 			body {
 				padding-top: 100px;
 				padding-bottom: 40px;
@@ -35,12 +36,29 @@
  				padding-left: 20px;
  			} 
 			
+			nav[role="navigation"] img {
+				background:#013568 url([[@{${basePath}}]]/resources/imagess/iso.png) left 20px top 10px no-repeat;height:90px;overflow: visible;
+			}
+			
+			.navbar .navbar-brand {
+			    max-height: 40px;
+			    overflow: visible;
+			    padding-top: 0;
+			    padding-bottom: 0;
+			}
+
 			.bs-sidebar1 {
 				padding-top: 9px 0;
 				position: fixed;
 				left: 20px;
 				top: 60px;
 				width: 250px;
+			}
+			
+			.test {
+				-webkit-font-smoothing: antialiased;
+  				font-family: 'Titillium Web', sans-serif, Arial, sans-serif;
+  				font-size: 18pt;
 			}
 		</style>
 		<!--[if lt IE 9]>
@@ -58,8 +76,9 @@
 				<button id="collapsenavbar" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
 					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
-				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left"/>
-				<a class="navbar-brand" th:href="@{__${basePath}__/}" th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
+<!-- 				<h1><span>Home</span></h1> -->
+				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left" style="padding-top: 10px"/>
+				<a style="padding-top:15px" class="test navbar-brand" th:href="@{__${basePath}__/}" th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -137,7 +156,7 @@
 				<div style="overflow: hidden">
 					<div id="demo1" class="demo" style="height: 100%;">
 						<ul>
-							<li id="nav_start"><a th:href="@{__${basePath}__/}">Start</a></li>
+							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}">Start</a></li>
 							<li id="nav_register"><a href="#">Register</a>
 								<ul>
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
