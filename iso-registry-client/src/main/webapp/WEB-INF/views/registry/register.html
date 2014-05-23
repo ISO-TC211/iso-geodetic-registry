@@ -316,7 +316,7 @@
 	        },
 // 			"fnServerData" : datatable2Rest,
 			"sPaginationType": "bs_normal",
-			"bFilter": false,
+// 			"bFilter": false,
 			"oLanguage": {
 				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
 				  "sInfo": "[[#{datatable.sInfo}]]",
@@ -340,7 +340,7 @@
 			"aoColumns": [
 				{ 
 					"mDataProp": "itemIdentifier",
-					"sWidth": "5%"
+					"sWidth": "8%"
 				},
 				{ 
 					"mDataProp": "name",
@@ -355,7 +355,7 @@
 				{ 
 					"mDataProp": "status",
 					"sWidth": "10%",
-					"bSortable": false
+					"bSortable": true
 				},
 			],
 			"aoColumnDefs": [
@@ -364,7 +364,7 @@
 				  "mRender": function (data, type, full) {
 					  var actions = detailsButton(full);
 					  
-					  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]]) {
+					  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]] && full.status === 'valid') {
 						  var dropdownActions = []; 
 						  dropdownActions.push(clarifyButton(full));
 						  dropdownActions.push(supersedeButton(full));
