@@ -22,7 +22,7 @@ public class ProposalNote extends de.geoinfoffm.registry.core.Entity
 	@ManyToOne
 	private RegistryUser author;
 	
-	@Lob
+	@Column(columnDefinition = "text")
 	private String note;
 	
 	protected ProposalNote() {

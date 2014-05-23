@@ -134,6 +134,7 @@
 	<entry key="button.saving">Saving...</entry>
 	<entry key="button.update">Update proposal</entry>
 	<entry key="button.back">Back</entry>
+	<entry key="button.close">Close</entry>
 	<entry key="button.newOrganization">New organization</entry>
 	<entry key="button.review">Accept proposal for decision</entry>
 	<entry key="button.accept">Accept proposal</entry>
@@ -224,6 +225,7 @@
 	<entry key="popup.submitProposal.header">Submit proposal</entry>
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
+	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.item">Item</entry>
@@ -372,6 +374,7 @@
 	<entry key="orderByName">[name]</entry>
 	<entry key="tooltip.orderByCode">Order list entries by code</entry>
 	<entry key="tooltip.orderByName">Order list entries by name</entry>
+	<entry key="tooltip.proposalNotes">Click to view notes attached to the proposal</entry>
 	
 	<entry key="home.initializeRegistry">Initialize registry</entry>
 	<entry key="home.addExampleData">Add example data</entry>
