@@ -3,13 +3,14 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +21,23 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.iso.registry.client.ProposalDtoFactory;
-import org.iso.registry.client.RegisterItemViewBean;
-import org.iso.registry.client.configuration.BasePathRedirectView;
+import org.iso.registry.client.controller.DatatablesResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -42,6 +49,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
@@ -49,23 +57,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
+import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO.ProposalType;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
+import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.ProposalDtoFactory;
+import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
-import de.geoinfoffm.registry.core.model.Appeal;
-import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
-import de.geoinfoffm.registry.core.model.SimpleProposal;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
-import de.geoinfoffm.registry.core.model.iso19135.RE_DecisionStatus;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
@@ -74,6 +82,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
+import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
@@ -98,6 +107,12 @@ public class RegisterController
 	private RegisterItemService itemService;
 	
 	@Autowired
+	private RegisterItemRepository itemRepository;
+	
+	@Autowired
+	private ProposalService proposalService;
+	
+	@Autowired
 	private RegisterService registerService;
 	
 	@Autowired
@@ -105,7 +120,7 @@ public class RegisterController
 
 	@Autowired
 	private ProposalRepository proposalRepository;
-	
+
 	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
 
@@ -127,14 +142,120 @@ public class RegisterController
 	@Autowired
 	private ItemClassRegistry itemClassRegistry;
 	
+	@Autowired
+	private ProposalDtoFactory proposalDtoFactory;
+	
+	@Autowired
+	private ConversionService conversionService;
+	
+	@Autowired
+	private MessageSource messageSource;
+	
 //	@InitBinder
 //	protected void initBinder(WebDataBinder binder) {
 //		binder.setValidator(new ProposalValidator(itemService));
 //	}
-	
+
 	@RequestMapping(value = "/{register}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public String registerOverview(@PathVariable("register") String registerName, final Model model, final RedirectAttributes redirectAttributes) {
+	public String registerOverview(@PathVariable("register") String registerName,
+							       final Model model, final RedirectAttributes redirectAttributes, Pageable pageable) {
+		return registerOverview(registerName, (UUID)null, model, redirectAttributes, pageable);
+	}
+
+	@RequestMapping(value = "/{register}/containedItems", method = RequestMethod.GET)
+	public @ResponseBody DatatablesResult getRegisterContainedItems(@PathVariable("register") String registerName, @RequestParam Map<String, String> parameters) {
+		RE_Register register = findRegister(registerName);
+		
+		String sEcho = parameters.get("sEcho");
+		String iDisplayStart = parameters.get("iDisplayStart");
+		String iDisplayLength = parameters.get("iDisplayLength");
+		String iColumns = parameters.get("iColumns");
+		String iSortingsCols = parameters.get("iSortingCols");
+		String sSearch = parameters.get("sSearch");
+		
+		Map<Integer, String> columns = new HashMap<Integer, String>();
+		if (iColumns != null) {
+			int columnCount = Integer.parseInt(iColumns);
+			for (int i = 0; i < columnCount; i++) {
+				columns.put(i, parameters.get("mDataProp_" + Integer.toString(i)));
+			}
+		}
+
+		Map<String, String> sortingColumns = new HashMap<String, String>();
+		if (iSortingsCols != null) {
+			int sortingCols = Integer.parseInt(iSortingsCols);
+			for (int i = 0; i < sortingCols; i++) {
+				String sortingCol = parameters.get("iSortCol_" + Integer.toString(i));
+				String direction = parameters.get("sSortDir_" + Integer.toString(i));
+				sortingColumns.put(columns.get(Integer.parseInt(sortingCol)), direction);
+			}
+		}
+		
+		Pageable pageable;
+		if (iDisplayStart != null && iDisplayLength != null) {
+			int startAt = Integer.parseInt(iDisplayStart);
+			int length = Integer.parseInt(iDisplayLength);
+			int pageNo = startAt / length;
+			
+			Sort sort;
+			if (!sortingColumns.isEmpty()) {
+				List<Order> orders = new ArrayList<Order>();
+				for (String property : sortingColumns.keySet()) {
+					Order order = new Order(Direction.fromString(sortingColumns.get(property).toString().toUpperCase()), property);
+					orders.add(order);
+				}
+				sort = new Sort(orders);
+			}
+			else {
+				sort = new Sort(new Order("itemIdentifier"));
+			}
+			
+			pageable = new PageRequest(pageNo, length, sort);
+		}
+		else {
+			pageable = new PageRequest(0, 10);
+		}
+		
+		RE_ItemClass itemClass = null;
+		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass")) && !"null".equalsIgnoreCase(parameters.get("itemClass"))) {
+			UUID itemClassUuid = UUID.fromString(parameters.get("itemClass"));
+			itemClass = itemClassRepository.findOne(itemClassUuid);
+		}
+		
+		Page<RE_RegisterItem> items;
+		if (itemClass == null) { 
+			if (!StringUtils.isEmpty(sSearch)) {
+				items = itemRepository.findByRegisterAndStatusInFiltered(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+			}
+			else {
+				items = itemRepository.findByRegisterAndStatusIn(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);
+			}
+		}
+		else {
+			if (!StringUtils.isEmpty(sSearch)) {
+				items = itemRepository.findByRegisterAndItemClassAndStatusInFiltered(register, itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+			}
+			else {
+				items = itemRepository.findByRegisterAndItemClassAndStatusIn(register, itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);				
+			}
+		}
+		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
+		for (RE_RegisterItem item : items.getContent()) {
+			RegisterItemViewBean rvb = new RegisterItemViewBean(item, false);
+			rvb.setStatus(messageSource.getMessage(item.getStatus().toString(), null, LocaleContextHolder.getLocale()));
+			rvb.setItemClassName(messageSource.getMessage(item.getItemClass().getName().toString(), null, LocaleContextHolder.getLocale()));
+			viewBeans.add(rvb);
+		}
+		
+		return new DatatablesResult(items.getTotalElements(), items.getTotalElements(), sEcho, viewBeans);
+	}
+
+	@RequestMapping(value = "/{register}/{itemClass}", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String registerOverview(@PathVariable("register") String registerName, 
+								   @PathVariable("itemClass") UUID itemClassUuid,
+								   final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
 		RE_Register register = findRegister(registerName);
 		if (register == null) {
 			redirectAttributes.addFlashAttribute("registerName", registerName);
@@ -142,37 +263,40 @@ public class RegisterController
 		}
 		model.addAttribute("register", register);
 		
-		List<RegisterItemViewBean> containedItemViewBeans = new ArrayList<RegisterItemViewBean>();
-		Set<RE_RegisterItem> containedItems = register.getContainedItems(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED));
-		for (RE_RegisterItem containedItem : containedItems) {
-			containedItemViewBeans.add(new RegisterItemViewBean(containedItem));
+		RE_ItemClass itemClass = null;
+		if (itemClassUuid != null) {
+			itemClass = itemClassRepository.findOne(itemClassUuid);
+			model.addAttribute("itemClass", itemClass);
 		}
-		model.addAttribute("items", containedItemViewBeans);
+		
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 //		RE_SubmittingOrganization suborg = null;
-		Collection<Proposal> proposals = proposalRepository.findByGroupIsNull();
-		List<RegisterItemViewBean> proposedItemViewBeans = new ArrayList<RegisterItemViewBean>();
-		for (Proposal proposal : proposals) {
-			if(!security.may(BasePermission.READ, proposal)) {
-				continue;
-			}
-
-			if (proposal.getStatus().equals(RE_DecisionStatus.FINAL)) continue;
-			if (proposal.hasGroup()) continue;
-			
-			if (proposal.isContainedIn(register)) {
-				Appeal appeal = itemService.findAppeal(proposal);
-				if (appeal != null) {
-					proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
-				}
-				else {
-					proposedItemViewBeans.add(new RegisterItemViewBean(proposal));
-				}
-			}
+//		Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
+		if (security.isLoggedIn()) {
+//			Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
+//			List<RegisterItemViewBean> proposedItemViewBeans = new ArrayList<RegisterItemViewBean>();
+//			for (Proposal proposal : proposals) {
+//				if(!security.may(BasePermission.READ, proposal)) {
+//					continue;
+//				}
+//
+//				if (proposal.getStatus().equals(RE_DecisionStatus.FINAL)) continue;
+//				if (proposal.hasGroup()) continue;
+//				
+//				if (proposal.isContainedIn(register)) {
+//					Appeal appeal = proposalService.findAppeal(proposal);
+//					if (appeal != null) {
+//						proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
+//					}
+//					else {
+//						proposedItemViewBeans.add(new RegisterItemViewBean(proposal));
+//					}
+//				}
+//			}
+//			
+//			model.addAttribute("proposedItems", proposedItemViewBeans);
 		}
-		
-		model.addAttribute("proposedItems", proposedItemViewBeans);
 
 		if (!model.containsAttribute("viewMode")) {
 			model.addAttribute("viewMode", "contents");
@@ -212,9 +336,9 @@ public class RegisterController
 
 	@RequestMapping(value = "/{register}/proposals", method = RequestMethod.GET)
 	@Transactional
-	public String registerOverviewProposals(@PathVariable("register") String registerName, final Model model, final RedirectAttributes redirectAttributes) {
+	public String registerOverviewProposals(@PathVariable("register") String registerName, final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
 		model.addAttribute("viewMode", "proposals");
-		return registerOverview(registerName, model, redirectAttributes);
+		return registerOverview(registerName, (UUID)null, model, redirectAttributes, pageable);
 	}
 
 
@@ -244,7 +368,7 @@ public class RegisterController
 
 		model.addAttribute("register", register);
 		
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		if (itemClasses.size() == 1) {
 			itemClassUuid = itemClasses.toArray(new RE_ItemClass[] {})[0].getUuid().toString();
 			model.addAttribute("itemClassUuid", itemClassUuid);
@@ -270,13 +394,14 @@ public class RegisterController
 				model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 			}
 			
-			proposal = ProposalDtoFactory.getInstance().getProposalDto(selectedItemClass);
+			proposal = proposalDtoFactory.getProposalDto(selectedItemClass);
 			if (proposal.getClass().getCanonicalName().equals(RegisterItemProposalDTO.class.getCanonicalName())) {
 				model.addAttribute("itemClassNotConfigured", "true");
 			}
 			
 			proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
 			model.addAttribute("itemClass", selectedItemClass.getUuid().toString());
+			model.addAttribute("itemClassName", selectedItemClass.getName());
 		}
 
 		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
@@ -286,10 +411,11 @@ public class RegisterController
 		proposal.setTargetRegisterUuid(register.getUuid());
 		
 		model.addAttribute("proposal", proposal);
+		model.addAttribute("isProposal", "true");
 
 		String viewName;
-		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getCreateTemplate())) {
-			viewName = itemClassConfiguration.getCreateTemplate();
+		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getCreateProposalTemplate())) {
+			viewName = itemClassConfiguration.getCreateProposalTemplate();
 		}
 		else {
 			viewName = "registry/proposal/create_addition";
@@ -314,13 +440,13 @@ public class RegisterController
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, register);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 		SupersessionState state = new SupersessionState(register, suborg, itemService);
 		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
 
 		model.addAttribute("state", state);
 
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 
@@ -343,7 +469,7 @@ public class RegisterController
 
 		addSupersededItemsToSupersession(request, model, supersededItems, itemService);
 
-		Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 
@@ -414,7 +540,7 @@ public class RegisterController
 		model.addAttribute("register", targetRegister);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 
 		model.addAttribute("isNew", "true");
 
@@ -528,10 +654,11 @@ public class RegisterController
 
 		request.removeAttribute("supersession", WebRequest.SCOPE_SESSION);
 		
-		itemService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
+		proposalService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
 				state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes(), state.getSponsor());
 
-		return new BasePathRedirectView("/register/" + registerName + "/proposals");
+		return new BasePathRedirectView("/management/submitter");
+//		return new BasePathRedirectView("/register/" + registerName + "/proposals");
 //		return "redirect:/register/" + registerName + "/proposals";
 	}
 	
@@ -540,6 +667,8 @@ public class RegisterController
 			@Valid @ModelAttribute("proposal") RegisterItemProposalDTO proposal,
 			@RequestParam Map<String, String> allParams,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) throws Exception {
+
+		boolean submitProposal = !allParams.containsKey("saveProposal");
 
 		RE_Register register = findRegister(registerName);
 		if (register == null) {
@@ -554,18 +683,22 @@ public class RegisterController
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("isNew", "true");
 			
-			Set<RE_ItemClass> itemClasses = register.getContainedItemClasses();
+			Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 			model.addAttribute("itemClasses", itemClasses);
 			return "proposal";
 		}
 		
-		String itemClassUuid = allParams.get("itemClass");
-		proposal = bindAdditionalAttributes(proposal, servletRequest/*, itemClassUuid*/);
+		proposal = bindAdditionalAttributes(proposal, servletRequest);
 		
-		Addition addition = itemService.proposeAddition(proposal);
+		Addition addition = proposalService.createAdditionProposal(proposal);
+		
+		if (submitProposal) {
+			proposalService.submitProposal(addition);
+		}
+		
 		redirectAttributes.addFlashAttribute("createdItem", addition.getItem().getUuid().toString());
 		
-		return "redirect:/register/" + registerName + "/proposals";
+		return "redirect:/management/submitter";
 	}
 
 	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
@@ -578,7 +711,8 @@ public class RegisterController
 				Class<? extends RegisterItemProposalDTO> dtoClass = 
 						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
 				proposal = BeanUtils.instantiateClass(dtoClass);
-				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal);
+				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
+				binder.setConversionService(conversionService);
 				binder.bind(servletRequest);
 				
 //				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
@@ -593,7 +727,7 @@ public class RegisterController
 	
 	public static class SupersessionState {
 		private String step;
-		private Set<RegisterItemViewBean> validItems;
+//		private Set<RegisterItemViewBean> validItems;
 		private RE_SubmittingOrganization sponsor;
 		private final Set<RegisterItemProposalDTO> newSupersedingItems = new HashSet<RegisterItemProposalDTO>();
 		private final Set<RegisterItemViewBean> existingSupersedingItems = new HashSet<RegisterItemViewBean>();
@@ -605,24 +739,26 @@ public class RegisterController
 		public SupersessionState(RE_Register register, RE_SubmittingOrganization sponsor, RegisterItemService itemService) {
 			this.sponsor = sponsor;
 			
-			step = "supersededItems";
+//			step = "supersededItems";
+			step = "supersedingItems";
 			
-			validItems = new HashSet<RegisterItemViewBean>();			
-			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID);
-			for (RE_RegisterItem validItem : validItemsDb) {
-				validItems.add(new RegisterItemViewBean(validItem));
-			}
+//			validItems = new HashSet<RegisterItemViewBean>();			
+//			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID);
+//			for (RE_RegisterItem validItem : validItemsDb) {
+//				validItems.add(new RegisterItemViewBean(validItem));
+//			}
 		}
 		
 		public SupersessionState(Supersession proposal, RegisterItemService itemService) {
 			this.sponsor = proposal.getSponsor();
-			step = "supersededItems";
-			
-			validItems = new HashSet<RegisterItemViewBean>();			
-			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(proposal.getTargetRegister(), RE_ItemStatus.VALID);
-			for (RE_RegisterItem validItem : validItemsDb) {
-				validItems.add(new RegisterItemViewBean(validItem));
-			}
+//			step = "supersededItems";
+			step = "supersedingItems";
+		
+//			validItems = new HashSet<RegisterItemViewBean>();			
+//			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(proposal.getTargetRegister(), RE_ItemStatus.VALID);
+//			for (RE_RegisterItem validItem : validItemsDb) {
+//				validItems.add(new RegisterItemViewBean(validItem));
+//			}
 			
 			for (RE_RegisterItem supersededItem : proposal.getSupersededItems()) {
 				this.addSupersededItem(supersededItem);
@@ -650,19 +786,19 @@ public class RegisterController
 			this.step = step;
 		}
 
-		/**
-		 * @return the validItems
-		 */
-		public Set<RegisterItemViewBean> getValidItems() {
-			return validItems;
-		}
-
-		/**
-		 * @param validItems the validItems to set
-		 */
-		public void setValidItems(Set<RegisterItemViewBean> validItems) {
-			this.validItems = validItems;
-		}
+//		/**
+//		 * @return the validItems
+//		 */
+//		public Set<RegisterItemViewBean> getValidItems() {
+//			return validItems;
+//		}
+//
+//		/**
+//		 * @param validItems the validItems to set
+//		 */
+//		public void setValidItems(Set<RegisterItemViewBean> validItems) {
+//			this.validItems = validItems;
+//		}
 
 		/**
 		 * @return the sponsor

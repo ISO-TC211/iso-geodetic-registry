@@ -32,17 +32,17 @@
 									<td th:utext="#{${item.proposalType}}"></td>											
 									<td th:text="#{${item.proposalStatus}}"></td>
 									<td>
-										<div class="btn-group">
+										<div class="btn-group" th:unless="${item.proposalGroupUuid}">
 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu" role="menu">
-												<li><div style="margin: 5px;">
+												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}"><div style="margin: 5px;">
 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
 												</div></li>
-												<li th:if="${item.isWithdrawable()}"><div style="margin: 5px;">
-													<button th:id="'edit_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '?edit=true'} + '\''" th:text="#{button.edit}">Edit</button>												
-												</div></li>
+<!-- 												<li th:if="${item.isWithdrawable()}"><div style="margin: 5px;"> -->
+<!-- 													<button th:id="'edit_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '?edit=true'} + '\''" th:text="#{button.edit}">Edit</button>												 -->
+<!-- 												</div></li> -->
 												<li th:if="${item.isUnderReview()}"><div style="margin: 5px">
 													<button th:id="'review_' + ${item.uuid}" th:if="${item.isUnderReview()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\''" th:text="#{button.reviewProposal}">Begutachten</button>
 												</div></li>

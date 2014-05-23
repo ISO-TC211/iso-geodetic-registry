@@ -13,13 +13,13 @@
 		<registry-persistence-version>HEAD-SNAPSHOT</registry-persistence-version>
 	</properties>
 	<repositories>
-		<repository>
+<!-- 	<repository>
 			<id>tango-snapshots</id>
-                        <url>http://localhost:8083/artifactory/libs-snapshot-local</url>
-                        <snapshots>
+				<url>http://localhost:8083/artifactory/libs-snapshot-local</url>
+			<snapshots>
 				<enabled>true</enabled>
  			</snapshots>
- 		</repository>
+ 		</repository>-->
  	</repositories>
 	<build>
 		<directory>target</directory>
@@ -141,6 +141,11 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity3</artifactId>
 			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.wimpi</groupId>
+			<artifactId>telnetd-x</artifactId>
+			<version>2.1.1</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

@@ -3,12 +3,10 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.CONTROLBODY_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.OWNER_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,10 +15,7 @@ import java.util.UUID;
 import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.iso.registry.client.ProposalDtoFactory;
-import org.iso.registry.client.RegisterItemViewBean;
-import org.iso.registry.client.ViewBeanFactory;
-import org.iso.registry.client.configuration.BasePathRedirectView;
+import org.iso.registry.api.registry.IsoProposalService;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +41,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO.ProposalType;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
+import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.ProposalDtoFactory;
+import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
+import de.geoinfoffm.registry.client.web.ViewBeanFactory;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
@@ -56,6 +54,7 @@ import de.geoinfoffm.registry.core.PropertyConfiguration;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -84,7 +83,10 @@ public class ProposalsController
 	
 	@Autowired
 	private RegisterItemService itemService;
-	
+
+	@Autowired
+	private IsoProposalService proposalService;
+
 	@Autowired
 	private SubmittingOrganizationRepository suborgRepository;
 	
@@ -115,16 +117,23 @@ public class ProposalsController
 	@Autowired
 	private ApplicationContext context;
 	
-	private ItemClassRegistry itemClassRegistry = new ItemClassRegistry();
+	@Autowired
+	private ItemClassRegistry itemClassRegistry;
+	
+	@Autowired
+	private ViewBeanFactory viewBeanFactory;
+	
+	@Autowired
+	private ProposalDtoFactory proposalDtoFactory;
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST/*, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE*/)
 	@Transactional
 	public View createProposal(@ModelAttribute("proposal") RegisterItemProposalDTO proposal, final Model model) throws InvalidProposalException, ItemNotFoundException, IllegalOperationException, UnauthorizedException {
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, proposal.getTargetRegisterUuid());
 		
-		itemService.propose(proposal);
+		proposalService.propose(proposal);
 		
-		return new BasePathRedirectView("/");
+		return new BasePathRedirectView("/management/submitter");
 	}
 
 	@RequestMapping(value = "/{uuid}/{property}", method = RequestMethod.GET)
@@ -147,7 +156,7 @@ public class ProposalsController
 			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 		}
 
-		RegisterItemViewBean rvb = ViewBeanFactory.getInstance().getViewBean(proposal);
+		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
 
 		if (itemClassConfiguration != null && rvb.getAdditionalProperties().keySet().contains(propertyName)) {
 			PropertyConfiguration propertyConfiguration = itemClassConfiguration.getProperty(propertyName);
@@ -229,8 +238,9 @@ public class ProposalsController
 			security.assertMayWrite(proposal);
 		}
 		
-		RegisterItemProposalDTO dto = ProposalDtoFactory.getInstance().getProposalDto(proposal);
+		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(proposal);
 		model.addAttribute("proposal", dto);
+		model.addAttribute("itemClass", dto.getItemClassUuid());
 		
 		ItemClassConfiguration itemClassConfiguration = null;
 		if (proposal instanceof SimpleProposal) {
@@ -238,8 +248,11 @@ public class ProposalsController
 			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 		}
 
-		RegisterItemViewBean rvb = ViewBeanFactory.getInstance().getViewBean(proposal);
+		RegisterItemProposalDTO rvb = proposalDtoFactory.getProposalDto(proposal);
+//		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
 		model.addAttribute("rvb", rvb);
+		
+		model.addAttribute("isProposal", "true");
 		
 		RE_SubmittingOrganization sponsor = suborgRepository.findOne(rvb.getSponsorUuid());
 //		if (rvb.getProposalType().equals(ProposalType.SUPERSESSION)) {
@@ -260,8 +273,8 @@ public class ProposalsController
 //		}
 		
 		String viewName;
-		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewTemplate())) {
-			viewName = itemClassConfiguration.getViewTemplate();
+		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewProposalTemplate())) {
+			viewName = itemClassConfiguration.getViewProposalTemplate();
 		}
 		else {
 			StringBuilder viewNameBuilder = new StringBuilder("registry/proposal/");
@@ -291,7 +304,7 @@ public class ProposalsController
 			final Model model, 
 			@RequestParam("item") UUID supersedingItem) throws InvalidProposalException, IllegalOperationException, UnauthorizedException {
 		
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -312,7 +325,7 @@ public class ProposalsController
 			final Model model, 
 			@RequestParam Map<String, String> supersededItems) throws InvalidProposalException, IllegalOperationException, UnauthorizedException {
 		
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		RegisterController.addSupersededItemsToSupersession(request, model, supersededItems, itemService);
 		
@@ -325,7 +338,7 @@ public class ProposalsController
 			   @PathVariable("uuid") UUID proposalUuid, 
 			   final Model model) throws ProposalNotFoundException, UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -348,7 +361,7 @@ public class ProposalsController
 		model.addAttribute("register", targetRegister);
 		
 //		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = null;
+		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
 
 		model.addAttribute("isNew", "true");
 		model.addAttribute("partOfSupersession", "true");
@@ -361,7 +374,7 @@ public class ProposalsController
 		model.addAttribute("proposal", newItem);
 		model.addAttribute("register", targetRegister);
 		
-		Set<RE_ItemClass> itemClasses = targetRegister.getContainedItemClasses();
+		Collection<RE_ItemClass> itemClasses = targetRegister.getContainedItemClasses();
 		itemClasses.size();
 		model.addAttribute("itemClasses", itemClasses);
 
@@ -395,12 +408,12 @@ public class ProposalsController
 			return "redirect:/registry/proposal/edit_supersession"; 
 		}
 		else {
-			proposalDto = ProposalDtoFactory.getInstance().getProposalDto(proposal);
+			proposalDto = proposalDtoFactory.getProposalDto(proposal);
 			ServletRequestDataBinder binder = new ServletRequestDataBinder(proposalDto);
 			binder.bind(servletRequest);
 			
-			itemService.updateProposal(proposalDto);
-			return "redirect:/";
+			proposalService.updateProposal(proposalDto);
+			return "redirect:/management/submitter";
 		}
 	}
 
@@ -410,7 +423,7 @@ public class ProposalsController
 			@PathVariable("uuid") UUID proposalUuid, 
 			final Model model) throws UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -439,7 +452,7 @@ public class ProposalsController
 			final Model model,
 			@RequestParam Map<String, String> additionalData) throws UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -471,7 +484,7 @@ public class ProposalsController
 			@PathVariable("uuid") UUID proposalUuid,
 			final Model model) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
@@ -508,14 +521,14 @@ public class ProposalsController
 			existingSuccessors.add(supersedingItem);			
 		}
 		
-		itemService.updateSupersession(supersession, supersededItems, existingSuccessors, state.getNewSupersedingItems(), state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes());
+		proposalService.updateSupersession(supersession, supersededItems, existingSuccessors, state.getNewSupersedingItems(), state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes());
 		
 		proposalRepository.saveAndFlush(supersession);
 		
 //		itemService.proposeSupersession(supersededItems, state.getNewSupersedingItems(), 
 //				state.getJustification(), state.getRegisterManagerNotes(), state.getControlBodyNotes(), state.getSponsor());
 		
-		return new BasePathRedirectView("/");
+		return new BasePathRedirectView("/management/submitter");
 	}
 	
 	/*
@@ -523,7 +536,7 @@ public class ProposalsController
 	 */
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
 	@Transactional
-	public ResponseEntity<Void> updateProposal(
+	public Object updateProposal(
 			@PathVariable("uuid") UUID proposalUuid,
 			@RequestParam(value = "op", required = false) String operation,
 			@RequestParam(value = "item", required = false) String itemUuid,
@@ -579,13 +592,14 @@ public class ProposalsController
 		}
 
 		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
-		RegisterItemProposalDTO dto = ProposalDtoFactory.getInstance().getProposalDto(itemClass);
+		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(itemClass);
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
 		binder.bind(servletRequest);
 
-		itemService.updateProposal(proposal);
+		proposalService.updateProposal(dto);
 		
-		return new ResponseEntity<Void>(HttpStatus.OK);
+//		return new ResponseEntity<Void>(HttpStatus.OK);
+		return "redirect:/management/submitter";
 	}
 
 	@RequestMapping(value = "/{uuid}/withdraw", method = RequestMethod.POST)
@@ -598,9 +612,26 @@ public class ProposalsController
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 		
-		security.assertMayDelete(proposal);
+//		security.assertMayDelete(proposal);
 		
-		itemService.withdrawProposal(proposal);
+		proposalService.withdrawProposal(proposal);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}	
+
+	@RequestMapping(value = "/{uuid}/submit", method = RequestMethod.POST)
+	@Transactional
+	public ResponseEntity<Void> submitProposal(@PathVariable("uuid") UUID proposalUuid) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+		logger.debug("POST /proposal/{}/submit", proposalUuid);
+		
+		Proposal proposal = proposalService.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+
+//		security.assertMaySubmit(proposal);
+
+		proposalService.submitProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -620,7 +651,7 @@ public class ProposalsController
 		security.assertHasAnyEntityRelatedRoleForAll(Arrays.asList(MANAGER_ROLE_PREFIX, OWNER_ROLE_PREFIX), proposal.getAffectedRegisters());
 
 //		rvb = new RegisterItemViewBean(proposal);
-		rvb = ViewBeanFactory.getInstance().getViewBean(proposal);
+		rvb = viewBeanFactory.getViewBean(proposal);
 		
 		model.addAttribute("proposal", rvb);
 		
@@ -639,7 +670,7 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.reviewProposal(proposal);
+		proposalService.reviewProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -657,14 +688,42 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.acceptProposal(proposal, controlBodyDecisionEvent);
+		proposalService.acceptProposal(proposal, controlBodyDecisionEvent);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
 
+	@RequestMapping(value = "/{uuid}/return", method = RequestMethod.POST)
+	@Transactional
+	public ResponseEntity<?> returnProposal(@PathVariable("uuid") UUID proposalUuid,
+											@RequestParam("noteToSubmitter") String noteToSubmitter) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+		logger.debug("POST /proposal/{}/return", proposalUuid);
+
+		Proposal proposal = proposalRepository.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+
+		if (proposal.isUnderReview()) {
+			security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.returnProposal(proposal, "[Register Manager] " + noteToSubmitter);
+		}
+		else if (proposal.isPending()) {
+			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.returnProposal(proposal, "[Control Body] " + noteToSubmitter);			
+		}
+		else {
+			// cannot be rejected: wrong status
+			return new ResponseEntity<String>(String.format("The proposal %s cannot be rejected: wrong status", proposal.getUuid().toString()), HttpStatus.FORBIDDEN);			
+		}
+
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/{uuid}/reject", method = RequestMethod.POST)
 	@Transactional
-	public ResponseEntity<Void> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
+	public ResponseEntity<?> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
 											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 		logger.debug("POST /proposal/{}/reject", proposalUuid);
 
@@ -672,10 +731,15 @@ public class ProposalsController
 		if (proposal == null) {
 			throw new ProposalNotFoundException(proposalUuid);
 		}
-
-		security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
-
-		itemService.rejectProposal(proposal, controlBodyDecisionEvent);
+		
+		if (proposal.isPending()) {
+			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
+			proposalService.rejectProposal(proposal, controlBodyDecisionEvent);			
+		}
+		else {
+			// cannot be rejected: wrong status
+			return new ResponseEntity<String>(String.format("The proposal %s cannot be rejected: wrong status", proposal.getUuid().toString()), HttpStatus.FORBIDDEN);			
+		}
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}	
@@ -687,7 +751,7 @@ public class ProposalsController
 		
 		logger.debug("GET /proposal/{}/appeal", proposalUuid);
 
-		security.assertIsAuthenticated();
+		security.assertIsLoggedIn();
 		
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
@@ -731,7 +795,7 @@ public class ProposalsController
 //			throw new UnauthorizedException("You are not authorized to access this resource");
 //		}
 
-		itemService.appealProposal(proposal, justification, situation, impact);
+		proposalService.appealProposal(proposal, justification, situation, impact);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -748,12 +812,12 @@ public class ProposalsController
 		
 		security.assertHasEntityRelatedRoleForAll(OWNER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		Appeal appeal = itemService.findAppeal(proposal);
+		Appeal appeal = proposalService.findAppeal(proposal);
 		if (appeal == null) {
 			throw new IllegalOperationException("The proposal is not appealed");
 		}
 
-		itemService.acceptAppeal(appeal);
+		proposalService.acceptAppeal(appeal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -770,12 +834,12 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(OWNER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		Appeal appeal = itemService.findAppeal(proposal);
+		Appeal appeal = proposalService.findAppeal(proposal);
 		if (appeal == null) {
 			throw new IllegalOperationException("The proposal is not appealed");
 		}
 
-		itemService.rejectAppeal(appeal);
+		proposalService.rejectAppeal(appeal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -792,7 +856,7 @@ public class ProposalsController
 
 		security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
 
-		itemService.concludeProposal(proposal);
+		proposalService.concludeProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
