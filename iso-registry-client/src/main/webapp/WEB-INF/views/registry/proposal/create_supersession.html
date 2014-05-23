@@ -84,9 +84,9 @@
 															<div class="input-group">
 																<select id="itemClass" name="itemClass" required="true">
 	<!-- 																<option th:text="#{form.select.choose}" value=""/> -->
-																	<option th:each="anItemClass : ${itemClasses}"
-																			th:value="${anItemClass.uuid}"
-																			th:text="${anItemClass.name}"></option>
+																	<option th:each="anItemClass : ${@itemClassRepository.findAllOrderByName()}"
+																			th:value="${anItemClass[0]}"
+																			th:text="#{${anItemClass[1]}}"></option>
 																</select>
 															</div>
 														</div>

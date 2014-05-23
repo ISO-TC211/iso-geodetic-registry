@@ -91,7 +91,7 @@
 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu" role="menu">
-												<li th:unless="${item.isRetirement()}"><div style="margin: 5px;">
+												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}"><div style="margin: 5px;">
 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${item.isEditable()} ? #{button.edit} : #{button.details}">Details</button>												
 												</div></li>
 												<li th:if="${item.isNotSubmitted()} or ${#strings.startsWith(item.proposalStatus, 'RETURNED_BY_')}">

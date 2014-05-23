@@ -134,6 +134,7 @@
 								<th th:text="#{tableheader.name}">Name</th>
 								<th th:text="#{tableheader.definition}">Klasse</th>
 								<th th:text="#{tableheader.description}">Klasse</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -141,6 +142,7 @@
 								<td th:text="${item.name}"></td>
 								<td th:text="${item.definition}"></td>
 								<td th:text="${item.description}"></td>
+								<td><a class="btn btn-sm btn-default" target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${item.uuid}__}"></a></td>
 							</tr>
 						</tbody>
 					</table>
@@ -157,6 +159,7 @@
 								<th th:text="#{tableheader.name}">Name</th>
 								<th th:text="#{tableheader.definition}">Klasse</th>
 								<th th:text="#{tableheader.description}">Klasse</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -164,6 +167,7 @@
 								<td th:text="${item.name}"></td>
 								<td th:text="${item.definition}"></td>
 								<td th:text="${item.description}"></td>
+								<td><a class="btn btn-sm btn-default" target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${item.uuid}__}"></a></td>
 							</tr>
 						</tbody>
 					</table>
