@@ -27,7 +27,7 @@ import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 
 public class EpsgImporter
 {
-	private static final String EPSG_REGISTER_NAME = "EPSG Geodetic Parameter Data Set";
+	private static final String GCP_REGISTER_NAME = "Geodetic Parameter Data Set";
 	
 	private static final Logger logger = LoggerFactory.getLogger(EpsgImporter.class);
 
@@ -86,10 +86,10 @@ public class EpsgImporter
 			EntityManager em = context.getBean(EntityManager.class);
 
 			RegisterRepository registerRepository = context.getBean(RegisterRepository.class);
-			RE_Register register = registerRepository.findByName(EPSG_REGISTER_NAME);
+			RE_Register register = registerRepository.findByName(GCP_REGISTER_NAME);
 			
 			if (register == null) {
-				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", EPSG_REGISTER_NAME));
+				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", GCP_REGISTER_NAME));
 			}
 			
 			if (argList.contains("all") || argList.contains("1")) {
