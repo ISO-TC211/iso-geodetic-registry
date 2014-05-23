@@ -706,11 +706,11 @@ public class ProposalsController
 
 		if (proposal.isUnderReview()) {
 			security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
-			proposalService.returnProposal(proposal, noteToSubmitter);
+			proposalService.returnProposal(proposal, "[Register Manager] " + noteToSubmitter);
 		}
 		else if (proposal.isPending()) {
 			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
-			proposalService.returnProposal(proposal, noteToSubmitter);			
+			proposalService.returnProposal(proposal, "[Control Body] " + noteToSubmitter);			
 		}
 		else {
 			// cannot be rejected: wrong status

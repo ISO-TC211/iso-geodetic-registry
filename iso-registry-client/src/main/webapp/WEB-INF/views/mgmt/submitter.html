@@ -82,9 +82,14 @@
 									</div>
 
 									<td th:text="${item.name}"></td>
-									<td th:text="${item.itemClassName}"></td>
+									<td><span th:unless="${#strings.isEmpty(item.itemClassName)}" th:text="#{${item.itemClassName}}"></span></td>
 									<td th:utext="#{${item.proposalType}}"></td>											
-									<td th:text="#{${item.proposalStatus}}"></td>
+									<td>
+										<span th:text="#{${item.proposalStatus}}"></span>&nbsp;&nbsp;<a th:unless="${#lists.isEmpty(@proposalNoteRepository.findByProposalUuid(item.proposalUuid))}" class="fa fa-envelope" data-toggle="modal" th:href="'#dialog-notes-' + ${item.proposalUuid}" th:title="#{tooltip.proposalNotes}"></a>
+										<div class="modal fade" th:id="'dialog-notes-' + ${item.proposalUuid}" role="dialog" th:unless="${#lists.isEmpty(@proposalNoteRepository.findByProposalUuid(item.proposalUuid))}">
+											<div th:include="mgmt/submitter_popup_notes :: popup"/>
+										</div>										
+									</td>
 									<td>
 										<div class="btn-group">
 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -102,11 +107,11 @@
 														<a th:href="'#dialog-submit-' + ${item.proposalUuid}" th:id="'submit_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-success btn-xs" th:text="#{button.submitProposal}">Einreichen</a>
 													</div>
 												</li>
-												<li th:if="${item.isUnderReview()} or ${item.isPending()}"><div style="margin: 5px;">
+												<li th:if="${item.isUnderReview()} or ${item.isPending()}">
 													<div style="margin: 5px;">
 														<a th:href="'#dialog-withdraw-' + ${item.proposalUuid}" th:id="'withdraw_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-warning btn-xs" th:text="#{button.withdrawProposal}">Einreichen</a>
 													</div>
-												</div></li>
+												</li>
 												<li th:if="${item.isAppealable()}"><div style="margin: 5px">
 													<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button>
 												</div></li>
