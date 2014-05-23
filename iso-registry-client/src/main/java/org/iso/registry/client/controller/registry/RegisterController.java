@@ -7,6 +7,7 @@ import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,6 +82,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
+import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
@@ -103,6 +105,9 @@ public class RegisterController
 	
 	@Autowired
 	private RegisterItemService itemService;
+	
+	@Autowired
+	private RegisterItemRepository itemRepository;
 	
 	@Autowired
 	private ProposalService proposalService;
@@ -167,6 +172,7 @@ public class RegisterController
 		String iDisplayLength = parameters.get("iDisplayLength");
 		String iColumns = parameters.get("iColumns");
 		String iSortingsCols = parameters.get("iSortingCols");
+		String sSearch = parameters.get("sSearch");
 		
 		Map<Integer, String> columns = new HashMap<Integer, String>();
 		if (iColumns != null) {
@@ -218,11 +224,21 @@ public class RegisterController
 		}
 		
 		Page<RE_RegisterItem> items;
-		if (itemClass == null) {
-			items = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID, pageable);
+		if (itemClass == null) { 
+			if (!StringUtils.isEmpty(sSearch)) {
+				items = itemRepository.findByRegisterAndStatusInFiltered(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+			}
+			else {
+				items = itemRepository.findByRegisterAndStatusIn(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);
+			}
 		}
 		else {
-			items = itemService.findByRegisterAndItemClassAndStatus(register, itemClass, RE_ItemStatus.VALID, pageable);			
+			if (!StringUtils.isEmpty(sSearch)) {
+				items = itemRepository.findByRegisterAndItemClassAndStatusInFiltered(register, itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+			}
+			else {
+				items = itemRepository.findByRegisterAndItemClassAndStatusIn(register, itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);				
+			}
 		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
 		for (RE_RegisterItem item : items.getContent()) {
