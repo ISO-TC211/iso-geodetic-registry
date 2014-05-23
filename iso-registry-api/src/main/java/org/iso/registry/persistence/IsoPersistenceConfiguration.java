@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import de.geoinfoffm.registry.core.Repository;
 import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
-import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
+import de.geoinfoffm.registry.persistence.jpa.HibernateConfigurationImpl;
 
 /**
  * Spring configuration class for the persistence layer.

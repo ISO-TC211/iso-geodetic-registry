@@ -1,0 +1,18 @@
+<div th:fragment="popup">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 th:text="#{popup.proposalNotes.header}">Vorschlag einreichen</h4>
+			</div>
+			<div class="modal-body">
+				<blockquote th:each="note : ${@proposalNoteRepository.findByProposalUuid(item.proposalUuid)}">
+				  <p th:text="${note.note}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+				  <footer th:text="${note.author.name}">Someone famous</footer>
+				</blockquote>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="close" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</div>

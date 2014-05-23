@@ -25,7 +25,7 @@
 											<option th:text="#{form.select.choose}" value=""/>
 											<option th:each="anItemClass : ${register.getContainedItemClasses()}"
 													th:value="${anItemClass.uuid}"
-													th:text="${anItemClass.name}"></option>
+													th:text="#{${anItemClass.name}}"></option>
 										</select>
 									</div>
 								</div>

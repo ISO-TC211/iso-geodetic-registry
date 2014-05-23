@@ -12,6 +12,7 @@
 		<module>../registry/src/iso19135/registry-core</module>
 		<module>../registry/src/iso19135/registry-api</module>
 		<module>../registry/src/iso19135/registry-persistence</module>
+		<module>../registry/src/iso19135/registry-client-base</module>
 		<module>iso-registry-api</module>
 		<module>iso-registry-client</module>
 	</modules>

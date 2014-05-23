@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body th:with="isNew='true'">
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="row clearfix" style="margin-top: 0px">
+		
+			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
+				<fieldset>		
+		
+					<div class="col-md-12 column">
+
+						<div th:replace="registry/registers/proposal-globals :: itemClassSelector"/> 			
+					
+						<div class="panel-group" id="accordion">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.datum}"></span></a>
+									<div class="pull-right">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+								<div id="dataPanel" class="panel-collapse collapse in">								
+									<div class="panel-body">
+										<div th:if="${itemClass}">
+											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
+											<div th:replace="registry/registers/epsg/datum_details :: datumDetails"/>
+										</div> <!-- if ${itemClass} -->
+									</div>
+								</div>
+							</div>
+							
+							<div th:replace="registry/registers/epsg/area_panel :: newAreaPanel"/>
+							
+<!-- 							<div id="newAreaPanel" class="panel panel-default" th:if="${itemClass}"> -->
+<!-- 								<div class="panel-heading"> -->
+<!-- 									<a data-toggle="collapse" data-parent="#accordion" href="#areaPanel"><span th:text="#{header.area}"></span></a> -->
+<!-- 									<div class="pull-right"> -->
+<!-- 										<button id="newAreaPanelDismiss" type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></button> -->
+<!-- 										<span class="glyphicon glyphicon-chevron-right"></span> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 								<div id="areaPanel" class="panel-collapse collapse">								 -->
+<!-- 									<div class="panel-body" th:object="${proposal.domainOfValidity}"> -->
+<!-- 										<ul class="nav nav-tabs"> -->
+<!-- 							  				<li class="active"><a href="#area" data-toggle="tab">Area details</a></li> -->
+<!-- 							  				<li><a href="#areaMgmt" data-toggle="tab">Management data</a></li> -->
+<!-- 										</ul> -->
+									
+<!-- 										<div class="tab-content"> -->
+<!-- 											<div id="area" class="tab-pane in active" style="padding-top: 10px"> -->
+<!-- 												<div th:include="registry/registers/epsg/area_create_addition :: areaDetails"/> -->
+<!-- 											</div> -->
+											
+<!-- 											<div id="areaMgmt" class="tab-pane in" style="padding-top: 10px"> -->
+<!-- 												<div th:include="registry/registers/epsg/area_create_addition :: proposalDetails"/> -->
+<!-- 											</div>				 -->
+<!-- 										</div> -->
+<!-- 									</div>		 -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+				
+							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
+
+						</div>
+						<div id="validationFailed" class="alert alert-danger" th:utext="#{alert.validationFailed}"/>
+						<div th:replace="registry/registers/proposal-globals :: proposalButtons"/>
+
+					</div>
+					
+				</fieldset>
+			</form>
+			
+		</div>
+	</div>
+
+	<script th:replace="registry/registers/globals :: js-proposal"/>
+	
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			hidePanel('#newAreaPanel');
+			
+			$('#addNew_domainOfValidity').bind('click', function (e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeIn(500);
+				$('#domainOfValidity').val('');
+				$('#domainOfValidity_select').append('<option value="">New</option>');
+				$('#domainOfValidity_select').val('');
+				$('#domainOfValidity_select').attr('disabled', 'disabled');
+
+				showPanel('#newAreaPanel');
+			});
+			
+			$('#newAreaPanelDismiss').bind('click', function(e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeOut(500);
+				$("#domainOfValidity_select option[value='']").remove();
+				$('#domainOfValidity_select').removeAttr('disabled');
+				$('#domainOfValidity_bycode').click();
+
+				hidePanel('#newAreaPanel');
+			});
+		});
+	/* ]]> */
+	</script>
+	
+</body>
+</html>

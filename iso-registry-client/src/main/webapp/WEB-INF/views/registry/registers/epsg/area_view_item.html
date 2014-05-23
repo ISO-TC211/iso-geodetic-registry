@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#item" data-toggle="tab" th:text="#{tabs.item}">Eintrag</a></li>
+			<li th:if="!${#maps.isEmpty(item.predecessors)}"><a href="#predecessors" data-toggle="tab" th:text="#{tabs.predecessors}">Vorgänger</a></li>
+			<li th:if="!${#maps.isEmpty(item.successors)}"><a href="#successors" data-toggle="tab" th:text="#{tabs.successors}">Nachfolger</a></li>
+			<li><a href="#managementInformation" data-toggle="tab" th:text="#{tabs.managementInformation}">Verwaltungsinformationen</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div id="item" class="tab-pane in active" style="padding-top: 10px">
+				<div class="span6" th:object="${item}">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title" th:text="#{header.area}">Area</h3>
+						</div>
+						
+						<div class="panel-body">
+							<div th:include="registry/registers/epsg/area_details :: areaDetails"/>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div th:replace="registry/item :: #predecessors"/>
+			<div th:replace="registry/item :: #successors"/>
+			<div th:replace="registry/item :: #managementInformation"/>
+
+		</div>
+
+		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
+	</div>
+</body>
+<script th:replace="registry/item :: js-item"/>
+</html>

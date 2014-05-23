@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">EPSG Geodetic Parameter Registry</entry>
+	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
 	
 	<entry key="navbar.setHistoricDate">Zeitpunkt setzen</entry>
 	<entry key="navbar.login">Anmelden</entry>
@@ -52,12 +52,16 @@
 	<entry key="tableheader.shortName">Kurzbezeichnung</entry>
 	<entry key="tableheader.category">Kategorie</entry>
 	<entry key="tableheader.appealStatus">Status des Einspruchs</entry>
-	<entry key="tableheader.itemIdentifier">ID</entry>
+	<entry key="tableheader.itemIdentifier">Item-ID</entry>
 	<entry key="tableheader.definition">Definition</entry>
 	<entry key="tableheader.description">Beschreibung</entry>
 	<entry key="tableheader.role">Rolle</entry>
 	<entry key="tableheader.group">Gruppe</entry>
 	<entry key="tableheader.register">Register</entry>
+	<entry key="tableheader.code">Code</entry>
+	<entry key="tableheader.alias">Alias</entry>
+	<entry key="tableheader.namingSystem">Bezeichnungssystem</entry>
+	<entry key="tableheader.remarks">Anmerkungen</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -75,6 +79,7 @@
 	<entry key="header.createUser">Benutzer anlegen</entry>
 	<entry key="header.editUser">Benutzer bearbeiten</entry>
 	<entry key="header.signup">Registrieren</entry>
+	<entry key="header.clarifiedItem">Klarzustellender Eintrag</entry>
 	<entry key="header.proposedChanges">Vorgeschlagene Änderungen</entry>
 	<entry key="header.proposedItem">Vorgeschlagener Eintrag</entry>
 	<entry key="header.retiredItem">Aufzugebender Eintrag</entry>
@@ -89,12 +94,17 @@
 	<entry key="header.proposalDetails">Vorschlagsdetails</entry>
 	<entry key="header.crs">Koordinatenreferenzsystem</entry>
 	<entry key="header.area">Gebiet</entry>
+	<entry key="header.datum">Datum</entry>
+	<entry key="header.namingSystem">Namenssystem</entry>
+	<entry key="header.uom">Maßeinheit</entry>
+	<entry key="header.ellipsoid">Ellipsoid</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
 	<entry key="button.acceptProposal">Annehmen</entry>
 	<entry key="button.rejectProposal">Ablehnen</entry>
 	<entry key="button.withdrawProposal">Zurückziehen</entry>
+	<entry key="button.saveProposal">Vorschlag speichern</entry>
 	<entry key="button.finalizeProposal">Einspruchsphase beenden</entry>
 	<entry key="button.appealProposal">Einspruch einlegen</entry>
 	<entry key="button.acceptAppeal">Einspruch stattgeben</entry>
@@ -112,6 +122,7 @@
 	<entry key="button.no">Nein</entry>
 	<entry key="button.ok">Ok</entry>
 	<entry key="button.confirm">Bestätigen</entry>
+	<entry key="button.confirmRejection">Ablehnung bestätigen</entry>
 	<entry key="button.cancel">Abbrechen</entry>
 	<entry key="button.withdraw">Zurückziehen</entry>
 	<entry key="button.save">Speichern</entry>
@@ -123,8 +134,10 @@
 	<entry key="button.review">Zur Entscheidung annehmen</entry>
 	<entry key="button.accept">Annehmen</entry>
 	<entry key="button.reject">Ablehnen</entry>
-	<entry key="button.addNew">Neuen Nachfolger erstellen</entry>
-	<entry key="button.addExisting">Vorhandenen Eintrag als Nachfolger hinzufügen</entry>
+	<entry key="button.addNew">Hinzufügen</entry>
+	<entry key="button.addNewSuccessor">Neuen Nachfolger erstellen</entry>
+	<entry key="button.addAlias">Alias hinzufügen</entry>
+	<entry key="button.addExistingSuccessor">Vorhandenen Eintrag als Nachfolger hinzufügen</entry>
 	<entry key="button.addSupersededItems">Zu ersetzende Einträge wählen</entry>
 	<entry key="button.supersede">Ersetzen</entry>
 	<entry key="button.next">Weiter</entry>
@@ -142,12 +155,17 @@
 	<entry key="CLARIFICATION">Klarstellung</entry>
 	<entry key="SUPERSESSION">Ersetzung</entry>
 	<entry key="RETIREMENT">Aufgabe</entry>
+	<entry key="GROUP">Gruppe</entry>
 	
+	<entry key="NOT_SUBMITTED">noch nicht eingereicht</entry>
 	<entry key="UNDER_REVIEW">wartet auf Zulassung durch Registermanager</entry>
 	<entry key="IN_APPROVAL_PROCESS">wartet auf Control-Body-Entscheidung</entry>
-	<entry key="APPEALABLE">anfechtbar</entry>
+	<entry key="APPEALABLE">zurückgewiesen/anfechtbar</entry>
 	<entry key="APPEALED">angefochten</entry>
 	<entry key="FINISHED">abgeschlossen</entry>
+
+	<entry key="RETURNED_BY_MANAGER">vom Register-Manager zurückgegeben</entry>
+	<entry key="RETURNED_BY_CONTROLBODY">vom Control-Body zurückgegeben</entry>
 	
 	<entry key="PENDING">offen</entry>
 	<entry key="TENTATIVE">vorläufig</entry>
@@ -165,6 +183,7 @@
 	<entry key="alert.userCreated">Der Benutzer wurde erfolgreich angelegt.</entry>
 	<entry key="alert.userDeleted">Der Benutzer wurde gelöscht.</entry>
 	<entry key="alert.signedUp">Sie wurden erfolgreich registriert und können sich jetzt mit Ihrer E-Mail-Adresse ({0}) anmelden.</entry>	
+	<entry key="alert.userProfileUpdated">Ihr Profil wurde aktualisiert.</entry>	
 	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
 	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
 	<entry key="alert.organizationCreated">Die Organisation wurde erfolgreich angelegt</entry>
@@ -172,6 +191,7 @@
 	<entry key="alert.noSupersededItems">Es muss mindestens ein zu ersetzender Eintrag ausgewählt werden.</entry>
 	<entry key="alert.noSupersedingItems">Es muss mindestens ein Nachfolger angelegt werden.</entry>
 	<entry key="alert.registerNotFound">Das Register "{0}" existiert nicht.</entry>
+	<entry key="alert.validationFailed">Der Vorgang kann aufgrund von fehlerhaften oder fehlenden Eingaben nicht fortgesetzt werden. Bitte überprüfen Sie alle Eingabefelder.</entry>
 
 	<entry key="popup.newOrganization.header">Details Ihrer Organisation</entry>
 	<entry key="popup.deleteUser.header">Benutzer löschen</entry>
@@ -183,12 +203,17 @@
 	<entry key="popup.acceptProposal.header">Vorschlag annehmen</entry>
 	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:</entry>
 	<entry key="popup.rejectProposal.header">Vorschlag ablehnen</entry>
+	<entry key="popup.rejectProposal.registerManagerNote">Bitte geben Sie, weshalb Sie den Vorschlag ablehnen und wie die einreichende Stelle ihn ggf. verbessern kann:</entry>
 	<entry key="popup.rejectProposal.controlBodyDecisionEvent">Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag abzulehnen, gefällt wurde:</entry>
 	<entry key="popup.delegations.header">Delegierte Rechte</entry>
 	<entry key="popup.delegations.pointOfContact">Organisationsverwalter</entry>
 	<entry key="popup.delegations.member">Organisationszugehörigkeit bestätigt</entry>
 	<entry key="popup.delegations.requested">Der Benutzer hat die Zuteilung der blau unterlegten Benutzerrechte angefordert.</entry>
 	<entry key="popup.delegations.deny">Zustimmung nicht erteilen</entry>
+	<entry key="popup.itemClass.header">Bitte wählen Sie die Item-Klasse</entry>
+	<entry key="popup.submitProposal.header">Vorschlag einreichen</entry>
+	<entry key="popup.submitProposal.reallySubmit">Möchten Sie den Vorschlag "{0}" einreichen?</entry>
+	<entry key="popup.createProposal.header">Vorschlag erstellen</entry>
 
 	<entry key="tabs.overview">Übersicht</entry>
 	<entry key="tabs.item">Eintrag</entry>
@@ -244,29 +269,78 @@
 	<entry key="form.label.code">Code</entry>
 	<entry key="form.label.crsType">CRS-Art</entry>
 	<entry key="form.label.scope">Scope</entry>
+	<entry key="form.label.areaOfUse">Gültigkeitsgebiet</entry>
+	<entry key="form.label.datum">Datum</entry>
+	<entry key="form.label.coordinateSystem">Koordinatensystem</entry>
+	<entry key="form.label.isoA2Code">ISO-Alpha-2-Code</entry>
+	<entry key="form.label.isoA3Code">ISO-Alpha-3-Code</entry>
+	<entry key="form.label.isoNCode">Num. ISO-Code</entry>
+	<entry key="form.label.northernLatitude">Nördl. Breite</entry>
+	<entry key="form.label.southernLatitude">Südl. Breite</entry>
+	<entry key="form.label.easternLongitude">Östl. Länge</entry>
+	<entry key="form.label.westernLongitude">Westl. Länge</entry>
+	<entry key="form.label.remarks">Bemerkungen</entry>
+	<entry key="form.label.originDescription">Herkunftsbeschreibung</entry>
+	<entry key="form.label.informationSource">Informationsquelle</entry>
+	<entry key="form.label.dataSource">Datenquelle</entry>
+	<entry key="form.label.aliases">Aliase</entry>
+	<entry key="form.label.realizationEpoch">Epoche</entry>
+	<entry key="form.label.ellipsoid">Ellipsoid</entry>
+	<entry key="form.label.primeMeridian">Prime Meridian</entry>
+	<entry key="form.label.standardUnit">Standard-Zielmaßeinheit</entry>
+	<entry key="form.label.factorB">Faktor B</entry>
+	<entry key="form.label.factorC">Faktor C</entry>
+	<entry key="form.label.measureType">Maßeinheitenart</entry>
+	<entry key="form.label.shape">Form</entry>
+	<entry key="form.label.semiMajorAxis">Hauptachse</entry>
+	<entry key="form.label.semiMajorAxisUom">Maßeinheit</entry>
+	<entry key="form.label.semiMinorAxis">Nebenachse</entry>
+	<entry key="form.label.inverseFlattening">Verflachung</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		
-	<entry key="form.placeholder.name">Name</entry>
-	<entry key="form.placeholder.definition">Definition</entry>
-	<entry key="form.placeholder.description">Beschreibung</entry>
-	<entry key="form.placeholder.justification">Begründung des Registrierungsvorschlags</entry>
-	<entry key="form.placeholder.registerManagerNotes">Anmerkungen für den Register-Manager</entry>
-	<entry key="form.placeholder.controlBodyNotes">Anmerkungen für den Control-Body</entry>
+	<entry key="form.placeholder.name"></entry>
+	<entry key="form.placeholder.definition"></entry>
+	<entry key="form.placeholder.description"></entry>
+	<entry key="form.placeholder.justification"></entry>
+	<entry key="form.placeholder.registerManagerNotes"></entry>
+	<entry key="form.placeholder.controlBodyNotes"></entry>
 	<entry key="form.placeholder.impact">Bitte beschreiben Sie die Auswirkungen für den Fall, dass der Einspruch abgelehnt wird</entry>
 	<entry key="form.placeholder.situation">Bitte beschreiben Sie den derzeitigen Sachstand</entry>
 	<entry key="form.placeholder.appealJustification">Begründung des Einspruchs</entry>
-	<entry key="form.placeholder.shortName">Kurzname</entry>
-	<entry key="form.placeholder.category">Kategorie</entry>
-	<entry key="form.placeholder.emailAddress">E-Mail-Adresse</entry>
-	<entry key="form.placeholder.password">Passwort</entry>
-	<entry key="form.placeholder.confirmPassword">Passwort bestätigen</entry>
-	<entry key="form.placeholder.code">Code</entry>
-	<entry key="form.placeholder.scope">Scope</entry>
+	<entry key="form.placeholder.shortName"></entry>
+	<entry key="form.placeholder.category"></entry>
+	<entry key="form.placeholder.emailAddress"></entry>
+	<entry key="form.placeholder.password"></entry>
+	<entry key="form.placeholder.confirmPassword"></entry>
+	<entry key="form.placeholder.code"></entry>
+	<entry key="form.placeholder.scope">
 
-	<entry key="form.placeholder.organizationName">Name Ihrer Organisation</entry>
+	<entry key="form.placeholder.organizationName"></entry>
 	<entry key="form.placeholder.onlineResourceWebsite">z.B. http://www.example.org</entry>
 	<entry key="form.placeholder.onlineResourceLogo">z.B. http://www.example.org/logo.png</entry>
+
+	<entry key="form.placeholder.isoA2Code"></entry>
+	<entry key="form.placeholder.isoA3Code"></entry>
+	<entry key="form.placeholder.isoNCode"></entry>
+	<entry key="form.placeholder.northernLatitude"></entry>
+	<entry key="form.placeholder.southernLatitude"></entry>
+	<entry key="form.placeholder.easternLongitude"></entry>
+	<entry key="form.placeholder.westernLongitude"></entry>
+
+	<entry key="form.placeholder.remarks"></entry>
+	<entry key="form.placeholder.informationSource"></entry>
+	<entry key="form.placeholder.dataSource"></entry>
+	<entry key="form.placeholder.originDescription"></entry>
+	<entry key="form.placeholder.informationSource"></entry>
+	<entry key="form.placeholder.realizationEpoch"></entry>
+
+	<entry key="form.placeholder.factorB"></entry>
+	<entry key="form.placeholder.factorC"></entry>
+
+	<entry key="form.placeholder.semiMajorAxis"></entry>
+	<entry key="form.placeholder.semiMinorAxis"></entry>
+	<entry key="form.placeholder.inverseFlattening"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
@@ -287,6 +361,12 @@
 	<entry key="form.myprofile.delegationRequested">Die Anfrage zur Erteilung des Benutzerrechts wurde verschickt.</entry>
 
 	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
+
+	<entry key="orderBy">sortieren</entry>
+	<entry key="orderByCode">[Code]</entry>
+	<entry key="orderByName">[Name]</entry>
+	<entry key="tooltip.orderByCode">Nach Code sortieren</entry>
+	<entry key="tooltip.orderByName">Nach Namen sortieren</entry>
 
 	<entry key="home.initializeRegistry">Registry initialisieren</entry>
 	<entry key="home.addExampleData">Beispieldaten hinzufügen</entry>
@@ -323,4 +403,27 @@
 	<entry key="organizationNameShortForm">Organisationskurzname</entry>
 	<entry key="onlineResourceWebsite">Website der Organisation</entry>
 	<entry key="onlineResourceLogo">Logo der Organisation</entry>
+	
+	<entry key="mandatoryField">Verpflichtende Eingabe</entry>
+	<entry key="undefined">nicht definiert</entry>
+	
+	<entry key="NamingSystem">Naming System</entry>
+	<entry key="EllipsoidalCS">Ellipsoidal Coordinate System</entry>
+	<entry key="SphericalCS">Spherical Coordinate System</entry>
+	<entry key="CartesianCS">Cartesian Coordinate System</entry>
+	<entry key="VerticalCS">Vertical Coordinate System</entry>
+	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
+	<entry key="UnitOfMeasure">Unit of Measurement</entry>
+	<entry key="GeodeticCRS">Geodetic CRS</entry>
+	<entry key="EngineeringCRS">Engineering CRS</entry>
+	<entry key="VerticalCRS">Vertical CRS</entry>
+	<entry key="ProjectedCRS">Projected CRS</entry>
+	<entry key="CompoundCRS">Compound CRS</entry>
+	<entry key="Ellipsoid">Ellipsoid</entry>
+	<entry key="Area">Area</entry>
+	<entry key="GeodeticDatum">Geodetic Datum</entry>
+	<entry key="VerticalDatum">Vertical Datum</entry>
+	<entry key="EngineeringDatum">Engineering Datum</entry>
+	<entry key="PrimeMeridian">Prime Meridian</entry>
+	
 </properties>

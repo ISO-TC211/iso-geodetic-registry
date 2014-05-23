@@ -1,14 +1,9 @@
 package org.iso.registry.client.configuration.web;
 
-import javax.servlet.Filter;
-
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import de.geoinfoffm.registry.client.web.AbstractWebApplicationInitializer;
 import de.geoinfoffm.registry.persistence.PersistenceConfiguration;
 
 /**
@@ -18,7 +13,7 @@ import de.geoinfoffm.registry.persistence.PersistenceConfiguration;
  *
  */
 @Configuration
-public class WebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer 
+public class WebApplicationInitializer extends AbstractWebApplicationInitializer 
 {
 
 	@Override
@@ -34,19 +29,5 @@ public class WebApplicationInitializer extends AbstractAnnotationConfigDispatche
 	@Override
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
-	}
-
-	@Override
-	protected Filter[] getServletFilters() {
-		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-		characterEncodingFilter.setEncoding("UTF-8");
-		characterEncodingFilter.setForceEncoding(true);
-		
-		HiddenHttpMethodFilter methodFilter = new HiddenHttpMethodFilter();
-		methodFilter.setMethodParam("_method");
-		
-		OpenEntityManagerInViewFilter oemivFilter = new OpenEntityManagerInViewFilter();
-
-		return new Filter[] { characterEncodingFilter, methodFilter, oemivFilter };
 	}
 }

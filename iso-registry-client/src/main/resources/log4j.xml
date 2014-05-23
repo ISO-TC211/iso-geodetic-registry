@@ -12,7 +12,11 @@
 	
 	<!-- Application Loggers -->
 	<logger name="de.geoinfoffm.registry">
-		<level value="info" />
+		<level value="debug" />
+	</logger>
+
+	<logger name="org.iso.registry">
+		<level value="debug" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->

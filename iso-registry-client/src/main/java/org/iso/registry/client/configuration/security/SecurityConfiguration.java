@@ -7,9 +7,6 @@ import javax.sql.DataSource;
 
 import org.iso.registry.api.security.RegistryAuthenticationProvider;
 import org.iso.registry.api.security.RegistryUserDetailsManager;
-import org.iso.registry.client.configuration.BasePathUrlAuthenticationFailureHandler;
-import org.iso.registry.client.configuration.BasePathUrlAuthenticationSuccessHandler;
-import org.iso.registry.client.configuration.BasePathUrlLogoutSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -42,6 +39,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import de.geoinfoffm.registry.client.web.BasePathUrlAuthenticationFailureHandler;
+import de.geoinfoffm.registry.client.web.BasePathUrlAuthenticationSuccessHandler;
+import de.geoinfoffm.registry.client.web.BasePathUrlLogoutSuccessHandler;
 import de.geoinfoffm.registry.core.security.RegistryLookupStrategy;
 import de.geoinfoffm.registry.core.security.RegistryMutableAclService;
 import de.geoinfoffm.registry.core.security.RegistryPermission;
@@ -59,10 +59,9 @@ import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
-	private HibernateConfiguration configuration = new HibernateConfiguration();
+	@Autowired
+	private HibernateConfiguration configuration;
 	
-	
-
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new RegistryUserDetailsManager();

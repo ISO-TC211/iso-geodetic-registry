@@ -1,13 +1,12 @@
 package org.iso.registry.api;
 
-import static de.geoinfoffm.registry.core.security.RegistryPermission.*;
+import static org.springframework.security.acls.domain.BasePermission.*;
+
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
-import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.Sid;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
