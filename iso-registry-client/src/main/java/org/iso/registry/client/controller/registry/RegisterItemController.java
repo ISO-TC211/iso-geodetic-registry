@@ -303,6 +303,13 @@ public class RegisterItemController
 			@PathVariable("uuid") UUID itemUuid, 
 			@ModelAttribute("proposal") RegisterItemProposalDTO proposal,
 			final Model model) {
+		
+		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
+
+		proposal = proposalDtoFactory.getProposalDto(itemClass);
+		if (proposal.getClass().getCanonicalName().equals(RegisterItemProposalDTO.class.getCanonicalName())) {
+			model.addAttribute("itemClassNotConfigured", "true");
+		}
 
 		proposal = bindAdditionalAttributes(proposal, servletRequest);
 

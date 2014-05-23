@@ -35,7 +35,7 @@
 									<td th:text="#{${item.proposalStatus}}"></td>
 									<td>
 										<div class="control-group">
-											<button th:unless="${item.isRetirement()}" th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
+											<button th:unless="${item.isRetirement()} or ${item.isSupersession()}" th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
 											<button th:id="'decide_' + ${item.uuid}" th:if="${item.isPending()}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button>
 										</div>
 									</td>
