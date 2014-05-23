@@ -101,7 +101,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 			RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
 			RegistryUser ex = createUser("Sam Submitter", "s", "submitter@example.org");
 
-			String registerName = "EPSG Geodetic Parameter Data Set";
+			String registerName = "Geodetic Parameter Data Set";
 			RE_Register r = registerService.findByName(registerName);
 			if (r == null) {
 				logger.info("> Creating register...");
