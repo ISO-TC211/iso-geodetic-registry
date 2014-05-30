@@ -74,6 +74,9 @@
 							},
 							function(j) {
 								var options = '';
+								if ([[!${isRequired}]]) {
+									options += '<option value="">[[#{form.select.none}]]</option>'
+								}
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i][0] + '">'
 											+ (j[i][2]).trunc(100) + ' [' + j[i][1] + ']'
@@ -107,6 +110,9 @@
 							},
 							function(j) {
 								var options = '';
+								if ([[!${isRequired}]]) {
+									options += '<option value="">[[#{form.select.none}]]</option>'
+								}
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i][0] + '">'
 											+ '[' + j[i][1] + '] ' + (j[i][2]).trunc(100) 
@@ -197,7 +203,7 @@
 
 	<script type="text/javascript" th:inline="text">
 	/* <![CDATA[ */
-			table = $('#aliasesTable').dataTable({
+			table = $('#aliasesTable_[[${modifier}]]').dataTable({
 			"sPaginationType": "bs_normal",
 			"bFilter": false,
 			"oLanguage": {
