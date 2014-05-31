@@ -1,6 +1,25 @@
 package org.iso.registry.core.model.iso19115.dataquality;
-import de.geoinfoffm.registry.core.model.iso19103.CharacterString;
-import de.geoinfoffm.registry.core.model.iso19103.DateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.envers.Audited;
+
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19115.MD_Identifier;
 
@@ -8,22 +27,52 @@ import de.geoinfoffm.registry.core.model.iso19115.MD_Identifier;
  * @author Florian.Esser
  * @created 17-Apr-2014 10:38:09
  */
-public abstract class DQ_Element {
+@Access(AccessType.FIELD)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Audited @Entity
+public abstract class DQ_Element extends de.geoinfoffm.registry.core.Entity
+{
 
-	private DateTime dateTime;
-	private CharacterString evaluationMethodDescription;
+	@Temporal(TemporalType.TIMESTAMP)
+	@ElementCollection
+	private List<Date> dateTime;
+	
+	@Column(columnDefinition = "text")
+	private String evaluationMethodDescription;
+	
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "value", column = @Column(name = "evaluationMethodType")),
+		@AttributeOverride(name = "codeList", column = @Column(name = "evaluationMethodType_codeList")),
+		@AttributeOverride(name = "codeListValue", column = @Column(name = "evaluationMethodType_codeListValue")),
+		@AttributeOverride(name = "codeSpace", column = @Column(name = "evaluationMethodType_codeSpace"))
+	})
 	private DQ_EvaluationMethodTypeCode evaluationMethodType;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	private CI_Citation evaluationProcedure;
-	private CharacterString measureDescription;
+	
+	@Column(columnDefinition = "text")
+	private String measureDescription;
+	
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "authority", column = @Column(name = "measureIdentificaion_authority")),
+		@AttributeOverride(name = "code", column = @Column(name = "measureIdentification"))
+	})
 	private MD_Identifier measureIdentification;
-	private CharacterString nameOfMeasure;
-	private DQ_Result result;
+	
+	@Column(columnDefinition = "text")
+	private String nameOfMeasure;
 
-	public DateTime getDateTime(){
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Result result;
+
+	public List<Date> getDateTime(){
 		return dateTime;
 	}
 
-	public CharacterString getEvaluationMethodDescription(){
+	public String getEvaluationMethodDescription(){
 		return evaluationMethodDescription;
 	}
 
@@ -35,7 +84,7 @@ public abstract class DQ_Element {
 		return evaluationProcedure;
 	}
 
-	public CharacterString getMeasureDescription(){
+	public String getMeasureDescription(){
 		return measureDescription;
 	}
 
@@ -43,7 +92,7 @@ public abstract class DQ_Element {
 		return measureIdentification;
 	}
 
-	public CharacterString getNameOfMeasure(){
+	public String getNameOfMeasure(){
 		return nameOfMeasure;
 	}
 
@@ -55,15 +104,22 @@ public abstract class DQ_Element {
 	 * 
 	 * @param newVal
 	 */
-	public void setDateTime(DateTime newVal){
+	public void setDateTime(List<Date> newVal){
 		dateTime = newVal;
+	}
+	
+	public void addDateTime(Date dateTime) {
+		if (this.dateTime == null) {
+			this.dateTime = new ArrayList<>();
+		}
+		this.dateTime.add(dateTime);
 	}
 
 	/**
 	 * 
 	 * @param newVal
 	 */
-	public void setEvaluationMethodDescription(CharacterString newVal){
+	public void setEvaluationMethodDescription(String newVal){
 		evaluationMethodDescription = newVal;
 	}
 
@@ -87,7 +143,7 @@ public abstract class DQ_Element {
 	 * 
 	 * @param newVal
 	 */
-	public void setMeasureDescription(CharacterString newVal){
+	public void setMeasureDescription(String newVal){
 		measureDescription = newVal;
 	}
 
@@ -103,7 +159,7 @@ public abstract class DQ_Element {
 	 * 
 	 * @param newVal
 	 */
-	public void setNameOfMeasure(CharacterString newVal){
+	public void setNameOfMeasure(String newVal){
 		nameOfMeasure = newVal;
 	}
 
@@ -112,6 +168,13 @@ public abstract class DQ_Element {
 	 * @param newVal
 	 */
 	public void setResult(DQ_Result newVal){
-		result = newVal;
+		if (!(newVal instanceof Result)) {
+			throw new IllegalArgumentException("Result must be of type " + Result.class.getCanonicalName());
+		}
+		result = (Result)newVal;
+	}
+	
+	public void setResult(Result result) {
+		this.result = result;
 	}
 }//end DQ_Element

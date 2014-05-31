@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 
@@ -22,6 +23,7 @@ public class EX_Extent
 	/**
 	 * Spatial and temporal extent for the referring object
 	 */
+	@Column(columnDefinition = "text")
 	private String description;
 	
 //	@ElementCollection
