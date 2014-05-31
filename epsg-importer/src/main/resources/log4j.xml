@@ -18,6 +18,10 @@
 	<logger name="org.iso.registry">
 		<level value="info" />
 	</logger>
+
+	<logger name="de.bespire.registry">
+		<level value="info" />
+	</logger>
 		
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">

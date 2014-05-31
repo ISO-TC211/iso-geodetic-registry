@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 
 import org.hibernate.envers.Audited;
 
+import de.geoinfoffm.registry.core.ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 
+@ItemClass("OperationParameter")
 @Access(AccessType.FIELD)
 @Audited @Entity
 public class OperationParameterItem extends GeneralOperationParameterItem

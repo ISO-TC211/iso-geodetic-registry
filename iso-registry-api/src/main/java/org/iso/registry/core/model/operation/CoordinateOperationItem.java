@@ -1,10 +1,12 @@
 package org.iso.registry.core.model.operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -34,7 +36,7 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	@ElementCollection
 	private List<String> scope;
 	
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	
 	@ManyToOne
@@ -43,12 +45,6 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	@ManyToOne
 	private CoordinateReferenceSystemItem targetCrs;
 	
-	@ManyToOne
-	private PassThroughOperationItem passThruOperation;
-	
-	@ManyToMany
-	private List<ConcatenatedOperationItem> concatOperation;
-
 	protected CoordinateOperationItem() {
 	}
 
@@ -77,9 +73,23 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	public List<String> getScope() {
 		return scope;
 	}
-
+	
 	public void setScope(List<String> scope) {
 		this.scope = scope;
+	}
+	
+	public void addScope(String scope) {
+		if (this.scope == null) {
+			this.scope = new ArrayList<>();
+		}
+		this.scope.add(scope);
+	}
+
+	public void addScopes(Collection<String> scopes) {
+		if (this.scope == null) {
+			this.scope = new ArrayList<>();
+		}
+		this.scope.addAll(scopes);
 	}
 
 	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
@@ -88,6 +98,13 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 
 	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
 		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
+	}
+	
+	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
+		if (this.coordinateOperationAccuracy == null) {
+			this.coordinateOperationAccuracy = new ArrayList<>();
+		}
+		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
 	}
 
 	public CoordinateReferenceSystemItem getSourceCrs() {
@@ -104,29 +121,6 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 
 	public void setTargetCrs(CoordinateReferenceSystemItem targetCrs) {
 		this.targetCrs = targetCrs;
-	}
-
-	public PassThroughOperationItem getPassThruOperation() {
-		return passThruOperation;
-	}
-
-	public void setPassThruOperation(PassThroughOperationItem passThruOperation) {
-		this.passThruOperation = passThruOperation;
-	}
-
-	public List<ConcatenatedOperationItem> getConcatOperation() {
-		return concatOperation;
-	}
-
-	public void setConcatOperation(List<ConcatenatedOperationItem> concatOperation) {
-		this.concatOperation = concatOperation;
-	}
-	
-	public void addConcatOperation(ConcatenatedOperationItem concatOperation) {
-		if (this.concatOperation == null) {
-			this.concatOperation = new ArrayList<>();
-		}
-		this.concatOperation.add(concatOperation);
 	}
 	
 }
