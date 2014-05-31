@@ -5,27 +5,38 @@ import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
 
+import de.geoinfoffm.registry.core.ItemClass;
+import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 
+@ItemClass("OperationMethod")
 @Access(AccessType.FIELD)
 @Audited @Entity
 public class OperationMethodItem extends IdentifiedItem
 {
-	@ManyToOne(optional = false)
-	private Formula formulaReference;
+	@Column(columnDefinition = "text")
+	private String formula;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private CI_Citation formulaCitation;
 	
 	private Integer sourceDimensions;
 	
 	private Integer targetDimensions;
+	
+	private Boolean reversible;
 	
 	@ManyToMany
 	private List<GeneralOperationParameterItem> parameter;
@@ -39,12 +50,20 @@ public class OperationMethodItem extends IdentifiedItem
 		super(register, itemClass, name, definition, additionInformation);
 	}
 
-	public Formula getFormulaReference() {
-		return formulaReference;
+	public String getFormula() {
+		return formula;
 	}
 
-	public void setFormulaReference(Formula formulaReference) {
-		this.formulaReference = formulaReference;
+	public void setFormula(String formula) {
+		this.formula = formula;
+	}
+
+	public CI_Citation getFormulaCitation() {
+		return formulaCitation;
+	}
+
+	public void setFormulaCitation(CI_Citation formulaCitation) {
+		this.formulaCitation = formulaCitation;
 	}
 
 	public Integer getSourceDimensions() {
@@ -76,6 +95,14 @@ public class OperationMethodItem extends IdentifiedItem
 			this.parameter = new ArrayList<>();
 		}
 		this.parameter.add(parameter);
+	}
+
+	public Boolean getReversible() {
+		return reversible;
+	}
+
+	public void setReversible(Boolean reversible) {
+		this.reversible = reversible;
 	}
 	
 }

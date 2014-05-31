@@ -27,13 +27,13 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 	@OneToMany(mappedBy = "aliasedItem")
 	private List<Alias> aliases;
 	
-	@Column(name = "REMARKS")
+	@Column(name = "REMARKS", columnDefinition = "text")
 	private String remarks;
 	
-	@Column(name = "INFORMATION_SOURCE")
+	@Column(name = "INFORMATION_SOURCE", columnDefinition = "text")
 	private String informationSource;
 
-	@Column(name = "DATA_SOURCE")
+	@Column(name = "DATA_SOURCE", columnDefinition = "text")
 	private String dataSource;
 
 	protected IdentifiedItem() {
