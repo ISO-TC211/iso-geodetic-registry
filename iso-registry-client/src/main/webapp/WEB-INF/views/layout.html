@@ -7,6 +7,7 @@
 		<meta http-equiv="Cache-control" content="no-cache"/>
 		<title th:text="#{application.title}">GDI-DE Registry</title>
 		<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{__${basePath}__/resources/js/jquery.js}"></script>
+		<script type="text/javascript" src="../../resources/js/jqueryui.js" th:src="@{__${basePath}__/resources/js/jqueryui.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.cookie.js" th:src="@{__${basePath}__/resources/js/jquery.cookie.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.hotkeys.js" th:src="@{__${basePath}__/resources/js/jquery.hotkeys.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.jstree.js" th:src="@{__${basePath}__/resources/js/jquery.jstree.js}"></script>
@@ -17,6 +18,7 @@
 		<script type="text/javascript" src="../../resources/js/jquery.dataTables.min.js" th:src="@{__${basePath}__/resources/js/jquery.dataTables.min.js}"></script>
 		<script type="text/javascript" src="../../resources/js/datatables.js" th:src="@{__${basePath}__/resources/js/datatables.js}"></script>
 		<script type="text/javascript" src="../../resources/js/registry.js" th:src="@{__${basePath}__/resources/js/registry.js}"></script>
+		<script type="text/javascript" src="../../resources/js/select2.js" th:src="@{__${basePath}__/resources/js/select2.js}"></script>
 		<script type="text/javascript" src="https://jira.geoinfoffm.de/s/de_DE5uveee-1988229788/6105/7/1.4.0-m3/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=6781bda0"></script>
 		<link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{__${basePath}__/resources/css/bootstrap.min.css}" />
 		<link rel="stylesheet" href="../../resources/css/bootstrap-theme.min.css" th:href="@{__${basePath}__/resources/css/bootstrap-theme.min.css}" />
@@ -24,6 +26,8 @@
 		<link rel="stylesheet" href="../../resources/css/font-titillium.css" th:href="@{__${basePath}__/resources/css/font-titillium.css}" type="text/css" />
 		<link rel="stylesheet" href="../../resources/css/font-awesome.min.css" th:href="@{__${basePath}__/resources/css/font-awesome.min.css}" type="text/css" />
 		<link rel="stylesheet" href="../../resources/css/datatables.css" th:href="@{__${basePath}__/resources/css/datatables.css}" />
+		<link rel="stylesheet" href="../../resources/css/select2.css" th:href="@{__${basePath}__/resources/css/select2.css}" />
+		<link rel="stylesheet" href="../../resources/css/select2-bootstrap.css" th:href="@{__${basePath}__/resources/css/select2-bootstrap.css}" />
 		<link rel="stylesheet" href="../../resources/css/registry.css" th:href="@{__${basePath}__/resources/css/registry.css}" />
 		<link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css"/>		
 		<style type="text/css" th:inline="text">
@@ -37,7 +41,7 @@
  			} 
 			
 			nav[role="navigation"] img {
-				background:#013568 url([[@{${basePath}}]]/resources/imagess/iso.png) left 20px top 10px no-repeat;height:90px;overflow: visible;
+				background:#013568 
 			}
 			
 			.navbar .navbar-brand {
