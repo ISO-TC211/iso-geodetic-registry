@@ -100,6 +100,7 @@
 	<entry key="header.namingSystem">Naming System</entry>
 	<entry key="header.uom">Unit of Measure</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
+	<entry key="header.operationParameter">Coordinate Operation Parameter</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>

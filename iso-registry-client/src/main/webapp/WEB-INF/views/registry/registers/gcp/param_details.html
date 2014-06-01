@@ -1,0 +1,14 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->									
+	</div>
+</div>

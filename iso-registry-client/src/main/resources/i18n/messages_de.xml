@@ -98,6 +98,7 @@
 	<entry key="header.namingSystem">Namenssystem</entry>
 	<entry key="header.uom">Maßeinheit</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
+	<entry key="header.operationParameter">Operationsparameter</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
