@@ -297,6 +297,8 @@
 	<entry key="form.label.semiMajorAxisUom">Maßeinheit</entry>
 	<entry key="form.label.semiMinorAxis">Nebenachse</entry>
 	<entry key="form.label.inverseFlattening">Verflachung</entry>
+	<entry key="form.label.operationParameters">Parameter</entry>
+	<entry key="form.label.formula">Formel</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 		

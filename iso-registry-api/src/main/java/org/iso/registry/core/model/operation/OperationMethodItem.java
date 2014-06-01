@@ -96,6 +96,12 @@ public class OperationMethodItem extends IdentifiedItem
 		}
 		this.parameter.add(parameter);
 	}
+	
+	public void removeParameter(int index) {
+		if (this.parameter != null) {
+			this.parameter.remove(index);
+		}
+	}
 
 	public Boolean getReversible() {
 		return reversible;
