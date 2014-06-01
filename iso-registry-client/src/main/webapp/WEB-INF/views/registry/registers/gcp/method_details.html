@@ -35,17 +35,35 @@
 										}
 						            },
 						            initSelection: function(element, callback) {
-						                var data = [];
+				                		var result = [];
+				                		var requests = Array();
+				                		
+				                		// Collect AJAX requests needed to resolve initially
+				                		// selected items
 						                $(element.val().split(",")).each(function(i) {
-						                    var item = this.split(':');
-						                    data.push({
-						                        id: item[0],
-// 												text: "[" + item[1] + "] " + item[2], 
-						                        text: item[1]
-						                    });
+						                	requests.push(
+							                	$.ajax("[[@{${basePath}}]]/entities/byUuid/" + this, {
+							                    	dataType: "json"
+							                	})
+							                );
 						                });
-						                //$(element).val('');
-						                callback(data);
+						                
+				                		// Process the requests asynchronically
+						                var defer = $.when.apply($, requests);
+				                		
+				                		// Perform the following after ALL of the requests
+				                		// have finished
+						                defer.done(function() {
+					                	   $.each(arguments, function(index, data){
+					                	        // "data" will contain an array of response information for each specific request
+		 						                var item = data[0].toString().split(",");
+						                		result.push({
+						                			id: item[0],
+													text: "[" + item[1] + "] " + item[2], 
+						                		});
+								                callback(result); 
+					                	   });
+					                	});
 						            }						            
 						        });
 								

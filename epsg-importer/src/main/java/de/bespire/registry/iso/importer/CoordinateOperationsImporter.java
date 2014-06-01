@@ -26,6 +26,7 @@ import org.iso.registry.core.model.crs.CoordinateReferenceSystemItemRepository;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_AbsoluteExternalPositionalAccuracy;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.iso.registry.core.model.operation.CoordinateOperationItemRepository;
+import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.Measure;
 import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.iso.registry.core.model.operation.OperationMethodItemRepository;
@@ -233,8 +234,8 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			// TODO Wohin damit??? 
 		}
 
-		List<OperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode);
-		for (OperationParameterItem parameter : parameters) {
+		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode);
+		for (GeneralOperationParameterItem parameter : parameters) {
 			OperationParameterValue paramValue = findParameterValue(operationCode, methodCode, parameter.getCode());
 			proposal.addParameterValue(paramValue);
 		}
@@ -311,8 +312,8 @@ public class CoordinateOperationsImporter extends AbstractImporter
 //		return null;
 //	}
 //
-	static List<OperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code) throws IOException {
-		List<OperationParameterItem> result = new ArrayList<>();
+	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code) throws IOException {
+		List<GeneralOperationParameterItem> result = new ArrayList<>();
 		
 		Cursor usageCursor = parametersUsageTable.getDefaultCursor();
 		

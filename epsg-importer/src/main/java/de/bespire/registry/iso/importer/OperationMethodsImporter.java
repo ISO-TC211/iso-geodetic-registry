@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO.FormulaType;
-import org.iso.registry.api.registry.registers.gcp.operation.OperationParameterItemProposalDTO;
-import org.iso.registry.core.model.operation.OperationParameterItem;
+import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationParameterItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,14 +54,12 @@ public class OperationMethodsImporter extends AbstractImporter
 		proposal.setCode(methodCode);
 		proposal.setName((String)row.get(COORD_OP_METHOD_NAME));
 		proposal.setReversible((Boolean)row.get(REVERSE_OP));
-		proposal.setFormulaType(FormulaType.REFERENCE);
+		proposal.setFormulaType(FormulaType.FORMULA);
 		proposal.setFormula((String)row.get(FORMULA));
 		proposal.setDescription((String)row.get(EXAMPLE));
 		
-		List<OperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, methodCode);
-		for (OperationParameterItem parameter : parameters) {
-			proposal.addParameter(new OperationParameterItemProposalDTO(parameter));
-		}
+		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, methodCode);
+		proposal.setParameters(parameters);
 
 		proposal.setRemarks((String)row.get(REMARKS));
 		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
