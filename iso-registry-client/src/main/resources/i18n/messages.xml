@@ -308,6 +308,8 @@
 	<entry key="form.label.semiMajorAxisUom">Unit of Measure</entry>
 	<entry key="form.label.semiMinorAxis">Semi minor axis</entry>
 	<entry key="form.label.inverseFlattening">Inverse flattening</entry>
+	<entry key="form.label.operationParameters">Parameters</entry>
+	<entry key="form.label.formula">Formula</entry>
 	
 	<entry key="form.select.choose">-- Select --</entry>
 		
