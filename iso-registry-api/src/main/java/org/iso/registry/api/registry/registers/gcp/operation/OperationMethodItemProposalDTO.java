@@ -2,14 +2,15 @@ package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
-import org.iso.registry.core.model.operation.OperationParameterItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
+import org.springframework.util.StringUtils;
 
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
@@ -28,7 +29,8 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 	private FormulaType formulaType = FormulaType.FORMULA;
 	private Integer sourceDimensions;
 	private Integer targetDimensions;
-	private List<GeneralOperationParameterItemProposalDTO> parameter;
+//	private List<OperationParameterItemProposalDTO> parameter;
+	private String parameters;
 	private Boolean reversible;
 
 	public OperationMethodItemProposalDTO() {
@@ -79,12 +81,23 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 			}
 			
 			item.setReversible(this.getReversible());
-			if (this.getParameter() != null) {
-				for (GeneralOperationParameterItemProposalDTO paramDto : this.getParameter()) {
-					if (paramDto.getReferencedItemUuid() != null) {
-						GeneralOperationParameterItem parameter = entityManager.find(GeneralOperationParameterItem.class, paramDto.getReferencedItemUuid());
-						item.addParameter(parameter);
-					}
+//			if (this.getParameter() != null) {
+//				for (GeneralOperationParameterItemProposalDTO paramDto : this.getParameter()) {
+//					if (paramDto.getReferencedItemUuid() != null) {
+//						GeneralOperationParameterItem parameter = entityManager.find(GeneralOperationParameterItem.class, paramDto.getReferencedItemUuid());
+//						item.addParameter(parameter);
+//					}
+//				}
+//			}
+
+			while (!item.getParameter().isEmpty()) {
+				item.removeParameter(0);
+			}
+			if (!StringUtils.isEmpty(this.getParameters())) {
+				for (String uuidText : StringUtils.delimitedListToStringArray(this.parameters, ","," ")) {
+					UUID uuid = UUID.fromString(uuidText);
+					GeneralOperationParameterItem parameter = entityManager.find(GeneralOperationParameterItem.class, uuid);
+					item.addParameter(parameter);
 				}
 			}
 		}
@@ -107,11 +120,15 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 			}
 			
 			this.setReversible(item.getReversible());
+			List<String> uuids = new ArrayList<>();
 			for (GeneralOperationParameterItem parameter : item.getParameter()) {
-				if (parameter instanceof OperationParameterItem) {
-					this.addParameter(new OperationParameterItemProposalDTO((OperationParameterItem)parameter));
-				}
+//				if (parameter instanceof OperationParameterItem) {
+//					this.addParameter(new OperationParameterItemProposalDTO((OperationParameterItem)parameter));
+//				}
+				uuids.add(parameter.getUuid().toString() + ":[" + parameter.getCode().toString() + "] " + parameter.getName());
 			}
+			String[] uuidTexts = uuids.toArray(new String[] { });
+			this.setParameters(StringUtils.arrayToCommaDelimitedString(uuidTexts));
 		}
 	}
 
@@ -147,19 +164,33 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 		this.targetDimensions = targetDimensions;
 	}
 
-	public List<GeneralOperationParameterItemProposalDTO> getParameter() {
-		return parameter;
+//	public List<OperationParameterItemProposalDTO> getParameter() {
+//		return parameter;
+//	}
+//
+//	public void setParameter(List<OperationParameterItemProposalDTO> parameter) {
+//		this.parameter = parameter;
+//	}
+//	
+//	public void addParameter(OperationParameterItemProposalDTO parameter) {
+//		if (this.parameter == null) {
+//			this.parameter = new ArrayList<>();
+//		}
+//		this.parameter.add(parameter);
+//	}
+
+	/**
+	 * @return the parameters
+	 */
+	public String getParameters() {
+		return parameters;
 	}
 
-	public void setParameter(List<GeneralOperationParameterItemProposalDTO> parameter) {
-		this.parameter = parameter;
-	}
-	
-	public void addParameter(GeneralOperationParameterItemProposalDTO parameter) {
-		if (this.parameter == null) {
-			this.parameter = new ArrayList<>();
-		}
-		this.parameter.add(parameter);
+	/**
+	 * @param parameters the parameters to set
+	 */
+	public void setParameters(String parameters) {
+		this.parameters = parameters;
 	}
 
 	public Boolean getReversible() {
