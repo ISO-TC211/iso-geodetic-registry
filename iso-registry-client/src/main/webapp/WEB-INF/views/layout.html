@@ -79,11 +79,11 @@
 <!-- 				<h1><span>Home</span></h1> -->
 				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left" style="padding-top: 10px"/>
 				<a style="padding-top:15px" class="test navbar-brand" th:href="@{__${basePath}__/}" th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
-			</div>
 
+			</div>
+			
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse navbar-ex1-collapse" style="margin-top: 40px">
-
 				<ul class="nav navbar-nav navbar-right">
 					<li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span sec:authentication="principal.emailAddress">Nutzer</span></li>
 					<li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}" th:text="#{navbar.logout}">Abmelden</a></li>
@@ -151,6 +151,10 @@
 	</div>
 
 	<div th:fragment="navtree">
+		<div class="alert alert-danger">
+			<p class="text-center"><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p>
+		</div>
+
 		<div class="sidebartree well">
 			<div class="bs-sidebar affix-top">
 				<div style="overflow: hidden">
