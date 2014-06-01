@@ -28,13 +28,13 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:replace="registry/registers/epsg/datum_details :: datumDetails"/>
+											<div th:replace="registry/registers/gcp/datum_details :: datumDetails"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
 							</div>
 							
-							<div th:replace="registry/registers/epsg/area_panel :: newAreaPanel"/>
+							<div th:replace="registry/registers/gcp/area_panel :: newAreaPanel"/>
 							
 <!-- 							<div id="newAreaPanel" class="panel panel-default" th:if="${itemClass}"> -->
 <!-- 								<div class="panel-heading"> -->
@@ -53,11 +53,11 @@
 									
 <!-- 										<div class="tab-content"> -->
 <!-- 											<div id="area" class="tab-pane in active" style="padding-top: 10px"> -->
-<!-- 												<div th:include="registry/registers/epsg/area_create_addition :: areaDetails"/> -->
+<!-- 												<div th:include="registry/registers/gcp/area_create_addition :: areaDetails"/> -->
 <!-- 											</div> -->
 											
 <!-- 											<div id="areaMgmt" class="tab-pane in" style="padding-top: 10px"> -->
-<!-- 												<div th:include="registry/registers/epsg/area_create_addition :: proposalDetails"/> -->
+<!-- 												<div th:include="registry/registers/gcp/area_create_addition :: proposalDetails"/> -->
 <!-- 											</div>				 -->
 <!-- 										</div> -->
 <!-- 									</div>		 -->

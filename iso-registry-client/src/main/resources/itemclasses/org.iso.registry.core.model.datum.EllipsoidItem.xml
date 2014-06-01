@@ -2,8 +2,8 @@
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="Ellipsoid">
 	<dtoClass>org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO</dtoClass>
 	<viewBeanClass>org.iso.registry.client.EllipsoidItemViewBean</viewBeanClass>
-	<viewItemTemplate>registry/registers/epsg/ellipsoid_view_item</viewItemTemplate>
-	<viewProposalTemplate>registry/registers/epsg/ellipsoid_edit_addition</viewProposalTemplate>
-	<createProposalTemplate>registry/registers/epsg/ellipsoid_create_addition</createProposalTemplate>
-	<editProposalTemplate>registry/registers/epsg/ellipsoid_edit_addition</editProposalTemplate>
+	<viewItemTemplate>registry/registers/gcp/ellipsoid_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/ellipsoid_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/ellipsoid_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/ellipsoid_edit_addition</editProposalTemplate>
 </reg:ItemClassConfiguration>

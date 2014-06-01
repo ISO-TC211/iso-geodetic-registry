@@ -12,15 +12,15 @@
 				<fieldset>		
 		
 					<div class="col-md-12 column">
-		
+					
 						<div th:replace="registry/registers/proposal-globals :: itemClassSelector"/> 			
-						
-						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
 
+						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
+						
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel">
-										<span class="panel-title" th:text="#{header.namingSystem}">Naming System</span>									
+										<span class="panel-title" th:text="#{header.area}"></span>									
 									</a>
 									<div class="pull-right">
 										<span class="glyphicon glyphicon-chevron-right"></span>
@@ -31,18 +31,19 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:replace="registry/registers/epsg/namsys_details :: namingSystemDetails"/>
+											<div th:replace="registry/registers/gcp/area_details :: areaDetails"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
 							</div>
-	
+			
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
 						</div>
 						
 						<div id="validationFailed" class="alert alert-danger" th:utext="#{alert.validationFailed}"/>
 						<div th:replace="registry/registers/proposal-globals :: proposalButtons"/>
+
 					</div>
 					
 				</fieldset>

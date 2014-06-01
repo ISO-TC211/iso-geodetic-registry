@@ -14,12 +14,12 @@
 
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title" th:text="#{header.namingSystem}">Naming System</h3>
+							<h3 class="panel-title" th:text="#{header.uom}">Unit of Measurement</h3>
 						</div>
 						
 						<div class="panel-body">
 						
-							<div th:include="registry/registers/epsg/namsys_details :: namingSystemDetails"/>
+							<div th:include="registry/registers/gcp/ellipsoid_details :: ellipsoidDetails"/>
 			
 						</div>
 					</div>

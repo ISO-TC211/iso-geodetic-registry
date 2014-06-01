@@ -2,10 +2,10 @@
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="VerticalCoordinateReferenceSystem">
 	<dtoClass>org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO</dtoClass>
 	<viewBeanClass>org.iso.registry.client.CoordinateReferenceSystemItemViewBean</viewBeanClass>
-	<viewItemTemplate>registry/registers/epsg/crs_view_item</viewItemTemplate>
-	<viewProposalTemplate>registry/registers/epsg/crs_edit_addition</viewProposalTemplate>
-	<createProposalTemplate>registry/registers/epsg/crs_create_addition</createProposalTemplate>
-	<editProposalTemplate>registry/registers/epsg/crs_edit_addition</editProposalTemplate>
+	<viewItemTemplate>registry/registers/gcp/crs_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/crs_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/crs_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/crs_edit_addition</editProposalTemplate>
 	<property reg:name="crsCode">
 		<reg:labelKey>form.label.crsCode</reg:labelKey>
 		<reg:placeholderKey>form.placeholder.crsCode</reg:placeholderKey>
