@@ -1,6 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import javax.persistence.EntityManager;
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
+import org.iso.registry.core.model.operation.OperationParameterItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 import org.springframework.util.StringUtils;
 
@@ -120,15 +122,16 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 			}
 			
 			this.setReversible(item.getReversible());
-			List<String> uuids = new ArrayList<>();
-			for (GeneralOperationParameterItem parameter : item.getParameter()) {
-//				if (parameter instanceof OperationParameterItem) {
-//					this.addParameter(new OperationParameterItemProposalDTO((OperationParameterItem)parameter));
-//				}
-				uuids.add(parameter.getUuid().toString() + ":[" + parameter.getCode().toString() + "] " + parameter.getName());
-			}
-			String[] uuidTexts = uuids.toArray(new String[] { });
-			this.setParameters(StringUtils.arrayToCommaDelimitedString(uuidTexts));
+			this.setParameters(item.getParameter());
+//			List<String> uuids = new ArrayList<>();
+//			for (GeneralOperationParameterItem parameter : item.getParameter()) {
+////				if (parameter instanceof OperationParameterItem) {
+////					this.addParameter(new OperationParameterItemProposalDTO((OperationParameterItem)parameter));
+////				}
+//				uuids.add(parameter.getUuid().toString() + ":[" + parameter.getCode().toString() + "] " + parameter.getName());
+//			}
+//			String[] uuidTexts = uuids.toArray(new String[] { });
+//			this.setParameters(StringUtils.arrayToCommaDelimitedString(uuidTexts));
 		}
 	}
 
@@ -191,6 +194,14 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 	 */
 	public void setParameters(String parameters) {
 		this.parameters = parameters;
+	}
+	
+	public void setParameters(Collection<GeneralOperationParameterItem> parameters) {
+		List<String> uuidList = new ArrayList<>();
+		for (GeneralOperationParameterItem parameter : parameters) {
+			uuidList.add(parameter.getUuid().toString());
+		}
+		this.parameters = StringUtils.collectionToCommaDelimitedString(uuidList);
 	}
 
 	public Boolean getReversible() {
