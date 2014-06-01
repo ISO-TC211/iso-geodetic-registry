@@ -11,6 +11,8 @@
 			</div>
 			<div class="col-md-9" role="main">
 				<h3 th:text="${register.name}">Register ABC</h3>
+				
+				<div th:replace="home :: demo"/>
 
 				<div th:if="${revisionDate}" th:unless="${noRevisionAtGivenDate}" class="alert alert-danger">
 					<p th:text="#{alert.historicView}">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</p>
