@@ -426,5 +426,23 @@
 	<entry key="VerticalDatum">Vertical Datum</entry>
 	<entry key="EngineeringDatum">Engineering Datum</entry>
 	<entry key="PrimeMeridian">Prime Meridian</entry>
+
+	<entry key="CoordinateSystemItem">all Coordinate Systems</entry>
+	<entry key="EllipsoidalCoordinateSystemItem">Ellipsoidal Coordinate Systems</entry>
+	<entry key="SphericalCoordinateSystemItem">Spherical Coordinate Systems</entry>
+	<entry key="CartesianCoordinateSystemItem">Cartesian Coordinate Systems</entry>
+	<entry key="VerticalCoordinateSystemItem">Vertical Coordinate Systems</entry>
+
+	<entry key="DatumItem">all Datums</entry>
+	<entry key="EngineeringDatumItem">Engineering Datums</entry>
+	<entry key="GeodeticDatumItem">Geodetic Datums</entry>
+	<entry key="VerticalDatumItem">Vertical Datums</entry>
+
+	<entry key="ConcatenatedOperation">Concatenated Coordinate Operation</entry>
+	<entry key="Conversion">Coordinate Conversion</entry>
+	<entry key="SingleOperation">Single Coordinate Operation</entry>
+	<entry key="OperationMethod">Coordinate Operation Method</entry>
+	<entry key="OperationParameter">Coordinate Operation Parameter</entry>
+	<entry key="Transformation">Coordinate Transformation</entry>
 	
 </properties>
