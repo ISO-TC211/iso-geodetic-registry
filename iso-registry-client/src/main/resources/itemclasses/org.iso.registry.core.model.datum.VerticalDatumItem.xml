@@ -2,8 +2,8 @@
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="VerticalDatum">
 	<dtoClass>org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO</dtoClass>
 	<viewBeanClass>org.iso.registry.client.DatumItemViewBean</viewBeanClass>
-	<viewItemTemplate>registry/registers/epsg/datum_view_item</viewItemTemplate>
-	<viewProposalTemplate>registry/registers/epsg/datum_edit_addition</viewProposalTemplate>
-	<createProposalTemplate>registry/registers/epsg/datum_create_addition</createProposalTemplate>
-	<editProposalTemplate>registry/registers/epsg/datum_edit_addition</editProposalTemplate>
+	<viewItemTemplate>registry/registers/gcp/datum_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/datum_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/datum_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/datum_edit_addition</editProposalTemplate>
 </reg:ItemClassConfiguration>

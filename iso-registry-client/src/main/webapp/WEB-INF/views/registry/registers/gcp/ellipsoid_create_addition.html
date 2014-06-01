@@ -31,7 +31,7 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:replace="registry/registers/epsg/ellipsoid_details :: ellipsoidDetails"/>
+											<div th:replace="registry/registers/gcp/ellipsoid_details :: ellipsoidDetails"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>

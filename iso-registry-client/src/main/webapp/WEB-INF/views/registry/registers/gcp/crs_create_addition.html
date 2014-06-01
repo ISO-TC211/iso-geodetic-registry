@@ -2,23 +2,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head th:include="layout :: headerFragment" />
-<body>
+<body th:with="isNew='true'">
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
+	
 		<div class="row clearfix" style="margin-top: 0px">
 		
 			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
 				<fieldset>		
-					<input type="hidden" name="_method" value="PUT"/>
-					<input type="hidden" th:field="*{itemClassUuid}"/>
 					<div class="col-md-12 column">
-
+					
+						<div th:replace="registry/registers/proposal-globals :: itemClassSelector"/> 			
+					
 						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
 
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.crs}"></span></a>
+<!-- 									<h3 class="panel-title" th:text="#{header.crs}">CRS</h3> -->
 									<div class="pull-right">
 										<span class="glyphicon glyphicon-chevron-right"></span>
 									</div>
@@ -27,14 +29,14 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:include="registry/registers/epsg/crs_details :: crsDetails"/>
+											<div th:include="registry/registers/gcp/crs_details :: crsDetails"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
 							</div>
 							
-							<div th:replace="registry/registers/epsg/area_panel :: newAreaPanel"/>
-							<div th:replace="registry/registers/epsg/datum_panel :: newDatumPanel"/>
+							<div th:replace="registry/registers/gcp/area_panel :: newAreaPanel"/>
+							<div th:replace="registry/registers/gcp/datum_panel :: newDatumPanel"/>
 
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
