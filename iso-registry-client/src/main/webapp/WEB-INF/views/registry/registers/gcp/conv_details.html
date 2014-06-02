@@ -1,0 +1,288 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('conv')" />
+			<div class="row">
+				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},isRequired='false',noAddNew='true',ajaxPath='AreaItem'">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+				</div>
+			</div>
+			<div th:if="${isProposal}" class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label" th:for="method" th:text="#{form.label.conversionMethod}"></label>
+						<input type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
+						<script type="text/javascript" charset="utf-8" th:inline="text">
+						/* <![CDATA[ */
+							$(function() {
+								$('#method').select2({
+									multiple: false,
+									dropdownCssClass: "bigdrop",
+									ajax: {
+										url: "[[@{${basePath}}]]/entities/methods/conversion",
+										dataType: "json",
+										data: function(term, page) {
+											return {
+												q: term
+											};
+										},
+										results: function (data) {
+											return { 
+												results : $.map(data, function (item) { 
+													return { 
+														id: item[0], 
+														text: item[2] + " [" + item[1] + "]", 
+													} 
+												}) 
+											};
+										}
+						            },
+						            initSelection: function(element, callback) {
+				                		var result = [];
+				                		// Collect AJAX requests needed to resolve initially
+				                		// selected items
+					                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+					                    	dataType: "json"
+					                	}))
+					                	.done(function(data) {
+	 						                var item = data[0].toString().split(",");
+					                		result.push({
+					                			id: item[0],
+												text: item[2] + " [" + item[1] + "]", 
+					                		});
+							                callback(result[0]); 
+					                	});
+						            }						            
+						        });
+								
+								if ([[${proposal.isClarification()}]]) {
+									$('#method').select2("readonly", true);
+								}
+							});
+						
+						/* ]]> */
+						</script>
+					</div>
+				</div>				
+			</div>
+<!-- 			<div class="row"> -->
+<!-- 				<div class="col-md-12" th:with="property='method',label=#{form.label.conversionMethod},isRequired='true',noAddNew='true',ajaxPath='OperationMethodItem'"> -->
+<!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row">
+				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textArea"/>
+				</div>
+			</div>
+			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+
+				<table id="parametersTable" class="table table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{tableheader.parameter}">Parameter</th>
+							<th th:text="#{tableheader.value}">Value</th>
+							<th th:text="#{tableheader.uom}">UoM</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="parameterValue,row : *{parameterValues}">
+							<td th:text="${parameterValue.parameterName}"></td>
+							<td>
+								<div class="form-group">
+									<input type="number" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
+								</div>
+							</td>
+							<td>
+								<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
+								<span th:unless="${isProposal}" th:text="${parameterValue.unitOfMeasure.name} + '[' + ${parameterValue.unitOfMeasure.code} + ']'"></span>
+							</td>							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+	    var uomSelect = function(element) {
+			element.select2({
+				width: 'resolve',
+				ajax: {
+					url: "[[@{${basePath}}]]/entities/by-class/UnitOfMeasureItem",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: 'name',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) { 
+								return { 
+									text: item[2] + " [" + item[1] + "]", 
+									id: item[0] 
+								} 
+							}) 
+						};
+					},
+				},
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+                    	dataType: "json"
+                	}))
+                	.done(function(data) {
+                		item = data[0];
+                		result.push({
+                			id: item[0],
+							text: item[2] + " [" + item[1] + "]", 
+                		});
+		                callback(result[0]); 
+                	});
+	            }						            
+			});        						
+		};
+
+       	$(document).ready(function() {
+       		$('#parametersTable').dataTable({
+       			"bPaginate": false,
+       			"bFilter": false,
+	   			 aoColumns: [
+   						{"bSortable" : false},
+  						{"bSortable" : false},
+   						{"bSortable" : false}
+   					]
+       		});
+       		
+
+       		
+       		$('.select-uom').each(function() {
+				uomSelect($(this));
+       		});
+
+			$('#method').change(function(e) {
+				table = $('#parametersTable').dataTable();
+				table.fnClearTable();
+            	$.when($.ajax("[[@{${basePath}}]]/entities/parameters/" + $(this).val(), {
+                	dataType: "json"
+            	}))
+            	.done(function (data) {
+            		$.each(data, function(idx, item) {
+        				table.fnAddData([
+        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
+        					"<div class='form-group'><input type='number' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
+						]);
+        				uomSelect($('#parameterUom_' + idx));
+            		});
+            	});
+			});
+
+// 				var index = $('table#[[${property}]]Table_[[${modifier}]] tbody').children().length;
+// 				table = $('#[[${property}]]Table_[[${modifier}]]').dataTable();
+// 				table.fnAddData([
+// 					"<select name='[[${property}]][" + index + "]'>",
+// 					"<textarea type='text' rows='3' cols='40' name='oidResolver[" + fileIndex + "].oidPattern' placeholder='[[#{form.placeholder.oidPattern}]]'></textarea>",
+// 					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (fileIndex - 1) + "' value='" + fileIndex + "'>Remove row</button>"
+// 				]);
+// 			});        	
+//         }
+				
+				
+// 				var table;
+				
+// 				table = $('#parametersTable').dataTable({
+// 					"sAjaxSource": "[[@{${basePath}}]]/entities/parameters/" + $(this).val(),
+// 					"bProcessing": true,
+// 					"bServerSide": true,
+// 					"fnServerParams": function (aoData) {
+// 			            aoData.push({ name: "orderBy", value: "code" });
+// 			        },
+// 					"sPaginationType": "bs_normal",
+// 		// 			"bFilter": false,
+// 					"oLanguage": {
+// 						  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+// 						  "sInfo": "[[#{datatable.sInfo}]]",
+// 						  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+// 						  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+// 						  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+// 						  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+// 						  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
+// 						  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+// 						  "oPaginate": {
+// 						        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+// 						        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+// 						        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+// 						        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+// 						    }
+// 						},
+// 					"fnDrawCallback": function( oSettings ) {
+// 		// 				alert( 'DataTables has redrawn the table' );
+// 					},				
+// 	// 				"aaSorting": [[ 0, "asc" ]],
+// 					"aoColumns": [
+// 						{ 
+// 							"mDataProp": "name",
+// 							"sWidth": "30%",
+// 							"bSortable": false
+// 						},
+// 					],
+// 					"aoColumnDefs": [
+// 						{ "aTargets": [1, 2],
+// 						  "mData": null,
+// 						  "mRender": function (data, type, full) {
+// 	// 						  var actions = detailsButton(full);
+							  
+// 	// 						  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]] && full.status === 'valid') {
+// 	// 							  var dropdownActions = []; 
+// 	// 							  dropdownActions.push(clarifyButton(full));
+// 	// 							  dropdownActions.push(supersedeButton(full));
+// 	// 							  dropdownActions.push(retireButton(full));
+								  
+// 	// 							  actions += dropdownMenu(dropdownActions);
+// 	// 							  actions += retirePopup(full);
+// 	// 						  }
+							  
+// 	// 						  return actions;
+																				
+// 						  }
+// 						}
+// 					]
+// // 					aoColumns: [
+// // 							{"bSortable" : false},
+// // 							{"bSortable" : false},
+// // 							{"bSortable" : false}
+// // 					]
+// 				});	
+		
+// 				$('.datatable').each(function(){
+// 					var datatable = $(this);
+// 					// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+// 					var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+// 					search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+// 					search_input.addClass('form-control input-sm');
+// 					// LENGTH - Inline-Form control
+// 					var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+// 					length_sel.addClass('form-control input-sm');
+// 				});
+// 			});
+       	});		
+	/* ]]> */
+	</script>
+</div>

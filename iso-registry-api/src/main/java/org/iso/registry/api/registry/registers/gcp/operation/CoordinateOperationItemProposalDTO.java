@@ -111,6 +111,7 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 			}
 
 			if (item.getScope() != null) {
+				this.scope = new ArrayList<>();
 				this.scope.addAll(item.getScope());
 			}
 			

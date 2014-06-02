@@ -21,7 +21,7 @@
 									multiple: true,
 									dropdownCssClass: "bigdrop",
 									ajax: {
-										url: "[[@{${basePath}}]]/entities/byClass/OperationParameterItem?orderBy=code",
+										url: "[[@{${basePath}}]]/entities/by-class/OperationParameterItem?orderBy=code",
 										dataType: "json",
 										results: function (data) {
 											return { 
@@ -42,7 +42,7 @@
 				                		// selected items
 						                $(element.val().split(",")).each(function(i) {
 						                	requests.push(
-							                	$.ajax("[[@{${basePath}}]]/entities/byUuid/" + this, {
+							                	$.ajax("[[@{${basePath}}]]/entities/by-uuid/" + this, {
 							                    	dataType: "json"
 							                	})
 							                );

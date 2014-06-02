@@ -92,8 +92,10 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 //				}
 //			}
 
-			while (!item.getParameter().isEmpty()) {
-				item.removeParameter(0);
+			if (item.getParameter() != null) {
+				while (!item.getParameter().isEmpty()) {
+					item.removeParameter(0);
+				}
 			}
 			if (!StringUtils.isEmpty(this.getParameters())) {
 				for (String uuidText : StringUtils.delimitedListToStringArray(this.parameters, ","," ")) {

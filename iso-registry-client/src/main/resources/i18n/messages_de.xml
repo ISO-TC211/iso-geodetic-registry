@@ -62,6 +62,9 @@
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Bezeichnungssystem</entry>
 	<entry key="tableheader.remarks">Anmerkungen</entry>
+	<entry key="tableheader.parameter">Parameter</entry>
+	<entry key="tableheader.value">Wert</entry>
+	<entry key="tableheader.uom">Maßeinheit</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -99,6 +102,7 @@
 	<entry key="header.uom">Maßeinheit</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
 	<entry key="header.operationParameter">Operationsparameter</entry>
+	<entry key="header.conversion">Conversion</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
@@ -299,8 +303,10 @@
 	<entry key="form.label.inverseFlattening">Verflachung</entry>
 	<entry key="form.label.operationParameters">Parameter</entry>
 	<entry key="form.label.formula">Formel</entry>
+	<entry key="form.label.conversionMethod">Conversion Method</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
+	<entry key="form.select.none">-- N/A --</entry>
 		
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>

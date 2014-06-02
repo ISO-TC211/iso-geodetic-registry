@@ -19,7 +19,7 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel">
-										<span class="panel-title" th:text="#{header.operationMethod}">Coordinate Operation Method</span>									
+										<span class="panel-title" th:text="#{header.conversion}">Conversion</span>									
 									</a>
 									<div class="pull-right">
 										<span class="glyphicon glyphicon-chevron-right"></span>
@@ -30,7 +30,7 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:replace="registry/registers/gcp/method_details :: details"/>
+											<div th:replace="registry/registers/gcp/conv_details :: details"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
