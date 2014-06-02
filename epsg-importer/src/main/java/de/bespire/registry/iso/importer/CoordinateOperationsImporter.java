@@ -352,15 +352,16 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		else {
 			Double paramValue = (Double)valueRow.get(PARAMETER_VALUE);
 			String fileRef = (String)valueRow.get(PARAM_VALUE_FILE_REF);
+			OperationParameterItem parameter = paramRepository.findByCode(paramCode);
 			if (paramValue != null && fileRef == null) {
 				Integer uomCode = (Integer)valueRow.get(UOM_CODE);
 				UnitOfMeasureItem uom = uomRepository.findByCode(uomCode);
 				Measure measure = new Measure(paramValue, uom);
-				return new OperationParameterValue(measure);
+				return new OperationParameterValue(parameter, measure);
 			}
 			else if (paramValue == null && fileRef != null) {
 				File file = new File(fileRef);
-				return new OperationParameterValue(file);
+				return new OperationParameterValue(parameter, file);
 			}
 			else {
 				logger.error("!!! Ambiguous parameter value for [{}, {}, {}]: value = {} // fileRef = {}", new Object[] { operationCode.toString(), methodCode.toString(), paramCode.toString(), paramValue, fileRef });

@@ -2,7 +2,6 @@ package org.iso.registry.core.model.operation;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,41 +50,48 @@ public class OperationParameterValue extends GeneralParameterValue<OperationPara
 		// TODO Auto-generated constructor stub
 	}
 	
-	public OperationParameterValue(OperationParameterValueType type) {
+	public OperationParameterValue(OperationParameterItem parameter, OperationParameterValueType type) {
+		this.setParameter(parameter);
 		this.parameterType = type;
 	}
-	
-	public OperationParameterValue(Measure value) {
-		this.parameterType = OperationParameterValueType.MEASURE;
+
+	public OperationParameterValue(OperationParameterItem parameter, OperationParameterValueType type, Measure value) {
+		this.setParameter(parameter);
+		this.parameterType = type;
 		this.parameterValue = new ArrayList<>();
 		this.parameterValue.add(value);
 	}
-	
-	public OperationParameterValue(File file) {
-		this.parameterType = OperationParameterValueType.FILE;
+
+	public OperationParameterValue(OperationParameterItem parameter, OperationParameterValueType type, String simpleValue) {
+		this.setParameter(parameter);
+		this.parameterType = type;
 		this.parameterValueSimple = new ArrayList<>();
-		this.parameterValueSimple.add(file.getName());
+		this.parameterValueSimple.add(simpleValue);
+	}
+
+	public OperationParameterValue(OperationParameterItem parameter, Measure value) {
+		this(parameter, OperationParameterValueType.MEASURE, value);
 	}
 	
-	public OperationParameterValue(String string) {
-		this.parameterType = OperationParameterValueType.STRING;
-		this.parameterValueSimple = new ArrayList<>();
-		this.parameterValueSimple.add(string);
+	public OperationParameterValue(OperationParameterItem parameter, File file) {
+		this(parameter, OperationParameterValueType.FILE, file.getName());
 	}
 	
-	public OperationParameterValue(Integer integer) {
-		this.parameterType = OperationParameterValueType.INTEGER;
-		this.parameterValueSimple = new ArrayList<>();
-		this.parameterValueSimple.add(integer.toString());
+	public OperationParameterValue(OperationParameterItem parameter, String string) {
+		this(parameter, OperationParameterValueType.STRING, string);
 	}
 	
-	public OperationParameterValue(Boolean bool) {
-		this.parameterType = OperationParameterValueType.BOOLEAN;
-		this.parameterValueSimple = new ArrayList<>();
-		this.parameterValueSimple.add(bool.toString());
+	public OperationParameterValue(OperationParameterItem parameter, Integer integer) {
+		this(parameter, OperationParameterValueType.INTEGER, integer.toString());
 	}
 	
-	public <T> OperationParameterValue(List<T> list, Class<T> listType) {
+	public OperationParameterValue(OperationParameterItem parameter, Boolean bool) {
+		this(parameter, OperationParameterValueType.BOOLEAN, bool.toString());
+	}
+	
+	public <T> OperationParameterValue(OperationParameterItem parameter, List<T> list, Class<T> listType) {
+		this.setParameter(parameter);
+		
 		if (listType.equals(Integer.class)) {
 			this.parameterType = OperationParameterValueType.INTEGER_LIST;
 			this.parameterValueSimple = new ArrayList<>();
