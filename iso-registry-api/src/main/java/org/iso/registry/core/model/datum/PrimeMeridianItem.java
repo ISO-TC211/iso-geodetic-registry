@@ -25,7 +25,7 @@ public class PrimeMeridianItem extends IdentifiedItem
 	 * 
 	 * Note: If the value of the prime meridian name is "Greenwich" then the value of greenwichLongitude shall be 0 degrees.
 	 */
-	private Double greenwichLongitude = 0.0;
+	private Double greenwichLongitude;
 	
 	@ManyToOne
 	private UnitOfMeasureItem greenwichLongitudeUom;
