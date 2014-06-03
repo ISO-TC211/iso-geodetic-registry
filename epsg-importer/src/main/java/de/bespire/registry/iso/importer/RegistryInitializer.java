@@ -82,7 +82,7 @@ public class RegistryInitializer
 			RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
 			RegistryUser ex = createUser("John Submitter", "s", "submitter@example.org");
 
-			String registerName = "Geodetic Parameter Data Set";
+			String registerName = "Geodetic Codes & Parameters";
 			RE_Register r = registerService.findByName(registerName); 
 			if (r == null) {
 				logger.info("> Creating register...");
