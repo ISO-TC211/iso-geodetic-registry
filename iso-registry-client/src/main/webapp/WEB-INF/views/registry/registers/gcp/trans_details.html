@@ -8,12 +8,32 @@
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
-			<div th:if="${isProposal}" class="row">
+			<div class="row">
+				<div class="col-md-12" th:with="property='sourceCrs',label=#{form.label.sourceCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" th:with="property='targetCrs',label=#{form.label.targetCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+				</div>
+			</div>
+
+			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
 						<label class="control-label" th:for="method" th:text="#{form.label.conversionMethod}"></label>
-						<input type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
-						<script type="text/javascript" charset="utf-8" th:inline="text">
+						<div th:unless="${isProposal}">
+							<!-- form-backing bean: RegisterItemViewBean -->
+							<div th:if="*{method}" th:with="uuid=*{method.uuid}">
+								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.code} + '] ' + *{method.name}"></a>
+							</div>
+							<div th:unless="*{method}">
+								[<span th:text="#{undefined}"></span>]
+							</div>		
+						</div>
+						<input th:if="${isProposal}" type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
+						<script th:if="${isProposal}" type="text/javascript" charset="utf-8" th:inline="text">
 						/* <![CDATA[ */
 							$(function() {
 								$('#method').select2({
@@ -66,22 +86,14 @@
 					</div>
 				</div>				
 			</div>
-		</div>	<!-- END OF LEFT -->
-		
-		<div class="col-md-6"> <!-- RIGHT -->
+
 			<div th:with="property='operationVersion',inputType='text',label=#{form.label.operationVersion},placeholder=#{form.placeholder.operationVersion},isRequired='false'">
 				<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 			</div>
-			<div class="row">
-				<div class="col-md-12" th:with="property='sourceCrs',label=#{form.label.sourceCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12" th:with="property='targetCrs',label=#{form.label.targetCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
-				</div>
-			</div>
+
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
 			<div class="row">
 				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
 					<div th:replace="registry/registers/globals :: textArea"/>
