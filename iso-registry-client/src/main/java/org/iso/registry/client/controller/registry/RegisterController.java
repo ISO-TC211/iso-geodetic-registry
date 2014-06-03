@@ -291,10 +291,10 @@ public class RegisterController
 		}
 	}
 
-	@RequestMapping(value = "/{register}/{itemClass}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{register}/{itemClassText}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public String registerOverview(@PathVariable("register") String registerName, 
-								   @PathVariable("itemClass") String itemClassFilter,
+								   @PathVariable("itemClassText") String itemClassFilter,
 								   final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
 		RE_Register register = findRegister(registerName);
 		if (register == null) {
