@@ -1,4 +1,4 @@
-<div th:fragment="details">
+<div th:fragment="details"		>
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
 			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
@@ -8,12 +8,27 @@
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
-			<div th:if="${isProposal}" class="row">
+			<div class="row">
+				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textArea"/>
+				</div>
+			</div>
+
+			<div class="row">
 				<div class="col-md-12">
 					<div class="form-group">
 						<label class="control-label" th:for="method" th:text="#{form.label.conversionMethod}"></label>
-						<input type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
-						<script type="text/javascript" charset="utf-8" th:inline="text">
+						<div th:unless="${isProposal}">
+							<!-- form-backing bean: RegisterItemViewBean -->
+							<div th:if="*{method}" th:with="uuid=*{method.uuid}">
+								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.code} + '] ' + *{method.name}"></a>
+							</div>
+							<div th:unless="*{method}">
+								[<span th:text="#{undefined}"></span>]
+							</div>		
+						</div>
+						<input th:if="${isProposal}" type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
+						<script th:if="${isProposal}" type="text/javascript" charset="utf-8" th:inline="text">
 						/* <![CDATA[ */
 							$(function() {
 								$('#method').select2({
@@ -66,19 +81,9 @@
 					</div>
 				</div>				
 			</div>
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col-md-12" th:with="property='method',label=#{form.label.conversionMethod},isRequired='true',noAddNew='true',ajaxPath='OperationMethodItem'"> -->
-<!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row">
-				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textArea"/>
-				</div>
-			</div>
 			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
 			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
 			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
@@ -106,7 +111,7 @@
 							</td>
 							<td>
 								<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
-								<span th:unless="${isProposal}" th:text="${parameterValue.unitOfMeasure.name} + '[' + ${parameterValue.unitOfMeasure.code} + ']'"></span>
+								<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.code} + ']'"></a>
 							</td>							
 						</tr>
 					</tbody>
@@ -193,95 +198,6 @@
             		});
             	});
 			});
-
-// 				var index = $('table#[[${property}]]Table_[[${modifier}]] tbody').children().length;
-// 				table = $('#[[${property}]]Table_[[${modifier}]]').dataTable();
-// 				table.fnAddData([
-// 					"<select name='[[${property}]][" + index + "]'>",
-// 					"<textarea type='text' rows='3' cols='40' name='oidResolver[" + fileIndex + "].oidPattern' placeholder='[[#{form.placeholder.oidPattern}]]'></textarea>",
-// 					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (fileIndex - 1) + "' value='" + fileIndex + "'>Remove row</button>"
-// 				]);
-// 			});        	
-//         }
-				
-				
-// 				var table;
-				
-// 				table = $('#parametersTable').dataTable({
-// 					"sAjaxSource": "[[@{${basePath}}]]/entities/parameters/" + $(this).val(),
-// 					"bProcessing": true,
-// 					"bServerSide": true,
-// 					"fnServerParams": function (aoData) {
-// 			            aoData.push({ name: "orderBy", value: "code" });
-// 			        },
-// 					"sPaginationType": "bs_normal",
-// 		// 			"bFilter": false,
-// 					"oLanguage": {
-// 						  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
-// 						  "sInfo": "[[#{datatable.sInfo}]]",
-// 						  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
-// 						  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
-// 						  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
-// 						  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
-// 						  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
-// 						  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
-// 						  "oPaginate": {
-// 						        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
-// 						        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
-// 						        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
-// 						        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
-// 						    }
-// 						},
-// 					"fnDrawCallback": function( oSettings ) {
-// 		// 				alert( 'DataTables has redrawn the table' );
-// 					},				
-// 	// 				"aaSorting": [[ 0, "asc" ]],
-// 					"aoColumns": [
-// 						{ 
-// 							"mDataProp": "name",
-// 							"sWidth": "30%",
-// 							"bSortable": false
-// 						},
-// 					],
-// 					"aoColumnDefs": [
-// 						{ "aTargets": [1, 2],
-// 						  "mData": null,
-// 						  "mRender": function (data, type, full) {
-// 	// 						  var actions = detailsButton(full);
-							  
-// 	// 						  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]] && full.status === 'valid') {
-// 	// 							  var dropdownActions = []; 
-// 	// 							  dropdownActions.push(clarifyButton(full));
-// 	// 							  dropdownActions.push(supersedeButton(full));
-// 	// 							  dropdownActions.push(retireButton(full));
-								  
-// 	// 							  actions += dropdownMenu(dropdownActions);
-// 	// 							  actions += retirePopup(full);
-// 	// 						  }
-							  
-// 	// 						  return actions;
-																				
-// 						  }
-// 						}
-// 					]
-// // 					aoColumns: [
-// // 							{"bSortable" : false},
-// // 							{"bSortable" : false},
-// // 							{"bSortable" : false}
-// // 					]
-// 				});	
-		
-// 				$('.datatable').each(function(){
-// 					var datatable = $(this);
-// 					// SEARCH - Add the placeholder for Search and Turn this into in-line form control
-// 					var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-// 					search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
-// 					search_input.addClass('form-control input-sm');
-// 					// LENGTH - Inline-Form control
-// 					var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-// 					length_sel.addClass('form-control input-sm');
-// 				});
-// 			});
        	});		
 	/* ]]> */
 	</script>

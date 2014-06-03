@@ -316,7 +316,7 @@
 	<entry key="form.label.inverseFlattening">Inverse flattening</entry>
 	<entry key="form.label.operationParameters">Parameters</entry>
 	<entry key="form.label.formula">Formula</entry>
-	<entry key="form.label.conversionMethod">Conversion Method</entry>
+	<entry key="form.label.conversionMethod">Operation Method</entry>
 	<entry key="form.label.operationVersion">Operation Version</entry>
 	<entry key="form.label.sourceCrs">Source CRS</entry>
 	<entry key="form.label.targetCrs">Target CRS</entry>
