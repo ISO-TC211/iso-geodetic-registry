@@ -462,11 +462,11 @@
 	<entry key="GeodeticDatumItem">Geodetic Datums</entry>
 	<entry key="VerticalDatumItem">Vertical Datums</entry>
 
-	<entry key="ConcatenatedOperation">Concatenated Coordinate Operation</entry>
-	<entry key="Conversion">Coordinate Conversion</entry>
-	<entry key="SingleOperation">Single Coordinate Operation</entry>
-	<entry key="OperationMethod">Coordinate Operation Method</entry>
-	<entry key="OperationParameter">Coordinate Operation Parameter</entry>
-	<entry key="Transformation">Coordinate Transformation</entry>
+	<entry key="ConcatenatedOperation">Concatenated Operation</entry>
+	<entry key="Conversion">Conversion</entry>
+	<entry key="SingleOperation">Single Operation</entry>
+	<entry key="OperationMethod">Operation Method</entry>
+	<entry key="OperationParameter">Operation Parameter</entry>
+	<entry key="Transformation">Transformation</entry>
 
 </properties>

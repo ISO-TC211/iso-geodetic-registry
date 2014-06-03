@@ -317,7 +317,18 @@
 			"bProcessing": true,
 			"bServerSide": true,
 			"fnServerParams": function (aoData) {
-	            aoData.push({ name: "itemClass", value: "[[${itemClass} ? ${itemClass.uuid}]]" });
+				if ([[${#strings.isEmpty(itemClassFilter)}]]) {
+		            aoData.push({
+			            	name: "itemClass", 
+			            	value: "[[${itemClass.uuid}]]"
+		            });
+				}
+				if ([[${!#strings.isEmpty(itemClassFilter)}]]) {
+		            aoData.push({
+			            	name: "itemClassFilter", 
+			            	value: "[[${itemClassFilter}]]"
+		            });
+				}
 	        },
 // 			"fnServerData" : datatable2Rest,
 			"sPaginationType": "bs_normal",
