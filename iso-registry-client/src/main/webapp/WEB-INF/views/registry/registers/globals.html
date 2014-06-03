@@ -85,6 +85,89 @@
 	
 </div>
 
+<div th:fragment="selectMultipleIdentifiedItems2" class="form-group">
+	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<input type="hidden" multiple="multiple" th:id="${property}" style="width: 100%" th:field="*{__${property}__}"/>
+	<script type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(function() {
+			$('#[[${property}]]').select2({
+				multiple: true,
+				dropdownCssClass: "bigdrop",
+				ajax: {
+					url: "[[@{${basePath}}]]/entities/[[${ajaxPath}]]",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: '[[${orderBy}]]',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) {
+								if ([[${displayCallback} ? 'true' : 'false']]) {
+									return [[${displayCallback}]](item);
+								}
+								else {
+									return { 
+										text: "[" + item[1] + "] " + item[2], 
+										id: item[0] 
+									} 
+								}
+							}) 
+						};
+					}
+	            },
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		var requests = Array();
+               		
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+	                $(element.val().split(",")).each(function(i) {
+	                	requests.push(
+		                	$.ajax("[[@{${basePath}}]]/entities/[[${ajaxPath}]]?uuid=" + this, {
+		                    	dataType: "json"
+		                	})
+		                );
+	                });
+	                
+               		// Process the requests asynchronically
+	                var defer = $.when.apply($, requests);
+               		
+               		// Perform the following after ALL of the requests
+               		// have finished
+	                defer.done(function() {
+                	   $.each(arguments, function(index, data){
+                	        // "data" will contain an array of response information for each specific request
+				            var item = data[0].toString().split(",");
+	                		result.push({
+	                			id: item[0],
+								text: "[" + item[1] + "] " + item[2], 
+	                		});
+			                callback(result); 
+                	   });
+                	});
+	            }						            
+	        });
+			
+			if ([[${proposal.isClarification()}]]) {
+				$('#[[${property}]]').select2("readonly", true);
+			}
+			
+			$("#[[${property}]]").select2("container").find("ul.select2-choices").sortable({
+				containment: 'parent',
+				start: function() { $("#[[${property}]]").select2("onSortStart"); },
+				update: function() { $("#[[${property}]]").select2("onSortEnd"); }
+			});								
+		});
+	
+	/* ]]> */
+	</script>
+</div>
+
+
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
@@ -330,7 +413,8 @@
 	/* <![CDATA[ */
 			var table = $('#[[${property}]]Table_[[${modifier}]]').dataTable({
 			"sPaginationType": "bs_normal",
-			"bFilter": false,
+   			"bPaginate": false,
+   			"bFilter": false,
 			"oLanguage": {
 				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
 				  "sInfo": "[[#{datatable.sInfo}]]",
