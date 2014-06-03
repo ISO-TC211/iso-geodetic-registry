@@ -76,6 +76,11 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 			}
 
 			if (this.getScope() != null) {
+				if (item.getScope() != null) {
+					while (!item.getScope().isEmpty()) {
+						item.getScope().remove(0);
+					}
+				}
 				item.addScopes(this.getScope());
 			}
 			
