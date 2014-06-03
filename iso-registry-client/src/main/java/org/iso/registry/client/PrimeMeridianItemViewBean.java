@@ -14,7 +14,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class PrimeMeridianItemViewBean extends IdentifiedItemViewBean
 {
-	private Double greenwichLongitude = 0.0;
+	private Double greenwichLongitude;
 	private UnitOfMeasureItemViewBean greenwichLongitudeUom;
 
 	public PrimeMeridianItemViewBean(RE_RegisterItem item) {

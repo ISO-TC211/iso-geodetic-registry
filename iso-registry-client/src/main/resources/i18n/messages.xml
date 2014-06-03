@@ -114,6 +114,7 @@
 	<entry key="header.conversion">Conversion</entry>
 	<entry key="header.transformation">Transformation</entry>
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
+	<entry key="header.primeMeridian">Prime Meridian</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -334,6 +335,8 @@
 	<entry key="form.label.minimumValue">Minimum value</entry>
 	<entry key="form.label.maximumValue">Maximum value</entry>
 	<entry key="form.label.rangeMeaning">Range meaning</entry>
+	<entry key="form.label.greenwichLongitude">Longitude from Greenwich</entry>
+	<entry key="form.label.greenwichLongitudeUom">Unit</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -382,6 +385,8 @@
 	<entry key="form.placeholder.axisAbbreviation"></entry>
 	<entry key="form.placeholder.minimumValue"></entry>
 	<entry key="form.placeholder.maximumValue"></entry>
+
+	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
