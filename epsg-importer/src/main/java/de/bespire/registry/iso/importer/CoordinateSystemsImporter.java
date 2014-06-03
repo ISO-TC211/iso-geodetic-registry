@@ -8,6 +8,7 @@ import java.util.Map;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO.CoordinateSystemType;
+import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItemRepository;
@@ -76,7 +77,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 					logger.error("!!! Missing axis #{}", axisCode.toString());
 				}
 				
-				proposal.addAxis(new CoordinateSystemAxisProposalDTO(axis));
+				proposal.addAxis(new AxisDTO(axis));
 			} while (cursor.findNextRow(m));
 		}
 		

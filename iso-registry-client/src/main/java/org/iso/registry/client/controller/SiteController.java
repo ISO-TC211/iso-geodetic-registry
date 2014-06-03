@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -19,6 +18,7 @@ import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemPropos
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
@@ -59,7 +59,6 @@ import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
-import de.geoinfoffm.registry.api.UpdateUserException;
 import de.geoinfoffm.registry.api.UserRegistrationException;
 import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
@@ -501,8 +500,8 @@ public class SiteController extends AbstractController
 							p.setRemarks("Coordinates referenced to this CS are in degrees. Any degree representation "
 									+ "(e.g. DMSH, decimal, etc.) may be used but that used must be declared for the "
 									+ "user by the supplier of data. Used in geographic 2D coordinate reference systems.");
-							p.addAxis(new CoordinateSystemAxisProposalDTO((CoordinateSystemAxisItem)axisLat));
-							p.addAxis(new CoordinateSystemAxisProposalDTO((CoordinateSystemAxisItem)axisLon));
+							p.addAxis(new AxisDTO((CoordinateSystemAxisItem)axisLat));
+							p.addAxis(new AxisDTO((CoordinateSystemAxisItem)axisLon));
 						}
 					});
 
