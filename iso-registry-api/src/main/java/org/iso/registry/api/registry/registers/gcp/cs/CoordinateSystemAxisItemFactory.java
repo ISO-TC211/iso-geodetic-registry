@@ -12,8 +12,8 @@ import de.geoinfoffm.registry.core.model.ItemFactory;
 
 @ItemFactory("CoordinateSystemAxis")
 public class CoordinateSystemAxisItemFactory
-extends RegisterItemFactoryImpl<CoordinateSystemAxisItem, CoordinateSystemAxisProposalDTO> 
-implements RegisterItemFactory<CoordinateSystemAxisItem, CoordinateSystemAxisProposalDTO>
+extends RegisterItemFactoryImpl<CoordinateSystemAxisItem, CoordinateSystemAxisItemProposalDTO> 
+implements RegisterItemFactory<CoordinateSystemAxisItem, CoordinateSystemAxisItemProposalDTO>
 {
 	@Autowired
 	private CoordinateSystemAxisItemRepository axisRepository;
@@ -22,7 +22,7 @@ implements RegisterItemFactory<CoordinateSystemAxisItem, CoordinateSystemAxisPro
 	private UnitOfMeasureItemRepository uomRepository;
 
 	@Override
-	public CoordinateSystemAxisItem createRegisterItem(CoordinateSystemAxisProposalDTO proposal) {
+	public CoordinateSystemAxisItem createRegisterItem(CoordinateSystemAxisItemProposalDTO proposal) {
 		if (proposal.getReferencedItemUuid() != null) {
 			return axisRepository.findOne(proposal.getReferencedItemUuid());
 		}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="CoordinateSystemAxis">
+	<dtoClass>org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO</dtoClass>
+	<viewBeanClass>org.iso.registry.client.CoordinateSystemAxisItemViewBean</viewBeanClass>
+	<viewItemTemplate>registry/registers/gcp/axis_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/axis_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/axis_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/axis_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>
