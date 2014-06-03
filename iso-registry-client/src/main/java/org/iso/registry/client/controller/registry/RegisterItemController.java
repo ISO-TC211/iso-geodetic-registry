@@ -148,7 +148,7 @@ public class RegisterItemController
 		ItemClassConfiguration itemClassConfiguration = null;
 		itemClassConfiguration = itemClassRegistry.getConfiguration(item.getItemClass().getName());
 		model.addAttribute("itemClassConfiguration", itemClassConfiguration);
-		model.addAttribute("itemClassName", itemClassConfiguration.getItemClassName());
+		model.addAttribute("itemClassName", item.getItemClass().getName());
 
 		String viewName;
 		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewItemTemplate())) {
