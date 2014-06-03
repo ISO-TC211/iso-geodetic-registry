@@ -10,6 +10,16 @@
 				<div th:include="layout :: navtree"></div>
 			</div>
 			<div class="col-md-9" role="main">
+				<div class="container" th:fragment="demo">
+					<div class="alert alert-danger">
+						<p class="text-center"><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p>
+						<p class="text-center">This registry is for demonstration purposes only. The current content of the registry is provided only to demonstrate the features and capabilities of the registry software.</p>
+						<p class="text-center">The registry content should NOT be used for any other purposes. In no way should the content be considered valid data!</p>
+			
+					</div>
+				</div>
+
+			
 				<div class="row">
 					<h3 th:text="#{application.title}">Registry</h3>
 					
@@ -40,11 +50,11 @@
 							</p>
 						</div>
 						
-						<div class="alert alert-danger" th:fragment="demo">
+<!-- 						<div class="alert alert-danger" th:fragment="demo"> -->
 <!-- 							<p><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p> -->
-							<p>This registry is for demonstration purposes only. The current content of the registry is provided only to demonstrate the features and capabilities of the registry software.</p>
-							<p>The registry content should NOT be used for any other purposes. In no way should the content be considered valid data!</p>
-						</div>
+<!-- 							<p>This registry is for demonstration purposes only. The current content of the registry is provided only to demonstrate the features and capabilities of the registry software.</p> -->
+<!-- 							<p>The registry content should NOT be used for any other purposes. In no way should the content be considered valid data!</p> -->
+<!-- 						</div> -->
 
 						<p>The ISO Registry of Geodetic Codes and Parameters is a structured database of coordinate reference systems and transformations that is accessible through this on-line registry system. The register includes only systems and transformations of international application. It does not include all possible coordinate reference systems and transformations.</p>
 						<p>This registry is provided under the auspices of ISO Technical Committee 211 on geographic information/geomatics and conforms to ISO standards ISO 19111:2007 (Spatial referencing by coordinates), ISO/TS 19127:2005 (Geodetic codes and parameters), ISO 19135:2005 (Procedures for item registration) and its soon to be published revision ISO 19135-1 (Procedures for item registration - Part 1: Fundamentals), and ISO 19135-2:2012 (Procedures for item registration -- Part 2: XML schema implementation).</p>
