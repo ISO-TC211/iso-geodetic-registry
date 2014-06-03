@@ -5,7 +5,7 @@
 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="Cache-control" content="no-cache"/>
-		<title th:text="#{application.title}">GDI-DE Registry</title>
+		<title th:text="${pageTitle} ? (${pageTitle} + ' - ' + #{application.title}) : #{application.title}">Registry</title>
 		<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{__${basePath}__/resources/js/jquery.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jqueryui.js" th:src="@{__${basePath}__/resources/js/jqueryui.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.cookie.js" th:src="@{__${basePath}__/resources/js/jquery.cookie.js}"></script>

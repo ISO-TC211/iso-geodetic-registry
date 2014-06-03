@@ -309,9 +309,22 @@ public class RegisterController
 				UUID itemClassUuid = UUID.fromString(itemClassFilter);
 				itemClass = itemClassRepository.findOne(itemClassUuid);
 				model.addAttribute("itemClass", itemClass);
+				model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
 			}
 			else {
 				model.addAttribute("itemClassFilter", itemClassFilter);
+				if (itemClassFilter.equalsIgnoreCase("crs")) {
+					model.addAttribute("pageTitle", "CRS");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("cs")) {
+					model.addAttribute("pageTitle", "Coordinate Systems");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("datum")) {
+					model.addAttribute("pageTitle", "Geodetic Datums");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("operations")) {
+					model.addAttribute("pageTitle", "Coordinate Operations");
+				}
 			}
 		}
 		
