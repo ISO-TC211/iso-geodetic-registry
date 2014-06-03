@@ -91,32 +91,29 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="row">
-
-				<table id="parametersTable" class="table table-striped">
-					<thead>
-						<tr>
-							<th th:text="#{tableheader.parameter}">Parameter</th>
-							<th th:text="#{tableheader.value}">Value</th>
-							<th th:text="#{tableheader.uom}">UoM</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="parameterValue,row : *{parameterValues}">
-							<td th:text="${parameterValue.parameterName}"></td>
-							<td>
-								<div class="form-group">
-									<input type="number" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
-								</div>
-							</td>
-							<td>
-								<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
-								<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.code} + ']'"></a>
-							</td>							
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			<table id="parametersTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th th:text="#{tableheader.parameter}">Parameter</th>
+						<th th:text="#{tableheader.value}">Value</th>
+						<th th:text="#{tableheader.uom}">UoM</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="parameterValue,row : *{parameterValues}">
+						<td th:text="${parameterValue.parameterName}"></td>
+						<td>
+							<div class="form-group">
+								<input type="number" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
+							</div>
+						</td>
+						<td>
+							<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
+							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.code} + ']'"></a>
+						</td>							
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 	

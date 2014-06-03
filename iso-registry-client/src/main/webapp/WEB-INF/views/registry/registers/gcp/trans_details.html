@@ -106,38 +106,35 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="row">
-
-				<table id="parametersTable" class="table table-striped">
-					<thead>
-						<tr>
-							<th th:text="#{tableheader.parameter}">Parameter</th>
-							<th th:text="#{tableheader.parameterType}">Parameter type</th>
-							<th th:text="#{tableheader.value}">Value</th>
-							<th th:text="#{tableheader.uom}">UoM</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="parameterValue,row : *{parameterValues}">
-							<td th:text="${parameterValue.parameterName}"></td>
-							<td>
-								<input th:if="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" required="required" th:readonly="${proposal.isClarification()}" style="width: 100%"/>
-								<input th:unless="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" readonly="readonly" style="width: 100%"/>
-							</td>
-							<td>
-								<div class="form-group" th:if="${isProposal}">
-									<input type="text" class="form-control input-sm required" th:value="${parameterValue.value}" th:disabled="${proposal.isClarification()}" th:readonly="${proposal.isClarification()}" th:required="!${proposal.isClarification()}"/>
-								</div>
-								<span th:unless="${isProposal}" th:text="${parameterValue.value}"></span>
-							</td>
-							<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
-								<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
-								<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.code} + ']'"></a>
-							</td>							
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			<table id="parametersTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th th:text="#{tableheader.parameter}">Parameter</th>
+						<th th:text="#{tableheader.parameterType}">Parameter type</th>
+						<th th:text="#{tableheader.value}">Value</th>
+						<th th:text="#{tableheader.uom}">UoM</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="parameterValue,row : *{parameterValues}">
+						<td th:text="${parameterValue.parameterName}"></td>
+						<td>
+							<input th:if="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" required="required" th:readonly="${proposal.isClarification()}" style="width: 100%"/>
+							<input th:unless="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" readonly="readonly" style="width: 100%"/>
+						</td>
+						<td>
+							<div class="form-group" th:if="${isProposal}">
+								<input type="text" class="form-control input-sm required" th:value="${parameterValue.value}" th:disabled="${proposal.isClarification()}" th:readonly="${proposal.isClarification()}" th:required="!${proposal.isClarification()}"/>
+							</div>
+							<span th:unless="${isProposal}" th:text="${parameterValue.value}"></span>
+						</td>
+						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
+							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
+							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.code} + ']'"></a>
+						</td>							
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
