@@ -340,7 +340,7 @@ public class SiteController extends AbstractController
 
 			initLog.append("\n");
 			
-			String registerName = "EPSG Geodetic Parameter Data Set";
+			String registerName = "Geodetic Codes & Parameters";
 			RE_Register r = registerService.findByName(registerName); 
 			if (r == null) {
 				initLog.append("> Creating register...\n");

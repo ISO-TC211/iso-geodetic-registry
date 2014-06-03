@@ -27,7 +27,7 @@ import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 
 public class EpsgImporter
 {
-	private static final String GCP_REGISTER_NAME = "Geodetic Parameter Data Set";
+	public static final String GCP_REGISTER_NAME = "Geodetic Codes & Parameters";
 	
 	private static final Logger logger = LoggerFactory.getLogger(EpsgImporter.class);
 
