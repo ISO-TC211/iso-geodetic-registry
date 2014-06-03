@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.datum.DatumItem;
+import org.iso.registry.core.model.datum.GeodeticDatumItem;
 
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
@@ -18,6 +19,8 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 	private AreaItemViewBean domainOfValidity;
 	private Date realizationEpoch;
 	private String scope;
+	private EllipsoidItemViewBean ellipsoid;
+	private PrimeMeridianItemViewBean primeMeridian;
 	
 	public DatumItemViewBean(Appeal appeal) {
 		super(appeal);
@@ -59,6 +62,16 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 		}
 		this.setRealizationEpoch(item.getRealizationEpoch());
 		this.setScope(item.getScope());
+		
+		if (registerItem instanceof GeodeticDatumItem) {
+			GeodeticDatumItem geodeticDatum = (GeodeticDatumItem)registerItem;
+			if (geodeticDatum.getEllipsoid() != null) {
+				this.setEllipsoid(new EllipsoidItemViewBean(geodeticDatum.getEllipsoid()));
+			}
+			if (geodeticDatum.getPrimeMeridian() != null) {
+				this.setPrimeMeridian(new PrimeMeridianItemViewBean(geodeticDatum.getPrimeMeridian()));
+			}
+		}
 	}
 
 	public String getAnchorDefinition() {
@@ -91,6 +104,22 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 
 	public void setScope(String scope) {
 		this.scope = scope;
+	}
+
+	public EllipsoidItemViewBean getEllipsoid() {
+		return ellipsoid;
+	}
+
+	public void setEllipsoid(EllipsoidItemViewBean ellipsoid) {
+		this.ellipsoid = ellipsoid;
+	}
+
+	public PrimeMeridianItemViewBean getPrimeMeridian() {
+		return primeMeridian;
+	}
+
+	public void setPrimeMeridian(PrimeMeridianItemViewBean primeMeridian) {
+		this.primeMeridian = primeMeridian;
 	}
 
 }
