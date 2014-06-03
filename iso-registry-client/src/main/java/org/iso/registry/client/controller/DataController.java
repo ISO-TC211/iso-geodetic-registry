@@ -45,7 +45,11 @@ public class DataController
 												@RequestParam(value = "orderBy", defaultValue = "code") String orderBy,
 												@RequestParam(value = "q", required = false) String search) {
 		StringBuilder q = new StringBuilder();
-		q.append("SELECT i.uuid, i.code, i.name FROM " + className + " i WHERE i.status = 'VALID'");
+		if (StringUtils.isEmpty(orderBy) || "null".equals(orderBy)) {
+			orderBy = "code";
+		}
+		
+		q.append("SELECT i.uuid, i.code, i.name, i.description FROM " + className + " i WHERE i.status = 'VALID'");
 		if (!StringUtil.isEmpty(search)) {
 			search = "%" + search + "%";
 			q.append(" AND (LOWER(i.name) LIKE '" + search.toLowerCase() + "' OR CAST(i.code AS text) LIKE '" + search + "')");
@@ -99,6 +103,47 @@ public class DataController
 		Query query = entityManager.createQuery(q.toString());
 		return query.getResultList();
 	}
+	
+	@RequestMapping(value = "/axes", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody List<Object[]> findCoordinateAxes(@RequestParam(value = "q", required = false) String search,
+														   @RequestParam(value = "uuid", required = false) UUID uuid) {
+		StringBuilder q = new StringBuilder();
+		if (uuid != null) {
+			q.append("SELECT i.uuid, i.code, i.name, i.axisAbbreviation, i.axisDirection, i.axisUnit.name FROM CoordinateSystemAxisItem i WHERE i.uuid = '" + uuid.toString() + "'");
+			Query query = entityManager.createQuery(q.toString());
+			return query.getResultList();
+		}
+		
+		q.append("SELECT i.uuid, i.code, i.name, i.axisAbbreviation, i.axisDirection, i.axisUnit.name FROM CoordinateSystemAxisItem i WHERE i.status = 'VALID'");
+		if (!StringUtils.isEmpty(search)) {
+			search = "%" + search + "%";
+			q.append(" AND (");
+			
+			q.append("LOWER(i.name) LIKE '");
+			q.append(search.toLowerCase());
+			q.append("'");
+			
+			q.append(" OR LOWER(i.axisDirection.code) LIKE '");
+			q.append(search.toLowerCase());
+			q.append("'");
+
+			q.append(" OR LOWER(i.axisUnit.name) LIKE '");
+			q.append(search.toLowerCase());
+			q.append("'");
+
+			q.append("OR CAST(i.code AS text) LIKE '");
+			q.append(search);
+			q.append("'");
+			
+			q.append(")");
+		}
+		q.append(" ORDER BY i.name");
+		
+		Query query = entityManager.createQuery(q.toString());
+		return query.getResultList();
+	}
+
 
 	@RequestMapping(value = "/methods/transformation", method = RequestMethod.GET)
 	@Transactional(readOnly = true)

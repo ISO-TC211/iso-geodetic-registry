@@ -1,5 +1,9 @@
 package org.iso.registry.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
 
@@ -12,6 +16,8 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class CoordinateSystemItemViewBean extends IdentifiedItemViewBean
 {
+	private List<CoordinateSystemAxisItemViewBean> axes;
+
 	public CoordinateSystemItemViewBean(RE_RegisterItem item) {
 		super(item);
 	}
@@ -46,7 +52,25 @@ public class CoordinateSystemItemViewBean extends IdentifiedItemViewBean
 		
 		CoordinateSystemItem item = (CoordinateSystemItem)registerItem;
 		
-		// TODO
+		if (item.getAxes() != null) {
+			for (CoordinateSystemAxisItem axis : item.getAxes()) {
+				this.addAxis(new CoordinateSystemAxisItemViewBean(axis, false));
+			}
+		}
 	}
 
+	public List<CoordinateSystemAxisItemViewBean> getAxes() {
+		return axes;
+	}
+
+	public void setAxes(List<CoordinateSystemAxisItemViewBean> axes) {
+		this.axes = axes;
+	}
+
+	public void addAxis(CoordinateSystemAxisItemViewBean axis) {
+		if (this.axes == null) {
+			this.axes = new ArrayList<>();
+		}
+		this.axes.add(axis);
+	}
 }

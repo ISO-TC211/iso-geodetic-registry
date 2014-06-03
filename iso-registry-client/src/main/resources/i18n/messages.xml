@@ -67,6 +67,10 @@
 	<entry key="tableheader.value">Value</entry>
 	<entry key="tableheader.uom">Unit of Measure</entry>
 	<entry key="tableheader.parameterType">Parameter type</entry>
+	<entry key="tableheader.coordinateAxis">Coordinate Axis</entry>
+	<entry key="tableheader.axisAbbreviation">Axis abbreviation</entry>
+	<entry key="tableheader.axisUnit">Axis unit</entry>
+	<entry key="tableheader.axisDirection">Axis direction</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -99,6 +103,7 @@
 	<entry key="header.myProfile">Your user profile</entry>
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
+	<entry key="header.cs">Coordinate System</entry>
 	<entry key="header.area">Area</entry>
 	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Naming System</entry>
@@ -320,6 +325,7 @@
 	<entry key="form.label.operationVersion">Operation Version</entry>
 	<entry key="form.label.sourceCrs">Source CRS</entry>
 	<entry key="form.label.targetCrs">Target CRS</entry>
+	<entry key="form.label.coordinateAxis">Coordinate Axes</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>

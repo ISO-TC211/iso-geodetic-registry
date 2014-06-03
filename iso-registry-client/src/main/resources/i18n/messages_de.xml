@@ -67,6 +67,10 @@
 	<entry key="tableheader.value">Wert</entry>
 	<entry key="tableheader.uom">Maßeinheit</entry>
 	<entry key="tableheader.parameterType">Parameter type</entry>
+	<entry key="tableheader.coordinateAxis">Koordinatenachse</entry>
+	<entry key="tableheader.axisAbbreviation">Achsenabkürzung</entry>
+	<entry key="tableheader.axisUnit">Achseneinheit</entry>
+	<entry key="tableheader.axisDirection">Achsenausrichtung</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -98,6 +102,7 @@
 	<entry key="header.myProfile">Ihr Benutzerprofil</entry>
 	<entry key="header.proposalDetails">Vorschlagsdetails</entry>
 	<entry key="header.crs">Koordinatenreferenzsystem</entry>
+	<entry key="header.cs">Koordinatensystem</entry>
 	<entry key="header.area">Gebiet</entry>
 	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Namenssystem</entry>
@@ -310,6 +315,7 @@
 	<entry key="form.label.operationVersion">Operation Version</entry>
 	<entry key="form.label.sourceCrs">Source CRS</entry>
 	<entry key="form.label.targetCrs">Target CRS</entry>
+	<entry key="form.label.coordinateAxis">Koordinatenachsen</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 	<entry key="form.select.none">-- N/A --</entry>
