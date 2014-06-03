@@ -14,7 +14,7 @@
 	
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title" th:text="${headerLabel}">Register Item</h3>
+								<h3 id="panelTitle" class="panel-title" th:text="${itemClassName} ? #{${itemClassName}} : ${headerLabel}">Register Item</h3>
 							</div>
 							
 							<div class="panel-body">
