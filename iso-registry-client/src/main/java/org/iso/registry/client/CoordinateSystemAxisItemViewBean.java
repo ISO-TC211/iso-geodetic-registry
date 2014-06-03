@@ -1,8 +1,6 @@
 package org.iso.registry.client;
 
-import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
-import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
 import org.iso.registry.core.model.iso19111.cs.CS_RangeMeaning;
 

@@ -4,16 +4,21 @@ import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
+import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
 import org.iso.registry.core.model.iso19111.cs.CS_RangeMeaning;
 import org.iso.registry.core.model.iso19115.extent.EX_GeographicBoundingBox;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
+import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.soap.Addition_Type;
 
-public class CoordinateSystemAxisProposalDTO extends IdentifiedItemProposalDTO
+public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalDTO
 {
 	/**
 	 * The abbreviation used for this coordinate system axis; this abbreviation
@@ -59,19 +64,37 @@ public class CoordinateSystemAxisProposalDTO extends IdentifiedItemProposalDTO
 	 */
 	private CS_RangeMeaning rangeMeaning;
 	
-	public CoordinateSystemAxisProposalDTO() { }
+	public CoordinateSystemAxisItemProposalDTO() { }
 	
-	public CoordinateSystemAxisProposalDTO(CoordinateSystemAxisItem item) {
+	public CoordinateSystemAxisItemProposalDTO(CoordinateSystemAxisItem item) {
 		super(item);
-//		this.uuid = item.getUuid();
-//		this.axisAbbreviation = item.getAxisAbbreviation();
-//		this.axisDirection = item.getAxisDirection();
-//		this.axisUnit = new UnitOfMeasureItemProposalDTO(item.getAxisUnit());
-//		this.maximumValue = item.getMaximumValue();
-//		this.minimumValue = item.getMinimumValue();
-//		this.rangeMeaning = item.getRangeMeaning();
 	}
-	
+
+	public CoordinateSystemAxisItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
+		super(proposal, sponsor);
+		// TODO Auto-generated constructor stub
+	}
+
+	public CoordinateSystemAxisItemProposalDTO(IdentifiedItem item) {
+		super(item);
+		// TODO Auto-generated constructor stub
+	}
+
+	public CoordinateSystemAxisItemProposalDTO(Proposal proposal) {
+		super(proposal);
+		// TODO Auto-generated constructor stub
+	}
+
+	public CoordinateSystemAxisItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
+		super(item, sponsor);
+		// TODO Auto-generated constructor stub
+	}
+
+	public CoordinateSystemAxisItemProposalDTO(String itemClassName) {
+		super(itemClassName);
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getAxisAbbreviation() {
 		return axisAbbreviation;
 	}
@@ -154,7 +177,7 @@ public class CoordinateSystemAxisProposalDTO extends IdentifiedItemProposalDTO
 			}
 			this.setMaximumValue(axis.getMaximumValue());
 			this.setMinimumValue(axis.getMinimumValue());
-			axis.setRangeMeaning(axis.getRangeMeaning());
+			this.setRangeMeaning(axis.getRangeMeaning());
 		}
 	}
 

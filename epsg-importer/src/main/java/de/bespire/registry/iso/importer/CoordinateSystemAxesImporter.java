@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItemRepository;
@@ -54,7 +54,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 	@Override
 	@Transactional
 	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
-		CoordinateSystemAxisProposalDTO proposal = new CoordinateSystemAxisProposalDTO();
+		CoordinateSystemAxisItemProposalDTO proposal = new CoordinateSystemAxisItemProposalDTO();
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());

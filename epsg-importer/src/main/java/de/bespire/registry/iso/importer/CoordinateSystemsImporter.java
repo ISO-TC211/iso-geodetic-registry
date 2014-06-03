@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO.CoordinateSystemType;
 import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;

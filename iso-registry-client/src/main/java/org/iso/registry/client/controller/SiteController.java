@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.GeodeticCoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
@@ -461,10 +461,10 @@ public class SiteController extends AbstractController
 			final RE_RegisterItem axisLat = this.registerItem(r, icAxis,
 					"Geodetic latitude",
 					BigInteger.valueOf(10106L),
-					CoordinateSystemAxisProposalDTO.class,
-					new ParameterizedRunnable<CoordinateSystemAxisProposalDTO>() {
+					CoordinateSystemAxisItemProposalDTO.class,
+					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
-						public void run(CoordinateSystemAxisProposalDTO parameter) {
+						public void run(CoordinateSystemAxisItemProposalDTO parameter) {
 							parameter.setCode(106);
 							parameter.setAxisAbbreviation("Lat");
 							parameter.setAxisDirection(CS_AxisDirection.NORTH);
@@ -474,10 +474,10 @@ public class SiteController extends AbstractController
 			final RE_RegisterItem axisLon = this.registerItem(r, icAxis,
 					"Geodetic longitude",
 					BigInteger.valueOf(10107L),
-					CoordinateSystemAxisProposalDTO.class,
-					new ParameterizedRunnable<CoordinateSystemAxisProposalDTO>() {
+					CoordinateSystemAxisItemProposalDTO.class,
+					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
-						public void run(CoordinateSystemAxisProposalDTO parameter) {
+						public void run(CoordinateSystemAxisItemProposalDTO parameter) {
 							parameter.setCode(107);
 							parameter.setAxisAbbreviation("Lon");
 							parameter.setAxisDirection(CS_AxisDirection.EAST);
