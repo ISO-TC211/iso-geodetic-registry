@@ -77,7 +77,7 @@
 							<div th:case="'ADDITION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-success' : 'panel-default'">
 								<div class="panel-heading">
 									<h3 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordion" th:href="'#additionInformation_' + ${pmi.uuid}" th:text="${pmi.dateDisposed} ? #{header.addedOn(${#calendars.format(pmi.dateDisposed, 'dd.MM.yyyy')})} : #{header.additionInformation}"></a>
+										<a data-toggle="collapse" data-parent="#accordion" th:href="'#additionInformation_' + ${pmi.uuid}" th:text="${pmi.dateDisposed} ? #{header.addedOn(${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})} : #{header.additionInformation}"></a>
 									</h3>
 								</div>
 								<div class="panel-collapse collapse" th:id="'additionInformation_' + ${pmi.uuid}">
@@ -85,11 +85,11 @@
 										<tbody>
 											<tr th:if="*{dateProposed}">
 												<td th:text="#{dateProposed}"></td>
-												<td th:text="*{#calendars.format(dateProposed, 'dd.MM.yyyy')}"></td>
+												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
 											</tr>
 											<tr th:if="*{dateDisposed}">
 												<td th:text="#{dateDisposed}"></td>
-												<td th:text="*{#calendars.format(dateDisposed, 'dd.MM.yyyy')}"></td>
+												<td th:text="*{#calendars.format(dateDisposed, 'yyyy-MM-dd')}"></td>
 											</tr>
 											<tr th:if="*{disposition}">
 												<td th:text="#{disposition}"></td>
@@ -119,12 +119,15 @@
 									</table>
 								</div>
 							</div>
+
+							<div th:case="'RETIREMENT'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-danger' : 'panel-default'" th:include="registry/item :: amendmentInfo">
+							</div>
 	
-							<div th:case="'RETIREMENT' or 'SUPERSESSION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-warning' : 'panel-default'">
+							<div th:case="'SUPERSESSION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-danger' : 'panel-default'" th:fragment="amendmentInfo">
 								<div class="panel-heading">
 									<h3 class="panel-title">
 										<a data-toggle="collapse" data-parent="#accordion" th:href="'#amendmentInformation_' + ${pmi.uuid}">
-											<span th:if="${pmi.dateDisposed}" th:text="#{header.amendedOn(#{${pmi.amendmentType}}, ${#calendars.format(pmi.dateDisposed, 'dd.MM.yyyy')})}"></span>
+											<span th:if="${pmi.dateDisposed}" th:text="#{header.amendedOn(#{${pmi.amendmentType}}, ${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})}"></span>
 											<span th:if="!${pmi.dateDisposed}" th:text="#{header.amendmentInformation}"></span>
 										</a>
 									</h3>
@@ -138,11 +141,11 @@
 											</tr>
 											<tr th:if="*{dateProposed}">
 												<td th:text="#{dateProposed}"></td>
-												<td th:text="*{#calendars.format(dateProposed, 'dd.MM.yyyy')}"></td>
+												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
 											</tr>
 											<tr th:if="*{dateDisposed}">
 												<td th:text="#{dateDisposed}"></td>
-												<td th:text="*{#calendars.format(dateDisposed, 'dd.MM.yyyy')}"></td>
+												<td th:text="*{#calendars.format(dateDisposed, 'yyyy-MM-dd')}"></td>
 											</tr>
 											<tr th:if="*{disposition}">
 												<td th:text="#{disposition}"></td>
@@ -173,7 +176,7 @@
 								<div class="panel-heading">
 									<h3 class="panel-title">
 										<a data-toggle="collapse" data-parent="#accordion" th:href="'#clarificationInformation_' + ${pmi.uuid}">
-											<span th:if="${pmi.dateDisposed}" th:text="#{header.clarifiedOn(${#calendars.format(pmi.dateDisposed, 'dd.MM.yyyy')})}" th:classappend="${pmi.isNotAccepted()} ? 'strikethrough'"></span>
+											<span th:if="${pmi.dateDisposed}" th:text="#{header.clarifiedOn(${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})}" th:classappend="${pmi.isNotAccepted()} ? 'strikethrough'"></span>
 											<span th:if="!${pmi.dateDisposed}" th:text="#{header.clarificationInformation}"></span>
 										</a>
 									</h3>
@@ -187,11 +190,11 @@
 											</tr>
 											<tr th:if="*{dateProposed}">
 												<td th:text="#{dateProposed}"></td>
-												<td th:text="*{#calendars.format(dateProposed, 'dd.MM.yyyy')}"></td>
+												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
 											</tr>
 											<tr th:if="*{dateDisposed}">
 												<td th:text="#{dateDisposed}"></td>
-												<td th:text="*{#calendars.format(dateDisposed, 'dd.MM.yyyy')}"></td>
+												<td th:text="*{#calendars.format(dateDisposed, 'yyyy-MM-dd')}"></td>
 											</tr>
 											<tr th:if="*{disposition}">
 												<td th:text="#{disposition}"></td>
