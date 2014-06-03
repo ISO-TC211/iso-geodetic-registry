@@ -164,7 +164,7 @@
 				<div style="overflow: hidden">
 					<div id="demo1" class="demo" style="height: 100%;">
 						<ul>
-							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}">Start</a></li>
+							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}" th:text="#{application.welcome}">Welcome</a></li>
 							<li id="nav_register"><a href="#">Register</a>
 								<ul>
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>

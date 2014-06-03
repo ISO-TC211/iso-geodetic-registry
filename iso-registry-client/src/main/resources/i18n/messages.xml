@@ -4,6 +4,7 @@
 	<comment />
 	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
 	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.welcome">Welcome</entry>
 	
 	<entry key="navbar.setHistoricDate">Historic view</entry>
 	<entry key="navbar.login">Login</entry>
