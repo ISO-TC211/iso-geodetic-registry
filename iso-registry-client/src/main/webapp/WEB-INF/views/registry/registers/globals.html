@@ -20,7 +20,7 @@
 <div th:fragment="selectIdentifiedItem2" class="form-group">
 	<label class="control-label" th:for="${property}" th:text="${label}"></label>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" th:with="isClarification=${proposal.isClarification()}">
-		<input type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}"/>
+		<input type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
 		<script type="text/javascript" charset="utf-8" th:inline="text">
 		/* <![CDATA[ */
 			$(function() {
@@ -66,7 +66,7 @@
 		        });
 				
 				if ([[${proposal.isClarification()}]]) {
-					$('#method').select2("readonly", true);
+					$('#[[${property}]]').select2("readonly", true);
 				}
 			});
 		

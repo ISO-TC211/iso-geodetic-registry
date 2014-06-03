@@ -46,6 +46,7 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 			this.setParameterName(parameterName);
 			this.value = value;
 			this.parameterType = parameterType;
+			this.uomUuid = null;
 		}
 
 		public ParameterValueDTO(UUID parameterUuid, String parameterName, String value, UUID uomUuid) {
@@ -161,6 +162,11 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 			}
 
 			if (this.getParameterValues() != null) {
+				if (item.getParameterValue() != null) {
+					while (!item.getParameterValue().isEmpty()) {
+						item.getParameterValue().remove(0);
+					}
+				}
 				for (ParameterValueDTO parameterValue : this.getParameterValues()) {
 					OperationParameterItem parameter = entityManager.find(OperationParameterItem.class, parameterValue.parameterUuid);
 					

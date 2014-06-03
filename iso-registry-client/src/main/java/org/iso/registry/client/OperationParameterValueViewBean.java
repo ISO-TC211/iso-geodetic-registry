@@ -5,11 +5,13 @@ import java.util.UUID;
 
 import org.iso.registry.core.model.operation.Measure;
 import org.iso.registry.core.model.operation.OperationParameterValue;
+import org.iso.registry.core.model.operation.OperationParameterValue.OperationParameterValueType;
 
 public class OperationParameterValueViewBean extends GeneralParameterValueViewBean
 {
 	private Object value;
 	private UnitOfMeasureItemViewBean unitOfMeasure;
+	private OperationParameterValueType parameterType;
 
 	public OperationParameterValueViewBean() {
 		// TODO Auto-generated constructor stub
@@ -18,6 +20,7 @@ public class OperationParameterValueViewBean extends GeneralParameterValueViewBe
 	public OperationParameterValueViewBean(OperationParameterValue parameterValue) {
 		super(parameterValue);
 		
+		this.parameterType = parameterValue.getParameterType();
 		if (parameterValue.getValue() instanceof Measure) {
 			this.unitOfMeasure = new UnitOfMeasureItemViewBean(((Measure)parameterValue.getValue()).getUom(), false);
 			this.value = ((Measure)parameterValue.getValue()).getValue();
@@ -44,6 +47,20 @@ public class OperationParameterValueViewBean extends GeneralParameterValueViewBe
 
 	public void setUnitOfMeasure(UnitOfMeasureItemViewBean unitOfMeasure) {
 		this.unitOfMeasure = unitOfMeasure;
+	}
+
+	/**
+	 * @return the parameterType
+	 */
+	public OperationParameterValueType getParameterType() {
+		return parameterType;
+	}
+
+	/**
+	 * @param parameterType the parameterType to set
+	 */
+	public void setParameterType(OperationParameterValueType parameterType) {
+		this.parameterType = parameterType;
 	}
 	
 }

@@ -3,6 +3,7 @@
 <properties>
 	<comment />
 	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
 	
 	<entry key="navbar.setHistoricDate">Zeitpunkt setzen</entry>
 	<entry key="navbar.login">Anmelden</entry>
@@ -65,6 +66,7 @@
 	<entry key="tableheader.parameter">Parameter</entry>
 	<entry key="tableheader.value">Wert</entry>
 	<entry key="tableheader.uom">Maßeinheit</entry>
+	<entry key="tableheader.parameterType">Parameter type</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -103,6 +105,7 @@
 	<entry key="header.ellipsoid">Ellipsoid</entry>
 	<entry key="header.operationParameter">Operationsparameter</entry>
 	<entry key="header.conversion">Conversion</entry>
+	<entry key="header.transformation">Transformation</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
@@ -304,6 +307,9 @@
 	<entry key="form.label.operationParameters">Parameter</entry>
 	<entry key="form.label.formula">Formel</entry>
 	<entry key="form.label.conversionMethod">Conversion Method</entry>
+	<entry key="form.label.operationVersion">Operation Version</entry>
+	<entry key="form.label.sourceCrs">Source CRS</entry>
+	<entry key="form.label.targetCrs">Target CRS</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
 	<entry key="form.select.none">-- N/A --</entry>
@@ -350,6 +356,8 @@
 	<entry key="form.placeholder.semiMajorAxis"></entry>
 	<entry key="form.placeholder.semiMinorAxis"></entry>
 	<entry key="form.placeholder.inverseFlattening"></entry>
+
+	<entry key="form.placeholder.operationVersion"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
