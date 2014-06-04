@@ -319,7 +319,7 @@ public class RegisterController
 				else if (itemClassFilter.equalsIgnoreCase("cs")) {
 					model.addAttribute("pageTitle", "Coordinate Systems");
 				}
-				else if (itemClassFilter.equalsIgnoreCase("datum")) {
+				else if (itemClassFilter.equalsIgnoreCase("datums")) {
 					model.addAttribute("pageTitle", "Geodetic Datums");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("operations")) {
