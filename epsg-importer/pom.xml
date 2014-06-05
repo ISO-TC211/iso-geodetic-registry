@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.geoinfoffm.registry</groupId>
+	<groupId>de.bespire.registry.iso</groupId>
 	<artifactId>epsg-importer</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<properties>
@@ -16,7 +16,7 @@
 		<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg-import</hibernate.connection.url>
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 		<client.basepath></client.basepath>
-		<basePackages>de.geoinfoffm.registry,org.iso.registry</basePackages>
+		<basePackages>de.geoinfoffm.registry,de.bespire.registry.iso,org.iso.registry</basePackages>
 	</properties>
 	<build>
 		<resources>
