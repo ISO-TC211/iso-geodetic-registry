@@ -143,7 +143,7 @@ public class CS_AxisDirection extends CodeType implements Serializable
 //	 */
 //	 WEST_SOUTH_WEST;
 
-	protected CS_AxisDirection() { }
+	public CS_AxisDirection() { }
 	
 	public CS_AxisDirection(String code, String codeSpace) {
 		super(code, codeSpace); 

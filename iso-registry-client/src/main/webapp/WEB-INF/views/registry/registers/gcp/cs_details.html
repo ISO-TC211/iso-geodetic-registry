@@ -1,0 +1,141 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6">
+
+			<div class="row">
+				<div class="col-md-4" th:with="property='code',inputType='number',label=#{form.label.code},placeholder=#{form.placeholder.code},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12" th:with="property='name',rows=5,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textArea"/>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div th:if="${isProposal}" class="col-md-12" th:with="property='axisUuids',label=#{form.label.coordinateAxis},isRequired='true',ajaxPath='axes',orderBy='name',displayCallback='axisSelectDisplay'">
+					<div th:replace="registry/registers/globals :: selectMultipleIdentifiedItems2"/>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="col-md-6">
+			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+		</div>
+	</div>
+
+<!-- 	<div th:unless="${isProposal}" class="row">	 -->
+<!-- 		<div class="col-md-12" th:with="property='axes',label=#{form.label.coordinateAxis},columns=${#strings.arraySplit('code,name,axisAbbreviation,axisUnit.name,axisDirection.code',',')},editable='false'"> -->
+<!-- 			<div th:replace="registry/registers/globals :: referencedEntitiesTable('axis')"/> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+				
+	<div class="row" th:unless="${isProposal}">
+		<div class="col-md-12">
+			<table id="axesTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th th:text="#{tableheader.code}"></th>
+						<th th:text="#{tableheader.coordinateAxis}"></th>
+						<th th:text="#{tableheader.axisAbbreviation}"></th>
+						<th th:text="#{tableheader.axisUnit}"></th>
+						<th th:text="#{tableheader.axisDirection}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="axis,row : *{axes}">
+<!-- 						<td> -->
+<!-- 							<input th:if="${isProposal}" type="hidden" th:id="'axis_' + ${row.index}" class="select-axis" th:value="${axis.axisUuid}" required="required" style="width: 100%"/> -->
+<!-- 							<a th:unless="${isProposal}" th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name} + ' [' + ${axis.code} + ']'"></a> -->
+<!-- 						</td>							 -->
+						<td th:text="${axis.code}"/>
+						<td th:text="${axis.name}"/>
+						<td th:text="${axis.axisAbbreviation}"/>
+						<td th:text="${axis.axisUnit.name}"/>
+						<td th:text="${axis.axisDirection.code}"/>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+	    var axisSelectDisplay = function(item) {
+			return { 
+				id: item[0],
+				text: "[" + item[1] + "] " + item[2] + " (" + item[3] + " / " + item[5] + " / " + item[4].code + ")", 
+			} 
+		};
+	            
+	    var axisSelect = function(element) {
+			element.select2({
+				width: 'resolve',
+				ajax: {
+					url: "[[@{${basePath}}]]/entities/by-class/CoordinateSystemAxisItem",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: 'name',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) { 
+								return { 
+									text: item[2] + " [" + item[1] + "]", 
+									id: item[0] 
+								} 
+							}) 
+						};
+					},
+				},
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+                    	dataType: "json"
+                	}))
+                	.done(function(data) {
+                		item = data[0];
+                		result.push({
+                			id: item[0],
+							text: item[2] + " [" + item[1] + "]", 
+                		});
+		                callback(result[0]); 
+                	});
+	            }						            
+			});        						
+		};
+
+       	$(document).ready(function() {
+//        		$('#panelTitle').text("[[#{${itemClassName}}]]");
+       		
+       		$('#axesTable').dataTable({
+       			"bPaginate": false,
+       			"bFilter": false,
+	   			 aoColumns: [
+	    						{"bSortable" : false},
+	       						{"bSortable" : false},
+	       						{"bSortable" : false},
+	       						{"bSortable" : false},
+	       						{"bSortable" : false},
+   					]
+       		});
+       		
+       		$('.select-axis').each(function() {
+				axisSelect($(this));
+       		});
+       	});		
+	/* ]]> */
+	</script>
+	
+
+</div>

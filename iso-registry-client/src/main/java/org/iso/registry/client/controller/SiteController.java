@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -14,11 +13,12 @@ import javax.validation.Valid;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.GeodeticCoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
@@ -59,7 +59,6 @@ import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
-import de.geoinfoffm.registry.api.UpdateUserException;
 import de.geoinfoffm.registry.api.UserRegistrationException;
 import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
@@ -341,7 +340,7 @@ public class SiteController extends AbstractController
 
 			initLog.append("\n");
 			
-			String registerName = "EPSG Geodetic Parameter Data Set";
+			String registerName = "Geodetic Codes & Parameters";
 			RE_Register r = registerService.findByName(registerName); 
 			if (r == null) {
 				initLog.append("> Creating register...\n");
@@ -462,10 +461,10 @@ public class SiteController extends AbstractController
 			final RE_RegisterItem axisLat = this.registerItem(r, icAxis,
 					"Geodetic latitude",
 					BigInteger.valueOf(10106L),
-					CoordinateSystemAxisProposalDTO.class,
-					new ParameterizedRunnable<CoordinateSystemAxisProposalDTO>() {
+					CoordinateSystemAxisItemProposalDTO.class,
+					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
-						public void run(CoordinateSystemAxisProposalDTO parameter) {
+						public void run(CoordinateSystemAxisItemProposalDTO parameter) {
 							parameter.setCode(106);
 							parameter.setAxisAbbreviation("Lat");
 							parameter.setAxisDirection(CS_AxisDirection.NORTH);
@@ -475,10 +474,10 @@ public class SiteController extends AbstractController
 			final RE_RegisterItem axisLon = this.registerItem(r, icAxis,
 					"Geodetic longitude",
 					BigInteger.valueOf(10107L),
-					CoordinateSystemAxisProposalDTO.class,
-					new ParameterizedRunnable<CoordinateSystemAxisProposalDTO>() {
+					CoordinateSystemAxisItemProposalDTO.class,
+					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
-						public void run(CoordinateSystemAxisProposalDTO parameter) {
+						public void run(CoordinateSystemAxisItemProposalDTO parameter) {
 							parameter.setCode(107);
 							parameter.setAxisAbbreviation("Lon");
 							parameter.setAxisDirection(CS_AxisDirection.EAST);
@@ -501,8 +500,8 @@ public class SiteController extends AbstractController
 							p.setRemarks("Coordinates referenced to this CS are in degrees. Any degree representation "
 									+ "(e.g. DMSH, decimal, etc.) may be used but that used must be declared for the "
 									+ "user by the supplier of data. Used in geographic 2D coordinate reference systems.");
-							p.addAxis(new CoordinateSystemAxisProposalDTO((CoordinateSystemAxisItem)axisLat));
-							p.addAxis(new CoordinateSystemAxisProposalDTO((CoordinateSystemAxisItem)axisLon));
+							p.addAxis(new AxisDTO((CoordinateSystemAxisItem)axisLat));
+							p.addAxis(new AxisDTO((CoordinateSystemAxisItem)axisLon));
 						}
 					});
 

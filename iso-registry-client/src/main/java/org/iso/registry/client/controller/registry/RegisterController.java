@@ -151,6 +151,8 @@ public class RegisterController
 	@Autowired
 	private MessageSource messageSource;
 	
+	private Map<String, RE_ItemClass> itemClassCache = new HashMap<>();
+	
 //	@InitBinder
 //	protected void initBinder(WebDataBinder binder) {
 //		binder.setValidator(new ProposalValidator(itemService));
@@ -160,11 +162,12 @@ public class RegisterController
 	@Transactional(readOnly = true)
 	public String registerOverview(@PathVariable("register") String registerName,
 							       final Model model, final RedirectAttributes redirectAttributes, Pageable pageable) {
-		return registerOverview(registerName, (UUID)null, model, redirectAttributes, pageable);
+		return registerOverview(registerName, (String)null, model, redirectAttributes, pageable);
 	}
 
 	@RequestMapping(value = "/{register}/containedItems", method = RequestMethod.GET)
-	public @ResponseBody DatatablesResult getRegisterContainedItems(@PathVariable("register") String registerName, @RequestParam Map<String, String> parameters) {
+	public @ResponseBody DatatablesResult getRegisterContainedItems(@PathVariable("register") String registerName, 
+																	@RequestParam Map<String, String> parameters) {
 		RE_Register register = findRegister(registerName);
 		
 		String sEcho = parameters.get("sEcho");
@@ -217,14 +220,38 @@ public class RegisterController
 			pageable = new PageRequest(0, 10);
 		}
 		
-		RE_ItemClass itemClass = null;
-		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass")) && !"null".equalsIgnoreCase(parameters.get("itemClass"))) {
+		List<RE_ItemClass> itemClasses = new ArrayList<>();
+		if (parameters.containsKey("itemClass") && !StringUtils.isEmpty(parameters.get("itemClass")) && !"null".equalsIgnoreCase(parameters.get("itemClass")) && !parameters.get("itemClass").contains("[[")) {
 			UUID itemClassUuid = UUID.fromString(parameters.get("itemClass"));
-			itemClass = itemClassRepository.findOne(itemClassUuid);
+			itemClasses.add(itemClassRepository.findOne(itemClassUuid));
+		}
+		else if (parameters.containsKey("itemClassFilter") && !StringUtils.isEmpty(parameters.get("itemClassFilter")) && !"null".equalsIgnoreCase(parameters.get("itemClassFilter"))) {
+			String itemClassParam = parameters.get("itemClassFilter");
+			if (itemClassParam.equalsIgnoreCase("crs")) {
+				addItemClassToList("GeodeticCRS", itemClasses);
+				addItemClassToList("EngineeringCRS", itemClasses);
+				addItemClassToList("CompoundCRS", itemClasses);
+				addItemClassToList("VerticalCRS", itemClasses);
+				addItemClassToList("ProjectedCRS", itemClasses);
+			}
+			if (itemClassParam.equalsIgnoreCase("cs")) {
+				addItemClassToList("CartesianCS", itemClasses);
+				addItemClassToList("EllipsoidalCS", itemClasses);
+				addItemClassToList("VerticalCS", itemClasses);
+			}
+			if (itemClassParam.equalsIgnoreCase("datums")) {
+				addItemClassToList("GeodeticDatum", itemClasses);
+				addItemClassToList("VerticalDatum", itemClasses);
+			}
+			if (itemClassParam.equalsIgnoreCase("operations")) {
+				addItemClassToList("ConcatenatedOperation", itemClasses);
+				addItemClassToList("Conversion", itemClasses);
+				addItemClassToList("Transformation", itemClasses);
+			}
 		}
 		
 		Page<RE_RegisterItem> items;
-		if (itemClass == null) { 
+		if (itemClasses.isEmpty()) { 
 			if (!StringUtils.isEmpty(sSearch)) {
 				items = itemRepository.findByRegisterAndStatusInFiltered(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
 			}
@@ -234,10 +261,10 @@ public class RegisterController
 		}
 		else {
 			if (!StringUtils.isEmpty(sSearch)) {
-				items = itemRepository.findByRegisterAndItemClassAndStatusInFiltered(register, itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+				items = itemRepository.findByRegisterAndItemClassInAndStatusInFiltered(register, itemClasses, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
 			}
 			else {
-				items = itemRepository.findByRegisterAndItemClassAndStatusIn(register, itemClass, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);				
+				items = itemRepository.findByRegisterAndItemClassInAndStatusIn(register, itemClasses, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);				
 			}
 		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
@@ -251,10 +278,23 @@ public class RegisterController
 		return new DatatablesResult(items.getTotalElements(), items.getTotalElements(), sEcho, viewBeans);
 	}
 
-	@RequestMapping(value = "/{register}/{itemClass}", method = RequestMethod.GET)
+	public void addItemClassToList(String name, List<RE_ItemClass> itemClasses) {
+		if (itemClassCache.containsKey(name)) {
+			itemClasses.add(itemClassCache.get(name));
+		}
+		else {
+			RE_ItemClass ic = itemClassRepository.findByName(name);
+			if (ic != null) {
+				itemClassCache.put(name, ic);
+				itemClasses.add(ic);
+			}
+		}
+	}
+
+	@RequestMapping(value = "/{register}/{itemClassText}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public String registerOverview(@PathVariable("register") String registerName, 
-								   @PathVariable("itemClass") UUID itemClassUuid,
+								   @PathVariable("itemClassText") String itemClassFilter,
 								   final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
 		RE_Register register = findRegister(registerName);
 		if (register == null) {
@@ -264,9 +304,28 @@ public class RegisterController
 		model.addAttribute("register", register);
 		
 		RE_ItemClass itemClass = null;
-		if (itemClassUuid != null) {
-			itemClass = itemClassRepository.findOne(itemClassUuid);
-			model.addAttribute("itemClass", itemClass);
+		if (itemClassFilter != null) {
+			if (itemClassFilter.contains("-")) {
+				UUID itemClassUuid = UUID.fromString(itemClassFilter);
+				itemClass = itemClassRepository.findOne(itemClassUuid);
+				model.addAttribute("itemClass", itemClass);
+				model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
+			}
+			else {
+				model.addAttribute("itemClassFilter", itemClassFilter);
+				if (itemClassFilter.equalsIgnoreCase("crs")) {
+					model.addAttribute("pageTitle", "CRS");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("cs")) {
+					model.addAttribute("pageTitle", "Coordinate Systems");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("datums")) {
+					model.addAttribute("pageTitle", "Geodetic Datums");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("operations")) {
+					model.addAttribute("pageTitle", "Coordinate Operations");
+				}
+			}
 		}
 		
 		
@@ -338,7 +397,7 @@ public class RegisterController
 	@Transactional
 	public String registerOverviewProposals(@PathVariable("register") String registerName, final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
 		model.addAttribute("viewMode", "proposals");
-		return registerOverview(registerName, (UUID)null, model, redirectAttributes, pageable);
+		return registerOverview(registerName, (String)null, model, redirectAttributes, pageable);
 	}
 
 

@@ -5,8 +5,9 @@
 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="Cache-control" content="no-cache"/>
-		<title th:text="#{application.title}">GDI-DE Registry</title>
+		<title th:text="${pageTitle} ? (${pageTitle} + ' - ' + #{application.title}) : #{application.title}">Registry</title>
 		<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{__${basePath}__/resources/js/jquery.js}"></script>
+		<script type="text/javascript" src="../../resources/js/jqueryui.js" th:src="@{__${basePath}__/resources/js/jqueryui.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.cookie.js" th:src="@{__${basePath}__/resources/js/jquery.cookie.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.hotkeys.js" th:src="@{__${basePath}__/resources/js/jquery.hotkeys.js}"></script>
 		<script type="text/javascript" src="../../resources/js/jquery.jstree.js" th:src="@{__${basePath}__/resources/js/jquery.jstree.js}"></script>
@@ -17,18 +18,21 @@
 		<script type="text/javascript" src="../../resources/js/jquery.dataTables.min.js" th:src="@{__${basePath}__/resources/js/jquery.dataTables.min.js}"></script>
 		<script type="text/javascript" src="../../resources/js/datatables.js" th:src="@{__${basePath}__/resources/js/datatables.js}"></script>
 		<script type="text/javascript" src="../../resources/js/registry.js" th:src="@{__${basePath}__/resources/js/registry.js}"></script>
-		<script type="text/javascript" src="https://jira.geoinfoffm.de/s/de_DE5uveee-1988229788/6105/7/1.4.0-m3/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=6781bda0"></script>
+		<script type="text/javascript" src="../../resources/js/select2.js" th:src="@{__${basePath}__/resources/js/select2.js}"></script>
+		<script type="text/javascript" src="https://bespire.atlassian.net/s/5aabcb68bc266b63d9c98db2e18c606b-T/en_USbdmabc/6327/13/1.4.11/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=3eddc320"></script>
 		<link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{__${basePath}__/resources/css/bootstrap.min.css}" />
 		<link rel="stylesheet" href="../../resources/css/bootstrap-theme.min.css" th:href="@{__${basePath}__/resources/css/bootstrap-theme.min.css}" />
 		<link rel="stylesheet" href="../../resources/css/bootstrap-datetimepicker.min.css" th:href="@{__${basePath}__/resources/css/bootstrap-datetimepicker.min.css}" />		
 		<link rel="stylesheet" href="../../resources/css/font-titillium.css" th:href="@{__${basePath}__/resources/css/font-titillium.css}" type="text/css" />
 		<link rel="stylesheet" href="../../resources/css/font-awesome.min.css" th:href="@{__${basePath}__/resources/css/font-awesome.min.css}" type="text/css" />
 		<link rel="stylesheet" href="../../resources/css/datatables.css" th:href="@{__${basePath}__/resources/css/datatables.css}" />
+		<link rel="stylesheet" href="../../resources/css/select2.css" th:href="@{__${basePath}__/resources/css/select2.css}" />
+		<link rel="stylesheet" href="../../resources/css/select2-bootstrap.css" th:href="@{__${basePath}__/resources/css/select2-bootstrap.css}" />
 		<link rel="stylesheet" href="../../resources/css/registry.css" th:href="@{__${basePath}__/resources/css/registry.css}" />
 		<link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css"/>		
 		<style type="text/css" th:inline="text">
 			body {
-				padding-top: 100px;
+				padding-top: 110px;
 				padding-bottom: 40px;
 			}
 			
@@ -36,9 +40,9 @@
  				padding-left: 20px;
  			} 
 			
-			nav[role="navigation"] img {
-				background:#013568 url([[@{${basePath}}]]/resources/imagess/iso.png) left 20px top 10px no-repeat;height:90px;overflow: visible;
-			}
+/* 			nav[role="navigation"] img { */
+/* 				background:#013568  */
+/* 			} */
 			
 			.navbar .navbar-brand {
 			    max-height: 40px;
@@ -77,13 +81,13 @@
 					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
 <!-- 				<h1><span>Home</span></h1> -->
-				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left" style="padding-top: 10px"/>
+				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left" style="padding-top: 10px; padding-left: 10px"/>
 				<a style="padding-top:15px" class="test navbar-brand" th:href="@{__${basePath}__/}" th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
-			</div>
 
+			</div>
+			
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse navbar-ex1-collapse" style="margin-top: 40px">
-
 				<ul class="nav navbar-nav navbar-right">
 					<li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span sec:authentication="principal.emailAddress">Nutzer</span></li>
 					<li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}" th:text="#{navbar.logout}">Abmelden</a></li>
@@ -151,56 +155,59 @@
 	</div>
 
 	<div th:fragment="navtree">
+<!-- 		<div class="alert alert-danger"> -->
+<!-- 			<p class="text-center"><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p> -->
+<!-- 		</div> -->
+
 		<div class="sidebartree well">
 			<div class="bs-sidebar affix-top">
 				<div style="overflow: hidden">
 					<div id="demo1" class="demo" style="height: 100%;">
 						<ul>
-							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}">Start</a></li>
+							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}" th:text="#{application.welcome}">Welcome</a></li>
 							<li id="nav_register"><a href="#">Register</a>
 								<ul>
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
-									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}">
-										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}"></a>
+									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}" class="jstree-open">
+										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}" th:title="#{${register.value}}"></a>
 										<ul>
 											<li>
-												<a th:id="'registerGCPCRS'" href="#">Coordinate Reference Systems</a>
-<!-- 												<a th:id="'register' + ${register.key} + 'CRS'" href="#">Coordinate Reference Systems</a> -->
+												<a th:id="'register' + ${register.key} + 'crs'" th:href="@{__${basePath}__/register/__${register.key}__/crs}">Coordinate Reference Systems</a>
 												<ul>
 													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CRS')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'CS'" href="#">Coordinate Systems</a>
+												<a th:id="'register' + ${register.key} + 'cs'" th:href="@{__${basePath}__/register/__${register.key}__/cs}">Coordinate Systems</a>
 												<ul>
 													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CS')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'Datums'" href="#">Datums</a>
+												<a th:id="'register' + ${register.key} + 'datums'" th:href="@{__${basePath}__/register/__${register.key}__/datums}">Datums</a>
 												<ul>
 													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'Datum')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'Conversions'" href="#">Coordinate Transformations</a>
+												<a th:id="'register' + ${register.key} + 'operations'" th:href="@{__${basePath}__/register/__${register.key}__/operations}">Coordinate Operations</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Operation')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'Other'" href="#">Other</a>
+												<a th:id="'register' + ${register.key} + 'other'" th:href="@{__${basePath}__/register/__${register.key}__}">Other</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Operation')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Concatenated')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
+														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
@@ -251,7 +258,7 @@
 								// each plugin you have included can have its own config object
 								"core" : {
 									"animation" : 100,
-									"initially_open" : [ "nav_register", "nav_mgmt", "nav_usermgmt", "registerGCPCRS" ]
+									"initially_open" : [ "nav_register", "nav_mgmt", "nav_usermgmt" ]
 								},
 								"ui" : {
 									//"initially_select" : [ "nav_start" ]

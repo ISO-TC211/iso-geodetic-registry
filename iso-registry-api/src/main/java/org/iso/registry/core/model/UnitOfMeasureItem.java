@@ -22,7 +22,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 @Access(AccessType.FIELD)
 @Table(name = "UnitOfMeasure")
 @Audited @Entity
-public class UnitOfMeasureItem extends IdentifiedItem
+public class UnitOfMeasureItem extends IdentifiedItem implements UnitOfMeasure
 {
 	@Basic(optional = false)
 	@Enumerated(EnumType.STRING)
@@ -63,6 +63,7 @@ public class UnitOfMeasureItem extends IdentifiedItem
 		return offsetToStandardUnit;
 	}
 
+	@Override
 	public void setOffsetToStandardUnit(Double offsetToStandardUnit) {
 		this.offsetToStandardUnit = offsetToStandardUnit;
 	}
@@ -89,6 +90,52 @@ public class UnitOfMeasureItem extends IdentifiedItem
 
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
+	}
+
+	@Override
+	public String getNameStandardUnit() {
+		if (this.getStandardUnit() != null) {
+			return this.getStandardUnit().getName();
+		}
+		else {
+			return null;
+		}
+	}
+
+	@Override
+	public void setNameStandardUnit(String nameStandardUnit) {
+		throw new RuntimeException("Not supported");
+	}
+
+	@Override
+	public Double getScaleToStandardUnit() {
+		return this.scaleToStandardUnitNumerator / this.scaleToStandardUnitDenominator;
+	}
+
+	@Override
+	public void setScaleToStandardUnit(Double scaleToStandardUnit) {
+		this.setScaleToStandardUnitNumerator(scaleToStandardUnit);
+		this.setScaleToStandardUnitDenominator(1.0);
+	}
+
+	@Override
+	public String getUomName() {
+		return this.getName();
+	}
+
+	@Override
+	public void setUomName(String uomName) {
+		this.setName(uomName);
+	}
+
+	@Override
+	public String getUomSymbol() {
+		return this.getSymbol();
+	}
+
+	@Override
+	public void setUomSymbol(String uomSymbol) {
+		this.setSymbol(uomSymbol);
 	}
 
 }

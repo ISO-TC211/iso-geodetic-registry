@@ -39,7 +39,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 @Audited @Entity
 public class CoordinateReferenceSystemItem extends ReferenceSystemItem
 {
-	@Column(name = "CRS_SCOPE")
+	@Column(name = "CRS_SCOPE", columnDefinition = "text")
 	private String scope;
 	
 	protected CoordinateReferenceSystemItem() {}

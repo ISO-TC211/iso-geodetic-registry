@@ -44,7 +44,7 @@ public abstract class DatumItem extends IdentifiedItem
 	 * image or the corner of the image. The coordinate system orientation is
 	 * defined through the CS_AxisDirection class.
 	 */
-	@Column(name = "ORIGIN_DESCRIPTION")
+	@Column(name = "ORIGIN_DESCRIPTION", columnDefinition = "text")
 	private String anchorDefinition;
 	/**
 	 * Area or region or timeframe in which this datum is valid.
@@ -68,7 +68,7 @@ public abstract class DatumItem extends IdentifiedItem
 	 * Description of usage, or limitations of usage, for which this datum is
 	 * valid. If unknown, enter "not known".
 	 */
-	@Column(name = "DATUM_SCOPE")	
+	@Column(name = "DATUM_SCOPE", columnDefinition = "text")	
 	private String scope;
 
 	public String getAnchorDefinition() {
