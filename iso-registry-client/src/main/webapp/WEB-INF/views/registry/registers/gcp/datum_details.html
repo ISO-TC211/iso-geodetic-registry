@@ -1,0 +1,55 @@
+<div th:fragment="details">
+	<div class="row">
+
+		<div class="col-md-6"> <!-- LEFT -->
+
+			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('datum')" />
+
+			<div class="row">
+				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textArea"/>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12" th:with="property='anchorDefinition',inputType='text',label=#{form.label.originDescription},placeholder=#{form.placeholder.originDescription},isRequired='false'">
+					<div th:replace="registry/registers/globals :: textArea"/>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12" th:with="property='realizationEpoch',inputType='date',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='true'">
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+			</div>
+		</div>	<!-- END OF LEFT -->
+
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row">
+				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},isRequired='true',ajaxPath='AreaItem'">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+
+			<div th:if="${itemClassName} != null and ${itemClassName} eq 'GeodeticDatum'">
+				<div class="row">
+					<div class="col-md-12" th:with="property='ellipsoid',label=#{form.label.ellipsoid},isRequired='true',ajaxPath='EllipsoidItem',noAddNew='true'">
+						<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12" th:with="property='primeMeridian',label=#{form.label.primeMeridian},isRequired='true',ajaxPath='PrimeMeridianItem',noAddNew='true'">
+						<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+					</div>
+				</div>
+			</div>
+		
+			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+			
+		</div>	<!-- END OF RIGHT -->									
+	</div>
+</div>

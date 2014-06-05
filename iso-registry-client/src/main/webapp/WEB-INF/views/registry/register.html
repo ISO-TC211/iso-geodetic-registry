@@ -10,7 +10,12 @@
 				<div th:include="layout :: navtree"></div>
 			</div>
 			<div class="col-md-9" role="main">
+			  	
+			  	<div th:replace="home :: demo"/>
+
 				<h3 th:text="${register.name}">Register ABC</h3>
+				
+<!-- 				<div th:replace="home :: demo"/> -->
 
 				<div th:if="${revisionDate}" th:unless="${noRevisionAtGivenDate}" class="alert alert-danger">
 					<p th:text="#{alert.historicView}">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</p>
@@ -312,7 +317,18 @@
 			"bProcessing": true,
 			"bServerSide": true,
 			"fnServerParams": function (aoData) {
-	            aoData.push({ name: "itemClass", value: "[[${itemClass} ? ${itemClass.uuid}]]" });
+				if ([[${#strings.isEmpty(itemClassFilter)}]]) {
+		            aoData.push({
+			            	name: "itemClass", 
+			            	value: "[[${itemClass.uuid}]]"
+		            });
+				}
+				if ([[${!#strings.isEmpty(itemClassFilter)}]]) {
+		            aoData.push({
+			            	name: "itemClassFilter", 
+			            	value: "[[${itemClassFilter}]]"
+		            });
+				}
 	        },
 // 			"fnServerData" : datatable2Rest,
 			"sPaginationType": "bs_normal",

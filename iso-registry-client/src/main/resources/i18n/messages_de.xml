@@ -3,6 +3,8 @@
 <properties>
 	<comment />
 	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.welcome">Willkommen</entry>
 	
 	<entry key="navbar.setHistoricDate">Zeitpunkt setzen</entry>
 	<entry key="navbar.login">Anmelden</entry>
@@ -62,6 +64,14 @@
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Bezeichnungssystem</entry>
 	<entry key="tableheader.remarks">Anmerkungen</entry>
+	<entry key="tableheader.parameter">Parameter</entry>
+	<entry key="tableheader.value">Wert</entry>
+	<entry key="tableheader.uom">Maßeinheit</entry>
+	<entry key="tableheader.parameterType">Parameter type</entry>
+	<entry key="tableheader.coordinateAxis">Koordinatenachse</entry>
+	<entry key="tableheader.axisAbbreviation">Achsenabkürzung</entry>
+	<entry key="tableheader.axisUnit">Achseneinheit</entry>
+	<entry key="tableheader.axisDirection">Achsenausrichtung</entry>
 
 	<entry key="header.supersededItems">Ersetzte Einträge</entry>	
 	<entry key="header.supersedingItems">Nachfolger</entry>
@@ -93,11 +103,17 @@
 	<entry key="header.myProfile">Ihr Benutzerprofil</entry>
 	<entry key="header.proposalDetails">Vorschlagsdetails</entry>
 	<entry key="header.crs">Koordinatenreferenzsystem</entry>
+	<entry key="header.cs">Koordinatensystem</entry>
 	<entry key="header.area">Gebiet</entry>
 	<entry key="header.datum">Datum</entry>
 	<entry key="header.namingSystem">Namenssystem</entry>
 	<entry key="header.uom">Maßeinheit</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
+	<entry key="header.operationParameter">Operationsparameter</entry>
+	<entry key="header.conversion">Conversion</entry>
+	<entry key="header.transformation">Transformation</entry>
+	<entry key="header.coordinateAxis">Koordinatenachse</entry>
+	<entry key="header.primeMeridian">Prime Meridian</entry>
 	
 	<entry key="button.reviewProposal">Überprüfen</entry>
 	<entry key="button.decideProposal">Entscheiden</entry>
@@ -296,8 +312,24 @@
 	<entry key="form.label.semiMajorAxisUom">Maßeinheit</entry>
 	<entry key="form.label.semiMinorAxis">Nebenachse</entry>
 	<entry key="form.label.inverseFlattening">Verflachung</entry>
+	<entry key="form.label.operationParameters">Parameter</entry>
+	<entry key="form.label.formula">Formel</entry>
+	<entry key="form.label.conversionMethod">Operation Method</entry>
+	<entry key="form.label.operationVersion">Operation Version</entry>
+	<entry key="form.label.sourceCrs">Source CRS</entry>
+	<entry key="form.label.targetCrs">Target CRS</entry>
+	<entry key="form.label.coordinateAxis">Koordinatenachsen</entry>
+	<entry key="form.label.axisAbbreviation">Axis abbreviation</entry>
+	<entry key="form.label.axisDirection">Axis direction</entry>
+	<entry key="form.label.axisUnit">Axis unit</entry>
+	<entry key="form.label.minimumValue">Minimum value</entry>
+	<entry key="form.label.maximumValue">Maximum value</entry>
+	<entry key="form.label.rangeMeaning">Range meaning</entry>
+	<entry key="form.label.greenwichLongitude">Longitude from Greenwich</entry>
+	<entry key="form.label.greenwichLongitudeUom">Unit</entry>
 		
 	<entry key="form.select.choose">-- Bitte wählen --</entry>
+	<entry key="form.select.none">-- N/A --</entry>
 		
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>
@@ -341,6 +373,14 @@
 	<entry key="form.placeholder.semiMajorAxis"></entry>
 	<entry key="form.placeholder.semiMinorAxis"></entry>
 	<entry key="form.placeholder.inverseFlattening"></entry>
+
+	<entry key="form.placeholder.operationVersion"></entry>
+	
+	<entry key="form.placeholder.axisAbbreviation"></entry>
+	<entry key="form.placeholder.minimumValue"></entry>
+	<entry key="form.placeholder.maximumValue"></entry>
+
+	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
@@ -425,5 +465,23 @@
 	<entry key="VerticalDatum">Vertical Datum</entry>
 	<entry key="EngineeringDatum">Engineering Datum</entry>
 	<entry key="PrimeMeridian">Prime Meridian</entry>
+
+	<entry key="CoordinateSystemItem">all Coordinate Systems</entry>
+	<entry key="EllipsoidalCoordinateSystemItem">Ellipsoidal Coordinate Systems</entry>
+	<entry key="SphericalCoordinateSystemItem">Spherical Coordinate Systems</entry>
+	<entry key="CartesianCoordinateSystemItem">Cartesian Coordinate Systems</entry>
+	<entry key="VerticalCoordinateSystemItem">Vertical Coordinate Systems</entry>
+
+	<entry key="DatumItem">all Datums</entry>
+	<entry key="EngineeringDatumItem">Engineering Datums</entry>
+	<entry key="GeodeticDatumItem">Geodetic Datums</entry>
+	<entry key="VerticalDatumItem">Vertical Datums</entry>
+
+	<entry key="ConcatenatedOperation">Concatenated Operation</entry>
+	<entry key="Conversion">Conversion</entry>
+	<entry key="SingleOperation">Single Operation</entry>
+	<entry key="OperationMethod">Operation Method</entry>
+	<entry key="OperationParameter">Operation Parameter</entry>
+	<entry key="Transformation">Transformation</entry>
 	
 </properties>

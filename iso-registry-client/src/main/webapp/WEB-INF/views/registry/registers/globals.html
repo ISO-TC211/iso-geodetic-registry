@@ -17,15 +17,167 @@
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
+<div th:fragment="selectIdentifiedItem2" class="form-group">
+	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<div th:if="${isProposal}" th:id="${property} + 'Group'" th:with="isClarification=${proposal.isClarification()}">
+		<input type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
+		<script type="text/javascript" charset="utf-8" th:inline="text">
+		/* <![CDATA[ */
+			$(function() {
+				$('#[[${property}]]').select2({
+					multiple: false,
+					dropdownCssClass: "bigdrop",
+					ajax: {
+						url: "[[@{${basePath}}]]/entities/by-class/[[${ajaxPath}]]",
+						dataType: "json",
+						data: function(term, page) {
+							return {
+								orderBy: 'name',
+								q: term
+							};
+						},
+						results: function (data) {
+							return { 
+								results : $.map(data, function (item) { 
+									return { 
+										id: item[0], 
+										text: item[2] + " [" + item[1] + "]", 
+									} 
+								}) 
+							};
+						}
+		            },
+		            initSelection: function(element, callback) {
+	               		var result = [];
+	               		// Collect AJAX requests needed to resolve initially
+	               		// selected items
+	                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+	                    	dataType: "json"
+	                	}))
+	                	.done(function(data) {
+	                		item = data[0];
+	                		result.push({
+	                			id: item[0],
+								text: item[2] + " [" + item[1] + "]", 
+	                		});
+			                callback(result[0]); 
+	                	});
+		            }						            
+		        });
+				
+				if ([[${proposal.isClarification()}]]) {
+					$('#[[${property}]]').select2("readonly", true);
+				}
+			});
+		
+		/* ]]> */
+		</script>
+	</div>
+	<div th:unless="${isProposal}">
+		<!-- form-backing bean: RegisterItemViewBean -->
+		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.code} + '] ' + *{__${property}__.name}"></a>
+		</div>
+		<div th:unless="*{__${property}__}">
+			[<span th:text="#{undefined}"></span>]
+		</div>		
+	</div>
+	
+</div>
+
+<div th:fragment="selectMultipleIdentifiedItems2" class="form-group">
+	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<input type="hidden" multiple="multiple" th:id="${property}" style="width: 100%" th:field="*{__${property}__}"/>
+	<script type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(function() {
+			$('#[[${property}]]').select2({
+				multiple: true,
+				dropdownCssClass: "bigdrop",
+				ajax: {
+					url: "[[@{${basePath}}]]/entities/[[${ajaxPath}]]",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: '[[${orderBy}]]',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) {
+								if ([[${displayCallback} ? 'true' : 'false']]) {
+									return [[${displayCallback}]](item);
+								}
+								else {
+									return { 
+										text: "[" + item[1] + "] " + item[2], 
+										id: item[0] 
+									} 
+								}
+							}) 
+						};
+					}
+	            },
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		var requests = Array();
+               		
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+	                $(element.val().split(",")).each(function(i) {
+	                	requests.push(
+		                	$.ajax("[[@{${basePath}}]]/entities/[[${ajaxPath}]]?uuid=" + this, {
+		                    	dataType: "json"
+		                	})
+		                );
+	                });
+	                
+               		// Process the requests asynchronically
+	                var defer = $.when.apply($, requests);
+               		
+               		// Perform the following after ALL of the requests
+               		// have finished
+	                defer.done(function() {
+                	   $.each(arguments, function(index, data){
+                	        // "data" will contain an array of response information for each specific request
+				            var item = data[0].toString().split(",");
+	                		result.push({
+	                			id: item[0],
+								text: "[" + item[1] + "] " + item[2], 
+	                		});
+			                callback(result); 
+                	   });
+                	});
+	            }						            
+	        });
+			
+			if ([[${proposal.isClarification()}]]) {
+				$('#[[${property}]]').select2("readonly", true);
+			}
+			
+			$("#[[${property}]]").select2("container").find("ul.select2-choices").sortable({
+				containment: 'parent',
+				start: function() { $("#[[${property}]]").select2("onSortStart"); },
+				update: function() { $("#[[${property}]]").select2("onSortEnd"); }
+			});								
+		});
+	
+	/* ]]> */
+	</script>
+</div>
+
+
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group" th:with="isClarification=${proposal.isClarification()}">
 		<!-- form-backing bean: RegisterItemProposalDTO -->
-		<input hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}"/>
+		<input th:unless="${index}" hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}" style="width: 100%"/>
+		<input th:if="${index}" hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__[__${index}__].referencedItemUuid}"/>
 		<select th:unless="${isClarification}" th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}"></select>
 		<span th:unless="${noAddNew} or ${isClarification}" class="input-group-btn">
-			<button th:id="'addNew_' + ${property}" class="btn btn-default btn-addnew" type="button" th:text="#{button.addNew}">Add new</button>
+			<button th:id="'addNew_' + ${property}" class="btn btn-default btn-addnew" type="button" th:text="${addNewLabel} ? ${addNewLabel} : #{button.addNew}">Add new</button>
 		</span>
 		<div th:if="${isClarification}" th:with="uuid=*{__${property}__.referencedItemUuid}">
 			<div th:if="${uuid}">
@@ -34,7 +186,7 @@
 				/* <![CDATA[ */
 					$(function() {
 						$.getJSON(
-								"[[@{${basePath}}]]/entities/byUuid/[[${uuid}]]",
+								"[[@{${basePath}}]]/entities/by-uuid/[[${uuid}]]",
 								{
 								},
 								function(j) {
@@ -67,13 +219,16 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/entities/byClass/" + ajaxPath + "?orderBy=name",
+							"[[@{${basePath}}]]/entities/by-class/" + ajaxPath + "?orderBy=name",
 							{
 								id : $(this).val(),
 								ajax : 'true'
 							},
 							function(j) {
 								var options = '';
+								if ([[!${isRequired}]]) {
+									options += '<option value="">[[#{form.select.none}]]</option>'
+								}
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i][0] + '">'
 											+ (j[i][2]).trunc(100) + ' [' + j[i][1] + ']'
@@ -100,13 +255,16 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/entities/byClass/" + ajaxPath + "?orderBy=code",
+							"[[@{${basePath}}]]/entities/by-class/" + ajaxPath + "?orderBy=code",
 							{
 								id : $(this).val(),
 								ajax : 'true'
 							},
 							function(j) {
 								var options = '';
+								if ([[!${isRequired}]]) {
+									options += '<option value="">[[#{form.select.none}]]</option>'
+								}
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i][0] + '">'
 											+ '[' + j[i][1] + '] ' + (j[i][2]).trunc(100) 
@@ -197,7 +355,7 @@
 
 	<script type="text/javascript" th:inline="text">
 	/* <![CDATA[ */
-			table = $('#aliasesTable').dataTable({
+			table = $('#aliasesTable_[[${modifier}]]').dataTable({
 			"sPaginationType": "bs_normal",
 			"bFilter": false,
 			"oLanguage": {
@@ -223,6 +381,76 @@
 				{"bSortable" : false}
 			]
 		});	
+	/* ]]> */
+	</script>	
+</div>
+
+<div th:fragment="referencedEntitiesTable(modifier)">
+	<div th:unless="!*{__${property}__} and !${isProposal}">
+		<label class="control-label" th:for="${property} + 'Table_' + ${modifier}" th:text="${label}"/>
+		<div class="panel">
+			<div class="panel-body">
+				<table th:id="${property} + 'Table_' + ${modifier}" class="datatable table table-condensed table-striped">
+					<thead>
+						<tr>
+							<th th:each="column : ${columns}" th:text="#{tableheader.__${column}__}">Alias</th>
+<!-- 							<th th:if="${editable}"><button th:id="${property} + 'Table_' + ${modifier} + '_addNew'" type="button" class="btn btn-default" th:text="#{button.addNew}"></button></th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="entity : *{__${property}__}">
+							<td th:each="column : ${columns}" th:text="${entity.__${column}__}"/>
+<!-- 							<td th:if="${editable}"><button type="button" class="btn btn-default" th:text="#{button.remove}"></button></td> -->
+						</tr>
+					</tbody>
+				</table>
+<!-- 				<button th:if="${isProposal} and !${proposal.isClarification()}" type="button" th:text="#{button.addNew}" class="btn btn-sm btn-default">Add new</button> -->
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+			var table = $('#[[${property}]]Table_[[${modifier}]]').dataTable({
+			"sPaginationType": "bs_normal",
+   			"bPaginate": false,
+   			"bFilter": false,
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			 "aaSorting": [[ 0, "asc" ]],
+// 			 aoColumns: [
+// 				null,
+// 				null,
+// 				{"bSortable" : false}
+// 			]
+		});
+	
+//         if ([[${editable}]])) {
+// 			$('[[${property}]]Table_[[${modifier}]]_addNew').click(function(e) {
+// 				var index = $('table#[[${property}]]Table_[[${modifier}]] tbody').children().length;
+// 				table = $('#[[${property}]]Table_[[${modifier}]]').dataTable();
+// 				table.fnAddData([
+// 					"<select name='[[${property}]][" + index + "]'>",
+// 					"<textarea type='text' rows='3' cols='40' name='oidResolver[" + fileIndex + "].oidPattern' placeholder='[[#{form.placeholder.oidPattern}]]'></textarea>",
+// 					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (fileIndex - 1) + "' value='" + fileIndex + "'>Remove row</button>"
+// 				]);
+// 			});        	
+//         }
+
 	/* ]]> */
 	</script>	
 </div>
@@ -322,7 +550,7 @@
 				$('#validationFailed').show();				
 			},
 			submitHandler: function(form) {
-				$('#pleasewait').show();
+				$('#pleaseWait').show();
 	 			$('button').each(function() {
 					$(this).attr('disabled', 'disabled');
 				});

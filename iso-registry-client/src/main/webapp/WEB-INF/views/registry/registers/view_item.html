@@ -1,0 +1,37 @@
+<body th:fragment="body(headerLabel, detailsTemplate)">
+	<div th:include="layout :: navbarFragment"></div>
+	
+	<div class="col-md-1">
+		<button id="topback" class="btn btn-default" onclick="history.back();" th:text="#{button.back}">Zurück</button>												
+	</div>
+	<div class="col-md-11">
+		<div class="container">
+			<div th:replace="registry/item :: itemTabs"/>
+	
+			<div class="tab-content">
+				<div id="item" class="tab-pane in active" style="padding-top: 10px">
+					<div class="span6" th:object="${item}">
+	
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 id="panelTitle" class="panel-title" th:text="${itemClassName} ? #{${itemClassName}} : ${headerLabel}">Register Item</h3>
+							</div>
+							
+							<div class="panel-body">
+								<div th:include="${detailsTemplate} :: details"/>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<div th:replace="registry/item :: #predecessors"/>
+				<div th:replace="registry/item :: #successors"/>
+				<div th:replace="registry/item :: #managementInformation"/>
+	
+			</div>
+	
+			<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
+		</div>
+	</div>
+	<script th:replace="registry/item :: js-item"/>
+</body>
