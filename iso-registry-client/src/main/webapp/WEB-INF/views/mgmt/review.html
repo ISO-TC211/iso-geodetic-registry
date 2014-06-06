@@ -285,7 +285,7 @@
 		
 		$('.btn-accept').on('click', function(e) {
 			$(this).button('loading');
-			postForm('[[@{${basePath}}]]/proposals/[[${proposal.proposalUuid}]]/accept', $('form#decisionEventForm').serialize(), goback);
+			postForm('[[@{__${basePath}__/}]]proposals/[[${proposal.proposalUuid}]]/accept', $('form#decisionEventForm').serialize(), goback);
 // 			$(this).button('reset');
 		});
 	});
