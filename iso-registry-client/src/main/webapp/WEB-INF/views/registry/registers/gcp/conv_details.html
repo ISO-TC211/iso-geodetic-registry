@@ -35,7 +35,7 @@
 									multiple: false,
 									dropdownCssClass: "bigdrop",
 									ajax: {
-										url: "[[@{${basePath}}]]/entities/methods/conversion",
+										url: "[[@{__${basePath}__/}]]entities/methods/conversion",
 										dataType: "json",
 										data: function(term, page) {
 											return {
@@ -57,7 +57,7 @@
 				                		var result = [];
 				                		// Collect AJAX requests needed to resolve initially
 				                		// selected items
-					                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+					                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
 					                    	dataType: "json"
 					                	}))
 					                	.done(function(data) {
@@ -123,7 +123,7 @@
 			element.select2({
 				width: 'resolve',
 				ajax: {
-					url: "[[@{${basePath}}]]/entities/by-class/UnitOfMeasureItem",
+					url: "[[@{__${basePath}__/}]]entities/by-class/UnitOfMeasureItem",
 					dataType: "json",
 					data: function(term, page) {
 						return {
@@ -146,7 +146,7 @@
                		var result = [];
                		// Collect AJAX requests needed to resolve initially
                		// selected items
-                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
                     	dataType: "json"
                 	}))
                 	.done(function(data) {
@@ -181,7 +181,7 @@
 			$('#method').change(function(e) {
 				table = $('#parametersTable').dataTable();
 				table.fnClearTable();
-            	$.when($.ajax("[[@{${basePath}}]]/entities/parameters/" + $(this).val(), {
+            	$.when($.ajax("[[@{__${basePath}__/}]]entities/parameters/" + $(this).val(), {
                 	dataType: "json"
             	}))
             	.done(function (data) {

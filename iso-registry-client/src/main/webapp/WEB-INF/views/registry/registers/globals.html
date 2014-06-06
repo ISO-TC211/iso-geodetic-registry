@@ -28,7 +28,7 @@
 					multiple: false,
 					dropdownCssClass: "bigdrop",
 					ajax: {
-						url: "[[@{${basePath}}]]/entities/by-class/[[${ajaxPath}]]",
+						url: "[[@{__${basePath}__/}]]entities/by-class/[[${ajaxPath}]]",
 						dataType: "json",
 						data: function(term, page) {
 							return {
@@ -51,7 +51,7 @@
 	               		var result = [];
 	               		// Collect AJAX requests needed to resolve initially
 	               		// selected items
-	                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+	                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
 	                    	dataType: "json"
 	                	}))
 	                	.done(function(data) {
@@ -95,7 +95,7 @@
 				multiple: true,
 				dropdownCssClass: "bigdrop",
 				ajax: {
-					url: "[[@{${basePath}}]]/entities/[[${ajaxPath}]]",
+					url: "[[@{__${basePath}__/}]]entities/[[${ajaxPath}]]",
 					dataType: "json",
 					data: function(term, page) {
 						return {
@@ -127,7 +127,7 @@
                		// selected items
 	                $(element.val().split(",")).each(function(i) {
 	                	requests.push(
-		                	$.ajax("[[@{${basePath}}]]/entities/[[${ajaxPath}]]?uuid=" + this, {
+		                	$.ajax("[[@{__${basePath}__/}]]entities/[[${ajaxPath}]]?uuid=" + this, {
 		                    	dataType: "json"
 		                	})
 		                );
@@ -186,7 +186,7 @@
 				/* <![CDATA[ */
 					$(function() {
 						$.getJSON(
-								"[[@{${basePath}}]]/entities/by-uuid/[[${uuid}]]",
+								"[[@{__${basePath}__/}]]entities/by-uuid/[[${uuid}]]",
 								{
 								},
 								function(j) {
@@ -219,7 +219,7 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/entities/by-class/" + ajaxPath + "?orderBy=name",
+							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath + "?orderBy=name",
 							{
 								id : $(this).val(),
 								ajax : 'true'
@@ -255,7 +255,7 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{${basePath}}]]/entities/by-class/" + ajaxPath + "?orderBy=code",
+							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath + "?orderBy=code",
 							{
 								id : $(this).val(),
 								ajax : 'true'
