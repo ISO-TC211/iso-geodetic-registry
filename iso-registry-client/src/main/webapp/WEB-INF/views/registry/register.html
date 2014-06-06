@@ -245,7 +245,7 @@
 		return '<div class="modal fade" id="confirmretirement-' + item.uuid + '" role="dialog">' +
 			      '<div class="modal-dialog">' +
 				    '<div class="modal-content">' +
-					  '<form action="[[@{${basePath}}]]/item/' + item.uuid + '/retire" method="get">' +
+					  '<form action="[[@{__${basePath}__/}]]item/' + item.uuid + '/retire" method="get">' +
 					    '<div class="modal-header"><h4>[[#{popup.retire.header}]]</h4></div>' +
 						  '<div class="modal-body">' +
 							'<div class="form-group">' +
@@ -296,24 +296,24 @@
 
 	$('#contentsTable').on('click', '.button-details', function(e) {
 		var uuid = $(this).data('uuid');
-		location.href = '[[@{${basePath}}]]/item/' + uuid;
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid;
 	});
 
 	$('#contentsTable').on('click', '.button-clarify', function(e) {
 		var uuid = $(this).data('uuid');
-		location.href = '[[@{${basePath}}]]/item/' + uuid + '/clarify';
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/clarify';
 	});
 
 	$('#contentsTable').on('click', '.button-supersede', function(e) {
 		var uuid = $(this).data('uuid');
-		location.href = '[[@{${basePath}}]]/item/' + uuid + '/supersede';
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/supersede';
 	});
 
 	$(document).ready(function() {
 		var table;
 		
 		table = $('#contentsTable').dataTable({
-			"sAjaxSource": "[[@{${basePath}}]]/register/[[${register.uuid}]]/containedItems",
+			"sAjaxSource": "[[@{__${basePath}__/}]]register/[[${register.uuid}]]/containedItems",
 			"bProcessing": true,
 			"bServerSide": true,
 			"fnServerParams": function (aoData) {
