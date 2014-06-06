@@ -77,7 +77,7 @@
 			element.select2({
 				width: 'resolve',
 				ajax: {
-					url: "[[@{${basePath}}]]/entities/by-class/CoordinateSystemAxisItem",
+					url: "[[@{__${basePath}__/}]]entities/by-class/CoordinateSystemAxisItem",
 					dataType: "json",
 					data: function(term, page) {
 						return {
@@ -100,7 +100,7 @@
                		var result = [];
                		// Collect AJAX requests needed to resolve initially
                		// selected items
-                	$.when($.ajax("[[@{${basePath}}]]/entities/by-uuid/" + $(element).val(), {
+                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
                     	dataType: "json"
                 	}))
                 	.done(function(data) {
