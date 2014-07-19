@@ -179,10 +179,30 @@ public class DataController
 //		return entityManager.createQuery(jpql).getResultList();
 	}
 
+	@RequestMapping(value = "/code/next-available", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody Integer findNextAvailableCode() {
+		String jpql = "SELECT MAX(i.code) FROM IdentifiedItem i";
+		Integer maxCode = (Integer)entityManager.createQuery(jpql).getResultList().get(0);
+		return maxCode + 1;
+	}
+
+	@RequestMapping(value = "/code/check-availability", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody Long checkCodeAvailability(@RequestParam("code") Long code) {
+		if (code == null) {
+			return -1L;
+		}
+		String jpql = "SELECT COUNT(i.code) FROM IdentifiedItem i WHERE i.code = " + code.toString();
+		Long count = (Long)entityManager.createQuery(jpql).getResultList().get(0);
+		return count;
+	}
+
 	@RequestMapping(value = "/by-uuid/{itemUuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody List<Object[]> findByUuid(@PathVariable("itemUuid") UUID uuid, @RequestParam(value = "orderBy", defaultValue = "code") String orderBy) {
 		String jpql = "SELECT i.uuid, i.code, i.name FROM RE_RegisterItem i WHERE uuid = '" + uuid.toString() + "' ORDER BY i." + orderBy;
 		return entityManager.createQuery(jpql).getResultList();
 	}
+
 }
