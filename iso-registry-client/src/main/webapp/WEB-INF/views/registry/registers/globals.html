@@ -573,6 +573,45 @@
 				$(element).closest(".form-group").removeClass(errorClass);
 			}			
 		});
+
+		if (!$('#code').val()) {
+			var jqxhr = $.get("[[@{__${basePath}__/entities/code/next-available}]]", function(data) {
+				$('#code').val(data);
+			});
+		}
+
+	    // validate signup form on keyup and submit
+		$('#code').popover({
+				"html": true,
+				"trigger": "manual",
+				"placement": "top",
+				"content": function() {
+					return "<b>Code is taken</b>";	
+				}
+			});
+
+	    $("#code").rules("add", {
+	   	    required: true,
+	   	    onkeyup: false,
+	   	    remote: {
+	   	        url: "[[@{__${basePath}__/entities/code/check-availability}]]",
+	   	        type: "GET",
+	   	        cache: false,
+	   	        dataFilter: function(response) {
+	   	        	if (response == 0) {
+	   	        		$('#code').popover("hide");
+	          	    	return true;
+	   	        	}
+	   	        	else {
+	   	        		$('#code').popover("show");
+	          	    	return false;
+	   	        	}
+	   	        }
+	   	    },
+	   	    messages: {
+	   	    	remote: $.format("The code {0} is already taken")
+	   	    },
+	    });
 	});
 /* ]]> */
 </script>
