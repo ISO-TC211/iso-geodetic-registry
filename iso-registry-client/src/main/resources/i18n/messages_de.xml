@@ -127,6 +127,7 @@
 	<entry key="button.rejectAppeal">Einspruch abweisen</entry>
 	<entry key="button.details">Details</entry>
 	<entry key="button.edit">Bearbeiten</entry>
+	<entry key="button.set">Setzen</entry>
 	<entry key="button.action">Aktion</entry>
 	<entry key="button.addition">Neuregistrierung</entry>
 	<entry key="button.clarification">Klarstellen</entry>
@@ -161,6 +162,9 @@
 	<entry key="button.delegations">Benutzerrechte</entry>
 	<entry key="button.requestDelegation">Benutzerrecht anfordern</entry>
 	<entry key="button.changeOrganization">Organisation ändern</entry>
+	<entry key="button.addBoundingBox">Bounding-Box hinzufügen</entry>
+	<entry key="button.addBoundingPolygon">Begrenzendes Polygon hinzufügen</entry>
+	<entry key="button.addGeographicDescription">Geographische Beschreibung hinzufügen</entry>
 
 	<entry key="NOT_VALID">nicht gültig</entry>
 	<entry key="VALID">gültig</entry>
@@ -230,6 +234,7 @@
 	<entry key="popup.submitProposal.header">Vorschlag einreichen</entry>
 	<entry key="popup.submitProposal.reallySubmit">Möchten Sie den Vorschlag "{0}" einreichen?</entry>
 	<entry key="popup.createProposal.header">Vorschlag erstellen</entry>
+	<entry key="popup.extent.header">Gültigkeitsbereich</entry>
 
 	<entry key="tabs.overview">Übersicht</entry>
 	<entry key="tabs.item">Eintrag</entry>
@@ -286,6 +291,7 @@
 	<entry key="form.label.crsType">CRS-Art</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Gültigkeitsgebiet</entry>
+	<entry key="form.label.domainOfValidity">Gültigkeitsgebiet</entry>
 	<entry key="form.label.datum">Datum</entry>
 	<entry key="form.label.coordinateSystem">Koordinatensystem</entry>
 	<entry key="form.label.isoA2Code">ISO-Alpha-2-Code</entry>
@@ -415,6 +421,9 @@
 	<entry key="tabs.overview">Übersicht</entry>
 	<entry key="tabs.contents">Inhalte</entry>
 	<entry key="tabs.proposals">Vorschlagsverwaltung</entry>
+	<entry key="tabs.geographicExtent">Geographische Ausdehnung</entry>
+	<entry key="tabs.verticalExtent">Vertikale Ausdehnung</entry>
+	<entry key="tabs.temporalExtent">Zeitliche Ausdehnung</entry>
 
 	<entry key="mail.subject.signup.confirmation">Ihre Anmeldung bei der Registry</entry>
 	<entry key="mail.subject.delegation.requested">[Registry] Ein Nutzer hat die Erteilung eines Benutzerrechts angefordert</entry>

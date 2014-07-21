@@ -15,9 +15,32 @@
 		</div>
 
 		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},isRequired='true',ajaxPath='AreaItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12">
+					<label class="control-label" for="domainOfValidity" th:text="#{form.label.domainOfValidity}"></label>
+					<div th:if="*{domainOfValidity}">
+						<a id="domainOfValidity" href="#dialog-extent" data-toggle="modal" th:text="*{domainOfValidity.description}"/>
+<!-- 						<p id="domainOfValidity" th:text="*{domainOfValidity.description}"/> -->
+					</div>
+					<div th:unless="*{domainOfValidity}">
+						<p th:text="'[' + #{undefined} + ']'"/>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="dialog-extent" role="dialog">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 th:text="#{popup.extent.header}">Extent</h4>
+							</div>
+							<div class="modal-body" th:object="${item.domainOfValidity}">
+								<div th:include="registry/registers/gcp/extent_panel_content :: extentPanelContent"/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" id="extentPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+							</div>
+						</div>
+					</div>							
 				</div>
 			</div>
 
