@@ -20,10 +20,10 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 
 public class EpsgImporter
 {
