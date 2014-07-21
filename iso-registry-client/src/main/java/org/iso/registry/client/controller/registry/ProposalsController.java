@@ -58,6 +58,7 @@ import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -68,7 +69,6 @@ import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
 
 /**

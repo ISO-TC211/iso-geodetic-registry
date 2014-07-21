@@ -21,13 +21,13 @@ import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.model.Addition;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 
 public abstract class AbstractImporter
 {
