@@ -739,7 +739,7 @@ public class SiteController extends AbstractController
 						@Override
 						public void run(GeodeticCoordinateReferenceSystemItemProposalDTO p) {
 							p.setCode(4326);
-							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
+//							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
 							p.setCoordinateSystem(new CoordinateSystemItemProposalDTO((CoordinateSystemItem)cs6422));
 							p.setDatum(new DatumItemProposalDTO((GeodeticDatumItem)dt6326));
 							

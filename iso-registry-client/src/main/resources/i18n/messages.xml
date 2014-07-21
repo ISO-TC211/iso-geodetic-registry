@@ -115,6 +115,7 @@
 	<entry key="header.transformation">Transformation</entry>
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
 	<entry key="header.primeMeridian">Prime Meridian</entry>
+	<entry key="header.domainOfValidity">Domain of Validity</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -129,6 +130,7 @@
 	<entry key="button.rejectAppeal">Reject appeal</entry>
 	<entry key="button.details">Details</entry>
 	<entry key="button.edit">Edit</entry>
+	<entry key="button.set">Set</entry>
 	<entry key="button.action">Action</entry>
 	<entry key="button.addition">Propose new</entry>
 	<entry key="button.clarification">Clarify</entry>
@@ -166,6 +168,9 @@
 	<entry key="button.delegations">Permissions</entry>
 	<entry key="button.requestDelegation">Request permission</entry>
 	<entry key="button.changeOrganization">Change affiliation</entry>
+	<entry key="button.addBoundingBox">Add bounding box</entry>
+	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
+	<entry key="button.addGeographicDescription">Add geographic description</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -241,6 +246,7 @@
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
+	<entry key="popup.extent.header">Domain of Validity</entry>
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.item">Item</entry>
@@ -249,6 +255,9 @@
 	<entry key="tabs.proposals">Proposal contents</entry>
 	<entry key="tabs.predecessors">Predecessors</entry>
 	<entry key="tabs.successors">Successors</entry>
+	<entry key="tabs.geographicExtent">Geographic extent</entry>
+	<entry key="tabs.verticalExtent">Vertical extent</entry>
+	<entry key="tabs.temporalExtent">Temporal extent</entry>
 		
 	<entry key="legend.create">Create new proposal</entry>
 	<entry key="legend.edit">Edit proposal</entry>
@@ -296,6 +305,7 @@
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Area of Use</entry>
+	<entry key="form.label.domainOfValidity">Domain of Validity</entry>
 	<entry key="form.label.datum">Datum</entry>
 	<entry key="form.label.coordinateSystem">Coordinate System</entry>
 	<entry key="form.label.isoA2Code">ISO Alpha-2 Code</entry>

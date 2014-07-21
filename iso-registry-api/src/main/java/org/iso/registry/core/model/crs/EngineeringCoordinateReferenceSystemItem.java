@@ -3,15 +3,14 @@ package org.iso.registry.core.model.crs;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.cs.CartesianCoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.cs.SphericalCoordinateSystemItem;
-import org.iso.registry.core.model.cs.VerticalCoordinateSystemItem;
 import org.iso.registry.core.model.datum.EngineeringDatumItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.core.ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
@@ -28,14 +27,14 @@ public class EngineeringCoordinateReferenceSystemItem extends SingleCoordinateRe
 	}
 
 	protected EngineeringCoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name,
-			String definition, RE_AdditionInformation additionInformation, AreaItem domainOfValidity, String scope,
+			String definition, RE_AdditionInformation additionInformation, EX_Extent domainOfValidity, String scope,
 			EngineeringDatumItem datum, CoordinateSystemItem cs) {
 
 		super(register, itemClass, name, definition, additionInformation, domainOfValidity, scope, datum, cs);
 	}
 
 	public EngineeringCoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name,
-			String definition, RE_AdditionInformation additionInformation, AreaItem domainOfValidity, String scope,
+			String definition, RE_AdditionInformation additionInformation, EX_Extent domainOfValidity, String scope,
 			EngineeringDatumItem datum, CartesianCoordinateSystemItem cs) {
 
 		this(register, itemClass, name, definition, additionInformation, domainOfValidity, scope, datum, (CoordinateSystemItem)cs);
