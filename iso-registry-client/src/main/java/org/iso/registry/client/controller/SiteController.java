@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ import org.iso.registry.core.model.datum.GeodeticDatumItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.iso19103.MeasureType;
 import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
+import org.isotc211.iso19135.RE_SubmittingOrganization_PropertyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -43,24 +45,30 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
+import de.geoinfoffm.registry.api.UpdateUserException;
 import de.geoinfoffm.registry.api.UserRegistrationException;
 import de.geoinfoffm.registry.client.web.AbstractController;
+import de.geoinfoffm.registry.client.web.ClientConfiguration;
+import de.geoinfoffm.registry.client.web.OrganizationFormBean;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.client.web.SignupFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -68,11 +76,16 @@ import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
+import de.geoinfoffm.registry.core.model.Delegation;
+import de.geoinfoffm.registry.core.model.DelegationRepository;
+import de.geoinfoffm.registry.core.model.Organization;
+import de.geoinfoffm.registry.core.model.OrganizationRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
@@ -82,7 +95,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
+import de.geoinfoffm.registry.soap.CreateOrganizationRequest;
 import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 /**
@@ -108,6 +121,12 @@ public class SiteController extends AbstractController
 	
 	@Autowired
 	private RegistryUserService userService;
+	
+	@Autowired
+	private OrganizationService orgService;
+
+	@Autowired
+	private OrganizationRepository orgRepository;
 
 	@Autowired
 	private SubmittingOrganizationRepository suborgRepository;
@@ -133,6 +152,9 @@ public class SiteController extends AbstractController
 	@Autowired
 	private MutableAclService mutableAclService;
 	
+	@Autowired
+	private DelegationRepository delegationRepository;
+
 	private StringBuilder initLog;
 	
 	private static boolean isInitializing = false;
@@ -206,10 +228,135 @@ public class SiteController extends AbstractController
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) {
 
 		request.removeAttribute("signupData", WebRequest.SCOPE_SESSION);
-		
+
+		List<Organization> orgs = orgRepository.findAll();
+		model.addAttribute("organizations", orgs);
+
 		return "signup";
 	}
+
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	@Transactional
+	public String createUser(WebRequest request, @Valid @ModelAttribute("user") final SignupFormBean userData,
+			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes)
+			throws Exception {
+
+		if (bindingResult.hasErrors()) {
+			List<Organization> orgs = orgRepository.findAll();
+			model.addAttribute("organizations", orgs);
+			return "signup";
+		}
+
+		if (StringUtils.isEmpty(userData.getPreferredLanguage())) {
+			userData.setPreferredLanguage("de");
+		}
+		
+		if (userData.isOrganizationNotListed()) {
+			request.setAttribute("signupData", userData, WebRequest.SCOPE_SESSION);
+			return "redirect:/signup/2";
+		}
+		
+		RegistryUser user;
+
+		CreateRegistryUserRequest registryUser = userData.toRegistrationDTO();
+		
+		user = this.registerUser(registryUser, redirectAttributes);
+
+		return "redirect:/";
+	}
+
+	@RequestMapping(value = "/signup/2", method = RequestMethod.GET)
+	public String registerUserOrganizationDetails(WebRequest request, @ModelAttribute("organization") final OrganizationFormBean organization,
+			final Model model, final RedirectAttributes redirectAttributes) throws Exception {
 	
+		SignupFormBean signupData = (SignupFormBean)request.getAttribute("signupData", WebRequest.SCOPE_SESSION);
+		if (signupData == null) {
+			return "redirect:/signup";
+		}
+		
+		model.addAttribute("isNew", "true");
+		model.addAttribute("isSignup", "true");
+		return "admin/organization";
+	}
+
+	@RequestMapping(value = "/signup/2", method = RequestMethod.POST)
+	@Transactional
+	public String createUserWithNewOrganization(WebRequest request, @Valid @ModelAttribute("organization") final OrganizationFormBean organizationData,
+			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes)
+			throws Exception {
+
+		SignupFormBean userData = (SignupFormBean)request.getAttribute("signupData", WebRequest.SCOPE_SESSION);
+		if (userData == null) {
+			return "redirect:/signup";
+		}
+
+		RegistryUser user;
+
+		CreateRegistryUserRequest registryUser = userData.toRegistrationDTO();
+		CreateOrganizationRequest organization = organizationData.toRegistrationDTO();
+
+		user = this.registerUser(registryUser, organization, redirectAttributes);
+
+		return "redirect:/";
+	}
+
+	protected RegistryUser registerUser(CreateRegistryUserRequest userData, CreateOrganizationRequest organizationData, final RedirectAttributes redirectAttributes) 
+			throws UserRegistrationException, UnauthorizedException, InvalidProposalException {
+		
+		RegistryUser user;
+		boolean sendConfirmationMails = ClientConfiguration.isSendConfirmationMails();
+		if (sendConfirmationMails) {
+			userService.activateConfirmationMails();
+		}
+		
+		try {
+			if (organizationData == null) {
+				user = userService.registerUser(userData);
+			}
+			else {
+				user = userService.registerUser(userData, organizationData);				
+			}
+		}
+		finally {
+			userService.deactivateConfirmationMails();
+		}
+
+		if (sendConfirmationMails) {
+			redirectAttributes.addFlashAttribute("signedUp", user.getEmailAddress().toString());
+		}
+		else {
+			redirectAttributes.addFlashAttribute("signedUpNoConfirmation", user.getEmailAddress().toString());
+		}
+		
+		return user;
+	}
+
+	protected RegistryUser registerUser(CreateRegistryUserRequest userData, final RedirectAttributes redirectAttributes)
+			throws UserRegistrationException, UnauthorizedException, InvalidProposalException {
+		
+		return this.registerUser(userData, null, redirectAttributes);
+	}
+
+	@RequestMapping(value = "/signup/confirmation", method = RequestMethod.GET)
+	@Transactional
+	public String confirmMailAddress(WebRequest request,
+								   @RequestParam("token") UUID token,
+								   @RequestParam("mail") String emailAddress,
+								   final Model model, 
+								   final RedirectAttributes redirectAttributes) throws Exception {
+		
+		boolean success = userService.confirmUser(emailAddress, token);
+		
+		if (success) {
+			redirectAttributes.addFlashAttribute("accountConfirmed", emailAddress);
+		}
+		else {
+			redirectAttributes.addFlashAttribute("accountConfirmationFailed", emailAddress);
+		}
+		
+		return "redirect:/";
+	}
+
 	@RequestMapping(value = "/myprofile", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public String viewUserProfile(WebRequest request, HttpServletRequest servletRequest,
@@ -236,13 +383,13 @@ public class SiteController extends AbstractController
 		model.addAttribute("groups", groups);
 		model.addAttribute("roles", roles);
 		
-//		List<String> organizationRoles = new ArrayList<String>();
-//		for (Role role : user.getOrganization().getRoles()) {
-//			organizationRoles.add(role.getName());
-//		}
-//		model.addAttribute("orgRoles", organizationRoles);
-//		
-//		model.addAttribute("delegations", delegationRepository.findByActor(user));
+		List<String> organizationRoles = new ArrayList<String>();
+		for (Role role : user.getOrganization().getRoles()) {
+			organizationRoles.add(role.getName());
+		}
+		model.addAttribute("orgRoles", organizationRoles);
+		
+		model.addAttribute("delegations", delegationRepository.findByActor(user));
 
 		userData.initializeFromUser(user);
 		
@@ -280,13 +427,13 @@ public class SiteController extends AbstractController
 			model.addAttribute("groups", groups);
 			model.addAttribute("roles", roles);
 			
-//			List<String> organizationRoles = new ArrayList<String>();
-//			for (Role role : user.getOrganization().getRoles()) {
-//				organizationRoles.add(role.getName());
-//			}
-//			model.addAttribute("orgRoles", organizationRoles);
-//			
-//			model.addAttribute("delegations", delegationRepository.findByActor(user));
+			List<String> organizationRoles = new ArrayList<String>();
+			for (Role role : user.getOrganization().getRoles()) {
+				organizationRoles.add(role.getName());
+			}
+			model.addAttribute("orgRoles", organizationRoles);
+			
+			model.addAttribute("delegations", delegationRepository.findByActor(user));
 			
 			RegistryUserFormBean userBean = new RegistryUserFormBean(user);
 			
@@ -297,21 +444,37 @@ public class SiteController extends AbstractController
 		}
 		
 		user = userService.updateUser(userData.toUpdateDTO(user.getUuid()));
-//		if (userData.getOrganizationUuid() != null && !userData.getOrganizationUuid().equals(user.getOrganization().getUuid())) {
-//			Organization organization = organizationRepository.findOne(UUID.fromString(userData.getOrganizationUuid()));
-//			if (organization == null) {
-//				throw new UpdateUserException(String.format("User references non-existent organization %s", userData.getOrganizationUuid()));
-//			}
-//			user.setOrganization(organization);
-//			user = userRepository.save(user);
-//		}
+		if (userData.getOrganizationUuid() != null && !userData.getOrganizationUuid().equals(user.getOrganization().getUuid())) {
+			Organization organization = orgRepository.findOne(userData.getOrganizationUuid());
+			if (organization == null) {
+				throw new UpdateUserException(String.format("User references non-existent organization %s", userData.getOrganizationUuid()));
+			}
+			user.setOrganization(organization);
+			user = userRepository.save(user);
+		}
 		
-//		Iterable<Organization> orgs = organizationService.findAll();
-//		model.addAttribute("organizations", orgs);
+		Iterable<Organization> orgs = orgService.findAll();
+		model.addAttribute("organizations", orgs);
 		
 		redirectAttributes.addFlashAttribute("userProfileUpdated", user);
 		
 		return "redirect:/";
+	}
+
+	@RequestMapping(value = "/myprofile/delegation", method = RequestMethod.POST)
+	@Transactional
+	public ResponseEntity<Void> requestDelegation (@RequestParam("userUuid") UUID userUuid, 
+												   @RequestParam("organizationUuid") UUID orgUuid,
+												   @RequestParam("roleName") String roleName,
+												   final Model model) throws UnauthorizedException {
+
+		Delegation delegation = security.requestDelegation(userUuid, orgUuid, roleName);
+		
+		if (delegation == null) {
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	@Transactional
@@ -330,13 +493,11 @@ public class SiteController extends AbstractController
 				groupRepository.save(adminGroup);
 				initLog.append("done\n");
 			}
+
+			Organization isotc211 = createOrganization("ISO/TC 211");
 			
-			CI_ResponsibleParty respExample = new CI_ResponsibleParty("Johne Doe", null, null, CI_RoleCode.USER);
-			RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization("EXAMPLE", respExample);
-			suborgRepository.save(orgExample);
-			
-			RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
-			RegistryUser ex = createUser("John Submitter", "s", "submitter@example.org");
+			RegistryUser regman = createUser("ISO Register Manager", "m", "regman@example.org", isotc211);
+			RegistryUser admin = createUser("ISO Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
 
 			initLog.append("\n");
 			
@@ -346,7 +507,7 @@ public class SiteController extends AbstractController
 				initLog.append("> Creating register...\n");
 				r = registerService.createRegister(
 						registerName,
-						rt, rt, rt,
+						regman, regman, regman,
 						roleService, 
 						RE_Register.class,
 						new ParameterizedRunnable<RE_Register>() {
@@ -364,12 +525,12 @@ public class SiteController extends AbstractController
 				initLog.append("\n");
 			}
 
-			Role submitterRole = registerService.getSubmitterRole(r);
-			initLog.append(">>> Adding submitter ");
-			initLog.append(ex.getEmailAddress());
-			ex.assignRole(submitterRole);
-			initLog.append("\n");
-			initLog.append("\n");
+//			Role submitterRole = registerService.getSubmitterRole(r);
+//			initLog.append(">>> Adding submitter ");
+//			initLog.append(admin.getEmailAddress());
+//			xxx.assignRole(submitterRole);
+//			initLog.append("\n");
+//			initLog.append("\n");
 			
 			/*
 			 * WGS 84 consists of:
@@ -393,7 +554,7 @@ public class SiteController extends AbstractController
 			 * Areas
 			 */
 			RE_ItemClass icArea = this.addItemClass("Area", r);
-			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", BigInteger.valueOf(1262L), AreaItemProposalDTO.class,
+			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", BigInteger.valueOf(1262L), isotc211, AreaItemProposalDTO.class,
 					new ParameterizedRunnable<AreaItemProposalDTO>() {
 						@Override
 						public void run(AreaItemProposalDTO parameter) {
@@ -404,7 +565,7 @@ public class SiteController extends AbstractController
 							parameter.setEastBoundLongitude(+180.0);
 						}
 					});
-			this.registerItem(r, icArea, "Germany - west of 7.5°E", BigInteger.valueOf(1624L), AreaItemProposalDTO.class,
+			this.registerItem(r, icArea, "Germany - west of 7.5°E", BigInteger.valueOf(1624L), isotc211, AreaItemProposalDTO.class,
 					new ParameterizedRunnable<AreaItemProposalDTO>() {
 						@Override
 						public void run(AreaItemProposalDTO parameter) {
@@ -422,7 +583,8 @@ public class SiteController extends AbstractController
 			RE_ItemClass icUoM = this.addItemClass("UnitOfMeasure", r);
 			final RE_RegisterItem uom9122 = this.registerItem(r, icUoM,
 					"degree (supplier to define representation)",
-					BigInteger.valueOf(9122L),
+					BigInteger.valueOf(9122L), 
+					isotc211,
 					UnitOfMeasureItemProposalDTO.class,
 					new ParameterizedRunnable<UnitOfMeasureItemProposalDTO>() {
 						@Override
@@ -433,7 +595,8 @@ public class SiteController extends AbstractController
 					});
 			final RE_RegisterItem uom9102 = this.registerItem(r, icUoM,
 					"degree",
-					BigInteger.valueOf(9102L),
+					BigInteger.valueOf(9102L), 
+					isotc211,
 					UnitOfMeasureItemProposalDTO.class,
 					new ParameterizedRunnable<UnitOfMeasureItemProposalDTO>() {
 						@Override
@@ -444,7 +607,8 @@ public class SiteController extends AbstractController
 					});
 			final RE_RegisterItem uom9001 = this.registerItem(r, icUoM,
 					"metre",
-					BigInteger.valueOf(9001L),
+					BigInteger.valueOf(9001L), 
+					isotc211,
 					UnitOfMeasureItemProposalDTO.class,
 					new ParameterizedRunnable<UnitOfMeasureItemProposalDTO>() {
 						@Override
@@ -460,7 +624,8 @@ public class SiteController extends AbstractController
 			RE_ItemClass icAxis = this.addItemClass("CoordinateSystemAxis", r);
 			final RE_RegisterItem axisLat = this.registerItem(r, icAxis,
 					"Geodetic latitude",
-					BigInteger.valueOf(10106L),
+					BigInteger.valueOf(10106L), 
+					isotc211,
 					CoordinateSystemAxisItemProposalDTO.class,
 					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
@@ -473,7 +638,8 @@ public class SiteController extends AbstractController
 					});
 			final RE_RegisterItem axisLon = this.registerItem(r, icAxis,
 					"Geodetic longitude",
-					BigInteger.valueOf(10107L),
+					BigInteger.valueOf(10107L), 
+					isotc211,
 					CoordinateSystemAxisItemProposalDTO.class,
 					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
@@ -491,7 +657,8 @@ public class SiteController extends AbstractController
 			RE_ItemClass icEllipsoidalCs = this.addItemClass("EllipsoidalCS", r);
 			final RE_RegisterItem cs6422 = this.registerItem(r, icEllipsoidalCs, 
 					"Ellipsoidal 2D CS. Axes: latitude, longitude. Orientations: north, east. UoM: degree",
-					BigInteger.valueOf(6422L),
+					BigInteger.valueOf(6422L), 
+					isotc211,
 					CoordinateSystemItemProposalDTO.class,
 					new ParameterizedRunnable<CoordinateSystemItemProposalDTO>() {
 						@Override
@@ -511,7 +678,8 @@ public class SiteController extends AbstractController
 			RE_ItemClass icEllipsoid = this.addItemClass("Ellipsoid", r);
 			final RE_RegisterItem el7030 = this.registerItem(r, icEllipsoid, 
 					"WGS 84", 
-					BigInteger.valueOf(7030L),
+					BigInteger.valueOf(7030L), 
+					isotc211,
 					EllipsoidItemProposalDTO.class,
 					new ParameterizedRunnable<EllipsoidItemProposalDTO>() {
 						@Override
@@ -532,7 +700,8 @@ public class SiteController extends AbstractController
 			RE_ItemClass icPrimeMeridian = this.addItemClass("PrimeMeridian", r);
 			final RE_RegisterItem pm8901 = this.registerItem(r, icPrimeMeridian, 
 					"Greenwich", 
-					BigInteger.valueOf(8901L),
+					BigInteger.valueOf(8901L), 
+					isotc211,
 					PrimeMeridianItemProposalDTO.class,
 					new ParameterizedRunnable<PrimeMeridianItemProposalDTO>() {
 						@Override
@@ -549,7 +718,8 @@ public class SiteController extends AbstractController
 			RE_ItemClass icGeodeticDatum = this.addItemClass("GeodeticDatum", r);
 			final RE_RegisterItem dt6326 = this.registerItem(r, icGeodeticDatum, 
 					"World Geodetic System 1984", 
-					BigInteger.valueOf(6326L),
+					BigInteger.valueOf(6326L), 
+					isotc211,
 					DatumItemProposalDTO.class,
 					new ParameterizedRunnable<DatumItemProposalDTO>() {
 						@Override
@@ -564,7 +734,7 @@ public class SiteController extends AbstractController
 			 * Coordinate Reference System
 			 */
 			RE_ItemClass icGeodeticCrs = this.addItemClass("GeodeticCRS", r);
-			this.registerItem(r, icGeodeticCrs, "WGS 84", BigInteger.valueOf(4326L), GeodeticCoordinateReferenceSystemItemProposalDTO.class,
+			this.registerItem(r, icGeodeticCrs, "WGS 84", BigInteger.valueOf(4326L), isotc211, GeodeticCoordinateReferenceSystemItemProposalDTO.class,
 					new ParameterizedRunnable<GeodeticCoordinateReferenceSystemItemProposalDTO>() {
 						@Override
 						public void run(GeodeticCoordinateReferenceSystemItemProposalDTO p) {
@@ -595,6 +765,20 @@ public class SiteController extends AbstractController
 			SecurityContextHolder.getContext().setAuthentication(currentAuth);
 		}
 	}
+
+	private Organization createOrganization(String name) throws UnauthorizedException {
+		CI_ResponsibleParty respExample = new CI_ResponsibleParty("John Doe", null, null, CI_RoleCode.USER);
+		RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization(name, respExample);
+		orgExample = suborgRepository.save(orgExample);
+
+		RE_SubmittingOrganization_PropertyType pt = new RE_SubmittingOrganization_PropertyType();
+		pt.setUuidref(orgExample.getUuid().toString());
+		
+		CreateOrganizationRequest cor = new CreateOrganizationRequest();
+		cor.setName(name);
+		cor.setSubmittingOrganization(pt);
+		return orgService.createOrganization(cor);
+	}
 	
 	private RE_ItemClass addItemClass(String name, RE_Register r) {
 		RE_ItemClass ic = null;
@@ -620,11 +804,11 @@ public class SiteController extends AbstractController
 		return ic;
 	}
 
-	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, BigInteger itemIdentifier, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
+	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, BigInteger itemIdentifier, Organization sponsor, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
 		P proposal;
 		proposal = BeanUtils.instantiateClass(dtoClass);
 		proposal.setItemClassUuid(itemClass.getUuid());
-		proposal.setSponsorUuid(suborgRepository.findAll().get(0).getUuid());
+		proposal.setSponsorUuid(sponsor.getSubmittingOrganization().getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
 		proposal.setName(name);
@@ -689,7 +873,7 @@ public class SiteController extends AbstractController
 		}
 	}
 
-	protected RegistryUser createUser(String name, String password, String mail, Role... roles)
+	protected RegistryUser createUser(String name, String password, String mail, Organization organization, Role... roles)
 			throws UserRegistrationException, UnauthorizedException {
 		
 		RegistryUser existingUser = userRepository.findByEmailAddress(mail);
@@ -701,6 +885,7 @@ public class SiteController extends AbstractController
 		CreateRegistryUserRequest req = new CreateRegistryUserRequest();
 		req.setName(name);
 		req.setPassword(password);
+		req.setOrganizationUuid(organization.getUuid().toString());
 		req.setEmailAddress(mail);
 		req.setPreferredLanguage("de");
 		req.setActive(true);

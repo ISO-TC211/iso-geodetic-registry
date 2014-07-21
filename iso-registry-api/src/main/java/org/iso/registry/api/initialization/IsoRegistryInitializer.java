@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.core.model.CoordinateSystemType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
@@ -46,7 +46,6 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 public class IsoRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
