@@ -13,19 +13,19 @@
 		
 					<div th:if="${revisionDate}" th:unless="${noRevisionAtGivenDate}" class="alert alert-danger">
 						<p th:text="#{alert.historicView}">
-							Es wird ein historischer Stand der GDI-DE Registry angezeigt.
+							Es wird ein historischer Stand der Registry angezeigt.
 						</p>
 					</div>
 		
 					<div th:if="${noRevisionAtGivenDate}" class="alert alert-danger">
 						<p th:text="#{alert.noRevisionAtGivenDate}">
-							Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.
+							Zum angegebenen Zeitpunkt existiert kein Stand der Registry. Es wird der aktuelle Stand angezeigt.
 						</p>
 					</div>
 		
 					<div th:if="${revision}" class="alert alert-danger">
 						<p>
-							<span th:text="#{alert.historicView}">Es wird historischer Stand der GDI-DE Registry angezeigt</span> (Revision
+							<span th:text="#{alert.historicView}">Es wird historischer Stand der Registry angezeigt</span> (Revision
 							#<span th:text="${revision}">revision</span>).
 						</p>
 					</div>
@@ -50,17 +50,13 @@
 							<thead>
 								<tr>
 									<th th:text="#{tableheader.name}">Name</th>
-									<th th:text="#{tableheader.shortName}">Short name</th>
-									<th th:text="#{tableheader.category}">Kategorie</th>
 									<th />
 								</tr>
 							</thead>
 							<tbody>
 		
 								<tr th:each="item : ${organizations}">
-									<td th:text="${item.organizationName}"></td>
-									<td th:text="${item.organizationNameShortForm}"></td>
-									<td th:text="${item.category}"></td>
+									<td th:text="${item.name}"></td>
 									<td>
 										<form th:action="@{__${basePath}__/admin/organization/} + ${item.uuid}" method="get" th:unless="${revision} or ${revisionDate}">
 											<button th:id="'editorganization-' + ${item.uuid}" class="btn btn-xs btn-primary" type="submit" th:text="#{button.edit}">Bearbeiten</button>
@@ -74,8 +70,8 @@
 															<h4 th:text="#{popup.deleteOrganization.header}">Organisation löschen</h4>
 														</div>
 														<div class="modal-body">
-														<p th:text="#{popup.deleteOrganization.reallyDelete( ${item.organizationName} )}">
-															Soll die Organisation '<span th:text="${item.organizationName}"></span>' gelöscht werden?
+														<p th:text="#{popup.deleteOrganization.reallyDelete( ${item.name} )}">
+															Soll die Organisation '<span th:text="${item.name}"></span>' gelöscht werden?
 														</p>
 													</div>
 														<div class="modal-footer">
@@ -92,8 +88,6 @@
 								<!-- This example data will be removed by thmyeleafe during processing and replaced with the rows generated above -->
 								<tr th:remove="all">
 									<td>Testorganisation 1</td>
-									<td>TST1</td>
-									<td>Kategorie</td>
 								</tr>
 							</tbody>
 						</table>
@@ -127,8 +121,6 @@
 						},
 					 "aaSorting": [[ 0, "asc" ]],
 					 aoColumns: [
-						null,
-						null,
 						null,
 						{"bSortable" : false}
 					]

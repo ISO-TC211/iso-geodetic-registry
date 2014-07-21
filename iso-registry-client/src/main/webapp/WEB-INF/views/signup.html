@@ -75,7 +75,7 @@
 											<option value="%%new%%" th:text="#{form.signup.pleaseSelectOrganization}"></option>
 											<option th:each="organization : ${organizations}"
 													th:value="${organization.uuid}"
-													th:text="${organization.organizationName}"></option>
+													th:text="${organization.name}"></option>
 										</select>
 									</div>
 								</div>
@@ -132,18 +132,19 @@
 									</div>
 								</div>
 							</div>-->
-								
-							<div class="form-group" th:if="false">
-								<label class="form-label" for="preferredLangugae" th:text="#{form.label.preferredLanguage}">Standardsprache</label>
-								<div class="controls">
-									<div class="input-group">
-										<select id="preferredLanguage" required="true" th:field="*{preferredLanguage}">
-											<option value="de-DE">Deutsch</option>
-											<option value="en-US">English</option>
-										</select>
-									</div>
-								</div>
-							</div>
+
+							<input type="hidden" th:field="*{preferredLanguage}" value="en-US"/>								
+<!-- 							<div class="form-group" th:if="false"> -->
+<!-- 								<label class="form-label" for="preferredLangugae" th:text="#{form.label.preferredLanguage}">Standardsprache</label> -->
+<!-- 								<div class="controls"> -->
+<!-- 									<div class="input-group"> -->
+<!-- 										<select id="preferredLanguage" required="true" th:field="*{preferredLanguage}"> -->
+<!-- 											<option value="de-DE">Deutsch</option> -->
+<!-- 											<option value="en-US">English</option> -->
+<!-- 										</select> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
 
 							<!-- Button -->
 							<div class="form-group">

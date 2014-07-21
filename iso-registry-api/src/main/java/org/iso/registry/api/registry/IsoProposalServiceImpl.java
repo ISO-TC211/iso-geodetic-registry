@@ -3,7 +3,6 @@ package org.iso.registry.api.registry;
 import org.iso.registry.core.model.ProposalNote;
 import org.iso.registry.core.model.ProposalNoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.geoinfoffm.registry.api.ProposalServiceImpl;
@@ -12,7 +11,6 @@ import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
-import de.geoinfoffm.registry.core.model.iso19135.RE_Disposition;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ProposalManagementInformation;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ProposalRepository;

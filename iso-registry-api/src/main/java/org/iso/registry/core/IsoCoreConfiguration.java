@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import de.geoinfoffm.registry.api.RegistrySecurityImpl;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 
 /**
@@ -18,6 +19,6 @@ public class IsoCoreConfiguration
 {
 	@Bean
 	public RegistrySecurity registrySecurity() {
-		return new RegistrySecurity();
+		return new RegistrySecurityImpl();
 	}
 }

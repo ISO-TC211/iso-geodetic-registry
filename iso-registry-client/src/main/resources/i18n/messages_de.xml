@@ -415,6 +415,11 @@
 	<entry key="tabs.overview">Übersicht</entry>
 	<entry key="tabs.contents">Inhalte</entry>
 	<entry key="tabs.proposals">Vorschlagsverwaltung</entry>
+
+	<entry key="mail.subject.signup.confirmation">Ihre Anmeldung bei der Registry</entry>
+	<entry key="mail.subject.delegation.requested">[Registry] Ein Nutzer hat die Erteilung eines Benutzerrechts angefordert</entry>
+	<entry key="mail.subject.discussion.invitation">[Registry] Einladung zu einer Vorschlagsdiskussion</entry>
+	<entry key="mail.subject.proposal.submitted">[Registry] Neuer Vorschlag</entry>
 	
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Zielregister</entry>
