@@ -162,6 +162,7 @@
 	<entry key="button.addAlias">Add alias</entry>
 	<entry key="button.addExistingSuccessor">Add existing item as successor</entry>
 	<entry key="button.addSupersededItems">Select items to supersede</entry>
+	<entry key="button.removeRow">Remove row</entry>
 	<entry key="button.supersede">Supersede</entry>
 	<entry key="button.next">Continue</entry>
 	<entry key="button.signup">Sign up</entry>

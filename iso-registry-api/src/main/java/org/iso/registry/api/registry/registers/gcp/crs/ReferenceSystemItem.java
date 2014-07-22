@@ -8,7 +8,6 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
