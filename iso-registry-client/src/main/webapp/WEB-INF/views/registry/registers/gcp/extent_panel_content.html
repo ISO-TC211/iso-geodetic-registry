@@ -1,6 +1,6 @@
 <div th:fragment="extentPanelContent">
 	<div class="row">
-		<div class="col-md-12" th:with="property='description',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='false'">
+		<div class="col-md-12" th:with="property='description',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='true'">
 			<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>

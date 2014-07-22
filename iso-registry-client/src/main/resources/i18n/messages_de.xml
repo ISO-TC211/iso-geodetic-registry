@@ -156,6 +156,7 @@
 	<entry key="button.addAlias">Alias hinzufügen</entry>
 	<entry key="button.addExistingSuccessor">Vorhandenen Eintrag als Nachfolger hinzufügen</entry>
 	<entry key="button.addSupersededItems">Zu ersetzende Einträge wählen</entry>
+	<entry key="button.removeRow">Zeilen löschen</entry>
 	<entry key="button.supersede">Ersetzen</entry>
 	<entry key="button.next">Weiter</entry>
 	<entry key="button.signup">Registrieren</entry>

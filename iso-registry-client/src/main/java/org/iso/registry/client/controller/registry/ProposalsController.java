@@ -648,9 +648,8 @@ public class ProposalsController
 			throw new ProposalNotFoundException(proposalUuid);
 		}
 
-		security.assertHasAnyEntityRelatedRoleForAll(Arrays.asList(MANAGER_ROLE_PREFIX, OWNER_ROLE_PREFIX), proposal.getAffectedRegisters());
+		security.assertHasAnyEntityRelatedRoleForAll(Arrays.asList(MANAGER_ROLE_PREFIX, CONTROLBODY_ROLE_PREFIX), proposal.getAffectedRegisters());
 
-//		rvb = new RegisterItemViewBean(proposal);
 		rvb = viewBeanFactory.getViewBean(proposal);
 		
 		model.addAttribute("proposal", rvb);

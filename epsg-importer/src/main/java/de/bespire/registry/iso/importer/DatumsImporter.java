@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
@@ -106,8 +107,12 @@ public class DatumsImporter extends AbstractImporter
 
 		proposal.setEllipsoid(new EllipsoidItemProposalDTO(ellipsoid));
 		proposal.setPrimeMeridian(new PrimeMeridianItemProposalDTO(primeMeridian));
-		proposal.setDomainOfValidity(new AreaItemProposalDTO(area));
-		
+		if (area != null) {
+			ExtentDTO extent = new ExtentDTO();
+			extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
+			extent.setDescription(area.getName());
+			proposal.setDomainOfValidity(extent);
+		}
 		proposal.setRemarks((String)row.get(REMARKS));
 		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));

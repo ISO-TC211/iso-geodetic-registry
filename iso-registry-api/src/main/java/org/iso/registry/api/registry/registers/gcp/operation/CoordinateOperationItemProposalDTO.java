@@ -1,20 +1,16 @@
 package org.iso.registry.api.registry.registers.gcp.operation;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.AliasDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.core.model.Alias;
-import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
@@ -26,14 +22,14 @@ import de.geoinfoffm.registry.soap.Addition_Type;
 public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemProposalDTO
 {
 	private String operationVersion;
-	private AreaItemProposalDTO domainOfValidity;
+	private ExtentDTO domainOfValidity;
 	private List<String> scope;
 	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	private CoordinateReferenceSystemItemProposalDTO sourceCrs;
 	private CoordinateReferenceSystemItemProposalDTO targetCrs;
 
 	public CoordinateOperationItemProposalDTO() {
-		// TODO Auto-generated constructor stub
+		this.domainOfValidity = new ExtentDTO();
 	}
 
 	public CoordinateOperationItemProposalDTO(String itemClassName) {
@@ -70,9 +66,9 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 
 			item.setOperationVersion(this.getOperationVersion());
 
-			if (this.getDomainOfValidity() != null && this.getDomainOfValidity().getReferencedItemUuid() != null) {
-				AreaItem area = entityManager.find(AreaItem.class, this.getDomainOfValidity().getReferencedItemUuid());
-				item.setDomainOfValidity(area);
+			if (this.getDomainOfValidity() != null) {
+				EX_Extent extent = this.getDomainOfValidity().getExtent(item.getDomainOfValidity());
+				item.setDomainOfValidity(extent);
 			}
 
 			if (this.getScope() != null) {
@@ -112,7 +108,7 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 			this.setOperationVersion(item.getOperationVersion());
 
 			if (item.getDomainOfValidity() != null) {
-				this.setDomainOfValidity(new AreaItemProposalDTO(item.getDomainOfValidity()));
+				this.setDomainOfValidity(new ExtentDTO(item.getDomainOfValidity()));
 			}
 
 			if (item.getScope() != null) {
@@ -145,11 +141,11 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		this.operationVersion = operationVersion;
 	}
 
-	public AreaItemProposalDTO getDomainOfValidity() {
+	public ExtentDTO getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItemProposalDTO domainOfValidity) {
+	public void setDomainOfValidity(ExtentDTO domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 

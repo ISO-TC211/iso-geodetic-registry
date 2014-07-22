@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO.CoordinateReferenceSystemType;
@@ -111,8 +112,8 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		AreaItem area = areaRepository.findByCode(areaCode);
 		if (area != null) {
-			EX_Extent extent = new EX_Extent();
-			extent.getGeographicElement().add(area.getBoundingBox());
+			ExtentDTO extent = new ExtentDTO();
+			extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
 			extent.setDescription(area.getName());
 			proposal.setDomainOfValidity(extent);
 		}
