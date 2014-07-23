@@ -283,7 +283,7 @@ public class ManagementController
 		}
 
 		if (StringUtils.isEmpty(userData.getPreferredLanguage())) {
-			userData.setPreferredLanguage("de");
+			userData.setPreferredLanguage("en");
 		}
 
 		model.addAttribute("isPoC", "true");

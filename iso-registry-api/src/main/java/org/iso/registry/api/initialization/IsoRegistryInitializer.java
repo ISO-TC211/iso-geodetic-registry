@@ -261,7 +261,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 		req.setName(name);
 		req.setPassword(password);
 		req.setEmailAddress(mail);
-		req.setPreferredLanguage("de");
+		req.setPreferredLanguage("en");
 		req.setActive(true);
 		for (Role role : roles) {
 			req.getRole().add(role.getName());
