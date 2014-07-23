@@ -84,6 +84,7 @@ public class RegistryInitializer
 			
 			Organization isotc211 = createOrganization("ISO/TC 211");
 			
+			RegistryUser submitter = createUser("ISO Registry Submitter", "s", "submitter@example.org", isotc211);
 			RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
 			RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
 			RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
@@ -108,6 +109,9 @@ public class RegistryInitializer
 
 				logger.info(">>> '{}' (owner = {}; manager = {})", new Object[] { r.getName(), r.getOwner().getName(), r.getManager().getName() });
 			}
+
+			Role submitterRole = registerService.getSubmitterRole(r);
+			orgService.delegate(submitter, submitterRole, isotc211);
 
 			Role managerRole = registerService.getManagerRole(r);
 			orgService.delegate(regman, managerRole, isotc211);
