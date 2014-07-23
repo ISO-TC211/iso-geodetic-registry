@@ -437,10 +437,10 @@
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposed contents</entry>
 
-	<entry key="mail.subject.signup.confirmation">You have signed up for the Registry</entry>
-	<entry key="mail.subject.delegation.requested">[Registry] Permission requested by user</entry>
-	<entry key="mail.subject.discussion.invitation">[Registry] Proposal discussion invitation</entry>
-	<entry key="mail.subject.proposal.submitted">[Registry] New proposal</entry>
+	<entry key="mail.subject.signup.confirmation">You have signed up for ISO Registry of Geodetic Codes and Parameters</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Registry] Permission requested by user</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Registry] New proposal</entry>
 			
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Target register</entry>
