@@ -246,7 +246,7 @@ public class SiteController extends AbstractController
 		}
 
 		if (StringUtils.isEmpty(userData.getPreferredLanguage())) {
-			userData.setPreferredLanguage("de");
+			userData.setPreferredLanguage("en");
 		}
 		
 		if (userData.isOrganizationNotListed()) {
@@ -885,7 +885,7 @@ public class SiteController extends AbstractController
 		req.setPassword(password);
 		req.setOrganizationUuid(organization.getUuid().toString());
 		req.setEmailAddress(mail);
-		req.setPreferredLanguage("de");
+		req.setPreferredLanguage("en");
 		req.setActive(true);
 		for (Role role : roles) {
 			req.getRole().add(role.getName());
