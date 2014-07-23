@@ -25,6 +25,8 @@
 	<entry key="navbar.login.label.password">Passwort</entry>
 	<entry key="navbar.login.button.register">Registrieren</entry>
 
+	<entry key="download.quickstart">Download the Quick Start Guide</entry>
+
 	<entry key="mgmt.submitter.content.header">Einreichende Organisation: Liste der Vorschläge</entry>
 	<entry key="mgmt.manager.content.header">Register-Manager: Liste der noch nicht abgeschlossenen Vorschläge</entry>
 	<entry key="mgmt.controlbody.content.header">Control-Body: Liste der zur Entscheidung angenommenen Vorschläge</entry>
