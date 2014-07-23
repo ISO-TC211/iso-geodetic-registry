@@ -353,7 +353,7 @@
 	<entry key="form.placeholder.password"></entry>
 	<entry key="form.placeholder.confirmPassword"></entry>
 	<entry key="form.placeholder.code"></entry>
-	<entry key="form.placeholder.scope">
+	<entry key="form.placeholder.scope"></entry>
 
 	<entry key="form.placeholder.organizationName"></entry>
 	<entry key="form.placeholder.onlineResourceWebsite">z.B. http://www.example.org</entry>
