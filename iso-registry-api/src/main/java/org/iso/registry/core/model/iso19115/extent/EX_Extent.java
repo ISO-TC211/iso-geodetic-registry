@@ -1,14 +1,17 @@
 package org.iso.registry.core.model.iso19115.extent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
-import de.geoinfoffm.registry.core.model.iso19103.CharacterString;
+import org.hibernate.envers.Audited;
 
 /**
  * Information about spatial, vertical, and temporal extent
@@ -17,8 +20,8 @@ import de.geoinfoffm.registry.core.model.iso19103.CharacterString;
  * @created 17-Apr-2014 10:38:10
  */
 @Access(AccessType.FIELD)
-@Embeddable
-public class EX_Extent
+@Audited @Entity
+public class EX_Extent extends de.geoinfoffm.registry.core.Entity
 {
 	/**
 	 * Spatial and temporal extent for the referring object
@@ -26,14 +29,14 @@ public class EX_Extent
 	@Column(columnDefinition = "text")
 	private String description;
 	
-//	@ElementCollection
+//	@OneToMany(mappedBy = "extent")
 //	private Collection<EX_TemporalExtent> temporalElement;
-//	
-//	@ElementCollection
-//	private Collection<EX_VerticalExtent> verticalElement;
-//	
-//	@ElementCollection
-//	private Collection<EX_GeographicExtent> geographicElement;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private Collection<EX_VerticalExtent> verticalElement;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private Collection<EX_GeographicExtent> geographicElement;
 
 	public String getDescription() {
 		return description;
@@ -47,19 +50,25 @@ public class EX_Extent
 		description = newVal;
 	}
 
-//	public Collection<EX_GeographicExtent> getGeographicElement() {
-//		return geographicElement;
-//	}
+	public Collection<EX_GeographicExtent> getGeographicElement() {
+		if (this.geographicElement == null) {
+			this.geographicElement = new ArrayList<>();
+		}
+		return geographicElement;
+	}
 //
 //	public Collection<EX_TemporalExtent> getTemporalElement() {
 //		return temporalElement;
 //	}
-//
-//	public Collection<EX_VerticalExtent> getVerticalElement() {
-//		return verticalElement;
-//	}
-//-
-//	/**
+
+	public Collection<EX_VerticalExtent> getVerticalElement() {
+		if (this.verticalElement == null) {
+			this.verticalElement = new ArrayList<>();
+		}
+		return verticalElement;
+	}
+
+	//	/**
 //	 * 
 //	 * @param newVal
 //	 */

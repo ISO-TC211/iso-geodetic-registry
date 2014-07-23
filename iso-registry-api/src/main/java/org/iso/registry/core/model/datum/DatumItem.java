@@ -4,10 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,7 +14,6 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 @Access(AccessType.FIELD)
@@ -49,8 +46,8 @@ public abstract class DatumItem extends IdentifiedItem
 	/**
 	 * Area or region or timeframe in which this datum is valid.
 	 */
-	@ManyToOne
-	private AreaItem domainOfValidity;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private EX_Extent domainOfValidity;
 	/**
 	 * The time after which this datum definition is valid. This time may be
 	 * precise (e.g. 1997.0 for IRTF97) or merely a year (e.g. 1986 for
@@ -75,7 +72,7 @@ public abstract class DatumItem extends IdentifiedItem
 		return anchorDefinition;
 	}
 
-	public AreaItem getDomainOfValidity() {
+	public EX_Extent getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
@@ -99,7 +96,7 @@ public abstract class DatumItem extends IdentifiedItem
 	 * 
 	 * @param newVal
 	 */
-	public void setDomainOfValidity(AreaItem newVal) {
+	public void setDomainOfValidity(EX_Extent newVal) {
 		domainOfValidity = newVal;
 	}
 

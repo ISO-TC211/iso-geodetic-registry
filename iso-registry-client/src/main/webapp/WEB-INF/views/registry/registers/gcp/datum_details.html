@@ -26,9 +26,9 @@
 		</div>	<!-- END OF LEFT -->
 
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row">
-				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},isRequired='true',ajaxPath='AreaItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12">
+					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
 				</div>
 			</div>
 

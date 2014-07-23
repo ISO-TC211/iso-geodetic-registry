@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.ConcatenatedOperationItemProposalDTO;
@@ -191,7 +192,12 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		if (areaCode != null) {
 			AreaItem area = areaRepository.findByCode(areaCode);
-			proposal.setDomainOfValidity(new AreaItemProposalDTO(area));
+			if (area != null) {
+				ExtentDTO extent = new ExtentDTO();
+				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
+				extent.setDescription(area.getName());
+				proposal.setDomainOfValidity(extent);
+			}
 		}
 		
 		proposal.setScope(Arrays.asList((String)row.get(COORD_OP_SCOPE)));

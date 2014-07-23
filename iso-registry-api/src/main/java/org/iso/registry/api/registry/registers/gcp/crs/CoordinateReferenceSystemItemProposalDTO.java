@@ -4,13 +4,12 @@ import javax.persistence.EntityManager;
 
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
-import org.iso.registry.core.model.crs.ProjectedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -18,7 +17,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.soap.Addition_Type;
 
-public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemProposalDTO
+public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemItemProposalDTO
 {
 	public enum CoordinateReferenceSystemType {
 		COMPOUND,
@@ -126,8 +125,8 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 			item.setScope(this.getScope());
 			
 			if (this.getDomainOfValidity() != null) {
-				AreaItem area = entityManager.find(AreaItem.class, this.getDomainOfValidity().getReferencedItemUuid());
-				item.setDomainOfValidity(area);
+				EX_Extent itemExtent = this.getDomainOfValidity().getExtent(item.getDomainOfValidity());
+				item.setDomainOfValidity(itemExtent);
 			}
 			
 			if (this.getCoordinateSystem() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {

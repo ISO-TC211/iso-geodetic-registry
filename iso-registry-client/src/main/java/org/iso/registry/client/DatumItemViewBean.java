@@ -2,11 +2,10 @@ package org.iso.registry.client;
 
 import java.util.Date;
 
-import org.iso.registry.core.model.crs.AreaItem;
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.GeodeticDatumItem;
 
-import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -16,7 +15,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 public class DatumItemViewBean extends IdentifiedItemViewBean
 {
 	private String anchorDefinition;
-	private AreaItemViewBean domainOfValidity;
+	private ExtentDTO domainOfValidity;
 	private Date realizationEpoch;
 	private String scope;
 	private EllipsoidItemViewBean ellipsoid;
@@ -58,7 +57,7 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 
 		this.setAnchorDefinition(item.getAnchorDefinition());
 		if (item.getDomainOfValidity() != null) {
-			this.setDomainOfValidity(new AreaItemViewBean(item.getDomainOfValidity()));
+			this.setDomainOfValidity(new ExtentDTO(item.getDomainOfValidity()));
 		}
 		this.setRealizationEpoch(item.getRealizationEpoch());
 		this.setScope(item.getScope());
@@ -82,11 +81,11 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 		this.anchorDefinition = anchorDefinition;
 	}
 
-	public AreaItemViewBean getDomainOfValidity() {
+	public ExtentDTO getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItemViewBean domainOfValidity) {
+	public void setDomainOfValidity(ExtentDTO domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 

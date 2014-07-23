@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.hsqldb.lib.StringUtil;
-import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
 import org.iso.registry.core.model.datum.DatumItemRepository;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
@@ -17,7 +16,6 @@ import org.iso.registry.core.model.operation.OperationMethodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +23,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
-
 @Controller
 @RequestMapping("/entities")
 public class DataController
 {
-	@Autowired private AreaItemRepository areaRepository;
 	@Autowired private DatumItemRepository datumRepository;
 	@Autowired private CoordinateSystemItemRepository csRepository;
 	@Autowired private OperationMethodItemRepository methodRepository;

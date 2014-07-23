@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO.CoordinateReferenceSystemType;
@@ -22,6 +23,8 @@ import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.DatumItemRepository;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
+import org.iso.registry.core.model.iso19115.extent.EX_GeographicBoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +112,10 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		AreaItem area = areaRepository.findByCode(areaCode);
 		if (area != null) {
-			proposal.setDomainOfValidity(new AreaItemProposalDTO(area));
+			ExtentDTO extent = new ExtentDTO();
+			extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
+			extent.setDescription(area.getName());
+			proposal.setDomainOfValidity(extent);
 		}
 		else {
 			logger.error(">>> CRS #{} referenced invalid Area #{}", crsCode, areaCode);
