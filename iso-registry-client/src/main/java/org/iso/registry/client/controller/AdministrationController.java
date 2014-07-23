@@ -143,6 +143,8 @@ public class AdministrationController
 		model.addAttribute("isNew", "true");
 		List<Role> roles = roleRepository.findAll();
 		model.addAttribute("roles", roles);
+		Iterable<Organization> orgs = organizationService.findAll();
+		model.addAttribute("organizations", orgs);
 		
 		return "admin/user";
 	}
@@ -165,6 +167,8 @@ public class AdministrationController
 			model.addAttribute("isNew", "true");
 			List<Role> roles = roleRepository.findAll();
 			model.addAttribute("roles", roles);
+			Iterable<Organization> orgs = organizationService.findAll();
+			model.addAttribute("organizations", orgs);
 			return "admin/user";
 		}
 		
@@ -183,7 +187,7 @@ public class AdministrationController
 		
 		redirectAttributes.addFlashAttribute("createdUser", user.getUuid().toString());
 		
-		return "/admin/users";
+		return "redirect:/admin/users";
 	}
 
 	/**
@@ -211,6 +215,8 @@ public class AdministrationController
 		if (bindingResult.hasErrors()) {
 			List<Role> roles = roleRepository.findAll();
 			model.addAttribute("roles", roles);
+			Iterable<Organization> orgs = organizationService.findAll();
+			model.addAttribute("organizations", orgs);
 			return "admin/user";
 		}
 		
@@ -244,6 +250,8 @@ public class AdministrationController
 		}
 		
 		model.addAttribute("user", new RegistryUserFormBean(registryUser));
+		Iterable<Organization> orgs = organizationService.findAll();
+		model.addAttribute("organizations", orgs);
 		List<Role> roles = roleRepository.findAll();
 		model.addAttribute("roles", roles);
 		
