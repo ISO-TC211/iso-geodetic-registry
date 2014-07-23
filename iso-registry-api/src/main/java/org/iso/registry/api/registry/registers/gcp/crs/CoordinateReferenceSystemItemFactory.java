@@ -1,6 +1,5 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
-import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,9 +19,6 @@ public class CoordinateReferenceSystemItemFactory<I extends CoordinateReferenceS
 extends RegisterItemFactoryImpl<I, D> 
 implements RegisterItemFactory<I, D>
 {
-	@Autowired
-	private AreaItemRepository areaRepository;
-	
 	@Autowired
 	private ItemClassRepository itemClassRepository;
 	

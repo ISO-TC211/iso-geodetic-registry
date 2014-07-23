@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.GeodeticCoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
@@ -21,7 +20,6 @@ import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDT
 import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.EllipsoidItem;
@@ -550,32 +548,32 @@ public class SiteController extends AbstractController
 			 *   
 			 */
 
-			/**
-			 * Areas
-			 */
-			RE_ItemClass icArea = this.addItemClass("Area", r);
-			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", BigInteger.valueOf(1262L), isotc211, AreaItemProposalDTO.class,
-					new ParameterizedRunnable<AreaItemProposalDTO>() {
-						@Override
-						public void run(AreaItemProposalDTO parameter) {
-							parameter.setCode(1262);
-							parameter.setSouthBoundLatitude(-90.0);
-							parameter.setNorthBoundLatitude(+90.0);
-							parameter.setWestBoundLongitude(-180.0);
-							parameter.setEastBoundLongitude(+180.0);
-						}
-					});
-			this.registerItem(r, icArea, "Germany - west of 7.5°E", BigInteger.valueOf(1624L), isotc211, AreaItemProposalDTO.class,
-					new ParameterizedRunnable<AreaItemProposalDTO>() {
-						@Override
-						public void run(AreaItemProposalDTO parameter) {
-							parameter.setCode(1624);
-							parameter.setSouthBoundLatitude(49.1);
-							parameter.setNorthBoundLatitude(53.75);
-							parameter.setWestBoundLongitude(5.87);
-							parameter.setEastBoundLongitude(7.5);
-						}
-					});
+//			/**
+//			 * Areas
+//			 */
+//			RE_ItemClass icArea = this.addItemClass("Area", r);
+//			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", BigInteger.valueOf(1262L), isotc211, AreaItemProposalDTO.class,
+//					new ParameterizedRunnable<AreaItemProposalDTO>() {
+//						@Override
+//						public void run(AreaItemProposalDTO parameter) {
+//							parameter.setCode(1262);
+//							parameter.setSouthBoundLatitude(-90.0);
+//							parameter.setNorthBoundLatitude(+90.0);
+//							parameter.setWestBoundLongitude(-180.0);
+//							parameter.setEastBoundLongitude(+180.0);
+//						}
+//					});
+//			this.registerItem(r, icArea, "Germany - west of 7.5°E", BigInteger.valueOf(1624L), isotc211, AreaItemProposalDTO.class,
+//					new ParameterizedRunnable<AreaItemProposalDTO>() {
+//						@Override
+//						public void run(AreaItemProposalDTO parameter) {
+//							parameter.setCode(1624);
+//							parameter.setSouthBoundLatitude(49.1);
+//							parameter.setNorthBoundLatitude(53.75);
+//							parameter.setWestBoundLongitude(5.87);
+//							parameter.setEastBoundLongitude(7.5);
+//						}
+//					});
 			
 			/**
 			 * Units of Measurement
@@ -739,7 +737,7 @@ public class SiteController extends AbstractController
 						@Override
 						public void run(GeodeticCoordinateReferenceSystemItemProposalDTO p) {
 							p.setCode(4326);
-							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
+//							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
 							p.setCoordinateSystem(new CoordinateSystemItemProposalDTO((CoordinateSystemItem)cs6422));
 							p.setDatum(new DatumItemProposalDTO((GeodeticDatumItem)dt6326));
 							

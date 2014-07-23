@@ -4,6 +4,7 @@ import javax.persistence.ManyToOne;
 
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.ConversionItem;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
@@ -21,7 +22,7 @@ public abstract class GeneralDerivedCoordinateReferenceSystemItem<D extends Datu
 	}
 
 	public GeneralDerivedCoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name,
-			String definition, RE_AdditionInformation additionInformation, AreaItem domainOfValidity, String scope,
+			String definition, RE_AdditionInformation additionInformation, EX_Extent domainOfValidity, String scope,
 			D datum, CoordinateSystemItem coordinateSystem) {
 		super(register, itemClass, name, definition, additionInformation, domainOfValidity, scope, datum, coordinateSystem);
 	}

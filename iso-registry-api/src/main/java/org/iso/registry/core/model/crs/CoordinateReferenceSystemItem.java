@@ -1,21 +1,16 @@
 package org.iso.registry.core.model.crs;
 
-import java.util.List;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.api.registry.registers.gcp.crs.ReferenceSystemItem;
-import org.iso.registry.core.model.Alias;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -45,7 +40,7 @@ public class CoordinateReferenceSystemItem extends ReferenceSystemItem
 	protected CoordinateReferenceSystemItem() {}
 
 	public CoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
-			RE_AdditionInformation additionInformation, AreaItem domainOfValidity, String scope) {
+			RE_AdditionInformation additionInformation, EX_Extent domainOfValidity, String scope) {
 
 		super(register, itemClass, name, definition, additionInformation, domainOfValidity);
 		

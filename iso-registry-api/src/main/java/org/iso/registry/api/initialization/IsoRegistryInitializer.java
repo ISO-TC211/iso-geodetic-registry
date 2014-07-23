@@ -3,7 +3,6 @@ package org.iso.registry.api.initialization;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,28 +121,28 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 			RE_ItemClass icCrs = this.addItemClass("CoordinateReferenceSystem", r);
 			RE_ItemClass icArea = this.addItemClass("Area", r);
 
-			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
-					new ParameterizedRunnable<AreaItemProposalDTO>() {
-						@Override
-						public void run(AreaItemProposalDTO parameter) {
-							parameter.setCode(1262);
-							parameter.setSouthBoundLatitude(-90.0);
-							parameter.setNorthBoundLatitude(+90.0);
-							parameter.setWestBoundLongitude(-180.0);
-							parameter.setEastBoundLongitude(+180.0);
-						}
-					});
-			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
-					new ParameterizedRunnable<AreaItemProposalDTO>() {
-						@Override
-						public void run(AreaItemProposalDTO parameter) {
-							parameter.setCode(1624);
-							parameter.setSouthBoundLatitude(49.1);
-							parameter.setNorthBoundLatitude(53.75);
-							parameter.setWestBoundLongitude(5.87);
-							parameter.setEastBoundLongitude(7.5);
-						}
-					});
+//			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
+//					new ParameterizedRunnable<AreaItemProposalDTO>() {
+//						@Override
+//						public void run(AreaItemProposalDTO parameter) {
+//							parameter.setCode(1262);
+//							parameter.setSouthBoundLatitude(-90.0);
+//							parameter.setNorthBoundLatitude(+90.0);
+//							parameter.setWestBoundLongitude(-180.0);
+//							parameter.setEastBoundLongitude(+180.0);
+//						}
+//					});
+//			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
+//					new ParameterizedRunnable<AreaItemProposalDTO>() {
+//						@Override
+//						public void run(AreaItemProposalDTO parameter) {
+//							parameter.setCode(1624);
+//							parameter.setSouthBoundLatitude(49.1);
+//							parameter.setNorthBoundLatitude(53.75);
+//							parameter.setWestBoundLongitude(5.87);
+//							parameter.setEastBoundLongitude(7.5);
+//						}
+//					});
 
 			this.registerItem(r, icCrs, "WGS 84", CoordinateReferenceSystemItemProposalDTO.class,
 					new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {

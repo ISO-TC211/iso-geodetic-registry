@@ -1,9 +1,11 @@
 package org.iso.registry.client;
 
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.core.model.CoordinateSystemType;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -16,8 +18,7 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 	private Integer code;
 	private CoordinateSystemType type;
 	private String scope;
-	private String areaName;
-	private AreaItemViewBean domainOfValidity;
+	private ExtentDTO domainOfValidity;
 	private DatumItemViewBean datum;
 	private CoordinateSystemItemViewBean coordinateSystem;
 
@@ -69,8 +70,9 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 			}
 		}
 		
-		this.setAreaName(crsItem.getDomainOfValidity().getName());
-		this.setDomainOfValidity(new AreaItemViewBean(crsItem.getDomainOfValidity()));
+//		this.setAreaName(crsItem.getDomainOfValidity().getName());
+//		this.setDomainOfValidity(new AreaItemViewBean(crsItem.getDomainOfValidity()));
+		this.setDomainOfValidity(new ExtentDTO(crsItem.getDomainOfValidity()));
 		this.setScope(crsItem.getScope());
 		
 //		this.setCode(crsItem.getCode());
@@ -104,19 +106,11 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 		this.scope = scope;
 	}
 
-	public String getAreaName() {
-		return areaName;
-	}
-
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
-	}
-
-	public AreaItemViewBean getDomainOfValidity() {
+	public ExtentDTO getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItemViewBean domainOfValidity) {
+	public void setDomainOfValidity(ExtentDTO domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 

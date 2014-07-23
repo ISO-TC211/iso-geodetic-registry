@@ -3,10 +3,7 @@ package org.iso.registry.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.iso.registry.api.registry.registers.gcp.operation.GeneralOperationParameterItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.operation.OperationParameterItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO.FormulaType;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.iso.registry.core.model.operation.OperationParameterItem;

@@ -1,6 +1,5 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
-import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.DatumItemRepository;
 import org.iso.registry.core.model.datum.EllipsoidItemRepository;
@@ -22,9 +21,6 @@ implements RegisterItemFactory<DatumItem, DatumItemProposalDTO>
 {
 	@Autowired
 	private DatumItemRepository datumRepository;
-	
-	@Autowired
-	private AreaItemRepository areaRepository;
 	
 	@Autowired
 	private EllipsoidItemRepository ellipsoidRepository;

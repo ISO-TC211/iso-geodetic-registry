@@ -84,7 +84,7 @@ public class RegistryInitializer
 			
 			Organization isotc211 = createOrganization("ISO/TC 211");
 			
-			RegistryUser regman = createUser("ISO Register Manager", "m", "regman@example.org", isotc211);
+			RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
 			RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
 			RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
 			RegistryUser admin = createUser("ISO Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
