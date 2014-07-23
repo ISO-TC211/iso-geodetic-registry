@@ -111,6 +111,7 @@ public class RegistryInitializer
 			}
 
 			Role submitterRole = registerService.getSubmitterRole(r);
+			isotc211.assignRole(submitterRole);
 			orgService.delegate(submitter, submitterRole, isotc211);
 
 			Role managerRole = registerService.getManagerRole(r);
@@ -166,7 +167,12 @@ public class RegistryInitializer
 		
 		logger.info(mail);
 
-		return userService.registerUser(req);
+		existingUser = userService.registerUser(req);
+		
+		Role membershipRole = orgService.getMembershipRole(organization);
+		orgService.delegate(existingUser, membershipRole, organization);
+		
+		return existingUser;
 	}
 
 	private RE_ItemClass addItemClass(String name, RE_Register r) {
