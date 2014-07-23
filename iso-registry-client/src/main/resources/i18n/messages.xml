@@ -209,7 +209,10 @@
 
 	<entry key="alert.userCreated">The user was created successfully.</entry>
 	<entry key="alert.userDeleted">The user was deleted.</entry>
-	<entry key="alert.signedUp">You were successfully signed up. You may now login using your e-mail address {0}</entry>	
+	<entry key="alert.signedUp">You were successfully signed up. You will shortly receive a confirmation e-mail containing a link to activate your account. After you have activated your account, you may login using your e-mail address {0}.</entry>	
+	<entry key="alert.signedUpNoConfirmation">You were successfully signed up. You may now login using your e-mail address {0}.</entry>	
+	<entry key="alert.accountConfirmed">Your account was confirmed. You may now login using your e-mail address {0}.</entry>	
+	<entry key="alert.accountConfirmationFailed">The provided confirmation token was incorrect.</entry>	
 	<entry key="alert.userProfileUpdated">Your profile was updated.</entry>	
 	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
 	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
