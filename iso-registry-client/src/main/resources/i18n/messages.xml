@@ -404,6 +404,8 @@
 
 	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
+	<entry key="form.placeholder.formula"></entry>
+	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
 	<entry key="form.signup.help.organizationName">In case your organization is not listed, please provide it here</entry>

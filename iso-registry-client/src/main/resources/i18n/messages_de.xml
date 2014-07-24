@@ -390,6 +390,8 @@
 	<entry key="form.placeholder.maximumValue"></entry>
 
 	<entry key="form.placeholder.greenwichLongitude"></entry>
+
+	<entry key="form.placeholder.formula"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Bitte wählen Sie Ihre Organisation --</entry>
 	<entry key="form.signup.button.organizationDetails">Meine Organisation ist nicht aufgeführt</entry>
