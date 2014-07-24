@@ -1,5 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
@@ -12,6 +14,7 @@ import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -115,6 +118,12 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		this.verticalCrs = verticalCrs;
 	}
 
+	@Override
+	public List<RegisterItemProposalDTO> getDependentProposals() {
+		return super.findDependentProposals(this.getDatum());
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
 		super.setAdditionalValues(registerItem, entityManager);

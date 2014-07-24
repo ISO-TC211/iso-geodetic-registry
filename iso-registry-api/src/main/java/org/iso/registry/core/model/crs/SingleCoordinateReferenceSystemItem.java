@@ -2,6 +2,7 @@ package org.iso.registry.core.model.crs;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,7 +31,7 @@ public abstract class SingleCoordinateReferenceSystemItem<D extends DatumItem> e
 	/**
 	 * Derived association to the datum used by this coordinate reference system.
 	 */
-	@ManyToOne(targetEntity = DatumItem.class)
+	@ManyToOne(targetEntity = DatumItem.class, cascade = CascadeType.PERSIST)
 	private D datum;
 	
 	/**
