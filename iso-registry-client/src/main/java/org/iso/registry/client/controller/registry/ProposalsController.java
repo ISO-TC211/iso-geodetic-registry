@@ -478,7 +478,7 @@ public class ProposalsController
 		
 	}
 
-	@RequestMapping(value = "/{uuid}", params={ "submit" })
+	@RequestMapping(value = "/{uuid}", params={ "submitProposal" })
 	@Transactional
 	public View submitSupersessionProposal(WebRequest request,
 			@PathVariable("uuid") UUID proposalUuid,
