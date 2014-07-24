@@ -590,28 +590,33 @@
 				}
 			});
 
-	    $("#code").rules("add", {
-	   	    required: true,
-	   	    onkeyup: false,
-	   	    remote: {
-	   	        url: "[[@{__${basePath}__/entities/code/check-availability}]]",
-	   	        type: "GET",
-	   	        cache: false,
-	   	        dataFilter: function(response) {
-	   	        	if (response == 0) {
-	   	        		$('#code').popover("hide");
-	          	    	return true;
-	   	        	}
-	   	        	else {
-	   	        		$('#code').popover("show");
-	          	    	return false;
-	   	        	}
-	   	        }
-	   	    },
-	   	    messages: {
-	   	    	remote: $.format("The code {0} is already taken")
-	   	    },
-	    });
+	    if ([[!${proposal.isClarification()}]]) { 
+		    $("#code").rules("add", {
+		   	    required: true,
+		   	    onkeyup: false,
+		   	    remote: {
+		   	        url: "[[@{__${basePath}__/entities/code/check-availability}]]",
+		   	        type: "GET",
+		   	        cache: false,
+		   	        dataFilter: function(response) {
+		   	        	if (response == 0) {
+		   	        		$('#code').popover("hide");
+		          	    	return true;
+		   	        	}
+		   	        	else {
+		   	        		$('#code').popover("show");
+		          	    	return false;
+		   	        	}
+		   	        }
+		   	    },
+		   	    messages: {
+		   	    	remote: $.format("The code {0} is already taken")
+		   	    },
+		    });
+	    }
+	    else {
+	    	$('#code').attr('readonly', 'readonly').attr('disabled', 'disabled');
+	    }
 	});
 /* ]]> */
 </script>
