@@ -132,12 +132,9 @@ public class DatumsImporter extends AbstractImporter
 
 	}
 
-	@Override
 	@Transactional
-	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
-		String csType = (String)row.get(DATUM_TYPE);
-		
-		if (csType.equalsIgnoreCase("GEODETIC")) {
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, String type) {
+		if (type.equalsIgnoreCase("GEODETIC")) {
 			if (icGeodetic == null) {
 				icGeodetic = itemClassRepository.findByName("GeodeticDatum");
 				if (icGeodetic == null) {
@@ -148,7 +145,7 @@ public class DatumsImporter extends AbstractImporter
 
 			return icGeodetic;
 		}
-		else if (csType.equalsIgnoreCase("ENGINEERING")) {
+		else if (type.equalsIgnoreCase("ENGINEERING")) {
 			if (icEngineering == null) {
 				icEngineering = itemClassRepository.findByName("EngineeringDatum");
 				if (icEngineering == null) {
@@ -159,7 +156,7 @@ public class DatumsImporter extends AbstractImporter
 
 			return icEngineering;
 		}
-		else if (csType.equalsIgnoreCase("VERTICAL")) {
+		else if (type.equalsIgnoreCase("VERTICAL")) {
 			if (icVertical == null) {
 				icVertical = itemClassRepository.findByName("VerticalDatum");
 				if (icVertical == null) {
@@ -172,7 +169,15 @@ public class DatumsImporter extends AbstractImporter
 		}
 		else {
 			return null;
-		}
+		}		
+	}
+
+	@Override
+	@Transactional
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
+		String type = (String)row.get(DATUM_TYPE);
+		
+		return getOrCreateItemClass(register, type);
 	}
 
 	@Override

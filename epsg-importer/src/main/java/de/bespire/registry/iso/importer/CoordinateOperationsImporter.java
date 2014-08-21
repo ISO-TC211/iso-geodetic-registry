@@ -452,6 +452,10 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			icOpParam = getOrCreateItemClass("OperationParameter", register);
 		}
 
+		if (row == null) {
+			return null;
+		}
+		
 		String type = (String)row.get(COORD_OP_TYPE);
 		if ("conversion".equalsIgnoreCase(type)) {
 			return icConversion;

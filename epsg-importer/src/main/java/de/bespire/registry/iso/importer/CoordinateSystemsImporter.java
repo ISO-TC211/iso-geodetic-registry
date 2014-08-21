@@ -107,11 +107,8 @@ public class CoordinateSystemsImporter extends AbstractImporter
 
 	}
 
-	@Override
 	@Transactional
-	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
-		String csType = (String)row.get(COORD_SYS_TYPE);
-		
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, String csType) {
 		if (csType.equalsIgnoreCase("ELLIPSOIDAL")) {
 			if (icEllipsoidal == null) {
 				icEllipsoidal = itemClassRepository.findByName("EllipsoidalCS");
@@ -158,7 +155,15 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		}
 		else {
 			return null;
-		}
+		}		
+	}
+	
+	@Override
+	@Transactional
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
+		String csType = (String)row.get(COORD_SYS_TYPE);
+	
+		return getOrCreateItemClass(register, csType);
 	}
 	
 	public void setAxisTable(Table table) {

@@ -162,11 +162,8 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 
 	}
 
-	@Override
 	@Transactional
-	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
-		String crsType = (String)row.get(COORD_REF_SYS_KIND);
-		
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, String crsType) {
 		if (crsType.equalsIgnoreCase("GEOCENTRIC") || crsType.equalsIgnoreCase("GEOGRAPHIC 2D") || crsType.equalsIgnoreCase("GEOGRAPHIC 3D")) {
 			if (icGeodetic == null) {
 				icGeodetic = itemClassRepository.findByName("GeodeticCRS");
@@ -224,7 +221,15 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		}
 		else {
 			return null;
-		}
+		}		
+	}
+
+	@Override
+	@Transactional
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
+		String crsType = (String)row.get(COORD_REF_SYS_KIND);
+		
+		return this.getOrCreateItemClass(register, crsType);
 	}
 	
 	
