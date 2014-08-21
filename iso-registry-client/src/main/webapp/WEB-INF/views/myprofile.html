@@ -155,7 +155,7 @@
 /* <![CDATA[ */
 
 	var requestDelegation = function(user, organization, roleName, callback) {
-		var url = '[[${basePath}]]/myprofile/delegation?userUuid=' + user + '&organizationUuid=' + organization + '&roleName=' + roleName;
+		var url = '[[@{__${basePath}__/myprofile/delegation}]]?userUuid=' + user + '&organizationUuid=' + organization + '&roleName=' + roleName;
 	
 		$.ajax({	
 			type: "POST",

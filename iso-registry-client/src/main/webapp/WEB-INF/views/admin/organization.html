@@ -174,7 +174,7 @@
 /* <![CDATA[ */
 
 	var denyRequest = function(user, organization, roleName, callback) {
-		var url = '[[${basePath}]]/management/poc/delegation?userUuid=' + user + '&organizationUuid=' + organization + '&roleName=' + roleName;
+		var url = '[[@{__${basePath}__/management/poc/delegation}]]?userUuid=' + user + '&organizationUuid=' + organization + '&roleName=' + roleName;
 	
 		$.ajax({	
 			type: "DELETE",
