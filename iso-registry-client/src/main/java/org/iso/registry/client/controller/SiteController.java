@@ -175,6 +175,16 @@ public class SiteController extends AbstractController
 		return "home";
 	}
 
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String loginHandler() {
+		return "login";
+	}
+
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	public String accessDeniedHandler() {
+		return "403";
+	}
+
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public String initialize(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
 		return "init";

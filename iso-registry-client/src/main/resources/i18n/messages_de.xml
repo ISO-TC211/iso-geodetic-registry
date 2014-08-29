@@ -203,6 +203,7 @@
 	<entry key="ROLE_SUBMITTER">Submitter</entry>
 	<entry key="ROLE_OWNER">Register-Inhaber</entry>
 
+	<entry key="alert.loginFailed">Login fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten.</entry>
 	<entry key="alert.userCreated">Der Benutzer wurde erfolgreich angelegt.</entry>
 	<entry key="alert.userDeleted">Der Benutzer wurde gelöscht.</entry>
 	<entry key="alert.signedUp">Sie wurden erfolgreich registriert und können sich jetzt mit Ihrer E-Mail-Adresse ({0}) anmelden.</entry>	
