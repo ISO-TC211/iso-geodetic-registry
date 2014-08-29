@@ -104,7 +104,7 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 			uom.setMeasureType(this.getMeasureType());
 			uom.setSymbol(this.getSymbol());
 			
-			if (this.getStandardUnit() != null) {
+			if (this.getStandardUnit() != null && this.getStandardUnit().getReferencedItemUuid() != null) {
 				UnitOfMeasureItem standardUnit = entityManager.find(UnitOfMeasureItem.class, this.getStandardUnit().getReferencedItemUuid());
 				uom.setStandardUnit(standardUnit);				
 			}
