@@ -320,7 +320,7 @@ public class RegisterController
 					model.addAttribute("pageTitle", "Coordinate Systems");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("datums")) {
-					model.addAttribute("pageTitle", "Geodetic Datums");
+					model.addAttribute("pageTitle", "Datums");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("operations")) {
 					model.addAttribute("pageTitle", "Coordinate Operations");
