@@ -4,17 +4,17 @@
 			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('uom')" />
 			<div class="row">
-				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
+				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='false',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12" th:with="property='scaleToStandardUnitNumerator',inputType='number',label=#{form.label.factorB},placeholder=#{form.placeholder.factorB},isRequired='true'">
+				<div class="col-md-12" th:with="property='scaleToStandardUnitNumerator',inputType='number',label=#{form.label.factorB},placeholder=#{form.placeholder.factorB},isRequired='false'">
 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12" th:with="property='scaleToStandardUnitDenominator',inputType='number',label=#{form.label.factorC},placeholder=#{form.placeholder.factorC},isRequired='true'">
+				<div class="col-md-12" th:with="property='scaleToStandardUnitDenominator',inputType='number',label=#{form.label.factorC},placeholder=#{form.placeholder.factorC},isRequired='false'">
 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
