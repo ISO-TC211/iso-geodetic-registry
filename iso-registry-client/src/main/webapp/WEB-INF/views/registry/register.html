@@ -12,8 +12,9 @@
 			<div class="col-md-9" role="main">
 			  	
 			  	<div th:replace="home :: demo"/>
-
-				<h3 th:text="${register.name}">Register ABC</h3>
+				
+				<h3 th:unless="${pageTitle}" th:text="${register.name}"/>
+				<h3 th:if="${pageTitle}" th:text="${pageTitle}"/>
 				
 <!-- 				<div th:replace="home :: demo"/> -->
 
