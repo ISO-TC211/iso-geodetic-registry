@@ -473,6 +473,12 @@
 	</div>
 </div>
 
+<div th:fragment="registerItemDefinition">
+	<div class="col-md-12" th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
+		<div th:replace="registry/registers/globals :: textArea"/>
+	</div>
+</div>
+
 <div th:fragment="proposalDetailsPanel (isCollapsible)" class="panel panel-default" th:if="${itemClass}">
 	<div class="panel-heading">
 		<div th:if="${isCollapsible}">

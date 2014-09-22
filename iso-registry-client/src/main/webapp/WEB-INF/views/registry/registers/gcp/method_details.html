@@ -3,6 +3,7 @@
 		<div class="col-md-6"> <!-- LEFT -->
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
 
 			<div th:unless="${isProposal}" th:with="property='parameter',label=#{form.label.operationParameters},columns=${#strings.arraySplit('name',',')},editable=${isProposal}">
 				<div th:replace="registry/registers/globals :: referencedEntitiesTable('parameter')"/>
