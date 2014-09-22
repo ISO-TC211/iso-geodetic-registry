@@ -553,6 +553,7 @@
 				$('#validationFailed').show();				
 			},
 			submitHandler: function(form) {
+				$('#validationFailed').hide();
 				$('#pleaseWait').show();
 	 			$('button').each(function() {
 					$(this).attr('disabled', 'disabled');
