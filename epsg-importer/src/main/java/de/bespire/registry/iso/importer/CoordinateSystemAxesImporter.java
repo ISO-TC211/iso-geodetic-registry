@@ -74,15 +74,20 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		
 		proposal.setAxisAbbreviation((String)row.get(COORD_AXIS_ABBREVIATION));
 		
-		Integer uomCode = (Integer)row.get(UOM_CODE);
-		UnitOfMeasureItem uom = uomRepository.findByCode(uomCode);
+		Integer uomEpsgCode = (Integer)row.get(UOM_CODE);
+		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasurement", uomEpsgCode);
+		UnitOfMeasureItem uom = uomRepository.findByIdentifier(uomCode);
 		if (uom == null) {
-			logger.error("!!! Missing UoM #{}", uomCode.toString());
+			logger.error("!!! Missing UoM #{}", uomEpsgCode.toString());
 			return;
 		}
 		proposal.setAxisUnit(new UnitOfMeasureItemProposalDTO(uom));
 		
-		proposal.setCode((Integer)row.get(COORD_AXIS_CODE));
+		Integer epsgCode = (Integer)row.get(COORD_AXIS_CODE);
+		Integer isoCode = findNextAvailableIdentifier();
+		proposal.setIdentifier(isoCode);
+		addMapping("CoordinateSystemAxis", epsgCode, isoCode);
+		
 		proposal.setName((String)nameRow.get(COORD_AXIS_NAME));
 		proposal.setDescription((String)nameRow.get(DESCRIPTION));
 		
@@ -95,7 +100,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}
@@ -135,7 +140,8 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 
 	@Override
 	protected String codeProperty() {
-		return COORD_AXIS_NAME_CODE;
+//		return COORD_AXIS_NAME_CODE;
+		return COORD_AXIS_CODE;
 	}
 
 }

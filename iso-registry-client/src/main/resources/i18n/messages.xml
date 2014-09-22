@@ -62,7 +62,7 @@
 	<entry key="tableheader.role">Role</entry>
 	<entry key="tableheader.group">Group</entry>
 	<entry key="tableheader.register">Registers</entry>
-	<entry key="tableheader.code">Code</entry>
+	<entry key="tableheader.identifier">Identifier</entry>
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Naming system</entry>
 	<entry key="tableheader.remarks">Anmerkungen</entry>
@@ -308,7 +308,7 @@
 	<entry key="form.label.onlineResourceLogo">URL to organization logo</entry>
 	<entry key="form.label.isActive">active</entry>
 	<entry key="form.label.linkedOrganization">Linked organization data</entry>
-	<entry key="form.label.code">Code</entry>
+	<entry key="form.label.identifier">Identifier</entry>
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Area of Use</entry>
@@ -372,7 +372,7 @@
 	<entry key="form.placeholder.emailAddress"></entry>
 	<entry key="form.placeholder.password"></entry>
 	<entry key="form.placeholder.confirmPassword"></entry>
-	<entry key="form.placeholder.code"></entry>
+	<entry key="form.placeholder.identifier"></entry>
 	<entry key="form.placeholder.scope"></entry>
 	
 	<entry key="form.placeholder.semiMajorAxis"></entry>
@@ -428,9 +428,9 @@
 	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
 
 	<entry key="orderBy">order by</entry>
-	<entry key="orderByCode">[code]</entry>
+	<entry key="orderByIdentifier">[id]</entry>
 	<entry key="orderByName">[name]</entry>
-	<entry key="tooltip.orderByCode">Order list entries by code</entry>
+	<entry key="tooltip.orderByIdentifier">Order list entries by identifier</entry>
 	<entry key="tooltip.orderByName">Order list entries by name</entry>
 	<entry key="tooltip.proposalNotes">Click to view notes attached to the proposal</entry>
 	

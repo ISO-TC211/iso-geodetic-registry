@@ -15,7 +15,6 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBean
 {
-	private Integer code;
 	private CoordinateSystemType type;
 	private String scope;
 	private ExtentDTO domainOfValidity;
@@ -80,14 +79,6 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 //		this.setAreaName(crsItem.getAreaOfUse().getName());
 //		
 //		this.addAdditionalProperty("code", crsItem.getCode());
-	}
-
-	public Integer getCode() {
-		return code;
-	}
-
-	public void setCode(Integer code) {
-		this.code = code;
 	}
 
 	public CoordinateSystemType getType() {

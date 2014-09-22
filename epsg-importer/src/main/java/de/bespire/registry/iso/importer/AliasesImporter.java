@@ -74,18 +74,18 @@ public class AliasesImporter extends AbstractImporter
 		String objectType = (String)row.get(OBJECT_TABLE_NAME);
 		Integer objectCode = (Integer)row.get(OBJECT_CODE);
 
-		NamingSystemItem namingSystem = namingSystemRepository.findByCode(namingSystemCode);
+		NamingSystemItem namingSystem = namingSystemRepository.findByIdentifier(namingSystemCode);
 		Alias alias = new Alias(aliasText, namingSystem);
 		IdentifiedItem item;
 		
 		if (objectType.equals("Area")) {
-			item = areaRepository.findByCode(objectCode);
+			item = areaRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Coordinate Axis Name")) {
-			item = axisRepository.findByCode(objectCode);
+			item = axisRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Coordinate Reference System")) {
-			item = crsRepository.findByCode(objectCode);
+			item = crsRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Coordinate_Operation")) {
 			return;
@@ -97,19 +97,19 @@ public class AliasesImporter extends AbstractImporter
 			return;
 		}
 		else if (objectType.equals("Datum")) {
-			item = datumRepository.findByCode(objectCode);
+			item = datumRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Ellipsoid")) {
-			item = ellipsoidRepository.findByCode(objectCode);
+			item = ellipsoidRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Naming System")) {
-			item = namingSystemRepository.findByCode(objectCode);
+			item = namingSystemRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Prime Meridian")) {
-			item = pmRepository.findByCode(objectCode);
+			item = pmRepository.findByIdentifier(objectCode);
 		}
 		else if (objectType.equals("Unit of Measure")) {
-			item = uomRepository.findByCode(objectCode);
+			item = uomRepository.findByIdentifier(objectCode);
 		}
 		else {
 			logger.info("Skipped alias '{}' (#{}) for object #{} in unknown table {}", new Object[] { aliasText, aliasCode, objectCode, objectType }); 

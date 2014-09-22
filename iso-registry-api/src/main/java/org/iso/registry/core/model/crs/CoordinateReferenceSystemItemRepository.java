@@ -1,11 +1,9 @@
 package org.iso.registry.core.model.crs;
 
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.springframework.stereotype.Repository;
 
-import de.geoinfoffm.registry.core.EntityRepository;
-
 @Repository
-public interface CoordinateReferenceSystemItemRepository extends EntityRepository<CoordinateReferenceSystemItem>
+public interface CoordinateReferenceSystemItemRepository extends IdentifiedItemRepository<CoordinateReferenceSystemItem>
 {
-	CoordinateReferenceSystemItem findByCode(Integer code);
 }

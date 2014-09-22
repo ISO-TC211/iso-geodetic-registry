@@ -160,7 +160,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 					singleCrs.setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)crs);
 				}
 				else {
-					throw new RuntimeException(String.format("Illegal CRS used as base CRS: %d is not a Single CRS", crs.getCode()));
+					throw new RuntimeException(String.format("Illegal CRS used as base CRS: %d is not a Single CRS", crs.getIdentifier()));
 				}
 			}
 			
@@ -172,7 +172,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 					compoundCrs.addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
 				}
 				else {
-					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", horizontalCrs.getCode()));
+					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", horizontalCrs.getIdentifier()));
 				}
 			}
 			if (this.getVerticalCrs() != null && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
@@ -183,7 +183,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 					compoundCrs.addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
 				}
 				else {
-					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", verticalCrs.getCode()));
+					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", verticalCrs.getIdentifier()));
 				}
 			}
 			
