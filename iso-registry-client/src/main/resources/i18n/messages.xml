@@ -65,7 +65,7 @@
 	<entry key="tableheader.identifier">Identifier</entry>
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Naming system</entry>
-	<entry key="tableheader.remarks">Anmerkungen</entry>
+	<entry key="tableheader.remarks">Remarks</entry>
 	<entry key="tableheader.parameter">Parameter</entry>
 	<entry key="tableheader.value">Value</entry>
 	<entry key="tableheader.uom">Unit of Measure</entry>
@@ -256,7 +256,7 @@
 	<entry key="popup.extent.header">Domain of Validity</entry>
 
 	<entry key="tabs.overview">Overview</entry>
-	<entry key="tabs.item">Item</entry>
+	<entry key="tabs.item">Item details</entry>
 	<entry key="tabs.managementInformation">Management information</entry>
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposal contents</entry>
@@ -331,8 +331,8 @@
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
-	<entry key="form.label.factorB">Factor B</entry>
-	<entry key="form.label.factorC">Factor C</entry>
+	<entry key="form.label.factorB">Nominator (factor B)</entry>
+	<entry key="form.label.factorC">Denominator (factor C)</entry>
 	<entry key="form.label.measureType">Measure type</entry>
 	<entry key="form.label.shape">Shape</entry>
 	<entry key="form.label.semiMajorAxis">Semi major axis</entry>
