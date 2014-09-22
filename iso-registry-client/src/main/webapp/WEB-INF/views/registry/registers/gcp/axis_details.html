@@ -1,7 +1,7 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
 			<div class="row">
 				<div class="col-md-6" th:with="property='axisAbbreviation',inputType='text',label=#{form.label.axisAbbreviation},placeholder=#{form.placeholder.axisAbbreviation},isRequired='true'">
@@ -9,7 +9,7 @@
 				</div>
 				<div class="col-md-6 form-group">
 					<label class="control-label" th:for="axisDirection" th:text="#{form.label.axisDirection}"></label>
-					<input type="hidden" id="axisDirection" th:field="*{axisDirection.code}" style="width: 100%"/>
+					<input type="hidden" id="axisDirection" th:field="*{axisDirection.identifier}" style="width: 100%"/>
 				</div>
 			</div>
 			<div class="row">

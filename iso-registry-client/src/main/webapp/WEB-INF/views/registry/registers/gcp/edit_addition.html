@@ -37,8 +37,8 @@
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
-														<label class="control-label" for="crsCode" th:text="#{form.label.code}">Code</label>
-														<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.code}" class="form-control required" required="true" type="number" th:field="*{code}"/>
+														<label class="control-label" for="crsCode" th:text="#{form.label.identifier}">Identifier</label>
+														<input id="crsCode" name="crsCode" th:placeholder="#{form.placeholder.identifier}" class="form-control required" required="true" type="number" th:field="*{identifier}"/>
 													</div>
 												</div>
 												<div class="col-md-6">
@@ -79,7 +79,7 @@
 												<div class="form-group">
 													<label class="control-label" for="areaOfUse" th:text="#{form.label.areaOfUse}">Area of Use</label>
 													<select id="areaOfUse" class="required" required="true" th:field="*{areaUuid}">
-														<option th:each="areaOfUse : ${@areaItemRepository.findAll()}" th:value="${areaOfUse.uuid}" th:text="${areaOfUse.name} + ' (' + ${areaOfUse.code} + ')'"></option>
+														<option th:each="areaOfUse : ${@areaItemRepository.findAll()}" th:value="${areaOfUse.uuid}" th:text="${areaOfUse.name} + ' (' + ${areaOfUse.identifier} + ')'"></option>
 													</select>
 												</div>
 											</div>

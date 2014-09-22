@@ -6,8 +6,6 @@ import de.geoinfoffm.registry.core.EntityRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
 
 @Repository
-public interface UnitOfMeasureItemRepository extends EntityRepository<UnitOfMeasureItem>
+public interface UnitOfMeasureItemRepository extends IdentifiedItemRepository<UnitOfMeasureItem>
 {
-	UnitOfMeasureItem findByCode(Integer code);
-	UnitOfMeasureItem findByNameAndStatus(String name, RE_ItemStatus status);
 }

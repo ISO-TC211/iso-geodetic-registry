@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
@@ -36,10 +37,10 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 	public static final String TARGET_UOM_CODE = "TARGET_UOM_CODE";
 	public static final String FACTOR_B = "FACTOR_B";
 	public static final String FACTOR_C = "FACTOR_C";
-	
+
 	@Autowired
 	private UnitOfMeasureItemRepository uomRepository;
-
+	
 	private RE_ItemClass itemClass;
 	
 	@Override
@@ -51,8 +52,14 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setTargetRegisterUuid(register.getUuid());
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+
+		Integer epsgCode = (Integer)row.get(UOM_CODE);
+		Integer isoCode = findNextAvailableIdentifier();
 		
-		proposal.setCode((Integer)row.get(UOM_CODE));
+		addMapping("UnitOfMeasurement", epsgCode, isoCode);
+		
+		proposal.setIdentifier(isoCode);
+//		proposal.setCode((Integer)row.get(UOM_CODE));
 		proposal.setName((String)row.get(UNIT_OF_MEAS_NAME));
 		
 		String typeName = (String)row.get(UNIT_OF_MEAS_TYPE);
@@ -62,8 +69,8 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setDescription(proposal.getName());
 		
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
-		if (!targetUomCode.equals(proposal.getCode())) {
-//			UnitOfMeasureItem standardUnitItem = uomRepository.findByCode(targetUomCode);
+		if (!targetUomCode.equals(proposal.getIdentifier())) {
+//			UnitOfMeasureItem standardUnitItem = uomRepository.findByIdentifier(targetUomCode);
 //			UnitOfMeasureItemProposalDTO standardUnit = new UnitOfMeasureItemProposalDTO(standardUnitItem);
 //			proposal.setStandardUnit(standardUnit);
 			proposal.setOffsetToStandardUnit(0.0);
@@ -82,7 +89,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
@@ -118,9 +125,9 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
 		if (targetUomCode != null) {
-			uom = uomRepository.findByCode(uomCode);
+			uom = uomRepository.findByIdentifier(uomCode);
 			
-			UnitOfMeasureItem targetUom = uomRepository.findByCode(targetUomCode);
+			UnitOfMeasureItem targetUom = uomRepository.findByIdentifier(targetUomCode);
 			if (targetUom != null) {
 				uom.setStandardUnit(targetUom);
 			}

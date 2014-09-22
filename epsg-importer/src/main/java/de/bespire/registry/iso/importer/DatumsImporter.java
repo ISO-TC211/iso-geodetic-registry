@@ -78,7 +78,7 @@ public class DatumsImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setCode((Integer)row.get(DATUM_CODE));
+		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
 		proposal.setScope((String)row.get(DATUM_SCOPE));
@@ -101,9 +101,9 @@ public class DatumsImporter extends AbstractImporter
 		Integer pmCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 
-		EllipsoidItem ellipsoid = ellipsoidRepository.findByCode(elCode);
-		PrimeMeridianItem primeMeridian = pmRepository.findByCode(pmCode);
-		AreaItem area = areaRepository.findByCode(areaCode);
+		EllipsoidItem ellipsoid = ellipsoidRepository.findByIdentifier(elCode);
+		PrimeMeridianItem primeMeridian = pmRepository.findByIdentifier(pmCode);
+		AreaItem area = areaRepository.findByIdentifier(areaCode);
 
 		proposal.setEllipsoid(new EllipsoidItemProposalDTO(ellipsoid));
 		proposal.setPrimeMeridian(new PrimeMeridianItemProposalDTO(primeMeridian));
@@ -122,7 +122,7 @@ public class DatumsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}

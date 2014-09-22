@@ -128,17 +128,6 @@ public class EpsgImporter
 				run(axesImporter, axesTable, register, sponsor);
 			}				
 
-			for (String type : new String[] { "ELLIPSOIDAL", "SPHERICAL", "CARTESIAN", "VERTICAL" }) {
-				RE_ItemClass icCS = csImporter.getOrCreateItemClass(register, type);
-			}
-			if (argList.contains("all") || argList.contains("4") || argList.contains("-cs")) {
-				if (argList.contains("-cs")) {
-					csImporter.setLimitToCodes(argList.get(argList.indexOf("-cs") + 1));
-				}
-				Table csTable = db.getTable("Coordinate System");
-				run(csImporter, csTable, register, sponsor);
-			}				
-				
 			RE_ItemClass icEllipsoid = ellipsoidsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("5") || argList.contains("-ellipsoid")) {
 				if (argList.contains("-ellipsoid")) {
@@ -156,7 +145,18 @@ public class EpsgImporter
 				Table pmTable = db.getTable("Prime Meridian");
 				run(pmImporter, pmTable, register, sponsor);
 			}				
-	
+
+			for (String type : new String[] { "ELLIPSOIDAL", "SPHERICAL", "CARTESIAN", "VERTICAL" }) {
+				RE_ItemClass icCS = csImporter.getOrCreateItemClass(register, type);
+			}
+			if (argList.contains("all") || argList.contains("4") || argList.contains("-cs")) {
+				if (argList.contains("-cs")) {
+					csImporter.setLimitToCodes(argList.get(argList.indexOf("-cs") + 1));
+				}
+				Table csTable = db.getTable("Coordinate System");
+				run(csImporter, csTable, register, sponsor);
+			}				
+
 			if (argList.contains("all") || argList.contains("7") || argList.contains("-area")) {
 				if (argList.contains("-area")) {
 					areasImporter.setLimitToCodes(argList.get(argList.indexOf("-area") + 1));
@@ -166,7 +166,7 @@ public class EpsgImporter
 			}				
 	
 			for (String type : new String[] { "GEODETIC", "ENGINEERING", "VERTICAL" }) {
-				RE_ItemClass icDatum = datumsImporter.getOrCreateItemClass(register, type);
+ 				RE_ItemClass icDatum = datumsImporter.getOrCreateItemClass(register, type);
 			}
 			if (argList.contains("all") || argList.contains("8") || argList.contains("-datum")) {
 				if (argList.contains("-datum")) {
@@ -248,20 +248,34 @@ public class EpsgImporter
 		
 		int rowCount = table.getRowCount();
 		int i = 1;
-		do {
+		if (importer.isLimited()) {
 			logger.info(".");
 			logger.info(".");
 			logger.info(".");
 			logger.info("======================================================================");
-			logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
-			logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
+			logger.info("> Happily importing (limited) rows from MDB table {}...", table.getRowCount(), table.getName());
 			logger.info("======================================================================");
 			logger.info(".");
 			logger.info(".");
 			logger.info(".");
-			importer.importRows(cursor, 100, sponsor, register);
-			i += 100;
-		} while (i <= rowCount);
+			importer.importRows(cursor, -1, sponsor, register);
+		}
+		else {
+			do {
+				logger.info(".");
+				logger.info(".");
+				logger.info(".");
+				logger.info("======================================================================");
+				logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
+				logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
+				logger.info("======================================================================");
+				logger.info(".");
+				logger.info(".");
+				logger.info(".");
+				importer.importRows(cursor, 100, sponsor, register);
+				i += 100;
+			} while (i <= rowCount);
+		}
 		
 		if (importer.mustFixReferences()) {
 			cursor.beforeFirst();

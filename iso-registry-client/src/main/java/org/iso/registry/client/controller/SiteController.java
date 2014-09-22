@@ -638,7 +638,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
 						public void run(CoordinateSystemAxisItemProposalDTO parameter) {
-							parameter.setCode(106);
+							parameter.setIdentifier(106);
 							parameter.setAxisAbbreviation("Lat");
 							parameter.setAxisDirection(CS_AxisDirection.NORTH);
 							parameter.setAxisUnit(new UnitOfMeasureItemProposalDTO((UnitOfMeasureItem)uom9122));
@@ -652,7 +652,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<CoordinateSystemAxisItemProposalDTO>() {
 						@Override
 						public void run(CoordinateSystemAxisItemProposalDTO parameter) {
-							parameter.setCode(107);
+							parameter.setIdentifier(107);
 							parameter.setAxisAbbreviation("Lon");
 							parameter.setAxisDirection(CS_AxisDirection.EAST);
 							parameter.setAxisUnit(new UnitOfMeasureItemProposalDTO((UnitOfMeasureItem)uom9122));
@@ -671,7 +671,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<CoordinateSystemItemProposalDTO>() {
 						@Override
 						public void run(CoordinateSystemItemProposalDTO p) {
-							p.setCode(6422);
+							p.setIdentifier(6422);
 							p.setRemarks("Coordinates referenced to this CS are in degrees. Any degree representation "
 									+ "(e.g. DMSH, decimal, etc.) may be used but that used must be declared for the "
 									+ "user by the supplier of data. Used in geographic 2D coordinate reference systems.");
@@ -692,7 +692,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<EllipsoidItemProposalDTO>() {
 						@Override
 						public void run(EllipsoidItemProposalDTO p) {
-							p.setCode(7030);
+							p.setIdentifier(7030);
 							p.setRemarks("Inverse flattening derived from four defining parameters (semi-major axis; C20 = -484.16685*10e-6; "
 									+ "earth's angular velocity w = 7292115e11 rad/sec; gravitational constant GM = 3986005e8 m*m*m/s/s).");
 							p.setSemiMajorAxis(6378137.0);
@@ -714,7 +714,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<PrimeMeridianItemProposalDTO>() {
 						@Override
 						public void run(PrimeMeridianItemProposalDTO p) {
-							p.setCode(8901);
+							p.setIdentifier(8901);
 							p.setGreenwichLongitude(0.0);
 							p.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO((UnitOfMeasureItem)uom9102));
 						}
@@ -732,7 +732,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<DatumItemProposalDTO>() {
 						@Override
 						public void run(DatumItemProposalDTO p) {
-							p.setCode(6326);
+							p.setIdentifier(6326);
 							p.setEllipsoid(new EllipsoidItemProposalDTO((EllipsoidItem)el7030));
 							p.setPrimeMeridian(new PrimeMeridianItemProposalDTO((PrimeMeridianItem)pm8901));
 						}
@@ -746,7 +746,7 @@ public class SiteController extends AbstractController
 					new ParameterizedRunnable<GeodeticCoordinateReferenceSystemItemProposalDTO>() {
 						@Override
 						public void run(GeodeticCoordinateReferenceSystemItemProposalDTO p) {
-							p.setCode(4326);
+							p.setIdentifier(4326);
 //							p.setDomainOfValidity(new AreaItemProposalDTO((AreaItem)worldArea));
 							p.setCoordinateSystem(new CoordinateSystemItemProposalDTO((CoordinateSystemItem)cs6422));
 							p.setDatum(new DatumItemProposalDTO((GeodeticDatumItem)dt6326));
