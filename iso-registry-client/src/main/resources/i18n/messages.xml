@@ -393,7 +393,7 @@
 	<entry key="form.placeholder.dataSource"></entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
-	<entry key="form.placeholder.realizationEpoch"></entry>
+	<entry key="form.placeholder.realizationEpoch">(year)</entry>
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>
