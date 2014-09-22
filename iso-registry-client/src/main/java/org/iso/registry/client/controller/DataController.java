@@ -185,18 +185,12 @@ public class DataController
 
 	@RequestMapping(value = "/identifier/check-availability", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public @ResponseBody Long checkIdentifierAvailability(@RequestParam("identifier") Long identifier, @RequestParam(value = "itemUuid", defaultValue = "") String itemUuid) {
+	public @ResponseBody Long checkIdentifierAvailability(@RequestParam("identifier") Long identifier) {
 		if (identifier == null) {
 			return -1L;
 		}
 		
-		String jpql;
-		if (StringUtils.isEmpty(itemUuid)) {
-			jpql = "SELECT COUNT(i.identifier) FROM IdentifiedItem i WHERE i.identifier = " + identifier.toString();
-		}
-		else {
-			jpql = String.format("SELECT COUNT(i.identifier) FROM IdentifiedItem i WHERE i.uuid <> %s AND i.identifier = %s", itemUuid, identifier.toString());			
-		}
+		String jpql = "SELECT COUNT(i.identifier) FROM IdentifiedItem i WHERE i.status = 'VALID' AND i.identifier = " + identifier.toString();
 		Long count = (Long)entityManager.createQuery(jpql).getResultList().get(0);
 		return count;
 	}
