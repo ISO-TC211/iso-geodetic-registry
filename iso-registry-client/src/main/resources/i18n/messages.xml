@@ -150,6 +150,7 @@
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
+	<entry key="button.submitting">Submitting...</entry>
 	<entry key="button.save">Save</entry>
 	<entry key="button.saving">Saving...</entry>
 	<entry key="button.update">Update proposal</entry>
