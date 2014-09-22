@@ -69,7 +69,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		
 		Cursor cursor = axisTable.getDefaultCursor();
 		Map<String, Object> m = new HashMap<String, Object>();
-		m.put(COORD_SYS_CODE, csCode);
+		m.put(COORD_SYS_CODE, epsgCode);
 		if (cursor.findFirstRow(m)) {
 			do {
 				Row axisRow = cursor.getCurrentRow();
