@@ -80,7 +80,7 @@
 										<a data-toggle="collapse" data-parent="#accordion" th:href="'#additionInformation_' + ${pmi.uuid}" th:text="${pmi.dateDisposed} ? #{header.addedOn(${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})} : #{header.additionInformation}"></a>
 									</h3>
 								</div>
-								<div class="panel-collapse collapse" th:id="'additionInformation_' + ${pmi.uuid}">
+								<div class="panel-collapse" th:id="'additionInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}">
 										<tbody>
 											<tr th:if="*{dateProposed}">
@@ -132,7 +132,7 @@
 										</a>
 									</h3>
 								</div>
-								<div class="panel-collapse collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
+								<div class="panel-collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}" th:id="'amendmentInformation_' + ${pmi.uuid}">
 										<tbody>
 											<tr>
@@ -181,7 +181,7 @@
 										</a>
 									</h3>
 								</div>
-								<div class="panel-collapse collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
+								<div class="panel-collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}" th:id="'clarificationInformation_' + ${pmi.uuid}">
 										<tbody>
 											<tr>
