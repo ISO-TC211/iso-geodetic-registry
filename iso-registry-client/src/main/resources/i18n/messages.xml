@@ -100,9 +100,9 @@
 	<entry key="header.additionInformation">Addition information</entry>
 	<entry key="header.amendmentInformation">Amendment information</entry>
 	<entry key="header.clarificationInformation">Clarification information</entry>
-	<entry key="header.addedOn">Added on {0}</entry>
-	<entry key="header.amendedOn">{0} on {1}</entry>
-	<entry key="header.clarifiedOn">Clarified on {0}</entry>
+	<entry key="header.addedOn">Item added on {0}</entry>
+	<entry key="header.amendedOn">Item {0} on {1}</entry>
+	<entry key="header.clarifiedOn">Item clarified on {0}</entry>
 	<entry key="header.myProfile">Your user profile</entry>
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
