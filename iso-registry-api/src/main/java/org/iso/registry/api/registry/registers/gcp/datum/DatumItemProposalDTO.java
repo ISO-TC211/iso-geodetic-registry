@@ -1,5 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +33,7 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	private String anchorDefinition;
 	private ExtentDTO domainOfValidity;
-	private Date realizationEpoch;
+	private String realizationEpoch;
 	private String scope;
 	
 	private EllipsoidItemProposalDTO ellipsoid;
@@ -72,11 +75,11 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 		this.domainOfValidity = domainOfValidity;
 	}
 
-	public Date getRealizationEpoch() {
+	public String getRealizationEpoch() {
 		return realizationEpoch;
 	}
 
-	public void setRealizationEpoch(Date realizationEpoch) {
+	public void setRealizationEpoch(String realizationEpoch) {
 		this.realizationEpoch = realizationEpoch;
 	}
 
@@ -123,7 +126,15 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 				datum.setDomainOfValidity(extent);
 			}
 			
-			datum.setRealizationEpoch(this.getRealizationEpoch());
+			DateFormat df = new SimpleDateFormat("yyyy");
+			Date epoch = null;
+			try {
+				epoch = df.parse(this.getRealizationEpoch());
+				datum.setRealizationEpoch(epoch);
+			}
+			catch (ParseException e) {
+				// Ignore
+			}
 			datum.setScope(this.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {
@@ -154,7 +165,11 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 				this.setDomainOfValidity(new ExtentDTO(datum.getDomainOfValidity()));
 			}
 			
-			this.setRealizationEpoch(datum.getRealizationEpoch());
+			if (datum.getRealizationEpoch() != null) {
+				DateFormat df = new SimpleDateFormat("yyyy");
+				this.setRealizationEpoch(df.format(datum.getRealizationEpoch()));
+			}
+			
 			this.setScope(datum.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {
