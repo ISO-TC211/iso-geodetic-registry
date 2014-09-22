@@ -220,8 +220,8 @@
 								<li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
 								<ul>
 									<li id="managementsubmitter" sec:authorize="@registrySecurity.hasRoleWith('ROLE_SUBMITTER_')"><a th:href="@{__${basePath}__/management/submitter}" th:text="#{navbar.submittingOrganizations}">Einreichende Organisationen</a></li>
-									<li id="managementmanager" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')"><a th:href="@{__${basePath}__/management/manager}" th:text="#{navbar.registerManager}">Register-Manager</a></li>
-									<li id="managementcontrolbody" sec:authorize="@registrySecurity.hasRoleWith('ROLE_CONTROLBODY_')"><a th:href="@{__${basePath}__/management/controlbody}" th:text="#{navbar.controlBody}">Control-Body</a></li>
+									<li id="managementmanager" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')"><a th:href="@{__${basePath}__/management/manager}"><span th:text="#{navbar.registerManager}">Register-Manager</span> <span class="badge" th:if="${@registrySecurity.getRegisterManagerTodoCount()}" th:text="${@registrySecurity.getRegisterManagerTodoCount()}"></span></a></li>
+									<li id="managementcontrolbody" sec:authorize="@registrySecurity.hasRoleWith('ROLE_CONTROLBODY_')"><a th:href="@{__${basePath}__/management/controlbody}"><span th:text="#{navbar.controlBody}">Control-Body</span> <span class="badge" th:if="${@registrySecurity.getControlBodyTodoCount()}" th:text="${@registrySecurity.getControlBodyTodoCount()}"></span></a></li>
 									<li id="managementowner" sec:authorize="@registrySecurity.hasRoleWith('ROLE_OWNER_')"><a th:href="@{__${basePath}__/management/owner}" th:text="#{navbar.registerOwner}">Register-Inhaber</a></li>
 									<li id="managementpoc" sec:authorize="@registrySecurity.hasRoleWith('ROLE_POINTOFCONTACT_')"><a th:href="@{__${basePath}__/management/poc}"><span th:text="#{navbar.pointOfContact}">Organisationsverwalter</span> <span class="badge" th:if="${@registrySecurity.getPointOfContactTodoCount()}" th:text="${@registrySecurity.getPointOfContactTodoCount()}"></span></a></li>
 								</ul></li>
