@@ -89,7 +89,7 @@ public class DataController
 	@Transactional(readOnly = true)
 	public @ResponseBody List<Object[]> findConversionMethods(@RequestParam(value = "q", required = false) String search) {
 		StringBuilder q = new StringBuilder();
-		q.append("SELECT i.uuid, i.identifier, i.name FROM ConversionItem i WHERE i.status = 'VALID'");
+		q.append("SELECT i.uuid, i.identifier, i.name FROM OperationMethodItem i WHERE i.status = 'VALID'");
 		if (!StringUtils.isEmpty(search)) {
 			search = "%" + search + "%";
 			q.append(" AND (LOWER(i.name) LIKE '" + search.toLowerCase() + "' OR CAST(i.identifier AS text) LIKE '" + search + "')");
