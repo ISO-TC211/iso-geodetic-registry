@@ -492,12 +492,9 @@
 		<h3 th:unless="${isCollapsible}" class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
 	</div>
 
-	<div id="managementPanel" th:classappend="${isCollapsible} ? 'panel-collapse collapse'">
-		<div class="panel-body">
+	<div id="managementPanel" th:classappend="${isCollapsible} ? 'panel-collapse'">
+		<div class="panel-body"> 
 			<div th:fragment="proposalDetails">
-				<div th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textArea"/>
-				</div>
 				<div th:unless="${partOfSupersession}">
 					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
 						<div th:replace="registry/registers/globals :: textArea"/>
