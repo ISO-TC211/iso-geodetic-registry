@@ -2,8 +2,7 @@
 	<div th:include="layout :: navbarFragment"></div>
 	
 	<div class="col-md-3">
-		<button th:unless="${param.closebtn != null}" id="topback" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
-		<button th:if="${closebtn == null}" id="topclose" class="btn btn-default" onclick="window.close();" th:text="#{button.close}" style="margin-top: 20px">Zurück</button>												
+ 		<button id="topback" class="btn btn-default" onclick="history.back();" th:text="#{button.back}">Zurück</button>
 		<div th:include="layout :: navtree"></div>
 	</div>
 	<div class="col-md-9">
@@ -31,9 +30,8 @@
 				<div th:replace="registry/item :: #managementInformation"/>
 	
 			</div>
-			
-		<button th:unless="${param.closebtn != null}" id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
-		<button th:if="${closebtn == null}" id="close" class="btn btn-default" onclick="window.close();" th:text="#{button.close}" style="margin-top: 20px">Zurück</button>												
+	
+			<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 		</div>
 	</div>
 	<script th:replace="registry/item :: js-item"/>
