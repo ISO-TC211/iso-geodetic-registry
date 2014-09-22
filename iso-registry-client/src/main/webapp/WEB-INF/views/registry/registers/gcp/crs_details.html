@@ -4,8 +4,8 @@
 
 		<div class="col-md-6">
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('crs')" />
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('crs')" /> -->
 		
 			<div class="row">
 				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
