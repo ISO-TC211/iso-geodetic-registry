@@ -113,6 +113,7 @@
 	<entry key="header.uom">Unit of Measure</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
 	<entry key="header.operationParameter">Coordinate Operation Parameter</entry>
+	<entry key="header.operationMethod">Coordinate Operation Method</entry>	
 	<entry key="header.conversion">Conversion</entry>
 	<entry key="header.transformation">Transformation</entry>
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
@@ -417,6 +418,8 @@
 	<entry key="form.validation.unavailable.user.emailAddress">This e-mail address is not available</entry>
 	<entry key="form.validation.confirmPassword">The passwords do not match</entry>
 
+	<entry key="label.placeholder.operationMethodParameters">Click to select parameters...</entry>
+	
 	<entry key="form.signup.validation.organizationNameExists">An organization with this name exists. Please select it from the list on the left and leave this field empty.</entry>
 	
 	<entry key="form.proposal.itemClassNotConfigured">No configuration file exists for this item class. Additional attributes will not be visible.</entry>

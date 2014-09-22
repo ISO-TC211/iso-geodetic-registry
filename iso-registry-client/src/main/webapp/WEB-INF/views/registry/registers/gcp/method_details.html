@@ -20,6 +20,7 @@
 							$(function() {
 								$('#parameters').select2({
 									multiple: true,
+									placeholder: "[[#{label.placeholder.operationMethodParameters}]]",
 									dropdownCssClass: "bigdrop",
 									ajax: {
 										url: "[[@{__${basePath}__/}]]entities/by-class/OperationParameterItem?orderBy=identifier",
