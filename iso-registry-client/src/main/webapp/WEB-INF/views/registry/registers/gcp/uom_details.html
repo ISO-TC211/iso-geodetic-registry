@@ -3,6 +3,7 @@
 		<div class="col-md-6"> <!-- LEFT -->
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('uom')" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
 			<div class="row">
 				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='false',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
