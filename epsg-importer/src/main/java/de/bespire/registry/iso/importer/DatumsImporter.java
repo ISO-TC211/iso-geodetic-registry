@@ -85,16 +85,6 @@ public class DatumsImporter extends AbstractImporter
 		
 		String epochText = (String)row.get(REALIZATION_EPOCH);
 		if (!StringUtils.isEmpty(epochText)) {
-			DateFormat df = new SimpleDateFormat("yyyy");
-			Date epoch;
-			try {
-				epoch = df.parse(epochText);
-			}
-			catch (ParseException e1) {
-				logger.error(e1.getMessage(), e1);
-				return;
-			}
-			proposal.setRealizationEpoch(epoch);
 		}
 		
 		Integer elCode = (Integer)row.get(ELLIPSOID_CODE);
