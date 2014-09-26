@@ -34,11 +34,30 @@
 									<td th:text="#{${item.proposalType}}"></td>											
 									<td th:text="#{${item.proposalStatus}}"></td>
 									<td>
-										<div class="control-group">
-											<button th:unless="${item.isRetirement()} or ${item.isSupersession()}" th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
-											<button th:id="'decide_' + ${item.uuid}" th:if="${item.isPending()}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button>
+										<div class="btn-group" th:unless="${item.proposalGroupUuid}">
+											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}">
+													<div style="margin: 5px;">
+														<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
+													</div>
+												</li>
+												<li th:if="${item.isPending()}">
+													<div style="margin: 5px">
+														<button th:id="'decide_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button>
+													</div>
+												</li>
+											</ul>
 										</div>
 									</td>
+<!-- 									<td> -->
+<!-- 										<div class="control-group"> -->
+<!-- 											<button th:unless="${item.isRetirement()} or ${item.isSupersession()}" th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												 -->
+<!-- 											<button th:id="'decide_' + ${item.uuid}" th:if="${item.isPending()}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button> -->
+<!-- 										</div> -->
+<!-- 									</td> -->
 								</tr>
 							</tbody>
 						</table>

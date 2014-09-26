@@ -1,24 +1,26 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
-import org.iso.registry.core.model.crs.ProjectedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.soap.Addition_Type;
 
-public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemProposalDTO
+public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemItemProposalDTO
 {
 	public enum CoordinateReferenceSystemType {
 		COMPOUND,
@@ -117,6 +119,12 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 	}
 
 	@Override
+	public List<RegisterItemProposalDTO> getDependentProposals() {
+		return super.findDependentProposals(this.getDatum());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
 		super.setAdditionalValues(registerItem, entityManager);
 		
@@ -126,8 +134,8 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 			item.setScope(this.getScope());
 			
 			if (this.getDomainOfValidity() != null) {
-				AreaItem area = entityManager.find(AreaItem.class, this.getDomainOfValidity().getReferencedItemUuid());
-				item.setDomainOfValidity(area);
+				EX_Extent itemExtent = this.getDomainOfValidity().getExtent(item.getDomainOfValidity());
+				item.setDomainOfValidity(itemExtent);
 			}
 			
 			if (this.getCoordinateSystem() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
@@ -152,7 +160,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 					singleCrs.setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)crs);
 				}
 				else {
-					throw new RuntimeException(String.format("Illegal CRS used as base CRS: %d is not a Single CRS", crs.getCode()));
+					throw new RuntimeException(String.format("Illegal CRS used as base CRS: %d is not a Single CRS", crs.getIdentifier()));
 				}
 			}
 			
@@ -164,7 +172,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 					compoundCrs.addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
 				}
 				else {
-					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", horizontalCrs.getCode()));
+					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", horizontalCrs.getIdentifier()));
 				}
 			}
 			if (this.getVerticalCrs() != null && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
@@ -175,7 +183,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemPro
 					compoundCrs.addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
 				}
 				else {
-					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", verticalCrs.getCode()));
+					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", verticalCrs.getIdentifier()));
 				}
 			}
 			

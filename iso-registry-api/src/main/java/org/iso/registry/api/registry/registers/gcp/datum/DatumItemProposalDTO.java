@@ -1,19 +1,23 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
-import org.iso.registry.core.model.crs.AreaItem;
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.GeodeticDatumItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
@@ -28,19 +32,25 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	private DatumType type;
 	
 	private String anchorDefinition;
-	private AreaItemProposalDTO domainOfValidity;
-	private Date realizationEpoch;
+	private ExtentDTO domainOfValidity;
+	private String realizationEpoch;
 	private String scope;
 	
 	private EllipsoidItemProposalDTO ellipsoid;
 	private PrimeMeridianItemProposalDTO primeMeridian;
 		
-	public DatumItemProposalDTO() { }
+	public DatumItemProposalDTO() { 
+		this.domainOfValidity = new ExtentDTO();
+	}
 	
 	public DatumItemProposalDTO(DatumItem item) {
 		super(item);
 	}
 	
+	public DatumItemProposalDTO(Proposal proposal) {
+		super(proposal);
+	}
+
 	public DatumType getType() {
 		return this.type;
 	}
@@ -57,19 +67,19 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 		this.anchorDefinition = anchorDefinition;
 	}
 
-	public AreaItemProposalDTO getDomainOfValidity() {
+	public ExtentDTO getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItemProposalDTO domainOfValidity) {
+	public void setDomainOfValidity(ExtentDTO domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 
-	public Date getRealizationEpoch() {
+	public String getRealizationEpoch() {
 		return realizationEpoch;
 	}
 
-	public void setRealizationEpoch(Date realizationEpoch) {
+	public void setRealizationEpoch(String realizationEpoch) {
 		this.realizationEpoch = realizationEpoch;
 	}
 
@@ -99,7 +109,7 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	@Override
 	public List<RegisterItemProposalDTO> getDependentProposals() {
-		return super.findDependentProposals(this.getDomainOfValidity(), this.getEllipsoid(), this.getPrimeMeridian());
+		return super.findDependentProposals(this.getEllipsoid(), this.getPrimeMeridian());
 	}
 
 	@Override
@@ -111,12 +121,20 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 
 			datum.setAnchorDefinition(this.getAnchorDefinition());
 
-			if (this.getDomainOfValidity() != null && this.getDomainOfValidity().getReferencedItemUuid() != null) {
-				AreaItem area = entityManager.find(AreaItem.class, this.getDomainOfValidity().getReferencedItemUuid());
-				datum.setDomainOfValidity(area);
+			if (this.getDomainOfValidity() != null) {
+				EX_Extent extent = this.getDomainOfValidity().getExtent(datum.getDomainOfValidity());
+				datum.setDomainOfValidity(extent);
 			}
 			
-			datum.setRealizationEpoch(this.getRealizationEpoch());
+			DateFormat df = new SimpleDateFormat("yyyy");
+			Date epoch = null;
+			try {
+				epoch = df.parse(this.getRealizationEpoch());
+				datum.setRealizationEpoch(epoch);
+			}
+			catch (ParseException e) {
+				// Ignore
+			}
 			datum.setScope(this.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {
@@ -144,10 +162,14 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 			this.setAnchorDefinition(datum.getAnchorDefinition());
 
 			if (datum.getDomainOfValidity() != null) {
-				this.setDomainOfValidity(new AreaItemProposalDTO(datum.getDomainOfValidity()));
+				this.setDomainOfValidity(new ExtentDTO(datum.getDomainOfValidity()));
 			}
 			
-			this.setRealizationEpoch(datum.getRealizationEpoch());
+			if (datum.getRealizationEpoch() != null) {
+				DateFormat df = new SimpleDateFormat("yyyy");
+				this.setRealizationEpoch(df.format(datum.getRealizationEpoch()));
+			}
+			
 			this.setScope(datum.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {

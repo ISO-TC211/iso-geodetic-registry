@@ -35,7 +35,7 @@
 								</div>
 							</div>
 							
-							<div th:replace="registry/registers/gcp/area_panel :: newAreaPanel"/>
+							<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
 							<div th:replace="registry/registers/gcp/datum_panel :: newDatumPanel"/>
 
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
@@ -77,7 +77,7 @@
 				$("#newAreaPanel").fadeOut(500);
 				$("#domainOfValidity_select option[value='']").remove();
 				$('#domainOfValidity_select').removeAttr('disabled');
-				$('#domainOfValidity_bycode').click();
+				$('#domainOfValidity_byid').click();
 
 				hidePanel('#newAreaPanel');
 			});
@@ -98,7 +98,7 @@
 				$("#newDatumPanel").fadeOut(500);
 				$("#datum_select option[value='']").remove();
 				$('#datum_select').removeAttr('disabled');
-				$('#datum_bycode').click();
+				$('#datum_byid').click();
 
 				hidePanel('#newDatumPanel');
 			});

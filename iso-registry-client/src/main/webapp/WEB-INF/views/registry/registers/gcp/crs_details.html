@@ -3,8 +3,9 @@
 	<div class="row">
 
 		<div class="col-md-6">
-			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('crs')" />
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('crs')" /> -->
 		
 			<div class="row">
 				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
@@ -15,20 +16,20 @@
 		</div>
 
 		<div class="col-md-6">
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12">
+					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
+				</div>
+			</div>
+
 			<div class="row">
-				<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.areaOfUse},isRequired='true',ajaxPath='AreaItem'">
+				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
+				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>

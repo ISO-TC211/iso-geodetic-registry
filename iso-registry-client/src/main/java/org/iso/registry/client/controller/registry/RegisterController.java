@@ -21,7 +21,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.iso.registry.client.controller.DatatablesResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +61,7 @@ import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.DatatablesResult;
 import de.geoinfoffm.registry.client.web.ProposalDtoFactory;
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -71,6 +71,7 @@ import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
@@ -84,7 +85,6 @@ import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
 import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
 import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationException;
 
@@ -320,7 +320,7 @@ public class RegisterController
 					model.addAttribute("pageTitle", "Coordinate Systems");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("datums")) {
-					model.addAttribute("pageTitle", "Geodetic Datums");
+					model.addAttribute("pageTitle", "Datums");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("operations")) {
 					model.addAttribute("pageTitle", "Coordinate Operations");

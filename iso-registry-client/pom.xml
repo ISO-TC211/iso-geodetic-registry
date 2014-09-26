@@ -6,7 +6,7 @@
 	<artifactId>iso-registry-client</artifactId>
 	<name>iso-registry-client</name>
 	<packaging>war</packaging>
-	<version>1.1.1</version>
+	<version>1.2</version>
 	<properties>
 		<java-version>1.7</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
@@ -110,8 +110,8 @@
 		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -348,6 +348,19 @@
 				<mail.smtp.port>25</mail.smtp.port>
 				<client.signup.sendConfirmationMails>false</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>http://localhost:8080/signup/confirmation</client.signup.confirmationUrl>
+				
+<!-- 				<mail.enabled>true</mail.enabled> -->
+<!-- 				<mail.from.name>Registry</mail.from.name> -->
+<!-- 				<mail.from.address>registry@bespire.eu</mail.from.address> -->
+<!-- 				<mail.smtp.auth>true</mail.smtp.auth> -->
+<!-- 				<mail.smtp.user>registrymail</mail.smtp.user> -->
+<!-- 				<mail.smtp.password>[add password]</mail.smtp.password> -->
+<!-- 				<mail.smtp.starttls.enable>true</mail.smtp.starttls.enable> -->
+<!-- 				<mail.smtp.host>mx.bespire.eu</mail.smtp.host> -->
+<!-- 				<mail.smtp.port>587</mail.smtp.port> -->
+<!-- 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails> -->
+<!-- 				<client.signup.confirmationUrl>http://localhost:8080/signup/confirmation</client.signup.confirmationUrl> -->
+				
 			</properties>
 		</profile>
 	</profiles>

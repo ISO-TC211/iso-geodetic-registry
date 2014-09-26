@@ -29,7 +29,7 @@
 		<link rel="stylesheet" href="../../resources/css/select2.css" th:href="@{__${basePath}__/resources/css/select2.css}" />
 		<link rel="stylesheet" href="../../resources/css/select2-bootstrap.css" th:href="@{__${basePath}__/resources/css/select2-bootstrap.css}" />
 		<link rel="stylesheet" href="../../resources/css/registry.css" th:href="@{__${basePath}__/resources/css/registry.css}" />
-		<link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css"/>		
+		<link th:href="@{~/static/fonts/oswald.css}" rel="stylesheet" type="text/css"/>		
 		<style type="text/css" th:inline="text">
 			body {
 				padding-top: 110px;
@@ -110,13 +110,16 @@
 											</div>
 											<div class="form-group">
 												<button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden</button>
-<!-- 												<button type="button" class="btn btn-primary btn-block" th:text="#{navbar.login.button.register}" th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren</button> -->
+												<button type="button" class="btn btn-primary btn-block" th:text="#{navbar.login.button.register}" th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren</button>
 											</div>
 										</form>
 									</div>
 								</div>
 							</li>
 						</ul>
+					</li>
+					<li>
+						<a th:href="@{~/static/quickstart-gcp.pdf}" target="_blank" th:title="#{download.quickstart}"><span class="glyphicon glyphicon-question-sign"></span></a>
 					</li>
 				</ul>
 <!-- 				<div class="navbar-form navbar-right"> -->
@@ -217,14 +220,16 @@
 								<li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
 								<ul>
 									<li id="managementsubmitter" sec:authorize="@registrySecurity.hasRoleWith('ROLE_SUBMITTER_')"><a th:href="@{__${basePath}__/management/submitter}" th:text="#{navbar.submittingOrganizations}">Einreichende Organisationen</a></li>
-									<li id="managementmanager" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')"><a th:href="@{__${basePath}__/management/manager}" th:text="#{navbar.registerManager}">Register-Manager</a></li>
-									<li id="managementcontrolbody" sec:authorize="@registrySecurity.hasRoleWith('ROLE_CONTROLBODY_')"><a th:href="@{__${basePath}__/management/controlbody}" th:text="#{navbar.controlBody}">Control-Body</a></li>
+									<li id="managementmanager" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')"><a th:href="@{__${basePath}__/management/manager}"><span th:text="#{navbar.registerManager}">Register-Manager</span> <span class="badge" th:if="${@registrySecurity.getRegisterManagerTodoCount()}" th:text="${@registrySecurity.getRegisterManagerTodoCount()}"></span></a></li>
+									<li id="managementcontrolbody" sec:authorize="@registrySecurity.hasRoleWith('ROLE_CONTROLBODY_')"><a th:href="@{__${basePath}__/management/controlbody}"><span th:text="#{navbar.controlBody}">Control-Body</span> <span class="badge" th:if="${@registrySecurity.getControlBodyTodoCount()}" th:text="${@registrySecurity.getControlBodyTodoCount()}"></span></a></li>
 									<li id="managementowner" sec:authorize="@registrySecurity.hasRoleWith('ROLE_OWNER_')"><a th:href="@{__${basePath}__/management/owner}" th:text="#{navbar.registerOwner}">Register-Inhaber</a></li>
+									<li id="managementpoc" sec:authorize="@registrySecurity.hasRoleWith('ROLE_POINTOFCONTACT_')"><a th:href="@{__${basePath}__/management/poc}"><span th:text="#{navbar.pointOfContact}">Organisationsverwalter</span> <span class="badge" th:if="${@registrySecurity.getPointOfContactTodoCount()}" th:text="${@registrySecurity.getPointOfContactTodoCount()}"></span></a></li>
 								</ul></li>
  							<li id="nav_account" sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/myprofile}" th:text="#{navbar.myAccount}">Mein Benutzerkonto</a></li>
 							<li id="nav_usermgmt" sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" th:text="#{navbar.userManagement}">Benutzerverwaltung</a>
 								<ul>
 									<li id="adminusers"><a th:href="@{__${basePath}__/admin/users}" th:text="#{navbar.userManagement.users}">Benutzer</a></li>
+									<li id="adminorganizations"><a th:href="@{__${basePath}__/admin/organizations}" th:text="#{navbar.userManagement.organizations}">Organisationen</a></li>
 								</ul>
 							</li>
 <!-- 							<li id="adminproposals" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{__${basePath}__/admin/proposals}" th:text="#{navbar.proposalManagement}">Vorschlagsverwaltung</a></li> -->

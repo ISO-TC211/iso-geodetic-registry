@@ -3,7 +3,12 @@
  */
 package org.iso.registry.client.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,34 +25,45 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.EntityNotFoundException;
+import de.geoinfoffm.registry.api.NoRevisionAtThisPointInTimeException;
+import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.UpdateUserException;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.NotFoundException;
+import de.geoinfoffm.registry.client.web.OrganizationFormBean;
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
+import de.geoinfoffm.registry.core.NonExistentRevisionException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
+import de.geoinfoffm.registry.core.model.Delegation;
+import de.geoinfoffm.registry.core.model.DelegationRepository;
+import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
 import de.geoinfoffm.registry.core.model.RoleRepository;
+import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
+import de.geoinfoffm.registry.soap.CreateOrganizationRequest;
 import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 /**
@@ -58,7 +74,6 @@ import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
  */
 @Controller
 @RequestMapping("/admin")
-@Secured("ROLE_ADMIN")
 public class AdministrationController
 {	
 	private static final Logger logger = LoggerFactory.getLogger(AdministrationController.class);
@@ -68,6 +83,12 @@ public class AdministrationController
 
 	@Autowired
 	private RegistryUserRepository userRepository;
+
+	@Autowired
+	private OrganizationService organizationService;
+
+	@Autowired
+	private DelegationRepository delegationRepository;
 
 	@Autowired
 	private RegisterItemService itemService;
@@ -83,6 +104,9 @@ public class AdministrationController
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private RegistrySecurity security;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -119,6 +143,8 @@ public class AdministrationController
 		model.addAttribute("isNew", "true");
 		List<Role> roles = roleRepository.findAll();
 		model.addAttribute("roles", roles);
+		Iterable<Organization> orgs = organizationService.findAll();
+		model.addAttribute("organizations", orgs);
 		
 		return "admin/user";
 	}
@@ -141,6 +167,8 @@ public class AdministrationController
 			model.addAttribute("isNew", "true");
 			List<Role> roles = roleRepository.findAll();
 			model.addAttribute("roles", roles);
+			Iterable<Organization> orgs = organizationService.findAll();
+			model.addAttribute("organizations", orgs);
 			return "admin/user";
 		}
 		
@@ -159,7 +187,7 @@ public class AdministrationController
 		
 		redirectAttributes.addFlashAttribute("createdUser", user.getUuid().toString());
 		
-		return "/admin/users";
+		return "redirect:/admin/users";
 	}
 
 	/**
@@ -187,6 +215,8 @@ public class AdministrationController
 		if (bindingResult.hasErrors()) {
 			List<Role> roles = roleRepository.findAll();
 			model.addAttribute("roles", roles);
+			Iterable<Organization> orgs = organizationService.findAll();
+			model.addAttribute("organizations", orgs);
 			return "admin/user";
 		}
 		
@@ -220,6 +250,8 @@ public class AdministrationController
 		}
 		
 		model.addAttribute("user", new RegistryUserFormBean(registryUser));
+		Iterable<Organization> orgs = organizationService.findAll();
+		model.addAttribute("organizations", orgs);
 		List<Role> roles = roleRepository.findAll();
 		model.addAttribute("roles", roles);
 		
@@ -251,6 +283,233 @@ public class AdministrationController
 		
 		return new BasePathRedirectView("/admin/users");
 	}
+	
+	/**
+	 * Fetches all {@link Organization}s from the repository and puts them
+	 * in the view model.
+	 * 
+	 * @param model Injected view model
+	 * @param revision Backend revision
+	 * @return
+	 */
+	@RequestMapping(value = "/organizations", method = RequestMethod.GET)
+	public String getAllOrganizations(Model model, @RequestParam(value="rev", defaultValue="0") int revision,
+			@RequestParam(value="revisionDate", defaultValue="") String revisionDate) {
+		
+		logger.debug("Request all organizations");
+		
+		Date revDate = null;
+		if (revisionDate != null && !revisionDate.isEmpty()) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			try {
+				revDate = df.parse(revisionDate);
+			}
+			catch (ParseException e) {
+				// Ignore
+			}
+		}
+		
+		Calendar now = Calendar.getInstance();
+		Iterable<Organization> orgs;
+		if (revDate != null && !revDate.after(now.getTime())) {
+			model.addAttribute("revisionDate", revisionDate);
+			try {
+				orgs = organizationService.findAll(revDate);
+			}
+			catch (NoRevisionAtThisPointInTimeException e) {
+				orgs = organizationService.findAll();
+				model.addAttribute("noRevisionAtGivenDate", "true");
+			}
+		}
+		else if (revision <= 0) {
+			orgs = organizationService.findAll();
+		}
+		else {
+			try {
+				orgs = organizationService.findAll(revision);
+			}
+			catch (NonExistentRevisionException e) {
+				orgs = organizationService.findAll();
+				model.addAttribute("noRevisionAtGivenDate", "true");				
+			}
+		}
+
+		model.addAttribute("organizations", orgs);
+		model.addAttribute("revision", revision);
+		
+		return "admin/organizations";
+	}
+
+	/**
+	 * Handles {@link NotFoundException}s.
+	 * 
+	 * @return The error view
+	 */
+	@ExceptionHandler(NotFoundException.class)
+	public String handleNotFoundException() {
+		return "notfound";
+	}
+	
+	/**
+	 * Finds and display details of an organization.
+	 * 
+	 * @param uuid ID of the organization to display
+	 * @param organization The view-backing {@link OrganizationPO} object
+	 * @param model The view model
+	 * @return The name of the view used to render the organization
+	 * @throws UnauthorizedException 
+	 */
+	@RequestMapping(value = "/organization/{id}", method = RequestMethod.GET) 
+	public String viewOrganization(@PathVariable("id") String uuid, @ModelAttribute("organization") final Organization organization, final Model model) throws UnauthorizedException {
+		UUID id = UUID.fromString(uuid);
+		Organization org = organizationService.findOne(id);
+		
+		if (org == null) {
+			throw new NotFoundException(String.format("Cannot edit non-existent organization %s", uuid));
+		}
+
+		security.assertMayWrite(org);
+		
+		model.addAttribute("organization", new OrganizationFormBean(org));
+		
+		List<RegistryUser> users = userRepository.findByOrganization(org);
+		model.addAttribute("users", users);
+		
+		List<Delegation> delegations = delegationRepository.findByDelegatingOrganization(org);
+		model.addAttribute("delegations", delegations);
+		
+		return "admin/organization";
+	}
+
+	/**
+	 * Displays an empty view and allows for the creation of a new organization.
+	 * 
+	 * @param organization The view-backing {@link OrganizationPO} object
+	 * @param model The view model
+	 * @return The name of the view used
+	 */
+	@RequestMapping(value="/organization/new", method = RequestMethod.GET)
+	public String addNewOrganization(@ModelAttribute("organization") OrganizationFormBean organization, final Model model) {
+		model.addAttribute("isNew", "true");
+		return "admin/organization";
+	}
+	
+	/**
+	 * Updates an organization.
+	 * 
+	 * @param organization The view-backing {@link OrganizationPO} object
+	 * @param bindingResult The validation result
+	 * @param model The view model
+	 * @return The name of the view used
+	 * @throws UnauthorizedException 
+	 */
+	@Transactional
+	@RequestMapping(value = "/organization/{id}", method = RequestMethod.PUT)
+	public String updateOrganization(WebRequest request, 
+								   @PathVariable("id") UUID id, 
+								   @ModelAttribute("organization") final OrganizationFormBean organization, 
+								   final BindingResult bindingResult, final Model model) throws UnauthorizedException {
+		
+		organization.setUuid(id);
+		Organization org = organizationService.findOne(id);
+		if (org == null) {
+			throw new EntityNotFoundException(String.format("Organization %s does not exist", id));
+		}
+
+		security.assertMayWrite(org);
+
+		List<Delegation> delegations = delegationRepository.findByDelegatingOrganization(org);
+
+		// Organization role changes may only be performed by administrators (not by PoCs!) 
+		if (security.isAdmin()) {
+			for (String paramName : request.getParameterMap().keySet()) {
+				if (paramName.startsWith("ROLE_") && "on".equals(request.getParameter(paramName))) {
+					organization.addRole(paramName);
+				}
+			}
+		}
+
+		org = organizationService.updateOrganization(organization.toUpdateDTO(id));
+
+		// Handle delegations separately to make sure that newly assigned roles are visible to
+		// organizationService.delegate(...)
+		for (String paramName : request.getParameterMap().keySet()) { 
+			if (paramName.startsWith("DELEGATE_")) {
+				String[] values = paramName.substring(9).split("_TO_");
+				Role role = roleRepository.findByName(values[0]);
+				RegistryUser user = userRepository.findOne(UUID.fromString(values[1]));
+
+				Delegation delegation = organizationService.findDelegation(user, role, org);
+				if ("on".equals(request.getParameter(paramName))) {
+					if (delegation == null || !delegation.isApproved()) {
+						delegation = organizationService.delegate(user, role, org);
+					}
+					
+					delegations.remove(delegation);
+				}
+			}
+		}
+		
+		for (Delegation delegation : delegations) {
+			// Approved delegations left in the list were unchecked
+			if (delegation.isApproved()) {
+				organizationService.revokeDelegation(delegation);
+			}
+		}
+
+		org = organizationService.updateOrganization(organization.toUpdateDTO(id));
+
+		return "redirect:/admin/organizations";
+	}
+
+	/**
+	 * Creates a new organization.
+	 * 
+	 * @param organization The view-backing {@link OrganizationPO} object
+	 * @param bindingResult The validation result
+	 * @param model The view model
+	 * @param redirectAttributes the {@link RedirectAttributes}
+	 * @return The name of the view used
+	 * @throws UnauthorizedException 
+	 */
+	@RequestMapping(value = "/organization/new", method = RequestMethod.POST)
+	public String createOrganization(@ModelAttribute("organization") final OrganizationFormBean organizationData, final BindingResult bindingResult, 
+			final Model model, final RedirectAttributes redirectAttributes) throws UnauthorizedException {
+		
+		CreateOrganizationRequest organization = organizationData.toRegistrationDTO();
+
+		Organization org = organizationService.createOrganization(organization);
+
+		redirectAttributes.addFlashAttribute("createdOrganization", org.getUuid().toString());
+		
+		return "redirect:/admin/organizations";
+	}
+
+	/**
+	 * Removes an organization.
+	 * 
+	 * @param uuid ID of the organization to remove.
+	 * @throws UnauthorizedException 
+	 */
+	@RequestMapping(value = "/organization/{id}", method = RequestMethod.DELETE)
+	public String removeRow(@PathVariable("id") String uuid, final RedirectAttributes redirectAttributes) throws UnauthorizedException {
+		try {
+			UUID id = UUID.fromString(uuid);
+			organizationService.delete(id);
+			redirectAttributes.addFlashAttribute("deletedOrganization", "true");
+		}
+		catch (IllegalArgumentException e) {
+			// Ignore
+		}
+		catch (NullPointerException e) {
+			// Ignore
+		}
+		catch (EntityNotFoundException e) {
+			throw new NotFoundException(String.format("Cannot remove non-existent organization %s", uuid), e);
+		}
+		
+		return "redirect:/admin/organizations";
+	}	
 	
 	@RequestMapping(value = "/proposals", method = RequestMethod.GET)
 	@Transactional

@@ -51,12 +51,14 @@ public class PrimeMeridiansImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setCode((Integer)row.get(PRIME_MERIDIAN_CODE));
+		Integer epsgCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
+		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));
+
 		proposal.setName((String)row.get(PRIME_MERIDIAN_NAME));
 		proposal.setGreenwichLongitude((Double)row.get(GREENWICH_LONGITUDE));
 
 		Integer uomCode = (Integer)row.get(UOM_CODE);
-		UnitOfMeasureItem uom = uomRepository.findByCode(uomCode);
+		UnitOfMeasureItem uom = uomRepository.findByIdentifier(findMappedCode("UnitOfMeasurement", uomCode));
 		proposal.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO(uom));
 
 		proposal.setRemarks((String)row.get(REMARKS));
@@ -68,7 +70,7 @@ public class PrimeMeridiansImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}

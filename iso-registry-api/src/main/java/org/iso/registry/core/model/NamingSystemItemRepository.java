@@ -1,8 +1,6 @@
 package org.iso.registry.core.model;
 
-import de.geoinfoffm.registry.core.EntityRepository;
 
-public interface NamingSystemItemRepository extends EntityRepository<NamingSystemItem>
+public interface NamingSystemItemRepository extends IdentifiedItemRepository<NamingSystemItem>
 {
-	NamingSystemItem findByCode(Integer code);
 }

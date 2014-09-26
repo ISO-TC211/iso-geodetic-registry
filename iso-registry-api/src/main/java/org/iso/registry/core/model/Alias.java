@@ -20,10 +20,10 @@ public class Alias extends de.geoinfoffm.registry.core.Entity
 	@ManyToOne
 	private NamingSystemItem namingSystem;
 	
-	@Column(name = "ALIAS")
+	@Column(name = "ALIAS", columnDefinition = "text")
 	private String alias;
 	
-	@Column(name = "REMARKS")
+	@Column(name = "REMARKS", columnDefinition = "text")
 	private String remarks;
 
 	protected Alias() { }

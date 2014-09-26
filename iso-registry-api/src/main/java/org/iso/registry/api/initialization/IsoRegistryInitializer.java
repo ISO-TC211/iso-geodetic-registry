@@ -3,9 +3,7 @@ package org.iso.registry.api.initialization;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.core.model.CoordinateSystemType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,7 @@ import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
@@ -46,7 +45,6 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 public class IsoRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
@@ -123,28 +121,28 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 			RE_ItemClass icCrs = this.addItemClass("CoordinateReferenceSystem", r);
 			RE_ItemClass icArea = this.addItemClass("Area", r);
 
-			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
-					new ParameterizedRunnable<AreaItemProposalDTO>() {
-						@Override
-						public void run(AreaItemProposalDTO parameter) {
-							parameter.setCode(1262);
-							parameter.setSouthBoundLatitude(-90.0);
-							parameter.setNorthBoundLatitude(+90.0);
-							parameter.setWestBoundLongitude(-180.0);
-							parameter.setEastBoundLongitude(+180.0);
-						}
-					});
-			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
-					new ParameterizedRunnable<AreaItemProposalDTO>() {
-						@Override
-						public void run(AreaItemProposalDTO parameter) {
-							parameter.setCode(1624);
-							parameter.setSouthBoundLatitude(49.1);
-							parameter.setNorthBoundLatitude(53.75);
-							parameter.setWestBoundLongitude(5.87);
-							parameter.setEastBoundLongitude(7.5);
-						}
-					});
+//			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
+//					new ParameterizedRunnable<AreaItemProposalDTO>() {
+//						@Override
+//						public void run(AreaItemProposalDTO parameter) {
+//							parameter.setCode(1262);
+//							parameter.setSouthBoundLatitude(-90.0);
+//							parameter.setNorthBoundLatitude(+90.0);
+//							parameter.setWestBoundLongitude(-180.0);
+//							parameter.setEastBoundLongitude(+180.0);
+//						}
+//					});
+//			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
+//					new ParameterizedRunnable<AreaItemProposalDTO>() {
+//						@Override
+//						public void run(AreaItemProposalDTO parameter) {
+//							parameter.setCode(1624);
+//							parameter.setSouthBoundLatitude(49.1);
+//							parameter.setNorthBoundLatitude(53.75);
+//							parameter.setWestBoundLongitude(5.87);
+//							parameter.setEastBoundLongitude(7.5);
+//						}
+//					});
 
 			this.registerItem(r, icCrs, "WGS 84", CoordinateReferenceSystemItemProposalDTO.class,
 					new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {
@@ -263,7 +261,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 		req.setName(name);
 		req.setPassword(password);
 		req.setEmailAddress(mail);
-		req.setPreferredLanguage("de");
+		req.setPreferredLanguage("en");
 		req.setActive(true);
 		for (Role role : roles) {
 			req.getRole().add(role.getName());

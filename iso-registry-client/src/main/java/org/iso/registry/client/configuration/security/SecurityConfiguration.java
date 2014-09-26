@@ -88,8 +88,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/admin/**").hasRole("ADMIN")
-//				.antMatchers("/management/**")
-//				.anyRequest().authenticated()
 			.and()
 			.logout()
 				.logoutSuccessHandler(new BasePathUrlLogoutSuccessHandler())
@@ -97,10 +95,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 			.formLogin()
 				.successHandler(new BasePathUrlAuthenticationSuccessHandler())
 				.failureHandler(new BasePathUrlAuthenticationFailureHandler())
+				.loginPage("/login")
+			.and()
+			.exceptionHandling()
+				.accessDeniedPage("/403")
 			.and()
 			.csrf().disable();
-//				.loginPage("/login")
-//				.permitAll();
 	}
 	
 	@Bean
@@ -165,23 +165,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		
 		return result;
 	}
-	
-//	@Bean
-//	public AuditedBackendFactoryBean auditedBackendFactoryBean() {
-//		AuditedBackendFactoryBean result = new AuditedBackendFactoryBean();
-//		result.setAclService(mutableAclService());
-//		
-//		return result;
-//	}
-
-//	@Bean
-//	public MethodSecurityInterceptor methodSecurityInterceptor() {
-//		MethodSecurityInterceptor result = new MethodSecurityInterceptor();
-//		result.setAuthenticationManager(authenticationManager());
-//		result.setAccessDecisionManager(accessDecisionManager());
-//		result.setAfterInvocationManager(afterInvocationManager());
-//		SecurityMetadataSource metadataSource = new  ExpressionBasedFilterInvocationSecurityMetadataSource(requestMap, expressionHandler)
-//		result.setSecurityMetadataSource();
-//	}
-	
 }
