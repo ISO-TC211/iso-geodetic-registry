@@ -75,7 +75,8 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setAxisAbbreviation((String)row.get(COORD_AXIS_ABBREVIATION));
 		
 		Integer uomEpsgCode = (Integer)row.get(UOM_CODE);
-		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasurement", uomEpsgCode);
+//		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasurement", uomEpsgCode);
+		Integer uomCode = findMappedCode("UnitOfMeasurement", uomEpsgCode);
 		UnitOfMeasureItem uom = uomRepository.findByIdentifier(uomCode);
 		if (uom == null) {
 			logger.error("!!! Missing UoM #{}", uomEpsgCode.toString());
@@ -84,9 +85,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setAxisUnit(new UnitOfMeasureItemProposalDTO(uom));
 		
 		Integer epsgCode = (Integer)row.get(COORD_AXIS_CODE);
-		Integer isoCode = findNextAvailableIdentifier();
-		proposal.setIdentifier(isoCode);
-		addMapping("CoordinateSystemAxis", epsgCode, isoCode);
+		proposal.setIdentifier(determineIdentifier("CoordinateSystemAxis", epsgCode));
 		
 		proposal.setName((String)nameRow.get(COORD_AXIS_NAME));
 		proposal.setDescription((String)nameRow.get(DESCRIPTION));

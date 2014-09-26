@@ -54,11 +54,8 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 
 		Integer epsgCode = (Integer)row.get(UOM_CODE);
-		Integer isoCode = findNextAvailableIdentifier();
+		proposal.setIdentifier(determineIdentifier("UnitOfMeasurement", epsgCode));
 		
-		addMapping("UnitOfMeasurement", epsgCode, isoCode);
-		
-		proposal.setIdentifier(isoCode);
 //		proposal.setCode((Integer)row.get(UOM_CODE));
 		proposal.setName((String)row.get(UNIT_OF_MEAS_NAME));
 		

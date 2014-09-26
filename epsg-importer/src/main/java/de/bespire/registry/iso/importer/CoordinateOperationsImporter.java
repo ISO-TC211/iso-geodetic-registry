@@ -162,9 +162,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(COORD_OP_CODE);
-		Integer isoCode = findNextAvailableIdentifier();
-		proposal.setIdentifier(isoCode);
-		addMapping("CoordinateOperation", epsgCode, isoCode);
+		proposal.setIdentifier(determineIdentifier("CoordinateOperation", epsgCode));
 		
 		proposal.setName((String)row.get(COORD_OP_NAME));
 		
@@ -244,7 +242,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			// TODO Wohin damit??? 
 		}
 
-		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode, mapRepository);
+		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode, this.isGenerateIdentifiers(), mapRepository);
 		for (GeneralOperationParameterItem parameter : parameters) {
 			OperationParameterValue paramValue = findParameterValue(operationCode, methodCode, parameter.getIdentifier());
 			proposal.addParameterValue(paramValue);
@@ -322,7 +320,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 //		return null;
 //	}
 //
-	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code, EpsgIsoMappingRepository mapRepository) throws IOException {
+	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code, boolean useMappedCode, EpsgIsoMappingRepository mapRepository) throws IOException {
 		List<GeneralOperationParameterItem> result = new ArrayList<>();
 		
 		Cursor usageCursor = parametersUsageTable.getDefaultCursor();
@@ -334,7 +332,8 @@ public class CoordinateOperationsImporter extends AbstractImporter
 				Row usageRow = usageCursor.getCurrentRow();
 				Integer parameterCode = (Integer)usageRow.get(PARAMETER_CODE);
 				
-				OperationParameterItem param = paramRepository.findByIdentifier(findMappedCode("OperationParameter", parameterCode, mapRepository));
+				Integer paramIdentifier = (useMappedCode ? findMappedCode("OperationParameter", parameterCode, mapRepository) : parameterCode);
+				OperationParameterItem param = paramRepository.findByIdentifier(paramIdentifier);
 				if (param != null) {
 					result.add(param);
 				}
