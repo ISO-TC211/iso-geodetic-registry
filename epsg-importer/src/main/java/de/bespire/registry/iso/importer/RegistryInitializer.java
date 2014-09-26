@@ -89,6 +89,7 @@ public class RegistryInitializer
 			RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
 			RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
 			RegistryUser admin = createUser("ISO Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
+			RegistryUser poc = createUser("ISO TC/211 Point of Contact", "p", "poc@example.org", isotc211);
 
 			String registerName = "Geodetic Codes & Parameters";
 			RE_Register r = registerService.findByName(registerName); 
@@ -122,6 +123,9 @@ public class RegistryInitializer
 
 			Role controlBodyRole = registerService.getControlBodyRole(r);
 			orgService.delegate(cb, controlBodyRole, isotc211);
+			
+			Role pocRole = orgService.getPointOfContactRole(isotc211);
+			orgService.delegate(poc, pocRole, isotc211);
 		}
 		catch (Throwable t) {
 			logger.error(t.getMessage(), t);

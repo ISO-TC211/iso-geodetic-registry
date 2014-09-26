@@ -1,5 +1,8 @@
 package org.iso.registry.client.configuration.web;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,4 +33,10 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
+	
+	@Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+        servletContext.addListener(new SessionListener());
+    }
 }

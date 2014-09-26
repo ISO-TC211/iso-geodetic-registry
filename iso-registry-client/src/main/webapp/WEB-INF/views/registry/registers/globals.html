@@ -76,7 +76,7 @@
 	<div th:unless="${isProposal}">
 		<!-- form-backing bean: RegisterItemViewBean -->
 		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
-			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.code} + '] ' + *{__${property}__.name}"></a>
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.identifier} + '] ' + *{__${property}__.name}"></a>
 		</div>
 		<div th:unless="*{__${property}__}">
 			[<span th:text="#{undefined}"></span>]
@@ -170,7 +170,7 @@
 
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_bycode'" href="#" th:title="#{tooltip.orderByCode}" th:text="#{orderByCode}">[by Code]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
+	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_byid'" href="#" th:title="#{tooltip.orderByIdentifier}" th:text="#{orderByIdentifier}">[by Identifier]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group" th:with="isClarification=${proposal.isClarification()}">
 		<!-- form-backing bean: RegisterItemProposalDTO -->
 		<input th:unless="${index}" hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}" style="width: 100%"/>
@@ -210,7 +210,7 @@
 
 				$('#[[${property}]]_ajaxPath').change(function(e) {
 					$('#[[${property}]]').val("");
-					$('#[[${property}]]_bycode').click();
+					$('#[[${property}]]_byid').click();
 				});
 
 				$('#[[${property}]]_byname').click(function(e) {
@@ -238,7 +238,7 @@
 								$("select#[[${property}]]_select").removeAttr('disabled');
 	
 								$('#[[${property}]]_byname').addClass('bold');
-								$('#[[${property}]]_bycode').removeClass('bold');
+								$('#[[${property}]]_byid').removeClass('bold');
 								$('#[[${property}]]_loader').hide();
 								if (!currentValue || currentValue === "") {
 									$('#[[${property}]]').val($('#[[${property}]]_select').val());
@@ -249,13 +249,13 @@
 							});
 				});
 	
-				$('#[[${property}]]_bycode').click(function(e) {
+				$('#[[${property}]]_byid').click(function(e) {
 					var ajaxPath = $('#[[${property}]]_ajaxPath').val();
 					var currentValue = $('#[[${property}]]').val();
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath + "?orderBy=code",
+							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath + "?orderBy=identifier",
 							{
 								id : $(this).val(),
 								ajax : 'true'
@@ -273,7 +273,7 @@
 								$("select#[[${property}]]_select").html(options);
 								$("select#[[${property}]]_select").removeAttr('disabled');
 	
-								$('#[[${property}]]_bycode').addClass('bold');
+								$('#[[${property}]]_byid').addClass('bold');
 								$('#[[${property}]]_byname').removeClass('bold');
 								$('#[[${property}]]_loader').hide();
 
@@ -287,7 +287,7 @@
 				});
 	
 				$('#[[${property}]]_loader').hide();
-				$('#[[${property}]]_bycode').click();
+				$('#[[${property}]]_byid').click();
 			});
 		/* ]]> */
 		</script>
@@ -295,7 +295,7 @@
 	<div th:unless="${isProposal}">
 		<!-- form-backing bean: RegisterItemViewBean -->
 		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
-			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.code} + '] ' + *{__${property}__.name}"></a>
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.identifier} + '] ' + *{__${property}__.name}"></a>
 		</div>
 		<div th:unless="*{__${property}__}">
 			[<span th:text="#{undefined}"></span>]
@@ -315,11 +315,11 @@
 	</div>
 </div>
 
-<div th:fragment="nameAndCode">
+<div th:fragment="nameAndIdentifier">
 	<div class="col-md-8" th:with="property='name',inputType='text',label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
-	<div class="col-md-4" th:with="property='code',inputType='number',label=#{form.label.code},placeholder=#{form.placeholder.code},isRequired='true'">
+	<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
@@ -473,6 +473,12 @@
 	</div>
 </div>
 
+<div th:fragment="registerItemDefinition">
+	<div class="col-md-12" th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
+		<div th:replace="registry/registers/globals :: textArea"/>
+	</div>
+</div>
+
 <div th:fragment="proposalDetailsPanel (isCollapsible)" class="panel panel-default" th:if="${itemClass}">
 	<div class="panel-heading">
 		<div th:if="${isCollapsible}">
@@ -486,12 +492,9 @@
 		<h3 th:unless="${isCollapsible}" class="panel-title" th:text="#{header.proposalDetails}">Details for proposal</h3>
 	</div>
 
-	<div id="managementPanel" th:classappend="${isCollapsible} ? 'panel-collapse collapse'">
-		<div class="panel-body">
+	<div id="managementPanel" th:classappend="${isCollapsible} ? 'panel-collapse'">
+		<div class="panel-body"> 
 			<div th:fragment="proposalDetails">
-				<div th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textArea"/>
-				</div>
 				<div th:unless="${partOfSupersession}">
 					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
 						<div th:replace="registry/registers/globals :: textArea"/>
@@ -550,6 +553,7 @@
 				$('#validationFailed').show();				
 			},
 			submitHandler: function(form) {
+				$('#validationFailed').hide();
 				$('#pleaseWait').show();
 	 			$('button').each(function() {
 					$(this).attr('disabled', 'disabled');
@@ -574,14 +578,14 @@
 			}			
 		});
 
-		if (!$('#code').val()) {
-			var jqxhr = $.get("[[@{__${basePath}__/entities/code/next-available}]]", function(data) {
-				$('#code').val(data);
+		if (!$('#identifier').val()) {
+			var jqxhr = $.get("[[@{__${basePath}__/entities/identifier/next-available}]]", function(data) {
+				$('#identifier').val(data);
 			});
 		}
 
 	    // validate signup form on keyup and submit
-		$('#code').popover({
+		$('#identifier').popover({
 				"html": true,
 				"trigger": "manual",
 				"placement": "top",
@@ -590,28 +594,41 @@
 				}
 			});
 
-	    $("#code").rules("add", {
-	   	    required: true,
-	   	    onkeyup: false,
-	   	    remote: {
-	   	        url: "[[@{__${basePath}__/entities/code/check-availability}]]",
-	   	        type: "GET",
-	   	        cache: false,
-	   	        dataFilter: function(response) {
-	   	        	if (response == 0) {
-	   	        		$('#code').popover("hide");
-	          	    	return true;
-	   	        	}
-	   	        	else {
-	   	        		$('#code').popover("show");
-	          	    	return false;
-	   	        	}
-	   	        }
-	   	    },
-	   	    messages: {
-	   	    	remote: $.format("The code {0} is already taken")
-	   	    },
-	    });
+	    if ([[!${proposal.isClarification()}]]) { 
+		    $("#identifier").rules("add", {
+		   	    required: true,
+		   	    onkeyup: false,
+		   	    remote: {
+		   	        url: "[[@{__${basePath}__/entities/identifier/check-availability}]]",
+		   	        type: "GET",
+		   	        cache: false,
+		   	     	data: {
+						identifier: function() {
+							return $("#identifier").val();
+		             	},
+		             	itemUuid: function() {
+		             		return $("#itemUuid").val();
+		             	}
+		   	     	},
+		   	        dataFilter: function(response) {
+		   	        	if (response == 0) {
+		   	        		$('#identifier').popover("hide");
+		          	    	return true;
+		   	        	}
+		   	        	else {
+		   	        		$('#identifier').popover("show");
+		          	    	return false;
+		   	        	}
+		   	        }
+		   	    },
+		   	    messages: {
+		   	    	remote: $.format("The identifier {0} is already taken")
+		   	    },
+		    });
+	    }
+	    else {
+	    	$('#identifier').attr('readonly', 'readonly').attr('disabled', 'disabled');
+	    }
 	});
 /* ]]> */
 </script>

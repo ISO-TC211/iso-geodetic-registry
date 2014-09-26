@@ -62,10 +62,10 @@
 	<entry key="tableheader.role">Role</entry>
 	<entry key="tableheader.group">Group</entry>
 	<entry key="tableheader.register">Registers</entry>
-	<entry key="tableheader.code">Code</entry>
+	<entry key="tableheader.identifier">Identifier</entry>
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Naming system</entry>
-	<entry key="tableheader.remarks">Anmerkungen</entry>
+	<entry key="tableheader.remarks">Remarks</entry>
 	<entry key="tableheader.parameter">Parameter</entry>
 	<entry key="tableheader.value">Value</entry>
 	<entry key="tableheader.uom">Unit of Measure</entry>
@@ -100,9 +100,9 @@
 	<entry key="header.additionInformation">Addition information</entry>
 	<entry key="header.amendmentInformation">Amendment information</entry>
 	<entry key="header.clarificationInformation">Clarification information</entry>
-	<entry key="header.addedOn">Added on {0}</entry>
-	<entry key="header.amendedOn">{0} on {1}</entry>
-	<entry key="header.clarifiedOn">Clarified on {0}</entry>
+	<entry key="header.addedOn">Item added on {0}</entry>
+	<entry key="header.amendedOn">Item {0} on {1}</entry>
+	<entry key="header.clarifiedOn">Item clarified on {0}</entry>
 	<entry key="header.myProfile">Your user profile</entry>
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
@@ -113,6 +113,7 @@
 	<entry key="header.uom">Unit of Measure</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
 	<entry key="header.operationParameter">Coordinate Operation Parameter</entry>
+	<entry key="header.operationMethod">Coordinate Operation Method</entry>	
 	<entry key="header.conversion">Conversion</entry>
 	<entry key="header.transformation">Transformation</entry>
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
@@ -149,6 +150,7 @@
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
+	<entry key="button.submitting">Submitting...</entry>
 	<entry key="button.save">Save</entry>
 	<entry key="button.saving">Saving...</entry>
 	<entry key="button.update">Update proposal</entry>
@@ -209,6 +211,7 @@
 	<entry key="ROLE_SUBMITTER">Submitter</entry>
 	<entry key="ROLE_OWNER">Register owner</entry>
 
+	<entry key="alert.loginFailed">Login failed. Please check your login credentials.</entry>
 	<entry key="alert.userCreated">The user was created successfully.</entry>
 	<entry key="alert.userDeleted">The user was deleted.</entry>
 	<entry key="alert.signedUp">You were successfully signed up. You will shortly receive a confirmation e-mail containing a link to activate your account. After you have activated your account, you may login using your e-mail address {0}.</entry>	
@@ -255,7 +258,7 @@
 	<entry key="popup.extent.header">Domain of Validity</entry>
 
 	<entry key="tabs.overview">Overview</entry>
-	<entry key="tabs.item">Item</entry>
+	<entry key="tabs.item">Item details</entry>
 	<entry key="tabs.managementInformation">Management information</entry>
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposal contents</entry>
@@ -307,7 +310,7 @@
 	<entry key="form.label.onlineResourceLogo">URL to organization logo</entry>
 	<entry key="form.label.isActive">active</entry>
 	<entry key="form.label.linkedOrganization">Linked organization data</entry>
-	<entry key="form.label.code">Code</entry>
+	<entry key="form.label.identifier">Identifier</entry>
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Area of Use</entry>
@@ -330,8 +333,8 @@
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
-	<entry key="form.label.factorB">Factor B</entry>
-	<entry key="form.label.factorC">Factor C</entry>
+	<entry key="form.label.factorB">Nominator (factor B)</entry>
+	<entry key="form.label.factorC">Denominator (factor C)</entry>
 	<entry key="form.label.measureType">Measure type</entry>
 	<entry key="form.label.shape">Shape</entry>
 	<entry key="form.label.semiMajorAxis">Semi major axis</entry>
@@ -371,7 +374,7 @@
 	<entry key="form.placeholder.emailAddress"></entry>
 	<entry key="form.placeholder.password"></entry>
 	<entry key="form.placeholder.confirmPassword"></entry>
-	<entry key="form.placeholder.code"></entry>
+	<entry key="form.placeholder.identifier"></entry>
 	<entry key="form.placeholder.scope"></entry>
 	
 	<entry key="form.placeholder.semiMajorAxis"></entry>
@@ -391,7 +394,7 @@
 	<entry key="form.placeholder.dataSource"></entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
-	<entry key="form.placeholder.realizationEpoch"></entry>
+	<entry key="form.placeholder.realizationEpoch">(year)</entry>
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>
@@ -404,6 +407,8 @@
 
 	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
+	<entry key="form.placeholder.formula"></entry>
+	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
 	<entry key="form.signup.help.organizationName">In case your organization is not listed, please provide it here</entry>
@@ -414,6 +419,8 @@
 	<entry key="form.validation.unavailable.user.emailAddress">This e-mail address is not available</entry>
 	<entry key="form.validation.confirmPassword">The passwords do not match</entry>
 
+	<entry key="label.placeholder.operationMethodParameters">Click to select parameters...</entry>
+	
 	<entry key="form.signup.validation.organizationNameExists">An organization with this name exists. Please select it from the list on the left and leave this field empty.</entry>
 	
 	<entry key="form.proposal.itemClassNotConfigured">No configuration file exists for this item class. Additional attributes will not be visible.</entry>
@@ -425,9 +432,9 @@
 	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
 
 	<entry key="orderBy">order by</entry>
-	<entry key="orderByCode">[code]</entry>
+	<entry key="orderByIdentifier">[id]</entry>
 	<entry key="orderByName">[name]</entry>
-	<entry key="tooltip.orderByCode">Order list entries by code</entry>
+	<entry key="tooltip.orderByIdentifier">Order list entries by identifier</entry>
 	<entry key="tooltip.orderByName">Order list entries by name</entry>
 	<entry key="tooltip.proposalNotes">Click to view notes attached to the proposal</entry>
 	

@@ -2,19 +2,16 @@ package org.iso.registry.core.model.cs;
 
 import java.util.List;
 
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import de.geoinfoffm.registry.core.EntityRepository;
-
 @Repository
-public interface CoordinateSystemItemRepository extends EntityRepository<CoordinateSystemItem>
+public interface CoordinateSystemItemRepository extends IdentifiedItemRepository<CoordinateSystemItem>
 {
-	CoordinateSystemItem findByCode(Integer code);
-	
-	@Query("SELECT a.code, a.name FROM CoordinateSystemItem a ORDER BY a.code")
-	public List<Object[]> findAllOrderByCode();
+	@Query("SELECT a.identifier, a.name FROM CoordinateSystemItem a ORDER BY a.identifier")
+	public List<Object[]> findAllOrderByIdentifier();
 
-	@Query("SELECT a.code, a.name FROM CoordinateSystemItem a ORDER BY a.name")
+	@Query("SELECT a.identifier, a.name FROM CoordinateSystemItem a ORDER BY a.name")
 	public List<Object[]> findAllOrderByName();
 }

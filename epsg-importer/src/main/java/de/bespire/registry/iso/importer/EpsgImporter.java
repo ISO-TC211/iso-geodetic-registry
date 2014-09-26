@@ -21,6 +21,7 @@ import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 
 import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
+import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
@@ -35,6 +36,8 @@ public class EpsgImporter
 	public static void main(String[] args) throws IOException {
 		List<String> argList = Arrays.asList(args);
 		
+		boolean generateIdentifiers = true;
+		
 		File source;
 		if (argList.isEmpty()) {
 			source = new File("C:/Daten/EPSG_v7_6_original.mdb"); 
@@ -42,6 +45,11 @@ public class EpsgImporter
 		else {
 			source = new File(args[0]);
 		}
+		
+		if (argList.contains("dontgenerateidentifiers")) {
+			generateIdentifiers = false;
+		}
+
 		Database db = DatabaseBuilder.open(source);
 		AnnotationConfigApplicationContext context = null;
 		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,33 +60,46 @@ public class EpsgImporter
 			context = new AnnotationConfigApplicationContext("de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry");
 			
 			NamingSystemsImporter namingSystemsImporter = context.getBean(NamingSystemsImporter.class);
+			namingSystemsImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			AreasImporter areasImporter = context.getBean(AreasImporter.class);
+			areasImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			UnitsOfMeasurementImporter uomImporter = context.getBean(UnitsOfMeasurementImporter.class);
+			uomImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			CoordinateSystemAxesImporter axesImporter = context.getBean(CoordinateSystemAxesImporter.class);
 			axesImporter.setNamesTable(db.getTable("Coordinate Axis Name"));
+			axesImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			CoordinateSystemsImporter csImporter = context.getBean(CoordinateSystemsImporter.class);
 			csImporter.setAxisTable(db.getTable("Coordinate Axis"));
+			csImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			EllipsoidsImporter ellipsoidsImporter = context.getBean(EllipsoidsImporter.class);
+			ellipsoidsImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			PrimeMeridiansImporter pmImporter = context.getBean(PrimeMeridiansImporter.class);
+			pmImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			DatumsImporter datumsImporter = context.getBean(DatumsImporter.class);
+			datumsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			CoordinateReferenceSystemsImporter crsImporter = context.getBean(CoordinateReferenceSystemsImporter.class);
+			crsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			AliasesImporter aliasesImporter = context.getBean(AliasesImporter.class);
+			aliasesImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			OperationMethodsImporter methodsImporter = context.getBean(OperationMethodsImporter.class);
 			methodsImporter.setParametersUsageTable(db.getTable("Coordinate_Operation Parameter Usage"));
+			methodsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			OperationParametersImporter paramsImporter = context.getBean(OperationParametersImporter.class);
+			paramsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			CoordinateOperationsImporter opsImporter = context.getBean(CoordinateOperationsImporter.class);
+			opsImporter.setGenerateIdentifiers(generateIdentifiers);
 			opsImporter.setParametersUsageTable(db.getTable("Coordinate_Operation Parameter Usage"));
 			opsImporter.setParameterValuesTable(db.getTable("Coordinate_Operation Parameter Value"));
 			opsImporter.setPathTable(db.getTable("Coordinate_Operation Path"));
@@ -87,7 +108,7 @@ public class EpsgImporter
 			if (argList.contains("all") || argList.contains("init")) {
 				initializer.initializeRegistry();
 			}
-
+			
 			SubmittingOrganizationRepository suborgRepository = context.getBean(SubmittingOrganizationRepository.class);
 			RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
 			
@@ -99,7 +120,8 @@ public class EpsgImporter
 			if (register == null) {
 				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", GCP_REGISTER_NAME));
 			}
-			
+
+			RE_ItemClass icNamespace = namingSystemsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("1") || argList.contains("-ns")) {
 				if (argList.contains("-ns")) {
 					namingSystemsImporter.setLimitToCodes(argList.get(argList.indexOf("-ns") + 1));
@@ -108,6 +130,7 @@ public class EpsgImporter
 				run(namingSystemsImporter, namingSystemsTable, register, sponsor);
 			}				
 
+			RE_ItemClass icUoM = uomImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("2") || argList.contains("-uom")) {
 				if (argList.contains("-uom")) {
 					uomImporter.setLimitToCodes(argList.get(argList.indexOf("-uom") + 1));
@@ -116,6 +139,7 @@ public class EpsgImporter
 				run(uomImporter, uomTable, register, sponsor);
 			}				
 				
+			RE_ItemClass icAxis = axesImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("3") || argList.contains("-axis")) {
 				if (argList.contains("-axis")) {
 					axesImporter.setLimitToCodes(argList.get(argList.indexOf("-axis") + 1));
@@ -123,15 +147,8 @@ public class EpsgImporter
 				Table axesTable = db.getTable("Coordinate Axis");
 				run(axesImporter, axesTable, register, sponsor);
 			}				
-				
-			if (argList.contains("all") || argList.contains("4") || argList.contains("-cs")) {
-				if (argList.contains("-cs")) {
-					csImporter.setLimitToCodes(argList.get(argList.indexOf("-cs") + 1));
-				}
-				Table csTable = db.getTable("Coordinate System");
-				run(csImporter, csTable, register, sponsor);
-			}				
-				
+
+			RE_ItemClass icEllipsoid = ellipsoidsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("5") || argList.contains("-ellipsoid")) {
 				if (argList.contains("-ellipsoid")) {
 					ellipsoidsImporter.setLimitToCodes(argList.get(argList.indexOf("-ellipsoid") + 1));
@@ -140,6 +157,7 @@ public class EpsgImporter
 				run(ellipsoidsImporter, elTable, register, sponsor);
 			}				
 	
+			RE_ItemClass icPrime = pmImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("6") || argList.contains("-pm")) {
 				if (argList.contains("-pm")) {
 					pmImporter.setLimitToCodes(argList.get(argList.indexOf("-pm") + 1));
@@ -147,7 +165,18 @@ public class EpsgImporter
 				Table pmTable = db.getTable("Prime Meridian");
 				run(pmImporter, pmTable, register, sponsor);
 			}				
-	
+
+			for (String type : new String[] { "ELLIPSOIDAL", "SPHERICAL", "CARTESIAN", "VERTICAL" }) {
+				RE_ItemClass icCS = csImporter.getOrCreateItemClass(register, type);
+			}
+			if (argList.contains("all") || argList.contains("4") || argList.contains("-cs")) {
+				if (argList.contains("-cs")) {
+					csImporter.setLimitToCodes(argList.get(argList.indexOf("-cs") + 1));
+				}
+				Table csTable = db.getTable("Coordinate System");
+				run(csImporter, csTable, register, sponsor);
+			}				
+
 			if (argList.contains("all") || argList.contains("7") || argList.contains("-area")) {
 				if (argList.contains("-area")) {
 					areasImporter.setLimitToCodes(argList.get(argList.indexOf("-area") + 1));
@@ -156,6 +185,9 @@ public class EpsgImporter
 				run(areasImporter, areasTable, register, sponsor);
 			}				
 	
+			for (String type : new String[] { "GEODETIC", "ENGINEERING", "VERTICAL" }) {
+ 				RE_ItemClass icDatum = datumsImporter.getOrCreateItemClass(register, type);
+			}
 			if (argList.contains("all") || argList.contains("8") || argList.contains("-datum")) {
 				if (argList.contains("-datum")) {
 					datumsImporter.setLimitToCodes(argList.get(argList.indexOf("-datum") + 1));
@@ -164,6 +196,9 @@ public class EpsgImporter
 				run(datumsImporter, datumsTable, register, sponsor);
 			}				
 				
+			for (String type : new String[] { "GEOCENTRIC", "ENGINEERING", "VERTICAL", "COMPOUND" }) {
+				RE_ItemClass icCRS = crsImporter.getOrCreateItemClass(register, type);
+			}
 			if (argList.contains("all") || argList.contains("9") || argList.contains("-crs")) {
 				if (argList.contains("-crs")) {
 					crsImporter.setLimitToCodes(argList.get(argList.indexOf("-crs") + 1));
@@ -180,6 +215,7 @@ public class EpsgImporter
 				run(aliasesImporter, aliasTable, register, sponsor);
 			}
 
+			RE_ItemClass icParam = paramsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("11") || argList.contains("-param")) {
 				if (argList.contains("-param")) {
 					paramsImporter.setLimitToCodes(argList.get(argList.indexOf("-param") + 1));
@@ -188,6 +224,7 @@ public class EpsgImporter
 				run(paramsImporter, opTable, register, sponsor);
 			}				
 
+			RE_ItemClass icMethod = methodsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("12") || argList.contains("-method")) {
 				if (argList.contains("-method")) {
 					methodsImporter.setLimitToCodes(argList.get(argList.indexOf("-method") + 1));
@@ -196,6 +233,7 @@ public class EpsgImporter
 				run(methodsImporter, methodsTable, register, sponsor);
 			}				
 
+			RE_ItemClass icOperarion = opsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("13") || argList.contains("-op")) {
 				if (argList.contains("-op")) {
 					opsImporter.setLimitToCodes(argList.get(argList.indexOf("-op") + 1));
@@ -230,20 +268,34 @@ public class EpsgImporter
 		
 		int rowCount = table.getRowCount();
 		int i = 1;
-		do {
+		if (importer.isLimited()) {
 			logger.info(".");
 			logger.info(".");
 			logger.info(".");
 			logger.info("======================================================================");
-			logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
-			logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
+			logger.info("> Happily importing (limited) rows from MDB table {}...", table.getName());
 			logger.info("======================================================================");
 			logger.info(".");
 			logger.info(".");
 			logger.info(".");
-			importer.importRows(cursor, 100, sponsor, register);
-			i += 100;
-		} while (i <= rowCount);
+			importer.importRows(cursor, -1, sponsor, register);
+		}
+		else {
+			do {
+				logger.info(".");
+				logger.info(".");
+				logger.info(".");
+				logger.info("======================================================================");
+				logger.info("> Happily importing {} rows from MDB table {}...", table.getRowCount(), table.getName());
+				logger.info(">>> Will now import rows #{} to #{}...", new Object[] { i, (i + 99 < rowCount) ? i + 99 : rowCount });
+				logger.info("======================================================================");
+				logger.info(".");
+				logger.info(".");
+				logger.info(".");
+				importer.importRows(cursor, 100, sponsor, register);
+				i += 100;
+			} while (i <= rowCount);
+		}
 		
 		if (importer.mustFixReferences()) {
 			cursor.beforeFirst();

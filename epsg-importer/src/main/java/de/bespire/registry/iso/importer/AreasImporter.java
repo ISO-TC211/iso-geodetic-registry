@@ -54,7 +54,7 @@ public class AreasImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setCode((Integer)row.get(AREA_CODE));
+		proposal.setIdentifier((Integer)row.get(AREA_CODE));
 		proposal.setName((String)row.get(AREA_NAME));
 		proposal.setDescription((String)row.get(AREA_OF_USE));
 		
@@ -87,7 +87,7 @@ public class AreasImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}

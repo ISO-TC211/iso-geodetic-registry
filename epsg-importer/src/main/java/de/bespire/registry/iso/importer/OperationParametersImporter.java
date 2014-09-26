@@ -36,7 +36,12 @@ public class OperationParametersImporter extends AbstractImporter
 		proposal.setTargetRegisterUuid(register.getUuid());
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setCode((Integer)row.get(PARAMETER_CODE));
+		if (row == null) {
+			new Object();
+		}
+		Integer epsgCode = (Integer)row.get(PARAMETER_CODE);
+		proposal.setIdentifier(determineIdentifier("OperationParameter", epsgCode));
+		
 		proposal.setName((String)row.get(PARAMETER_NAME));
 		proposal.setDescription((String)row.get(DESCRIPTION));
 		
@@ -51,7 +56,7 @@ public class OperationParametersImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

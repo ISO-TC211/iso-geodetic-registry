@@ -16,7 +16,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class IdentifiedItemViewBean extends RegisterItemViewBean
 {
-	private Integer code;
+	private Integer identifier;
 	private String remarks;
 	private List<AliasViewBean> aliases;
 	private String informationSource;
@@ -56,7 +56,7 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		
 		IdentifiedItem item = (IdentifiedItem)registerItem;
 
-		this.setCode(item.getCode());
+		this.setIdentifier(item.getIdentifier());
 		this.setRemarks(item.getRemarks());
 		this.setInformationSource(item.getInformationSource());
 		this.setDataSource(item.getDataSource());
@@ -65,12 +65,12 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		}
 	}
 
-	public Integer getCode() {
-		return code;
+	public Integer getIdentifier() {
+		return identifier;
 	}
 
-	public void setCode(Integer code) {
-		this.code = code;
+	public void setIdentifier(Integer identifier) {
+		this.identifier = identifier;
 	}
 
 	public String getRemarks() {

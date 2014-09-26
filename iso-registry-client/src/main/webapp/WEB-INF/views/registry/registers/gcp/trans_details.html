@@ -1,8 +1,9 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('conv')" />
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('conv')" /> -->
 			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
 				<div class="col-md-12">
 					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
@@ -26,7 +27,7 @@
 						<div th:unless="${isProposal}">
 							<!-- form-backing bean: RegisterItemViewBean -->
 							<div th:if="*{method}" th:with="uuid=*{method.uuid}">
-								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.code} + '] ' + *{method.name}"></a>
+								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.identifier} + '] ' + *{method.name}"></a>
 							</div>
 							<div th:unless="*{method}">
 								[<span th:text="#{undefined}"></span>]
@@ -130,7 +131,7 @@
 						</td>
 						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
 							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
-							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.code} + ']'"></a>
+							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
 						</td>							
 					</tr>
 				</tbody>

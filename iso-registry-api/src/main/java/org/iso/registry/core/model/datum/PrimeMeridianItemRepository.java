@@ -1,11 +1,9 @@
 package org.iso.registry.core.model.datum;
 
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.springframework.stereotype.Repository;
 
-import de.geoinfoffm.registry.core.EntityRepository;
-
 @Repository
-public interface PrimeMeridianItemRepository extends EntityRepository<PrimeMeridianItem>
+public interface PrimeMeridianItemRepository extends IdentifiedItemRepository<PrimeMeridianItem>
 {
-	PrimeMeridianItem findByCode(Integer code);
 }
