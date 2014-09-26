@@ -40,9 +40,7 @@ public class OperationParametersImporter extends AbstractImporter
 			new Object();
 		}
 		Integer epsgCode = (Integer)row.get(PARAMETER_CODE);
-		Integer isoCode = findNextAvailableIdentifier();
-		proposal.setIdentifier(isoCode);
-		addMapping("OperationParameter", epsgCode, isoCode);
+		proposal.setIdentifier(determineIdentifier("OperationParameter", epsgCode));
 		
 		proposal.setName((String)row.get(PARAMETER_NAME));
 		proposal.setDescription((String)row.get(DESCRIPTION));

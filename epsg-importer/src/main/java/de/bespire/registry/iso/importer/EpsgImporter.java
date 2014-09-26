@@ -36,6 +36,8 @@ public class EpsgImporter
 	public static void main(String[] args) throws IOException {
 		List<String> argList = Arrays.asList(args);
 		
+		boolean generateIdentifiers = true;
+		
 		File source;
 		if (argList.isEmpty()) {
 			source = new File("C:/Daten/EPSG_v7_6_original.mdb"); 
@@ -43,6 +45,11 @@ public class EpsgImporter
 		else {
 			source = new File(args[0]);
 		}
+		
+		if (argList.contains("dontgenerateidentifiers")) {
+			generateIdentifiers = false;
+		}
+
 		Database db = DatabaseBuilder.open(source);
 		AnnotationConfigApplicationContext context = null;
 		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
@@ -53,33 +60,46 @@ public class EpsgImporter
 			context = new AnnotationConfigApplicationContext("de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry");
 			
 			NamingSystemsImporter namingSystemsImporter = context.getBean(NamingSystemsImporter.class);
+			namingSystemsImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			AreasImporter areasImporter = context.getBean(AreasImporter.class);
+			areasImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			UnitsOfMeasurementImporter uomImporter = context.getBean(UnitsOfMeasurementImporter.class);
+			uomImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			CoordinateSystemAxesImporter axesImporter = context.getBean(CoordinateSystemAxesImporter.class);
 			axesImporter.setNamesTable(db.getTable("Coordinate Axis Name"));
+			axesImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			CoordinateSystemsImporter csImporter = context.getBean(CoordinateSystemsImporter.class);
 			csImporter.setAxisTable(db.getTable("Coordinate Axis"));
+			csImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			EllipsoidsImporter ellipsoidsImporter = context.getBean(EllipsoidsImporter.class);
+			ellipsoidsImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			PrimeMeridiansImporter pmImporter = context.getBean(PrimeMeridiansImporter.class);
+			pmImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			DatumsImporter datumsImporter = context.getBean(DatumsImporter.class);
+			datumsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			CoordinateReferenceSystemsImporter crsImporter = context.getBean(CoordinateReferenceSystemsImporter.class);
+			crsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			AliasesImporter aliasesImporter = context.getBean(AliasesImporter.class);
+			aliasesImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			OperationMethodsImporter methodsImporter = context.getBean(OperationMethodsImporter.class);
 			methodsImporter.setParametersUsageTable(db.getTable("Coordinate_Operation Parameter Usage"));
+			methodsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			OperationParametersImporter paramsImporter = context.getBean(OperationParametersImporter.class);
+			paramsImporter.setGenerateIdentifiers(generateIdentifiers);
 			
 			CoordinateOperationsImporter opsImporter = context.getBean(CoordinateOperationsImporter.class);
+			opsImporter.setGenerateIdentifiers(generateIdentifiers);
 			opsImporter.setParametersUsageTable(db.getTable("Coordinate_Operation Parameter Usage"));
 			opsImporter.setParameterValuesTable(db.getTable("Coordinate_Operation Parameter Value"));
 			opsImporter.setPathTable(db.getTable("Coordinate_Operation Path"));
@@ -88,7 +108,7 @@ public class EpsgImporter
 			if (argList.contains("all") || argList.contains("init")) {
 				initializer.initializeRegistry();
 			}
-
+			
 			SubmittingOrganizationRepository suborgRepository = context.getBean(SubmittingOrganizationRepository.class);
 			RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
 			
@@ -253,7 +273,7 @@ public class EpsgImporter
 			logger.info(".");
 			logger.info(".");
 			logger.info("======================================================================");
-			logger.info("> Happily importing (limited) rows from MDB table {}...", table.getRowCount(), table.getName());
+			logger.info("> Happily importing (limited) rows from MDB table {}...", table.getName());
 			logger.info("======================================================================");
 			logger.info(".");
 			logger.info(".");

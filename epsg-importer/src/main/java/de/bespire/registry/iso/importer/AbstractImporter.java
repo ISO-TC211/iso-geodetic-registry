@@ -74,6 +74,11 @@ public abstract class AbstractImporter
 	private UnitOfMeasureItemRepository uomRepository;
 
 	private LinkedHashSet<String> limitToCodes;
+	private boolean generateIdentifiers;
+	
+	protected AbstractImporter() {
+		this.generateIdentifiers = true;
+	}
 
 	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier)
 			throws InvalidProposalException {
@@ -119,7 +124,7 @@ public abstract class AbstractImporter
 				rowPattern.put(codeProperty(), Integer.parseInt(code));
 				Row row = CursorBuilder.findRow(cursor.getTable(), rowPattern);
 				if (row == null) {
-				 new Object();
+					logger.error("!!!! Did not find object with {}='{}' in table '{}' !!!!", new Object[] { codeProperty(), code, cursor.getTable().getName() });
 				}
 				RE_ItemClass itemClass = this.getOrCreateItemClass(register, row);
 				try {
@@ -227,12 +232,33 @@ public abstract class AbstractImporter
 		}
 	}
 	
+	public boolean isGenerateIdentifiers() {
+		return generateIdentifiers;
+	}
+
+	public void setGenerateIdentifiers(boolean generateIdentifiers) {
+		this.generateIdentifiers = generateIdentifiers;
+	}
+
 	protected EpsgIsoMapping addMapping(String itemClass, Integer epsgCode, Integer isoCode) {
 		EpsgIsoMapping mapping = new EpsgIsoMapping(itemClass, epsgCode, isoCode);
 		return mapRepository.save(mapping);
 	}
 	
-	protected Integer findNextAvailableIdentifier() {
+	protected Integer determineIdentifier(String itemClass, Integer epsgCode) {
+		Integer identifier;
+		if (generateIdentifiers) {
+			identifier = findNextAvailableIdentifier();
+			addMapping(itemClass, epsgCode, identifier);
+		}
+		else {
+			identifier = epsgCode;
+		}
+		
+		return identifier;			
+	}
+	
+	private Integer findNextAvailableIdentifier() {
 		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
 		Integer maxCode = (Integer)em.createQuery(jpql).getResultList().get(0);
 		
@@ -242,7 +268,12 @@ public abstract class AbstractImporter
 	}
 	
 	protected Integer findMappedCode(String itemClass, Integer epsgCode) {
-		return mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
+		if (this.generateIdentifiers) {
+			return mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
+		}
+		else {
+			return epsgCode;
+		}
 	}
 
 	protected static Integer findMappedCode(String itemClass, Integer epsgCode, EpsgIsoMappingRepository mapRepository) {

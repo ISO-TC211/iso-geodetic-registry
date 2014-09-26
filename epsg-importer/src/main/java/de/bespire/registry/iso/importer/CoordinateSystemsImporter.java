@@ -63,9 +63,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 
 		// Add axes
 		Integer epsgCode = (Integer)row.get(COORD_SYS_CODE);
-		Integer csCode = findNextAvailableIdentifier();
-		addMapping("CoordinateSystem", epsgCode, csCode);
-		proposal.setIdentifier(csCode);
+		proposal.setIdentifier(determineIdentifier("CoordinateSystem", epsgCode));
 		
 		Cursor cursor = axisTable.getDefaultCursor();
 		Map<String, Object> m = new HashMap<String, Object>();

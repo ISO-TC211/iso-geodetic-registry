@@ -51,9 +51,7 @@ public class OperationMethodsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(COORD_OP_METHOD_CODE);
-		Integer methodCode = findNextAvailableIdentifier();
-		proposal.setIdentifier(methodCode);
-		addMapping("OperationMethod", epsgCode, methodCode);
+		proposal.setIdentifier(determineIdentifier("OperationMethod", epsgCode));
 		
 		proposal.setName((String)row.get(COORD_OP_METHOD_NAME));
 		proposal.setReversible((Boolean)row.get(REVERSE_OP));
@@ -61,7 +59,7 @@ public class OperationMethodsImporter extends AbstractImporter
 		proposal.setFormula((String)row.get(FORMULA));
 		proposal.setDescription((String)row.get(EXAMPLE));
 		
-		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, epsgCode, mapRepository);
+		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, epsgCode, this.isGenerateIdentifiers(), mapRepository);
 		proposal.setParameters(parameters);
 
 		proposal.setRemarks((String)row.get(REMARKS));

@@ -52,9 +52,7 @@ public class PrimeMeridiansImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
-		Integer isoCode = findNextAvailableIdentifier();
-		addMapping("Ellipsoid", epsgCode, isoCode);
-		proposal.setIdentifier(isoCode);
+		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));
 
 		proposal.setName((String)row.get(PRIME_MERIDIAN_NAME));
 		proposal.setGreenwichLongitude((Double)row.get(GREENWICH_LONGITUDE));

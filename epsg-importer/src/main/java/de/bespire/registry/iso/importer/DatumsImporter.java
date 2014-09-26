@@ -82,10 +82,7 @@ public class DatumsImporter extends AbstractImporter
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
 		proposal.setScope((String)row.get(DATUM_SCOPE));
-		
-		String epochText = (String)row.get(REALIZATION_EPOCH);
-		if (!StringUtils.isEmpty(epochText)) {
-		}
+		proposal.setRealizationEpoch((String)row.get(REALIZATION_EPOCH));
 		
 		Integer elCode = (Integer)row.get(ELLIPSOID_CODE);
 		Integer pmCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
