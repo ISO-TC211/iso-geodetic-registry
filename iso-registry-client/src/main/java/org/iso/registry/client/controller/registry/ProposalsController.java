@@ -381,7 +381,7 @@ public class ProposalsController
 		return "registry/proposal/create_addition";
 	}
 
-	@RequestMapping(value = "/{uuid}", params={ "save" })
+	@RequestMapping(value = "/{uuid}", params={ "saveProposal" })
 	@Transactional
 	public String saveObject(WebRequest request, final HttpServletRequest servletRequest,
 			@PathVariable("uuid") UUID proposalUuid, 

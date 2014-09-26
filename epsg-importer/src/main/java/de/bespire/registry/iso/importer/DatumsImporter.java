@@ -78,32 +78,19 @@ public class DatumsImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setCode((Integer)row.get(DATUM_CODE));
+		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
 		proposal.setScope((String)row.get(DATUM_SCOPE));
-		
-		String epochText = (String)row.get(REALIZATION_EPOCH);
-		if (!StringUtils.isEmpty(epochText)) {
-			DateFormat df = new SimpleDateFormat("yyyy");
-			Date epoch;
-			try {
-				epoch = df.parse(epochText);
-			}
-			catch (ParseException e1) {
-				logger.error(e1.getMessage(), e1);
-				return;
-			}
-			proposal.setRealizationEpoch(epoch);
-		}
+		proposal.setRealizationEpoch((String)row.get(REALIZATION_EPOCH));
 		
 		Integer elCode = (Integer)row.get(ELLIPSOID_CODE);
 		Integer pmCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 
-		EllipsoidItem ellipsoid = ellipsoidRepository.findByCode(elCode);
-		PrimeMeridianItem primeMeridian = pmRepository.findByCode(pmCode);
-		AreaItem area = areaRepository.findByCode(areaCode);
+		EllipsoidItem ellipsoid = ellipsoidRepository.findByIdentifier(elCode);
+		PrimeMeridianItem primeMeridian = pmRepository.findByIdentifier(pmCode);
+		AreaItem area = areaRepository.findByIdentifier(areaCode);
 
 		proposal.setEllipsoid(new EllipsoidItemProposalDTO(ellipsoid));
 		proposal.setPrimeMeridian(new PrimeMeridianItemProposalDTO(primeMeridian));
@@ -122,7 +109,7 @@ public class DatumsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}
@@ -132,12 +119,9 @@ public class DatumsImporter extends AbstractImporter
 
 	}
 
-	@Override
 	@Transactional
-	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
-		String csType = (String)row.get(DATUM_TYPE);
-		
-		if (csType.equalsIgnoreCase("GEODETIC")) {
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, String type) {
+		if (type.equalsIgnoreCase("GEODETIC")) {
 			if (icGeodetic == null) {
 				icGeodetic = itemClassRepository.findByName("GeodeticDatum");
 				if (icGeodetic == null) {
@@ -148,7 +132,7 @@ public class DatumsImporter extends AbstractImporter
 
 			return icGeodetic;
 		}
-		else if (csType.equalsIgnoreCase("ENGINEERING")) {
+		else if (type.equalsIgnoreCase("ENGINEERING")) {
 			if (icEngineering == null) {
 				icEngineering = itemClassRepository.findByName("EngineeringDatum");
 				if (icEngineering == null) {
@@ -159,7 +143,7 @@ public class DatumsImporter extends AbstractImporter
 
 			return icEngineering;
 		}
-		else if (csType.equalsIgnoreCase("VERTICAL")) {
+		else if (type.equalsIgnoreCase("VERTICAL")) {
 			if (icVertical == null) {
 				icVertical = itemClassRepository.findByName("VerticalDatum");
 				if (icVertical == null) {
@@ -172,7 +156,15 @@ public class DatumsImporter extends AbstractImporter
 		}
 		else {
 			return null;
-		}
+		}		
+	}
+
+	@Override
+	@Transactional
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
+		String type = (String)row.get(DATUM_TYPE);
+		
+		return getOrCreateItemClass(register, type);
 	}
 
 	@Override

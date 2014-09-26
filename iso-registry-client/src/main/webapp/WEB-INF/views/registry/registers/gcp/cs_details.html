@@ -2,17 +2,20 @@
 	<div class="row">
 		<div class="col-md-6">
 
-			<div class="row">
-				<div class="col-md-4" th:with="property='code',inputType='number',label=#{form.label.code},placeholder=#{form.placeholder.code},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
-				</div>
-			</div>
+<!-- 			<div class="row"> -->
+<!-- 				<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},isRequired='true'"> -->
+<!-- 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			
-			<div class="row">
-				<div class="col-md-12" th:with="property='name',rows=5,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textArea"/>
-				</div>
-			</div>
+<!-- 			<div class="row"> -->
+<!-- 				<div class="col-md-12" th:with="property='name',rows=5,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'"> -->
+<!-- 					<div th:replace="registry/registers/globals :: textArea"/> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
 			
 			<div class="row">
 				<div th:if="${isProposal}" class="col-md-12" th:with="property='axisUuids',label=#{form.label.coordinateAxis},isRequired='true',ajaxPath='axes',orderBy='name',displayCallback='axisSelectDisplay'">
@@ -40,7 +43,7 @@
 			<table id="axesTable" class="table table-striped">
 				<thead>
 					<tr>
-						<th th:text="#{tableheader.code}"></th>
+						<th th:text="#{tableheader.identifier}"></th>
 						<th th:text="#{tableheader.coordinateAxis}"></th>
 						<th th:text="#{tableheader.axisAbbreviation}"></th>
 						<th th:text="#{tableheader.axisUnit}"></th>
@@ -53,7 +56,7 @@
 <!-- 							<input th:if="${isProposal}" type="hidden" th:id="'axis_' + ${row.index}" class="select-axis" th:value="${axis.axisUuid}" required="required" style="width: 100%"/> -->
 <!-- 							<a th:unless="${isProposal}" th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name} + ' [' + ${axis.code} + ']'"></a> -->
 <!-- 						</td>							 -->
-						<td th:text="${axis.code}"/>
+						<td th:text="${axis.identifier}"/>
 						<td th:text="${axis.name}"/>
 						<td th:text="${axis.axisAbbreviation}"/>
 						<td th:text="${axis.axisUnit.name}"/>
@@ -69,7 +72,7 @@
 	    var axisSelectDisplay = function(item) {
 			return { 
 				id: item[0],
-				text: "[" + item[1] + "] " + item[2] + " (" + item[3] + " / " + item[5] + " / " + item[4].code + ")", 
+				text: "[" + item[1] + "] " + item[2] + " (" + item[3] + " / " + item[5] + " / " + item[4].identifier + ")", 
 			} 
 		};
 	            

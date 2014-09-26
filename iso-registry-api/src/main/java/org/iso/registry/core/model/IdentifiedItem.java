@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -21,8 +22,8 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 @Audited @Entity
 public abstract class IdentifiedItem extends RE_RegisterItem
 {
-	@Column(name = "CODE")
-	private Integer code;
+	@Basic(optional = false)
+	private Integer identifier;
 
 	@OneToMany(mappedBy = "aliasedItem")
 	private List<Alias> aliases;
@@ -46,12 +47,12 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 		super(register, itemClass, name, definition, additionInformation);
 	}
 
-	public Integer getCode() {
-		return code;
+	public Integer getIdentifier() {
+		return identifier;
 	}
 
-	public void setCode(Integer code) {
-		this.code = code;
+	public void setIdentifier(Integer identifier) {
+		this.identifier = identifier;
 	}
 
 	public List<Alias> getAliases() {

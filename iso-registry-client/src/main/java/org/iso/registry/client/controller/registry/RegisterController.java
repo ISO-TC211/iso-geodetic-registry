@@ -21,7 +21,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.iso.registry.client.controller.DatatablesResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +61,7 @@ import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.DatatablesResult;
 import de.geoinfoffm.registry.client.web.ProposalDtoFactory;
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -320,7 +320,7 @@ public class RegisterController
 					model.addAttribute("pageTitle", "Coordinate Systems");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("datums")) {
-					model.addAttribute("pageTitle", "Geodetic Datums");
+					model.addAttribute("pageTitle", "Datums");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("operations")) {
 					model.addAttribute("pageTitle", "Coordinate Operations");

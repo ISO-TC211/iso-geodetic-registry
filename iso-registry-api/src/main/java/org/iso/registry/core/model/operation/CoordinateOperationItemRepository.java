@@ -1,11 +1,9 @@
 package org.iso.registry.core.model.operation;
 
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.springframework.stereotype.Repository;
 
-import de.geoinfoffm.registry.core.EntityRepository;
-
 @Repository
-public interface CoordinateOperationItemRepository extends EntityRepository<CoordinateOperationItem>
+public interface CoordinateOperationItemRepository extends IdentifiedItemRepository<CoordinateOperationItem>
 {
-	CoordinateOperationItem findByCode(Integer code);
 }

@@ -62,17 +62,17 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 
 		// Add axes
-		Integer csCode = (Integer)row.get(COORD_SYS_CODE);
-		proposal.setCode(csCode);
+		Integer epsgCode = (Integer)row.get(COORD_SYS_CODE);
+		proposal.setIdentifier(determineIdentifier("CoordinateSystem", epsgCode));
 		
 		Cursor cursor = axisTable.getDefaultCursor();
 		Map<String, Object> m = new HashMap<String, Object>();
-		m.put(COORD_SYS_CODE, csCode);
+		m.put(COORD_SYS_CODE, epsgCode);
 		if (cursor.findFirstRow(m)) {
 			do {
 				Row axisRow = cursor.getCurrentRow();
 				Integer axisCode = (Integer)axisRow.get(CoordinateSystemAxesImporter.COORD_AXIS_CODE);
-				CoordinateSystemAxisItem axis = axisRepository.findByCode(axisCode);
+				CoordinateSystemAxisItem axis = axisRepository.findByIdentifier(findMappedCode("CoordinateSystemAxis", axisCode));
 				if (axis == null) {
 					logger.error("!!! Missing axis #{}", axisCode.toString());
 				}
@@ -96,22 +96,19 @@ public class CoordinateSystemsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}
 		catch (InvalidProposalException e) {
-			logger.error("!! Failed to imported CS #{}...", proposal.getCode());
+			logger.error("!! Failed to imported CS #{}...", proposal.getIdentifier());
 			logger.error(e.getMessage(), e);
 		}
 
 	}
 
-	@Override
 	@Transactional
-	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
-		String csType = (String)row.get(COORD_SYS_TYPE);
-		
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, String csType) {
 		if (csType.equalsIgnoreCase("ELLIPSOIDAL")) {
 			if (icEllipsoidal == null) {
 				icEllipsoidal = itemClassRepository.findByName("EllipsoidalCS");
@@ -158,7 +155,15 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		}
 		else {
 			return null;
-		}
+		}		
+	}
+	
+	@Override
+	@Transactional
+	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
+		String csType = (String)row.get(COORD_SYS_TYPE);
+	
+		return getOrCreateItemClass(register, csType);
 	}
 	
 	public void setAxisTable(Table table) {

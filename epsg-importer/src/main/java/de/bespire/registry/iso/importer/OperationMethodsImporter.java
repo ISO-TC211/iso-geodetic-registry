@@ -50,15 +50,16 @@ public class OperationMethodsImporter extends AbstractImporter
 		proposal.setTargetRegisterUuid(register.getUuid());
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		Integer methodCode = (Integer)row.get(COORD_OP_METHOD_CODE); 
-		proposal.setCode(methodCode);
+		Integer epsgCode = (Integer)row.get(COORD_OP_METHOD_CODE);
+		proposal.setIdentifier(determineIdentifier("OperationMethod", epsgCode));
+		
 		proposal.setName((String)row.get(COORD_OP_METHOD_NAME));
 		proposal.setReversible((Boolean)row.get(REVERSE_OP));
 		proposal.setFormulaType(FormulaType.FORMULA);
 		proposal.setFormula((String)row.get(FORMULA));
 		proposal.setDescription((String)row.get(EXAMPLE));
 		
-		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, methodCode);
+		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, epsgCode, this.isGenerateIdentifiers(), mapRepository);
 		proposal.setParameters(parameters);
 
 		proposal.setRemarks((String)row.get(REMARKS));
@@ -72,7 +73,7 @@ public class OperationMethodsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

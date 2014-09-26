@@ -18,6 +18,7 @@ import org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItem
 import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO.SingleOperationType;
 import org.iso.registry.api.registry.registers.gcp.operation.TransformationAccuracy;
+import org.iso.registry.core.model.EpsgIsoMappingRepository;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
 import org.iso.registry.core.model.crs.AreaItem;
@@ -160,13 +161,14 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		proposal.setTargetRegisterUuid(register.getUuid());
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		Integer operationCode = (Integer)row.get(COORD_OP_CODE);
-		proposal.setCode(operationCode);
+		Integer epsgCode = (Integer)row.get(COORD_OP_CODE);
+		proposal.setIdentifier(determineIdentifier("CoordinateOperation", epsgCode));
+		
 		proposal.setName((String)row.get(COORD_OP_NAME));
 		
 		Integer sourceCrsCode = (Integer)row.get(SOURCE_CRS_CODE);
 		if (sourceCrsCode != null) {
-			CoordinateReferenceSystemItem sourceCrs = crsRepository.findByCode(sourceCrsCode);
+			CoordinateReferenceSystemItem sourceCrs = crsRepository.findByIdentifier(findMappedCode("CoordinateReferenceSystem", sourceCrsCode));
 			if (sourceCrs != null) {
 				proposal.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(sourceCrs));
 			}
@@ -177,7 +179,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 
 		Integer targetCrsCode = (Integer)row.get(TARGET_CRS_CODE);
 		if (targetCrsCode != null) {
-			CoordinateReferenceSystemItem targetCrs = crsRepository.findByCode(targetCrsCode);
+			CoordinateReferenceSystemItem targetCrs = crsRepository.findByIdentifier(findMappedCode("CoordinateReferenceSystem", targetCrsCode));
 			if (targetCrs != null) {
 				proposal.setTargetCrs(new CoordinateReferenceSystemItemProposalDTO(targetCrs));
 			}
@@ -191,7 +193,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		if (areaCode != null) {
-			AreaItem area = areaRepository.findByCode(areaCode);
+			AreaItem area = areaRepository.findByIdentifier(areaCode);
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
@@ -223,26 +225,26 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		Integer operationCode = (Integer)row.get(COORD_OP_CODE);
 
 		Integer methodCode = (Integer)row.get(COORD_OP_METHOD_CODE);
-		OperationMethodItem method = methodRepository.findByCode(methodCode);
+		OperationMethodItem method = methodRepository.findByIdentifier(findMappedCode("operationMethod", methodCode));
 		if (method != null) {
 			proposal.setMethod(new OperationMethodItemProposalDTO(method));
 		}
 		
 		Integer sourceCrsDiffUomCode = (Integer)row.get(UOM_CODE_SOURCE_COORD_DIFF);
 		if (sourceCrsDiffUomCode != null) {
-//			UnitOfMeasureItem uom = uomRepository.findByCode(sourceCrsUomCode);
+//			UnitOfMeasureItem uom = uomRepository.findByIdentifier(sourceCrsUomCode);
 			// TODO Wohin damit??? 
 		}
 
 		Integer targetCrsDiffUomCode = (Integer)row.get(UOM_CODE_TARGET_COORD_DIFF);
 		if (targetCrsDiffUomCode != null) {
-//			UnitOfMeasureItem uom = uomRepository.findByCode(targetCrsUomCode);
+//			UnitOfMeasureItem uom = uomRepository.findByIdentifier(targetCrsUomCode);
 			// TODO Wohin damit??? 
 		}
 
-		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode);
+		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode, this.isGenerateIdentifiers(), mapRepository);
 		for (GeneralOperationParameterItem parameter : parameters) {
-			OperationParameterValue paramValue = findParameterValue(operationCode, methodCode, parameter.getCode());
+			OperationParameterValue paramValue = findParameterValue(operationCode, methodCode, parameter.getIdentifier());
 			proposal.addParameterValue(paramValue);
 		}
 
@@ -268,7 +270,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getCode().longValue()));
+			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
@@ -318,7 +320,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 //		return null;
 //	}
 //
-	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code) throws IOException {
+	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code, boolean useMappedCode, EpsgIsoMappingRepository mapRepository) throws IOException {
 		List<GeneralOperationParameterItem> result = new ArrayList<>();
 		
 		Cursor usageCursor = parametersUsageTable.getDefaultCursor();
@@ -330,7 +332,8 @@ public class CoordinateOperationsImporter extends AbstractImporter
 				Row usageRow = usageCursor.getCurrentRow();
 				Integer parameterCode = (Integer)usageRow.get(PARAMETER_CODE);
 				
-				OperationParameterItem param = paramRepository.findByCode(parameterCode);
+				Integer paramIdentifier = (useMappedCode ? findMappedCode("OperationParameter", parameterCode, mapRepository) : parameterCode);
+				OperationParameterItem param = paramRepository.findByIdentifier(paramIdentifier);
 				if (param != null) {
 					result.add(param);
 				}
@@ -358,10 +361,10 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		else {
 			Double paramValue = (Double)valueRow.get(PARAMETER_VALUE);
 			String fileRef = (String)valueRow.get(PARAM_VALUE_FILE_REF);
-			OperationParameterItem parameter = paramRepository.findByCode(paramCode);
+			OperationParameterItem parameter = paramRepository.findByIdentifier(paramCode);
 			if (paramValue != null && fileRef == null) {
 				Integer uomCode = (Integer)valueRow.get(UOM_CODE);
-				UnitOfMeasureItem uom = uomRepository.findByCode(uomCode);
+				UnitOfMeasureItem uom = uomRepository.findByIdentifier(uomCode);
 				Measure measure = new Measure(paramValue, uom);
 				return new OperationParameterValue(parameter, measure);
 			}
@@ -416,7 +419,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		}			
 		
 		for (int i = 1; i <= orderedOps.size(); i++) {
-			CoordinateOperationItem param = opsRepository.findByCode(orderedOps.get(i));
+			CoordinateOperationItem param = opsRepository.findByIdentifier(orderedOps.get(i));
 			if (param != null && param instanceof SingleOperationItem) {
 				result.add((SingleOperationItem)param);
 			}
@@ -452,6 +455,10 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			icOpParam = getOrCreateItemClass("OperationParameter", register);
 		}
 
+		if (row == null) {
+			return null;
+		}
+		
 		String type = (String)row.get(COORD_OP_TYPE);
 		if ("conversion".equalsIgnoreCase(type)) {
 			return icConversion;

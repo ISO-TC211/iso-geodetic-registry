@@ -54,7 +54,7 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 		
 		AreaItem item = (AreaItem)registerItem;
 		
-		this.setCode(item.getCode());
+		this.setIdentifier(item.getIdentifier());
 		this.setIsoA2Code(item.getIsoA2Code());
 		this.setIsoA3Code(item.getIsoA3Code());
 		this.setIsoNCode(item.getIsoNCode());
@@ -65,7 +65,7 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 			this.setSouthBoundLatitude(item.getBoundingBox().getSouthBoundLatitude());
 		}
 		
-		this.addAdditionalProperty("code", item.getCode());
+		this.addAdditionalProperty("code", item.getIdentifier());
 	}
 
 	public double getEastBoundLongitude() {

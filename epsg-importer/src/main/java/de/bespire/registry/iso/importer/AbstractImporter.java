@@ -2,11 +2,17 @@ package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.iso.registry.core.model.EpsgIsoMapping;
+import org.iso.registry.core.model.EpsgIsoMappingRepository;
+import org.iso.registry.core.model.UnitOfMeasureItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.healthmarketscience.jackcess.Cursor;
+import com.healthmarketscience.jackcess.CursorBuilder;
 import com.healthmarketscience.jackcess.Row;
 
 import de.geoinfoffm.registry.api.ProposalService;
@@ -60,7 +67,18 @@ public abstract class AbstractImporter
 	@Autowired
 	private RegisterRepository registerRepository;
 	
-	private Set<String> limitToCodes;
+	@Autowired
+	protected EpsgIsoMappingRepository mapRepository;
+	
+	@Autowired
+	private UnitOfMeasureItemRepository uomRepository;
+
+	private LinkedHashSet<String> limitToCodes;
+	private boolean generateIdentifiers;
+	
+	protected AbstractImporter() {
+		this.generateIdentifiers = true;
+	}
 
 	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier)
 			throws InvalidProposalException {
@@ -100,14 +118,13 @@ public abstract class AbstractImporter
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void importRows(Cursor cursor, long count, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
-		for (int i = 0; i < count; i++) {
-			Row row = cursor.getNextRow(); 
-			if (row != null) {
-				if (this.limitToCodes != null && !this.limitToCodes.isEmpty() && this.codeProperty() != null) {
-					Integer code = (Integer)row.get(codeProperty());
-					if (!limitToCodes.contains(code.toString())) {
-						continue;
-					}
+		if (this.limitToCodes != null && !this.limitToCodes.isEmpty()) {
+			for (String code : this.limitToCodes) {
+				Map<String, Object> rowPattern = new HashMap<String, Object>();
+				rowPattern.put(codeProperty(), Integer.parseInt(code));
+				Row row = CursorBuilder.findRow(cursor.getTable(), rowPattern);
+				if (row == null) {
+					logger.error("!!!! Did not find object with {}='{}' in table '{}' !!!!", new Object[] { codeProperty(), code, cursor.getTable().getName() });
 				}
 				RE_ItemClass itemClass = this.getOrCreateItemClass(register, row);
 				try {
@@ -116,8 +133,8 @@ public abstract class AbstractImporter
 				catch (Throwable t) {
 					logger.error(t.getMessage(), t);
 					if (this.codeProperty() != null) {
-						Integer code = (Integer)row.get(codeProperty());
-						logger.error("!!!! Failed to import object #{} from table '{}' !!!!", code, cursor.getTable().getName());
+						Integer codeInt = (Integer)row.get(codeProperty());
+						logger.error("!!!! Failed to import object #{} from table '{}' !!!!", codeInt, cursor.getTable().getName());
 					}
 					else {
 						logger.error("!!!! Failed to import object from table '{}' !!!!", cursor.getTable().getName());
@@ -127,8 +144,38 @@ public abstract class AbstractImporter
 					}
 				}
 			}
-			else {
-				return;
+		}
+		else {
+			for (int i = 0; i < count; i++) {
+				Row row = cursor.getNextRow(); 
+				if (row != null) {
+					if (this.limitToCodes != null && !this.limitToCodes.isEmpty() && this.codeProperty() != null) {
+						Integer code = (Integer)row.get(codeProperty());
+						if (!limitToCodes.contains(code.toString())) {
+							continue;
+						}
+					}
+					RE_ItemClass itemClass = this.getOrCreateItemClass(register, row);
+					try {
+						this.importRow(row, itemClass, sponsor, register);
+					}
+					catch (Throwable t) {
+						logger.error(t.getMessage(), t);
+						if (this.codeProperty() != null) {
+							Integer code = (Integer)row.get(codeProperty());
+							logger.error("!!!! Failed to import object #{} from table '{}' !!!!", code, cursor.getTable().getName());
+						}
+						else {
+							logger.error("!!!! Failed to import object from table '{}' !!!!", cursor.getTable().getName());
+							for (String key : row.keySet()) {
+								logger.error("[{}] {}", key, row.get(key));
+							}
+						}
+					}
+				}
+				else {
+					return;
+				}
 			}
 		}
 	}
@@ -169,13 +216,68 @@ public abstract class AbstractImporter
 	public Set<String> getLimitToCodes() {
 		return limitToCodes;
 	}
+	
+	public boolean isLimited() {
+		return this.limitToCodes != null && !this.limitToCodes.isEmpty();
+	}
 
-	public void setLimitToCodes(Set<String> limitToCodes) {
+	public void setLimitToCodes(LinkedHashSet<String> limitToCodes) {
 		this.limitToCodes = limitToCodes;
 	}
 	
 	public void setLimitToCodes(String limitToCodes) {
-		this.limitToCodes = StringUtils.commaDelimitedListToSet(limitToCodes);
+		this.limitToCodes = new LinkedHashSet<>();
+		for (String code : StringUtils.commaDelimitedListToStringArray(limitToCodes)) {
+			this.limitToCodes.add(code);
+		}
+	}
+	
+	public boolean isGenerateIdentifiers() {
+		return generateIdentifiers;
+	}
+
+	public void setGenerateIdentifiers(boolean generateIdentifiers) {
+		this.generateIdentifiers = generateIdentifiers;
+	}
+
+	protected EpsgIsoMapping addMapping(String itemClass, Integer epsgCode, Integer isoCode) {
+		EpsgIsoMapping mapping = new EpsgIsoMapping(itemClass, epsgCode, isoCode);
+		return mapRepository.save(mapping);
+	}
+	
+	protected Integer determineIdentifier(String itemClass, Integer epsgCode) {
+		Integer identifier;
+		if (generateIdentifiers) {
+			identifier = findNextAvailableIdentifier();
+			addMapping(itemClass, epsgCode, identifier);
+		}
+		else {
+			identifier = epsgCode;
+		}
+		
+		return identifier;			
+	}
+	
+	private Integer findNextAvailableIdentifier() {
+		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
+		Integer maxCode = (Integer)em.createQuery(jpql).getResultList().get(0);
+		
+		Integer result = (maxCode == null) ? 1 : maxCode + 1;
+		logger.info(">>> Next available identifier: {}", result);
+		return result;
+	}
+	
+	protected Integer findMappedCode(String itemClass, Integer epsgCode) {
+		if (this.generateIdentifiers) {
+			return mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
+		}
+		else {
+			return epsgCode;
+		}
+	}
+
+	protected static Integer findMappedCode(String itemClass, Integer epsgCode, EpsgIsoMappingRepository mapRepository) {
+		return mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
 	}
 
 }
