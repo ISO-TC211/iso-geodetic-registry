@@ -1,8 +1,9 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('namsys')" />
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('namsys')" /> -->
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->

@@ -3,37 +3,53 @@
  */
 package org.iso.registry.client.controller;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.Hibernate;
+import javax.validation.Valid;
+
 import org.iso.registry.client.controller.registry.ProposalNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import de.geoinfoffm.registry.api.OrganizationService;
+import de.geoinfoffm.registry.api.RegistryUserService;
+import de.geoinfoffm.registry.client.web.ClientConfiguration;
+import de.geoinfoffm.registry.client.web.OrganizationFormBean;
 import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
+import de.geoinfoffm.registry.client.web.SignupFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
+import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalFactory;
+import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
-import de.geoinfoffm.registry.core.model.iso19135.RE_ProposalManagementInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.security.RegistryPermission;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.AppealRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
+import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 /**
  * @author Florian.Esser
@@ -53,16 +69,25 @@ public class ManagementController
 	private RegistryUserRepository userRepository;
 
 	@Autowired
+	private RegistryUserService userService;
+
+	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
 
 	@Autowired
+	private OrganizationService orgService;
+
+	@Autowired
 	private SubmittingOrganizationRepository suborgRepository;
-	
+
 	@Autowired
 	private ProposalFactory proposalFactory;
 	
 	@Autowired
 	private RegistrySecurity security;
+
+	@Autowired
+	private AdministrationController adminController;
 
 	
 	@RequestMapping(value = "/owner", method = RequestMethod.GET)
@@ -188,6 +213,109 @@ public class ManagementController
 		model.addAttribute("proposal", pvb);
 		
 		return "mgmt/review";
+	}
+
+	@RequestMapping(value = "/poc", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String pointOfContactOverview(@ModelAttribute("organization") final Organization organization, final Model model) throws UnauthorizedException {
+		security.assertHasRoleWith(POINTOFCONTACT_ROLE_PREFIX);
+
+		model.addAttribute("isPoC", "true");
+
+		RegistryUser currentUser = security.getCurrentUser();
+		return adminController.viewOrganization(currentUser.getOrganization().getUuid().toString(), organization, model);
+	}
+
+	@Transactional
+	@RequestMapping(value = "/poc", method = RequestMethod.PUT)
+	public String updateOrganization(WebRequest request, 
+								   @ModelAttribute("organization") final OrganizationFormBean organization, 
+								   final BindingResult bindingResult, final Model model) throws UnauthorizedException {
+
+		security.assertHasRoleWith(POINTOFCONTACT_ROLE_PREFIX);
+
+		model.addAttribute("isPoC", "true");
+
+		RegistryUser currentUser = security.getCurrentUser();
+		UUID orgUuid = currentUser.getOrganization().getUuid();
+		adminController.updateOrganization(request, orgUuid, organization, bindingResult, model);
+		
+		// TODO Flash attribute
+		
+		return "redirect:/management/poc";
+	}
+	
+	@RequestMapping(value = "/poc/addUser", method = RequestMethod.GET)
+	@Transactional
+	public String pointOfContactNewUser(WebRequest request,
+										@ModelAttribute("user") SignupFormBean userData,
+									    final Model model) throws UnauthorizedException {
+
+		request.removeAttribute("signupData", WebRequest.SCOPE_SESSION);
+
+		security.assertHasRoleWith(POINTOFCONTACT_ROLE_PREFIX);
+
+		model.addAttribute("isPoC", "true");
+
+		RegistryUser currentUser = security.getCurrentUser();
+
+		userData.setOrganizationUuid(currentUser.getOrganization().getUuid().toString());
+
+		List<Organization> orgs = orgService.findAll();
+		model.addAttribute("organizations", orgs);
+		
+		model.addAttribute("isOrganizationFixed", "true");
+		
+		return "signup";
+	}
+
+
+	@RequestMapping(value = "/poc/addUser", method = RequestMethod.POST)
+	@Transactional
+	public String createUser(WebRequest request, @Valid @ModelAttribute("user") final SignupFormBean userData,
+			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes)
+			throws Exception {
+
+		if (bindingResult.hasErrors()) {
+			List<Organization> orgs = orgService.findAll();
+			model.addAttribute("organizations", orgs);
+			return "signup";
+		}
+
+		if (StringUtils.isEmpty(userData.getPreferredLanguage())) {
+			userData.setPreferredLanguage("en");
+		}
+
+		model.addAttribute("isPoC", "true");
+
+		RegistryUser user;
+
+		CreateRegistryUserRequest registryUser = userData.toRegistrationDTO();
+		
+		boolean sendConfirmationMails = ClientConfiguration.isSendConfirmationMails();
+		
+		user = userService.registerUser(registryUser);
+
+		if (sendConfirmationMails) {
+			redirectAttributes.addFlashAttribute("signedUp", user.getEmailAddress().toString());
+		}
+		else {
+			redirectAttributes.addFlashAttribute("signedUpNoConfirmation", user.getEmailAddress().toString());
+		}
+
+		return "redirect:/management/poc";
+	}
+
+	@RequestMapping(value = "/poc/delegation", method = RequestMethod.DELETE)
+	@Transactional
+	public ResponseEntity<Void> pointOfContactDenyDelegationRequest(@RequestParam("userUuid") UUID userUuid, 
+																	@RequestParam("organizationUuid") UUID orgUuid,
+																	@RequestParam("roleName") String roleName,
+																	final Model model) throws UnauthorizedException {
+
+		security.denyDelegationRequest(userUuid, orgUuid, roleName);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }

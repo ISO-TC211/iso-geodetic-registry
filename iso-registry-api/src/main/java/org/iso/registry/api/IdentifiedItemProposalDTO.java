@@ -23,7 +23,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 //	private String nameCodespaceVersion;
 //	private CI_Citation nameCodespaceCitation;
 	
-	private Integer code;
+	private Integer identifier;
 	private List<AliasDTO> aliases;
 	private String remarks;
 	private String informationSource;
@@ -54,12 +54,12 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		super(item, sponsor);
 	}
 
-	public Integer getCode() {
-		return code;
+	public Integer getIdentifier() {
+		return identifier;
 	}
 
-	public void setCode(Integer code) {
-		this.code = code;
+	public void setIdentifier(Integer identifier) {
+		this.identifier = identifier;
 	}
 
 	public List<AliasDTO> getAliases() {
@@ -108,8 +108,8 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		if (registerItem instanceof IdentifiedItem) {
 			IdentifiedItem item = (IdentifiedItem)registerItem;
 			
-			item.setCode(this.getCode());
-			item.setItemIdentifier(BigInteger.valueOf(this.getCode().longValue()));
+			item.setIdentifier(this.getIdentifier());
+			item.setItemIdentifier(BigInteger.valueOf(this.getIdentifier().longValue()));
 			item.setRemarks(this.getRemarks());
 			item.setInformationSource(this.getInformationSource());
 			item.setDataSource(this.getDataSource());
@@ -126,7 +126,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			for (Alias alias : item.getAliases()) {
 				this.addAlias(new AliasDTO(alias));
 			}
-			this.setCode(item.getCode());
+			this.setIdentifier(item.getIdentifier());
 			this.setRemarks(item.getRemarks());
 			this.setInformationSource(item.getInformationSource());
 			this.setDataSource(item.getDataSource());

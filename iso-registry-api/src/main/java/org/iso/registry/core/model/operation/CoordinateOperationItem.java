@@ -14,9 +14,9 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -30,8 +30,8 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 
 	private String operationVersion;
 	
-	@ManyToOne
-	private AreaItem domainOfValidity;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private EX_Extent domainOfValidity;
 	
 	@ElementCollection
 	private List<String> scope;
@@ -62,11 +62,11 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 		this.operationVersion = operationVersion;
 	}
 
-	public AreaItem getDomainOfValidity() {
+	public EX_Extent getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItem domainOfValidity) {
+	public void setDomainOfValidity(EX_Extent domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 

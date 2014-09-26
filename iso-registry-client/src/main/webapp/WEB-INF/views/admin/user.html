@@ -77,29 +77,29 @@
 										th:field="*{confirmedPassword}" /> <span class="help-block" th:if="${#fields.hasErrors('confirmedPassword')}" th:text="#{form.validation.confirmPassword}"></span>
 								</div>
 							</div>
-		
+
 							<div class="form-group">
 								<label class="form-label" for="preferredLangugae" th:text="#{form.label.preferredLanguage}">Standardsprache</label>
 								<div class="controls">
 									<div class="input-group">
 										<select id="preferredLanguage" required="true" th:field="*{preferredLanguage}">
-											<option value="de-DE">Deutsch</option>
-											<option value="en-US">English</option>
+<!-- 											<option value="de">Deutsch</option> -->
+											<option value="en">English</option>
 										</select>
 									</div>
 								</div>
 							</div>
 		
-<!-- 							<div class="form-group"> -->
-<!-- 								<label class="form-label" for="organization" th:text="#{form.label.organization}">Organisation</label> -->
-<!-- 								<div class="controls"> -->
-<!-- 									<div class="input-group"> -->
-<!-- 										<select id="organization" required="true" th:field="*{organizationUuid}"> -->
-<!-- 											<option th:each="org : ${organizations}" th:value="${org.uuid}" th:text="${org.organizationName}"></option> -->
-<!-- 										</select>  -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
+							<div class="form-group">
+								<label class="form-label" for="organization" th:text="#{form.label.organization}">Organisation</label>
+								<div class="controls">
+									<div class="input-group">
+										<select id="organization" required="true" th:field="*{organizationUuid}">
+											<option th:each="org : ${organizations}" th:value="${org.uuid}" th:text="${org.name}"></option>
+										</select> 
+									</div>
+								</div>
+							</div>
 
 						</div>
 					</div>

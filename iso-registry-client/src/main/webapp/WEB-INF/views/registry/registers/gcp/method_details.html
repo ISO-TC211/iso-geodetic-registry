@@ -1,8 +1,9 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" /> -->
 
 			<div th:unless="${isProposal}" th:with="property='parameter',label=#{form.label.operationParameters},columns=${#strings.arraySplit('name',',')},editable=${isProposal}">
 				<div th:replace="registry/registers/globals :: referencedEntitiesTable('parameter')"/>
@@ -19,9 +20,10 @@
 							$(function() {
 								$('#parameters').select2({
 									multiple: true,
+									placeholder: "[[#{label.placeholder.operationMethodParameters}]]",
 									dropdownCssClass: "bigdrop",
 									ajax: {
-										url: "[[@{__${basePath}__/}]]entities/by-class/OperationParameterItem?orderBy=code",
+										url: "[[@{__${basePath}__/}]]entities/by-class/OperationParameterItem?orderBy=identifier",
 										dataType: "json",
 										results: function (data) {
 											return { 

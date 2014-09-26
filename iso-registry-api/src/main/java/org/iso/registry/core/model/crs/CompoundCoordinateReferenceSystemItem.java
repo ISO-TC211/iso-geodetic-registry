@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.datum.DatumItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 
 import de.geoinfoffm.registry.core.ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
@@ -31,7 +32,7 @@ public class CompoundCoordinateReferenceSystemItem extends CoordinateReferenceSy
 	}
 	
 	public CompoundCoordinateReferenceSystemItem(RE_Register register, RE_ItemClass itemClass, String name,
-			String definition, RE_AdditionInformation additionInformation, AreaItem domainOfValidity, String scope,
+			String definition, RE_AdditionInformation additionInformation, EX_Extent domainOfValidity, String scope,
 			List<SingleCoordinateReferenceSystemItem<? extends DatumItem>> componentReferenceSystems) {
 
 		super(register, itemClass, name, definition, additionInformation, domainOfValidity, scope);

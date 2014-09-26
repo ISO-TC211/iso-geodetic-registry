@@ -1,11 +1,9 @@
 package org.iso.registry.core.model.datum;
 
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.springframework.stereotype.Repository;
 
-import de.geoinfoffm.registry.core.EntityRepository;
-
 @Repository
-public interface EllipsoidItemRepository extends EntityRepository<EllipsoidItem>
+public interface EllipsoidItemRepository extends IdentifiedItemRepository<EllipsoidItem>
 {
-	EllipsoidItem findByCode(Integer code);
 }

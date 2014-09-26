@@ -1,10 +1,11 @@
 <body th:fragment="body(headerLabel, detailsTemplate)">
 	<div th:include="layout :: navbarFragment"></div>
 	
-	<div class="col-md-1">
-		<button id="topback" class="btn btn-default" onclick="history.back();" th:text="#{button.back}">Zurück</button>												
+	<div class="col-md-3">
+ 		<button id="topback" class="btn btn-default" onclick="history.back();" th:text="#{button.back}">Zurück</button>
+		<div th:include="layout :: navtree"></div>
 	</div>
-	<div class="col-md-11">
+	<div class="col-md-9">
 		<div class="container">
 			<div th:replace="registry/item :: itemTabs"/>
 	

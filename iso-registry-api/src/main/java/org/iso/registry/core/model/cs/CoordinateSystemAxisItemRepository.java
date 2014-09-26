@@ -1,11 +1,9 @@
 package org.iso.registry.core.model.cs;
 
+import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.springframework.stereotype.Repository;
 
-import de.geoinfoffm.registry.core.EntityRepository;
-
 @Repository
-public interface CoordinateSystemAxisItemRepository extends EntityRepository<CoordinateSystemAxisItem>
+public interface CoordinateSystemAxisItemRepository extends IdentifiedItemRepository<CoordinateSystemAxisItem>
 {
-	CoordinateSystemAxisItem findByCode(Integer code);
 }

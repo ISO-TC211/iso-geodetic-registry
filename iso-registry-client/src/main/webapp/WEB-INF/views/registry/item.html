@@ -80,12 +80,28 @@
 										<a data-toggle="collapse" data-parent="#accordion" th:href="'#additionInformation_' + ${pmi.uuid}" th:text="${pmi.dateDisposed} ? #{header.addedOn(${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})} : #{header.additionInformation}"></a>
 									</h3>
 								</div>
-								<div class="panel-collapse collapse" th:id="'additionInformation_' + ${pmi.uuid}">
+								<div class="panel-collapse" th:id="'additionInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}">
 										<tbody>
+											<tr th:if="*{sponsor}">
+												<td th:text="#{sponsor}"></td>
+												<td th:text="*{sponsor.name}"></td>
+											</tr>
 											<tr th:if="*{dateProposed}">
 												<td th:text="#{dateProposed}"></td>
 												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr>
+												<td th:text="#{justification}"></td>
+												<td th:text="*{justification}"></td>
+											</tr>
+											<tr th:if="*{registerManagerNotes}">
+												<td th:text="#{registerManagerNotes}"></td>
+												<td th:text="*{registerManagerNotes}"></td>
+											</tr>
+											<tr th:if="*{controlBodyNotes}">
+												<td th:text="#{controlBodyNotes}"></td>
+												<td th:text="*{controlBodyNotes}"></td>
 											</tr>
 											<tr th:if="*{dateDisposed}">
 												<td th:text="#{dateDisposed}"></td>
@@ -102,18 +118,6 @@
 											<tr th:if="*{controlBodyDecisionEvent}">
 												<td th:text="#{controlBodyDecisionEvent}"></td>
 												<td th:text="*{controlBodyDecisionEvent}"></td>
-											</tr>
-											<tr>
-												<td th:text="#{justification}"></td>
-												<td th:text="*{justification}"></td>
-											</tr>
-											<tr th:if="*{registerManagerNotes}">
-												<td th:text="#{registerManagerNotes}"></td>
-												<td th:text="*{registerManagerNotes}"></td>
-											</tr>
-											<tr th:if="*{controlBodyNotes}">
-												<td th:text="#{controlBodyNotes}"></td>
-												<td th:text="*{controlBodyNotes}"></td>
 											</tr>
 										</tbody>
 									</table>
@@ -132,7 +136,7 @@
 										</a>
 									</h3>
 								</div>
-								<div class="panel-collapse collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
+								<div class="panel-collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}" th:id="'amendmentInformation_' + ${pmi.uuid}">
 										<tbody>
 											<tr>
@@ -181,7 +185,7 @@
 										</a>
 									</h3>
 								</div>
-								<div class="panel-collapse collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
+								<div class="panel-collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}" th:id="'clarificationInformation_' + ${pmi.uuid}">
 										<tbody>
 											<tr>

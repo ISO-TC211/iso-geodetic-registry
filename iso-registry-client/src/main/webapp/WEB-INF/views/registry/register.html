@@ -12,8 +12,9 @@
 			<div class="col-md-9" role="main">
 			  	
 			  	<div th:replace="home :: demo"/>
-
-				<h3 th:text="${register.name}">Register ABC</h3>
+				
+				<h3 th:unless="${pageTitle}" th:text="${register.name}"/>
+				<h3 th:if="${pageTitle}" th:text="${pageTitle}"/>
 				
 <!-- 				<div th:replace="home :: demo"/> -->
 
@@ -54,7 +55,7 @@
 							<table id="contentsTable" class="datatable table table-striped">
 								<thead>
 									<tr>
-										<th th:text="#{tableheader.itemIdentifier}">Item ID</th>
+										<th th:text="#{tableheader.identifier}">Identifier</th>
 										<th th:text="#{tableheader.name}">Name</th>
 										<th th:text="#{tableheader.itemClassName}">Klasse</th>
 										<th th:text="#{tableheader.status}">Status</th>

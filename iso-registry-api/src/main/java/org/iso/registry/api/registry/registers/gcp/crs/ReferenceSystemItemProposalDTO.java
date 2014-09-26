@@ -1,9 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
-import javax.persistence.EntityManager;
-
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -11,27 +10,29 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.soap.Addition_Type;
 
-public abstract class ReferenceSystemProposalDTO extends IdentifiedItemProposalDTO
+public abstract class ReferenceSystemItemProposalDTO extends IdentifiedItemProposalDTO
 {
-	private AreaItemProposalDTO domainOfValidity;
+	private ExtentDTO domainOfValidity;
 
-	public ReferenceSystemProposalDTO() {
+	public ReferenceSystemItemProposalDTO() {
 		super();
+		this.domainOfValidity = new ExtentDTO();
 	}
 	
-	public ReferenceSystemProposalDTO(ReferenceSystemItem item) {
+	public ReferenceSystemItemProposalDTO(ReferenceSystemItem item) {
 		super(item);
+		this.domainOfValidity = new ExtentDTO(item.getDomainOfValidity());
 	}
 
-	public ReferenceSystemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
+	public ReferenceSystemItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 	}
 
-	public ReferenceSystemProposalDTO(Proposal proposal) {
+	public ReferenceSystemItemProposalDTO(Proposal proposal) {
 		super(proposal);
 	}
 
-	public ReferenceSystemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
+	public ReferenceSystemItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
 		super(item, sponsor);
 	}
 	
@@ -52,15 +53,15 @@ public abstract class ReferenceSystemProposalDTO extends IdentifiedItemProposalD
 		if (registerItem instanceof ReferenceSystemItem) {
 			ReferenceSystemItem item = (ReferenceSystemItem)registerItem;
 
-			this.setDomainOfValidity(new AreaItemProposalDTO(item.getDomainOfValidity()));
+			this.setDomainOfValidity(new ExtentDTO(item.getDomainOfValidity()));
 		}
 	}
 
-	public AreaItemProposalDTO getDomainOfValidity() {
+	public ExtentDTO getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItemProposalDTO domainOfValidity) {
+	public void setDomainOfValidity(ExtentDTO domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 

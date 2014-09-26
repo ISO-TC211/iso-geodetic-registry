@@ -3,15 +3,7 @@ package org.iso.registry.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-
-import org.iso.registry.core.model.Alias;
-import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.AreaItem;
-import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 
@@ -24,7 +16,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 {
 	private String operationVersion;
-	private AreaItemViewBean domainOfValidity;
+	private ExtentDTO domainOfValidity;
 	private List<String> scope;
 	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	private CoordinateReferenceSystemItemViewBean sourceCrs;
@@ -72,7 +64,7 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 
 		this.setOperationVersion(item.getOperationVersion());
 		if (item.getDomainOfValidity() != null) {
-			this.setDomainOfValidity(new AreaItemViewBean(item.getDomainOfValidity()));
+			this.setDomainOfValidity(new ExtentDTO(item.getDomainOfValidity()));
 		}
 		if (item.getScope() != null) {
 			for (String scope : item.getScope()) {
@@ -96,11 +88,11 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 		this.operationVersion = operationVersion;
 	}
 
-	public AreaItemViewBean getDomainOfValidity() {
+	public ExtentDTO getDomainOfValidity() {
 		return domainOfValidity;
 	}
 
-	public void setDomainOfValidity(AreaItemViewBean domainOfValidity) {
+	public void setDomainOfValidity(ExtentDTO domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 

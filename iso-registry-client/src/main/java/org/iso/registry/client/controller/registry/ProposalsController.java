@@ -58,6 +58,7 @@ import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
+import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -68,7 +69,6 @@ import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.ProposalRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
-import de.geoinfoffm.registry.persistence.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
 
 /**
@@ -381,7 +381,7 @@ public class ProposalsController
 		return "registry/proposal/create_addition";
 	}
 
-	@RequestMapping(value = "/{uuid}", params={ "save" })
+	@RequestMapping(value = "/{uuid}", params={ "saveProposal" })
 	@Transactional
 	public String saveObject(WebRequest request, final HttpServletRequest servletRequest,
 			@PathVariable("uuid") UUID proposalUuid, 
@@ -478,7 +478,7 @@ public class ProposalsController
 		
 	}
 
-	@RequestMapping(value = "/{uuid}", params={ "submit" })
+	@RequestMapping(value = "/{uuid}", params={ "submitProposal" })
 	@Transactional
 	public View submitSupersessionProposal(WebRequest request,
 			@PathVariable("uuid") UUID proposalUuid,
@@ -648,9 +648,8 @@ public class ProposalsController
 			throw new ProposalNotFoundException(proposalUuid);
 		}
 
-		security.assertHasAnyEntityRelatedRoleForAll(Arrays.asList(MANAGER_ROLE_PREFIX, OWNER_ROLE_PREFIX), proposal.getAffectedRegisters());
+		security.assertHasAnyEntityRelatedRoleForAll(Arrays.asList(MANAGER_ROLE_PREFIX, CONTROLBODY_ROLE_PREFIX), proposal.getAffectedRegisters());
 
-//		rvb = new RegisterItemViewBean(proposal);
 		rvb = viewBeanFactory.getViewBean(proposal);
 		
 		model.addAttribute("proposal", rvb);

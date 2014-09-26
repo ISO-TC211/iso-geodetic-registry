@@ -1,13 +1,14 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndCode" />
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
+			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
+			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" /> -->
 			<div class="row">
-				<div class="col-md-6" th:with="property='greenwichLongitude',inputType='number',label=#{form.label.greenwichLongitude},placeholder=#{form.placeholder.greenwichLongitude},isRequired='false'">
+				<div class="col-md-6" th:with="property='greenwichLongitude',inputType='number',label=#{form.label.greenwichLongitude},placeholder=#{form.placeholder.greenwichLongitude},isRequired='true'">
 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
-				<div class="col-md-6" th:with="property='greenwichLongitudeUom',label=#{form.label.greenwichLongitudeUom},isRequired='false',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
+				<div class="col-md-6" th:with="property='greenwichLongitudeUom',label=#{form.label.greenwichLongitudeUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
@@ -22,6 +23,8 @@
 	<script type="text/javascript" charset="utf-8" th:inline="text">
 	/* <![CDATA[ */
 		$(document).ready(function() {
+			$('#greenwichLongitude').val("0");
+			
 			$('#rangeMeaning').select2({
 					width: 'resolve',
 					dropdownAutoWidth : true,

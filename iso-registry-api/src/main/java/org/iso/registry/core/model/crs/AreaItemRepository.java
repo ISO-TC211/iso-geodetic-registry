@@ -11,14 +11,14 @@ import de.geoinfoffm.registry.core.EntityRepository;
 @Repository
 public interface AreaItemRepository extends EntityRepository<AreaItem>
 {
-	AreaItem findByCode(Integer code);
+	AreaItem findByIdentifier(Integer identifier);
 	
-	@Query("SELECT a FROM AreaItem a ORDER BY a.code")
+	@Query("SELECT a FROM AreaItem a ORDER BY a.identifier")
 	List<AreaItem> findAllOrderBy(/*@Param("orderField") String orderField*/);
 	
-	@Query("SELECT a.code, a.name FROM AreaItem a ORDER BY a.code")
-	public List<Object[]> findAllOrderByCode();
+	@Query("SELECT a.identifier, a.name FROM AreaItem a ORDER BY a.identifier")
+	public List<Object[]> findAllOrderByIdentifier();
 
-	@Query("SELECT a.code, a.name FROM AreaItem a ORDER BY a.name")
+	@Query("SELECT a.identifier, a.name FROM AreaItem a ORDER BY a.name")
 	public List<Object[]> findAllOrderByName();
 }

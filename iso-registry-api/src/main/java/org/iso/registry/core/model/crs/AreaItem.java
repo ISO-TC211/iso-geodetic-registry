@@ -56,7 +56,7 @@ public class AreaItem extends IdentifiedItem
 
 		super(register, itemClass, name, definition, additionInformation);
 		
-		this.setCode(code);
+		this.setIdentifier(code);
 	}
 
 	public EX_GeographicBoundingBox getBoundingBox() {

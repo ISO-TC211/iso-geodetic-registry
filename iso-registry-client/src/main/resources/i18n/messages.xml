@@ -24,6 +24,8 @@
 	<entry key="navbar.login.label.email">E-mail address</entry>
 	<entry key="navbar.login.label.password">Password</entry>
 	<entry key="navbar.login.button.register">Register</entry>
+	
+	<entry key="download.quickstart">Download the Quick Start Guide</entry>
 
 	<entry key="mgmt.submitter.content.header">Submitting organization: List of proposals</entry>
 	<entry key="mgmt.manager.content.header">Register manager: List of pending proposals</entry>
@@ -59,11 +61,11 @@
 	<entry key="tableheader.description">Description</entry>
 	<entry key="tableheader.role">Role</entry>
 	<entry key="tableheader.group">Group</entry>
-	<entry key="tableheader.register">Register</entry>
-	<entry key="tableheader.code">Code</entry>
+	<entry key="tableheader.register">Registers</entry>
+	<entry key="tableheader.identifier">Identifier</entry>
 	<entry key="tableheader.alias">Alias</entry>
 	<entry key="tableheader.namingSystem">Naming system</entry>
-	<entry key="tableheader.remarks">Anmerkungen</entry>
+	<entry key="tableheader.remarks">Remarks</entry>
 	<entry key="tableheader.parameter">Parameter</entry>
 	<entry key="tableheader.value">Value</entry>
 	<entry key="tableheader.uom">Unit of Measure</entry>
@@ -98,9 +100,9 @@
 	<entry key="header.additionInformation">Addition information</entry>
 	<entry key="header.amendmentInformation">Amendment information</entry>
 	<entry key="header.clarificationInformation">Clarification information</entry>
-	<entry key="header.addedOn">Added on {0}</entry>
-	<entry key="header.amendedOn">{0} on {1}</entry>
-	<entry key="header.clarifiedOn">Clarified on {0}</entry>
+	<entry key="header.addedOn">Item added on {0}</entry>
+	<entry key="header.amendedOn">Item {0} on {1}</entry>
+	<entry key="header.clarifiedOn">Item clarified on {0}</entry>
 	<entry key="header.myProfile">Your user profile</entry>
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
@@ -111,10 +113,12 @@
 	<entry key="header.uom">Unit of Measure</entry>
 	<entry key="header.ellipsoid">Ellipsoid</entry>
 	<entry key="header.operationParameter">Coordinate Operation Parameter</entry>
+	<entry key="header.operationMethod">Coordinate Operation Method</entry>	
 	<entry key="header.conversion">Conversion</entry>
 	<entry key="header.transformation">Transformation</entry>
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
 	<entry key="header.primeMeridian">Prime Meridian</entry>
+	<entry key="header.domainOfValidity">Domain of Validity</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -129,6 +133,7 @@
 	<entry key="button.rejectAppeal">Reject appeal</entry>
 	<entry key="button.details">Details</entry>
 	<entry key="button.edit">Edit</entry>
+	<entry key="button.set">Set</entry>
 	<entry key="button.action">Action</entry>
 	<entry key="button.addition">Propose new</entry>
 	<entry key="button.clarification">Clarify</entry>
@@ -145,6 +150,7 @@
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
+	<entry key="button.submitting">Submitting...</entry>
 	<entry key="button.save">Save</entry>
 	<entry key="button.saving">Saving...</entry>
 	<entry key="button.update">Update proposal</entry>
@@ -160,12 +166,16 @@
 	<entry key="button.addAlias">Add alias</entry>
 	<entry key="button.addExistingSuccessor">Add existing item as successor</entry>
 	<entry key="button.addSupersededItems">Select items to supersede</entry>
+	<entry key="button.removeRow">Remove row</entry>
 	<entry key="button.supersede">Supersede</entry>
 	<entry key="button.next">Continue</entry>
 	<entry key="button.signup">Sign up</entry>
 	<entry key="button.delegations">Permissions</entry>
 	<entry key="button.requestDelegation">Request permission</entry>
 	<entry key="button.changeOrganization">Change affiliation</entry>
+	<entry key="button.addBoundingBox">Add bounding box</entry>
+	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
+	<entry key="button.addGeographicDescription">Add geographic description</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -201,9 +211,13 @@
 	<entry key="ROLE_SUBMITTER">Submitter</entry>
 	<entry key="ROLE_OWNER">Register owner</entry>
 
+	<entry key="alert.loginFailed">Login failed. Please check your login credentials.</entry>
 	<entry key="alert.userCreated">The user was created successfully.</entry>
 	<entry key="alert.userDeleted">The user was deleted.</entry>
-	<entry key="alert.signedUp">You were successfully signed up. You may now login using your e-mail address {0}</entry>	
+	<entry key="alert.signedUp">You were successfully signed up. You will shortly receive a confirmation e-mail containing a link to activate your account. After you have activated your account, you may login using your e-mail address {0}.</entry>	
+	<entry key="alert.signedUpNoConfirmation">You were successfully signed up. You may now login using your e-mail address {0}.</entry>	
+	<entry key="alert.accountConfirmed">Your account was confirmed. You may now login using your e-mail address {0}.</entry>	
+	<entry key="alert.accountConfirmationFailed">The provided confirmation token was incorrect.</entry>	
 	<entry key="alert.userProfileUpdated">Your profile was updated.</entry>	
 	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
 	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
@@ -241,14 +255,18 @@
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
+	<entry key="popup.extent.header">Domain of Validity</entry>
 
 	<entry key="tabs.overview">Overview</entry>
-	<entry key="tabs.item">Item</entry>
+	<entry key="tabs.item">Item details</entry>
 	<entry key="tabs.managementInformation">Management information</entry>
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposal contents</entry>
 	<entry key="tabs.predecessors">Predecessors</entry>
 	<entry key="tabs.successors">Successors</entry>
+	<entry key="tabs.geographicExtent">Geographic extent</entry>
+	<entry key="tabs.verticalExtent">Vertical extent</entry>
+	<entry key="tabs.temporalExtent">Temporal extent</entry>
 		
 	<entry key="legend.create">Create new proposal</entry>
 	<entry key="legend.edit">Edit proposal</entry>
@@ -292,10 +310,11 @@
 	<entry key="form.label.onlineResourceLogo">URL to organization logo</entry>
 	<entry key="form.label.isActive">active</entry>
 	<entry key="form.label.linkedOrganization">Linked organization data</entry>
-	<entry key="form.label.code">Code</entry>
+	<entry key="form.label.identifier">Identifier</entry>
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Area of Use</entry>
+	<entry key="form.label.domainOfValidity">Domain of Validity</entry>
 	<entry key="form.label.datum">Datum</entry>
 	<entry key="form.label.coordinateSystem">Coordinate System</entry>
 	<entry key="form.label.isoA2Code">ISO Alpha-2 Code</entry>
@@ -314,8 +333,8 @@
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
-	<entry key="form.label.factorB">Factor B</entry>
-	<entry key="form.label.factorC">Factor C</entry>
+	<entry key="form.label.factorB">Nominator (factor B)</entry>
+	<entry key="form.label.factorC">Denominator (factor C)</entry>
 	<entry key="form.label.measureType">Measure type</entry>
 	<entry key="form.label.shape">Shape</entry>
 	<entry key="form.label.semiMajorAxis">Semi major axis</entry>
@@ -355,7 +374,7 @@
 	<entry key="form.placeholder.emailAddress"></entry>
 	<entry key="form.placeholder.password"></entry>
 	<entry key="form.placeholder.confirmPassword"></entry>
-	<entry key="form.placeholder.code"></entry>
+	<entry key="form.placeholder.identifier"></entry>
 	<entry key="form.placeholder.scope"></entry>
 	
 	<entry key="form.placeholder.semiMajorAxis"></entry>
@@ -375,7 +394,7 @@
 	<entry key="form.placeholder.dataSource"></entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
-	<entry key="form.placeholder.realizationEpoch"></entry>
+	<entry key="form.placeholder.realizationEpoch">(year)</entry>
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>
@@ -388,6 +407,8 @@
 
 	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
+	<entry key="form.placeholder.formula"></entry>
+	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
 	<entry key="form.signup.help.organizationName">In case your organization is not listed, please provide it here</entry>
@@ -398,6 +419,8 @@
 	<entry key="form.validation.unavailable.user.emailAddress">This e-mail address is not available</entry>
 	<entry key="form.validation.confirmPassword">The passwords do not match</entry>
 
+	<entry key="label.placeholder.operationMethodParameters">Click to select parameters...</entry>
+	
 	<entry key="form.signup.validation.organizationNameExists">An organization with this name exists. Please select it from the list on the left and leave this field empty.</entry>
 	
 	<entry key="form.proposal.itemClassNotConfigured">No configuration file exists for this item class. Additional attributes will not be visible.</entry>
@@ -409,9 +432,9 @@
 	<entry key="form.registry.registers.org.editAddition.organzationDetails">Organisationsdetails</entry>
 
 	<entry key="orderBy">order by</entry>
-	<entry key="orderByCode">[code]</entry>
+	<entry key="orderByIdentifier">[id]</entry>
 	<entry key="orderByName">[name]</entry>
-	<entry key="tooltip.orderByCode">Order list entries by code</entry>
+	<entry key="tooltip.orderByIdentifier">Order list entries by identifier</entry>
 	<entry key="tooltip.orderByName">Order list entries by name</entry>
 	<entry key="tooltip.proposalNotes">Click to view notes attached to the proposal</entry>
 	
@@ -422,6 +445,11 @@
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposed contents</entry>
+
+	<entry key="mail.subject.signup.confirmation">You have signed up for ISO Registry of Geodetic Codes and Parameters</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Registry] Permission requested by user</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Registry] New proposal</entry>
 			
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Target register</entry>
