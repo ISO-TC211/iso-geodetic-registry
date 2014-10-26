@@ -719,6 +719,26 @@ public class ProposalsController
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
+	@Transactional
+	public ResponseEntity<?> deleteProposal(@PathVariable("uuid") UUID proposalUuid) throws IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+		logger.debug("DELETE /proposal/{}", proposalUuid);
+
+		Proposal proposal = proposalRepository.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+
+		if (proposal.isSubmitted()) {
+			throw new IllegalOperationException("Cannot delete submitted proposal: use withdraw");
+		}
+		
+		proposalService.deleteProposal(proposal);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 
 	@RequestMapping(value = "/{uuid}/reject", method = RequestMethod.POST)
 	@Transactional
