@@ -150,6 +150,7 @@
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
+	<entry key="button.deleteProposal">Delete proposal</entry>
 	<entry key="button.submitting">Submitting...</entry>
 	<entry key="button.save">Save</entry>
 	<entry key="button.saving">Saving...</entry>
@@ -253,6 +254,8 @@
 	<entry key="popup.itemClass.header">Please select an item class</entry>
 	<entry key="popup.submitProposal.header">Submit proposal</entry>
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
+	<entry key="popup.deleteProposal.header">Delete proposal</entry>
+	<entry key="popup.deleteProposal.reallyDelete">Do you want to delete the proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
 	<entry key="popup.extent.header">Domain of Validity</entry>

@@ -19,6 +19,8 @@ public interface IsoProposalService extends ProposalService
 {
 	Proposal returnProposal(Proposal proposal, String noteToSubmitter) throws InvalidProposalException, IllegalOperationException, UnauthorizedException;
 	
+	void deleteProposal(Proposal proposal) throws IllegalOperationException, UnauthorizedException;
+	
 	ProposalNote createNote(Proposal proposal, RegistryUser author, String note);
 
 }
