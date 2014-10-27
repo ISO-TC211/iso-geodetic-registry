@@ -13,14 +13,17 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.EntityExistsException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.iso.registry.api.registry.IsoProposalService;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -125,7 +128,10 @@ public class ProposalsController
 	
 	@Autowired
 	private ProposalDtoFactory proposalDtoFactory;
-	
+
+	@Autowired
+	private ConversionService conversionService;
+
 	@RequestMapping(value = "/", method = RequestMethod.POST/*, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE*/)
 	@Transactional
 	public View createProposal(@ModelAttribute("proposal") RegisterItemProposalDTO proposal, final Model model) throws InvalidProposalException, ItemNotFoundException, IllegalOperationException, UnauthorizedException {
@@ -409,8 +415,9 @@ public class ProposalsController
 		}
 		else {
 			proposalDto = proposalDtoFactory.getProposalDto(proposal);
-			ServletRequestDataBinder binder = new ServletRequestDataBinder(proposalDto);
-			binder.bind(servletRequest);
+			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest);
+//			ServletRequestDataBinder binder = new ServletRequestDataBinder(proposalDto);
+//			binder.bind(servletRequest);
 			
 			proposalService.updateProposal(proposalDto);
 			return "redirect:/management/submitter";
@@ -593,8 +600,9 @@ public class ProposalsController
 
 		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(itemClass);
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
-		binder.bind(servletRequest);
+		dto = bindAdditionalAttributes(dto, servletRequest);
+//		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
+//		binder.bind(servletRequest);
 
 		proposalService.updateProposal(dto);
 		
@@ -880,4 +888,26 @@ public class ProposalsController
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
+	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
+		RE_ItemClass selectedItemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
+		ItemClassConfiguration itemClassConfiguration = itemClassRegistry.getConfiguration(selectedItemClass.getName());
+		
+		if (itemClassConfiguration != null) {
+			try {
+				@SuppressWarnings("unchecked")
+				Class<? extends RegisterItemProposalDTO> dtoClass = 
+						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
+				proposal = BeanUtils.instantiateClass(dtoClass);
+				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
+				binder.setConversionService(conversionService);
+				binder.bind(servletRequest);
+				
+//				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
+			}
+			catch (ClassNotFoundException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+		return proposal;
+	}	
 }
