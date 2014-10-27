@@ -67,7 +67,7 @@
 							</tr>
 							<tr th:if="${current.isAddition()} or ${current.isClarification()}">
 								<td th:text="#{itemDetails}"></td>
-								<td><a target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${current.uuid}__}"></a></td>
+								<td><a th:text="#{button.details}" th:href="@{__${basePath}__/item/__${current.uuid}__}"></a></td>
 							</tr>
 							
 						</tbody>
