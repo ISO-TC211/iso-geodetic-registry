@@ -125,6 +125,7 @@ public abstract class AbstractImporter
 				Row row = CursorBuilder.findRow(cursor.getTable(), rowPattern);
 				if (row == null) {
 					logger.error("!!!! Did not find object with {}='{}' in table '{}' !!!!", new Object[] { codeProperty(), code, cursor.getTable().getName() });
+					continue;
 				}
 				RE_ItemClass itemClass = this.getOrCreateItemClass(register, row);
 				try {

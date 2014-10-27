@@ -325,8 +325,8 @@
 </div>
 
 <div th:fragment="aliasesTable(modifier)">
-	<div class="col-md-12" th:unless="!*{aliases} and !${isProposal}">
-		<div class="panel" th:if="${proposal}">
+	<div class="col-md-12" th:unless="!*{aliases} or ${isProposal}">
+		<div class="panel">
 <!-- 			<div class="panel-header"> -->
 <!-- 				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label> -->
 <!-- 			</div> -->
@@ -335,54 +335,100 @@
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.alias}">Alias</th>
-							<th th:text="#{tableheader.namingSystem}">Naming system</th>
-							<th th:text="#{tableheader.remarks}">Remarks</th>
+<!-- 							<th th:text="#{tableheader.namingSystem}">Naming system</th> -->
+<!-- 							<th th:text="#{tableheader.remarks}">Remarks</th> -->
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="alias : *{aliases}">
-							<td th:text="${alias.alias}"/>
-							<td th:text="${alias.namingSystem.name}"/>
-							<td th:text="${alias.remarks}"/>
+							<td th:text="${alias}"/>
+<!-- 							<td th:text="${alias.namingSystem.name}"/> -->
+<!-- 							<td th:text="${alias.remarks}"/> -->
+							<td></td>
 						</tr>
 					</tbody>
 				</table>
-				<button th:if="${isProposal} and !${proposal.isClarification()}" type="button" th:text="#{button.addAlias}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
+				<button th:if="${isProposal} and !${proposal.isClarification()}" th:id="'addAlias_' + ${modifier}" type="button" th:attr="data-modifier=${modifier}" th:text="#{button.addAlias}" class="btn btn-sm btn-default button-addalias">Add new</button>
 			</div>
 		</div>
-	</div>
 
-	<script type="text/javascript" th:inline="text">
-	/* <![CDATA[ */
-			table = $('#aliasesTable_[[${modifier}]]').dataTable({
-			"sPaginationType": "bs_normal",
-			"bFilter": false,
-			"oLanguage": {
-				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
-				  "sInfo": "[[#{datatable.sInfo}]]",
-				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
-				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
-				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
-				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
-				  "sProcessing": "[[#{datatable.sProcessing}]]",
-				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
-				  "oPaginate": {
-				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
-				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
-				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
-				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+				table = $('#aliasesTable_[[${modifier}]]').dataTable({
+				"sPaginationType": "bs_normal",
+				"bFilter": false,
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 0, "asc" ]],
+				 aoColumns: [
+				    null,
+					{"bSortable" : false}
+				]
+			});
+		
+	// 		$(document).ready(function() {
+	// 			var aliasesTable_[[${modifier}]] = $('#aliasesTable_[[${modifier}]]').dataTable();
+	// 			var aliases_[[${modifier}]]_count = aliasesTable_[[${modifier}]].fnGetData().length();  
+				
+	// 			$('#addAlias_[[${modifier}]]').click(function(e) {
+	// 				var idx = aliases_[[${modifier}]]_count;
+					
+	// 				table.fnAddData([
+	// 					"<input type='text' name='aliases[" + idx + "]' placeholder='[[#{form.placeholder.alias}]]' required='required'/>",
+	// 					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (index - 1) + "' value='" + index + "'>Remove</button>"
+	// 				]);
+					
+	// 				aliases_[[${modifier}]]_count++;
+	// 			});
+	// 		});
+		/* ]]> */
+		</script>
+	</div>
+	
+	<div th:if="${isProposal}" class="form-group">
+		<div class="col-md-12">
+			<label class="control-label" th:for="'aliases_' + ${modifier}" th:text="#{form.label.aliases}"></label>
+			<input type="hidden" style="width: 100%" th:id="'aliases_' + ${modifier}" th:field="*{aliases}"/>
+		</div>
+		
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+		    $(document).ready(function() {
+				$('#aliases_[[${modifier}]]').select2({
+					tags: [],
+					multiple: true,
+					formatNoMatches: "Please enter an alias. You may enter multiple aliases by pressing the semicolon key (,).",
+					tokenSeparators: [','],
+					initSelection : function (element, callback) {
+						var data = [];
+				        $(element.val().split(",")).each(function () {
+				            data.push({
+				            	id: this, 
+				            	text: this
+				            });
+				        });
+				        callback(data);
 				    }
-				},
-			 "aaSorting": [[ 0, "asc" ]],
-			 aoColumns: [
-				null,
-				null,
-				{"bSortable" : false}
-			]
-		});	
-	/* ]]> */
-	</script>	
+				});		    	
+		    });
+		/* ]]> */
+		</script>
+	</div>	
 </div>
 
 <div th:fragment="referencedEntitiesTable(modifier)">

@@ -1,13 +1,12 @@
 package org.iso.registry.api;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.iso.registry.api.registry.registers.gcp.AliasDTO;
-import org.iso.registry.core.model.Alias;
+import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
@@ -24,7 +23,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 //	private CI_Citation nameCodespaceCitation;
 	
 	private Integer identifier;
-	private List<AliasDTO> aliases;
+	private Set<String> aliases;
 	private String remarks;
 	private String informationSource;
 	private String dataSource;
@@ -62,17 +61,17 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		this.identifier = identifier;
 	}
 
-	public List<AliasDTO> getAliases() {
+	public Set<String> getAliases() {
 		return aliases;
 	}
 
-	public void setAliases(List<AliasDTO> aliases) {
+	public void setAliases(Set<String> aliases) {
 		this.aliases = aliases;
 	}
 	
-	public void addAlias(AliasDTO alias) {
+	public void addAlias(String alias) {
 		if (this.aliases == null) {
-			this.aliases = new ArrayList<AliasDTO>();
+			this.aliases = new HashSet<String>();
 		}
 		this.aliases.add(alias);
 	}
@@ -108,6 +107,15 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		if (registerItem instanceof IdentifiedItem) {
 			IdentifiedItem item = (IdentifiedItem)registerItem;
 			
+			if (this.getAliases() != null) {
+				item.getAliases().clear();
+				for (String alias : this.getAliases()) {
+					if (!StringUtils.isEmpty(alias)) {
+						item.getAliases().add(alias);
+					}
+				}
+			}
+			
 			item.setIdentifier(this.getIdentifier());
 			item.setItemIdentifier(BigInteger.valueOf(this.getIdentifier().longValue()));
 			item.setRemarks(this.getRemarks());
@@ -123,9 +131,14 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		if (registerItem instanceof IdentifiedItem) {
 			IdentifiedItem item = (IdentifiedItem)registerItem;
 
-			for (Alias alias : item.getAliases()) {
-				this.addAlias(new AliasDTO(alias));
+			if (item.getAliases() != null) {
+				for (String alias : item.getAliases()) {
+					if (!StringUtils.isEmpty(alias)) {
+						this.addAlias(alias);
+					}
+				}
 			}
+			
 			this.setIdentifier(item.getIdentifier());
 			this.setRemarks(item.getRemarks());
 			this.setInformationSource(item.getInformationSource());

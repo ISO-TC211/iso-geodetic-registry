@@ -19,6 +19,7 @@ import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.EllipsoidItemRepository;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItemRepository;
+import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,18 +75,19 @@ public class AliasesImporter extends AbstractImporter
 		String objectType = (String)row.get(OBJECT_TABLE_NAME);
 		Integer objectCode = (Integer)row.get(OBJECT_CODE);
 
-		NamingSystemItem namingSystem = namingSystemRepository.findByIdentifier(namingSystemCode);
-		Alias alias = new Alias(aliasText, namingSystem);
+//		NamingSystemItem namingSystem = namingSystemRepository.findByIdentifier(namingSystemCode);
+//		Alias alias = new Alias(aliasText, namingSystem);
 		IdentifiedItem item;
 		
-		if (objectType.equals("Area")) {
-			item = areaRepository.findByIdentifier(objectCode);
-		}
-		else if (objectType.equals("Coordinate Axis Name")) {
-			item = axisRepository.findByIdentifier(objectCode);
+//		if (objectType.equals("Area")) {
+//			item = areaRepository.findByIdentifier(findMappedCode("operationMethod", methodCode));
+//			item = areaRepository.findByIdentifier(objectCode);
+//		}
+		if (objectType.equals("Coordinate Axis Name")) {
+			item = axisRepository.findByIdentifier(findMappedCode("CoordinateAxis", objectCode));
 		}
 		else if (objectType.equals("Coordinate Reference System")) {
-			item = crsRepository.findByIdentifier(objectCode);
+			item = crsRepository.findByIdentifier(findMappedCode("CoordinateReferenceSystem", objectCode));
 		}
 		else if (objectType.equals("Coordinate_Operation")) {
 			return;
@@ -97,19 +99,19 @@ public class AliasesImporter extends AbstractImporter
 			return;
 		}
 		else if (objectType.equals("Datum")) {
-			item = datumRepository.findByIdentifier(objectCode);
+			item = datumRepository.findByIdentifier(findMappedCode("Datum", objectCode));
 		}
 		else if (objectType.equals("Ellipsoid")) {
-			item = ellipsoidRepository.findByIdentifier(objectCode);
+			item = ellipsoidRepository.findByIdentifier(findMappedCode("Ellipsoid", objectCode));
 		}
 		else if (objectType.equals("Naming System")) {
-			item = namingSystemRepository.findByIdentifier(objectCode);
+			item = namingSystemRepository.findByIdentifier(findMappedCode("NamingSystem", objectCode));
 		}
 		else if (objectType.equals("Prime Meridian")) {
-			item = pmRepository.findByIdentifier(objectCode);
+			item = pmRepository.findByIdentifier(findMappedCode("PrimeMeridian", objectCode));
 		}
 		else if (objectType.equals("Unit of Measure")) {
-			item = uomRepository.findByIdentifier(objectCode);
+			item = uomRepository.findByIdentifier(findMappedCode("UnitOfMeasurement", objectCode));
 		}
 		else {
 			logger.info("Skipped alias '{}' (#{}) for object #{} in unknown table {}", new Object[] { aliasText, aliasCode, objectCode, objectType }); 
@@ -117,8 +119,8 @@ public class AliasesImporter extends AbstractImporter
 		}
 
 		if (item != null) {
-			item.addAlias(alias);
-			alias.setAliasedItem(item);
+			item.getAliases().add(aliasText);
+//			alias.setAliasedItem(item);
 			logger.info("Added alias '{}' (#{}) to object '{}' (#{}, {}) of type {}", new Object[] { aliasText, aliasCode, item.getName(), objectCode, item.getUuid().toString(), item.getClass().getName() }); 
 		}
 		else {
@@ -126,8 +128,8 @@ public class AliasesImporter extends AbstractImporter
 			return;
 		}
 		
-		alias.setRemarks(remarks);
-		aliasRepository.save(alias);
+//		alias.setRemarks(remarks);
+//		aliasRepository.save(aliasText);
 	}
 
 	@Override
@@ -144,7 +146,8 @@ public class AliasesImporter extends AbstractImporter
 
 	@Override
 	protected String codeProperty() {
-		return ALIAS_CODE;
+//		return ALIAS_CODE;
+		return OBJECT_CODE;
 	}
 
 }
