@@ -18,7 +18,7 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 {
 	private Integer identifier;
 	private String remarks;
-	private List<AliasViewBean> aliases;
+	private List<String> aliases;
 	private String informationSource;
 	private String dataSource;
 
@@ -60,8 +60,8 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		this.setRemarks(item.getRemarks());
 		this.setInformationSource(item.getInformationSource());
 		this.setDataSource(item.getDataSource());
-		for (Alias alias : item.getAliases()) {
-			this.addAlias(new AliasViewBean(alias));
+		for (String alias : item.getAliases()) {
+			this.addAlias(alias);
 		}
 	}
 
@@ -81,17 +81,17 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		this.remarks = remarks;
 	}
 
-	public List<AliasViewBean> getAliases() {
+	public List<String> getAliases() {
 		return aliases;
 	}
 
-	public void setAliases(List<AliasViewBean> aliases) {
+	public void setAliases(List<String> aliases) {
 		this.aliases = aliases;
 	}
 	
-	public void addAlias(AliasViewBean alias) {
+	public void addAlias(String alias) {
 		if (this.aliases == null) {
-			this.aliases = new ArrayList<AliasViewBean>();
+			this.aliases = new ArrayList<String>();
 		}
 		this.aliases.add(alias);
 	}
