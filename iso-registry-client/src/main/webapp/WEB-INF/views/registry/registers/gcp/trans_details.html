@@ -3,7 +3,7 @@
 		<div class="col-md-6"> <!-- LEFT -->
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('conv')" /> -->
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('conv')" />
 			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
 				<div class="col-md-12">
 					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
