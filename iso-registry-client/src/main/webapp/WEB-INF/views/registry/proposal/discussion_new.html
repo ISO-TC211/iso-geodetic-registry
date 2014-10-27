@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment">
+</head>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:replace="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{proposal.discussion.content.header}">Discussion</h3>
+					</div>
+					
+					<form method="post" th:object=" ${discussion}">
+						<input type="hidden" name="ownerUuid" th:field="*{ownerUuid}"/>
+						<input type="hidden" name="discussedProposalUuid" th:field="*{discussedProposalUuid}"/>
+						<input type="hidden" name="discussionType" th:field="*{discussionType}"/>
+						
+						<div class="panel-body">
+							
+							<div class="from-group">
+								<label class="form-label" for="invitees" th:text="#{form.label.invitees}">Eingeladene</label>
+								<div class="controls">
+									<textarea id="invitees" cols="120" rows="10" th:field="*{invitees}"></textarea>
+								</div>
+							</div>
+
+<!-- 							<div class="from-group"> -->
+<!-- 								<label class="form-label" for="message" th:text="#{form.label.message}">Nachricht</label> -->
+<!-- 								<div class="controls"> -->
+<!-- 									<textarea id="message" cols="120" rows="10" th:field="*{message}"></textarea> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+						
+						</div>
+						
+						<div class="panel-footer">
+							<button type="button" id="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+							<div class="pull-right">
+								<button id="submit" class="btn btn-primary" th:text="#{button.startDiscussion}">Diskussion beginnen</button>
+							</div>
+						</div>
+						
+					</form>
+					
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" th:inline="text">
+	$(document).ready(function() {
+		var table;
+		
+		table = $('#discussionTable').dataTable({
+			"sPaginationType": "bs_normal",
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			 "aaSorting": [[ 0, "asc" ]],
+			 "aoColumns": [
+				{
+					"sWidth" : "20%"
+				},
+				{
+					"sWidth" : "30%"
+				},
+// 				null,
+				null,
+// 				null,
+				{
+					"bSortable" : false,
+					"sWidth" : "0%"
+				}
+			]
+		});	
+
+		$('.datatable').each(function(){
+			var datatable = $(this);
+			// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+			var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+			search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+			search_input.addClass('form-control input-sm');
+			// LENGTH - Inline-Form control
+			var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+			length_sel.addClass('form-control input-sm');
+		});
+
+		$('#discussionTable tbody tr').on('click', function(event){
+			var position = table.fnGetPosition(this); // getting the clicked row position
+			var from = table.fnGetData(position)[1];    
+			var subject = table.fnGetData(position)[2];
+			var message = table.fnGetData(position)[3];
+			
+			$('#authorNameOutput').val(from);
+			$('#subjectOutput').val(subject);
+			$('#messageOutput').val(message);
+			
+			$("td.selected-row", table.fnGetNodes()).removeClass('selected-row');
+			$(this).find("td").addClass('selected-row');
+		});		
+		
+		$('#cancel').on('click', function(event) {
+			goback();
+		});
+	});
+</script>
+
+	<div th:replace="layout :: footer"></div>
+
+</body>
+
+</html>

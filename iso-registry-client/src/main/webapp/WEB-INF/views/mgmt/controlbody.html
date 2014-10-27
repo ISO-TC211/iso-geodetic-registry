@@ -45,6 +45,9 @@
 													</div>
 												</li>
 												<li th:if="${item.isPending()}">
+													<div style="margin: 5px;">
+														<a th:href="@{__${basePath}__/discussion/CONTROLBODY/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a>
+													</div>
 													<div style="margin: 5px">
 														<button th:id="'decide_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button>
 													</div>

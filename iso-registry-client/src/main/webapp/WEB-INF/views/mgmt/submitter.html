@@ -103,9 +103,9 @@
 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${item.isEditable()} ? #{button.edit} : #{button.details}">Details</button>												
 												</div></li>
 												<li th:if="${item.isNotSubmitted()} or ${#strings.startsWith(item.proposalStatus, 'RETURNED_BY_')}">
-<!-- 													<div style="margin: 5px;"> -->
-<!-- 														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a> -->
-<!-- 													</div> -->
+													<div style="margin: 5px;">
+														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a>
+													</div>
 													<div style="margin: 5px;">
 														<a th:href="'#dialog-submit-' + ${item.proposalUuid}" th:id="'submit_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-success btn-xs" th:text="#{button.submitProposal}">Einreichen</a>
 													</div>

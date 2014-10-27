@@ -40,6 +40,7 @@
 	<entry key="admin.organization.main.header">Master data</entry>
 	<entry key="admin.organization.roles.header">Roles</entry>
 	<entry key="admin.organization.users.header">Users</entry>
+	<entry key="proposal.discussion.content.header">Discuss proposal</entry>
 	
 	<entry key="tableheader.name">Name</entry>
 	<entry key="tableheader.itemClassName">Item class</entry>
@@ -50,6 +51,7 @@
 	<entry key="tableheader.proposalStatus">Proposal status</entry>
 	<entry key="tableheader.decisionStatus">Decision status</entry>
 	<entry key="tableheader.emailAddress">Email address</entry>
+	<entry key="tableheader.accessUrl">User-specific access URL</entry>
 	<entry key="tableheader.organization">Organization</entry>
 	<entry key="tableheader.date">Date</entry>
 	<entry key="tableheader.itemClass">Item class</entry>
@@ -61,6 +63,8 @@
 	<entry key="tableheader.description">Description</entry>
 	<entry key="tableheader.role">Role</entry>
 	<entry key="tableheader.group">Group</entry>
+	<entry key="tableheader.from">From</entry>
+	<entry key="tableheader.subject">Subject</entry>
 	<entry key="tableheader.register">Registers</entry>
 	<entry key="tableheader.identifier">Identifier</entry>
 	<entry key="tableheader.alias">Alias</entry>
@@ -126,6 +130,7 @@
 	<entry key="button.rejectProposal">Reject</entry>
 	<entry key="button.returnProposal">Return</entry>
 	<entry key="button.withdrawProposal">Withdraw</entry>
+	<entry key="button.discussProposal">Discussion</entry>
 	<entry key="button.saveProposal">Save proposal</entry>
 	<entry key="button.finalizeProposal">End appeal period</entry>
 	<entry key="button.appealProposal">Appeal to owner</entry>
@@ -174,6 +179,13 @@
 	<entry key="button.delegations">Permissions</entry>
 	<entry key="button.requestDelegation">Request permission</entry>
 	<entry key="button.changeOrganization">Change affiliation</entry>
+	<entry key="button.newThread">New message</entry>
+	<entry key="button.inviteParticipants">Invite participants</entry>
+	<entry key="button.startDiscussion">Start discussion</entry>
+	<entry key="button.reply">Reply</entry>	
+	<entry key="button.send">Send</entry>
+	<entry key="button.showAccessUrl">Show access URL</entry>	
+	<entry key="button.proposalDetails">Proposal Details</entry>
 	<entry key="button.addBoundingBox">Add bounding box</entry>
 	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
@@ -251,6 +263,8 @@
 	<entry key="popup.delegations.member">Membership approved</entry>
 	<entry key="popup.delegations.requested">The user has requested to be assigned the highlighted roles.</entry>
 	<entry key="popup.delegations.deny">Deny this request</entry>
+	<entry key="popup.message.header">New message</entry>
+	<entry key="popup.inviteParticipants.header">Invite participants</entry>
 	<entry key="popup.itemClass.header">Please select an item class</entry>
 	<entry key="popup.submitProposal.header">Submit proposal</entry>
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
@@ -313,6 +327,15 @@
 	<entry key="form.label.onlineResourceLogo">URL to organization logo</entry>
 	<entry key="form.label.isActive">active</entry>
 	<entry key="form.label.linkedOrganization">Linked organization data</entry>
+	<entry key="form.label.finish">Finish</entry>
+	<entry key="form.label.proposalTitle">Item name</entry>
+	<entry key="form.label.proposalType">Proposal type</entry>
+	<entry key="form.label.proposalStatus">Proposal status</entry>
+	<entry key="form.label.from">From</entry>
+	<entry key="form.label.subject">Subject</entry>
+	<entry key="form.label.message">Message</entry>
+	<entry key="form.label.invitees">Send invitations to the following addresses (one e-mail address per line)</entry>
+	<entry key="form.label.alreadyInvited">Already invited</entry>
 	<entry key="form.label.identifier">Identifier</entry>
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
