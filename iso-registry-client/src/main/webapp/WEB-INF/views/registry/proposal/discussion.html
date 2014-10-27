@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment">
+</head>
+<body>
+	<link rel="stylesheet" href="../../resources/css/jquery.treetable.css" th:href="@{__${basePath}__/resources/css/jquery.treetable.css}" />
+	<link rel="stylesheet" href="../../resources/css/jquery.treetable.theme.default.css" th:href="@{__${basePath}__/resources/css/jquery.treetable.theme.default.css}" />
+
+	<script type="text/javascript" src="../../resources/js/jquery.treetable.js" th:src="@{__${basePath}__/resources/js/jquery.treetable.js}"></script>
+	<style type="text/css">
+		.selected-row {
+		    background-color: lightyellow;
+		}
+	</style>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:replace="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><span th:text="#{proposal.discussion.content.header}"></span></h3>
+					</div>
+					
+					<div style="padding: 10px">
+						<div class="col-md-5">
+							<div class="control-group" style="margin-bottom: 10px">
+								<button id="newThread" href="#startThread" data-toggle="modal" class="btn btn-success" th:text="#{button.newThread}">Neuer Thread</button>
+								<button th:if="${isManager}" href="#inviteParticipants" id="invitations" data-toggle="modal" class="btn btn-default" th:text="#{button.inviteParticipants}">Teilnehmer einladen</button>
+							</div>
+						</div>
+						<form class="form-horizontal" role="form">
+							<div class="col-md-7">
+								<div class="form-group">
+									<label class="control-label col-sm-4" th:text="#{form.label.proposalType}"/>
+									<div class="col-sm-8">
+										<p class="form-control" th:text="#{${discussion.proposalType}}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-4" th:text="#{form.label.proposalTitle}"/>
+									<div class="col-sm-8">
+										<p class="form-control" th:text="${discussion.proposalTitle}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-4" th:text="#{form.label.proposalStatus}"/>
+									<div class="col-sm-8">
+										<p class="form-control" th:text="#{${discussion.proposalStatus}}"/>
+									</div>
+								</div>
+								<a id="showProposal" th:href="@{__${basePath}__/proposals/__${discussion.proposalUuid}__}" class="btn btn-primary pull-right" th:text="#{button.proposalDetails}"></a>
+							</div>
+						</form>
+			
+						<div th:replace="registry/proposal/discussion_post :: dialog"></div>
+						<div th:if="${isManager}">
+							<div th:replace="registry/proposal/discussion_invite :: dialog"></div>
+						</div>
+						
+						<table id="discussionTable" class="datatable table clickable-rows" style="border-collapse: collapse;">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.date}">Datum</th>
+									<th th:text="#{tableheader.from}">Von</th>
+<!-- 									<th th:text="#{tableheader.role}">Rolle</th> -->
+									<th th:text="#{tableheader.subject}">Betreff</th>
+									<th />
+									<th hidden="hidden" />
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:attr="data-tt-id=${post.postUuid}, data-tt-parent-id=${post.parentPostUuid}" th:each="post : ${discussion.posts}">
+									<td th:text="${post.timePostedGerman}"></td>
+									<td th:text="${post.authorEmailAddress}"></td>
+<!-- 									<td th:text="${post.authorRole}"></td> -->
+									<td th:text="${post.subject}"></td>
+									<td>
+										<button id="reply" data-toggle="modal" th:attr="data-id=${post.postUuid}" class="btn btn-xs btn-primary reply" th:text="#{button.reply}">Antworten</button>
+									</td>
+									<td hidden="hidden" th:text="${post.text}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+			</div>
+		
+			<div class="panel panel-default" style="padding: 10px">
+				<table style="border-collapse: separate; border-spacing: 10px;">
+					<tbody>
+						<tr>
+							<td><label class="form-label" for="authorName" th:text="#{form.label.from}">Von</label></td>
+							<td><label readonly="readonly" type="text" style="width: 50ex" id="authorNameOutput"></label></td>
+						</tr>
+						<tr>
+							<td><label class="form-label" for="subject" th:text="#{form.label.subject}">Betreff</label></td>
+							<td><input readonly="readonly" type="text" style="width: 100ex" id="subjectOutput"></input></td>
+						</tr>
+						<tr>
+							<td valign="top"><label class="form-label" for="message" th:text="#{form.label.message}">Nachricht</label></td>
+							<td><textarea readonly="readonly" id="messageOutput" style="width: 100ex" cols="120" rows="10"></textarea></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" th:inline="text">
+	$(document).ready(function() {
+		var table;
+		
+		table = $('#discussionTable').dataTable({
+			"sPaginationType": "bs_normal",
+  			"bSort": false,
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "[[#{datatable.sProcessing}]]",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			 "aoColumns": [
+				{
+					"sWidth" : "20%"
+				},
+				{
+					"sWidth" : "30%"
+				},
+// 				null,
+				null,
+				null,
+				{
+					"sWidth" : "0%"
+				}
+			]
+		});	
+		
+ 		table.treetable({ expandable: true });
+
+		$('.datatable').each(function(){
+			var datatable = $(this);
+			// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+			var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+			search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+			search_input.addClass('form-control input-sm');
+			// LENGTH - Inline-Form control
+			var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+			length_sel.addClass('form-control input-sm');
+		});
+
+		$('#discussionTable tbody tr').on('click', function(event){
+			var position = table.fnGetPosition(this); // getting the clicked row position
+			var from = table.fnGetData(position)[1];    
+			var subject = table.fnGetData(position)[2];
+			var message = table.fnGetData(position)[4];
+			
+			$('#authorNameOutput').text(from);
+			$('#subjectOutput').val($("<div/>").html(subject).text());
+			$('#messageOutput').val($("<div/>").html(message).text());
+			
+			$("td.selected-row", table.fnGetNodes()).removeClass('selected-row');
+			$(this).find("td").addClass('selected-row');
+		});
+		
+		$('.reply').click(function() {
+			$("#parentPostUuid").val($(this).data('id'));
+			$('#startThread').modal('show');
+		});
+	});
+</script>
+
+	<div th:replace="layout :: footer"></div>
+
+</body>
+</html>
