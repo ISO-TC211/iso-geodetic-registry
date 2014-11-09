@@ -83,7 +83,6 @@
 <!-- 				<h1><span>Home</span></h1> -->
 				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left" style="padding-top: 10px; padding-left: 10px"/>
 				<a style="padding-top:15px" class="test navbar-brand" th:href="@{__${basePath}__/}" th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
-
 			</div>
 			
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -160,6 +159,9 @@
 	</div>
 
 	<div th:fragment="foot">
+		<footer class="footer">
+			<p class="pull-right text-muted text-sm"><small><span th:text="#{application.version}"></span></small></p>
+		</footer>
 	</div>
 
 	<div th:fragment="navtree">
@@ -312,13 +314,14 @@
 			</div>
 		</div>
 		
-	    <div class="footer" data-spy="affix">
-	      <div class="container">
-	      	<div class="pull-right">
-	      		<p>Software version: <span th:text="#{application.version}"></span></p>
-	      	</div>
-	      </div>
-	    </div>			
+<!-- 	    <footer class="footer"> -->
+<!-- 	    	<div class="container"> -->
+<!-- 		      	<div class="pull-right"> -->
+<!-- 		      		<p class="text-muted">Software version: <span th:text="#{application.version}"></span></p> -->
+<!-- 		      	</div> -->
+<!-- 			</div> -->
+<!-- 	    </footer>			 -->
+		
 	</div>
 </body>
 
