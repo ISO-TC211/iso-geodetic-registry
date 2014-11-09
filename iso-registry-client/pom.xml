@@ -231,7 +231,7 @@
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 				<targetPath>i18n</targetPath>
 			</resource>
 		</resources>
@@ -314,13 +314,15 @@
 						<phase>validate</phase>
 						<configuration>
 							<!-- Only changing prefix since properties conflicts with jgit above -->
-							<prefix>git-commit-id</prefix>
+							<prefix>git</prefix>
+							<verbose>true</verbose>
 							<dotGitDirectory>../.git</dotGitDirectory>
 							<!-- We're using a pom in this example -->
 							<skipPoms>false</skipPoms>
 							<gitDescribe>
 								<!-- Faster to get just branch if skip = true -->
 								<skip>false</skip>
+								<forceLongFormat>true</forceLongFormat>
 							</gitDescribe>
 						</configuration>
 					</execution>
