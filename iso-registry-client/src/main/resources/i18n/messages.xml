@@ -5,6 +5,7 @@
 	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
 	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
 	<entry key="application.welcome">Welcome</entry>
+	<entry key="application.version">${git.commit.id.describe}-${git.commit.id.abbrev}</entry>
 	
 	<entry key="navbar.setHistoricDate">Historic view</entry>
 	<entry key="navbar.login">Login</entry>
@@ -24,8 +25,8 @@
 	<entry key="navbar.login.label.email">E-mail address</entry>
 	<entry key="navbar.login.label.password">Password</entry>
 	<entry key="navbar.login.button.register">Register</entry>
-	
-	<entry key="download.quickstart">Download the Quick Start Guide</entry>
+	<entry key="navbar.help">Documentation</entry>	
+	<entry key="navbar.help.userguide">User Guide (PDF)</entry>
 
 	<entry key="mgmt.submitter.content.header">Submitting organization: List of proposals</entry>
 	<entry key="mgmt.manager.content.header">Register manager: List of pending proposals</entry>

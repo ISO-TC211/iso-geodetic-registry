@@ -7,6 +7,9 @@
 	<name>iso-registry-client</name>
 	<packaging>war</packaging>
 	<version>1.3.0-SNAPSHOT</version>
+    <scm>
+        <connection>scm:git:ssh://git@git.bespire.de:bespire/iso-registry.git</connection>
+    </scm>	
 	<properties>
 		<java-version>1.7</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
@@ -228,7 +231,7 @@
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 				<targetPath>i18n</targetPath>
 			</resource>
 		</resources>
@@ -279,6 +282,53 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 			</plugin>
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>buildnumber-maven-plugin</artifactId> -->
+<!-- 				<version>1.3</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<phase>validate</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>create</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 				<configuration> -->
+<!-- 					<doCheck>true</doCheck> -->
+<!-- 					<doUpdate>true</doUpdate> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.1.11</version>
+				<executions>
+					<execution>
+						<id>git-commit-id</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+						<phase>validate</phase>
+						<configuration>
+							<!-- Only changing prefix since properties conflicts with jgit above -->
+							<prefix>git</prefix>
+							<verbose>true</verbose>
+							<dotGitDirectory>../.git</dotGitDirectory>
+							<!-- We're using a pom in this example -->
+							<skipPoms>false</skipPoms>
+							<gitDescribe>
+								<!-- Faster to get just branch if skip = true -->
+								<skip>false</skip>
+								<forceLongFormat>true</forceLongFormat>
+							</gitDescribe>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
     </build>
 	<distributionManagement>
