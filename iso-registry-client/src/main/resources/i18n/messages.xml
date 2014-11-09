@@ -25,8 +25,8 @@
 	<entry key="navbar.login.label.email">E-mail address</entry>
 	<entry key="navbar.login.label.password">Password</entry>
 	<entry key="navbar.login.button.register">Register</entry>
-	
-	<entry key="download.quickstart">Download the Quick Start Guide</entry>
+	<entry key="navbar.help">Documentation</entry>	
+	<entry key="navbar.help.userguide">User Guide (PDF)</entry>
 
 	<entry key="mgmt.submitter.content.header">Submitting organization: List of proposals</entry>
 	<entry key="mgmt.manager.content.header">Register manager: List of pending proposals</entry>
