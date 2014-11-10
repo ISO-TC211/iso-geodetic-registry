@@ -25,9 +25,9 @@
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
-	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
+	<div th:unless="${inputType} eq 'hidden'" th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
-	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isRequired}" th:unless="${inputType} eq 'hidden'" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <div th:fragment="selectIdentifiedItem2" class="form-group">
@@ -527,8 +527,8 @@
 </div>
 
 <div th:fragment="dataSource (cssClass)">
-	<div th:classappend="${cssClass}" th:with="property='dataSource',inputType='text',label=#{form.label.dataSource},placeholder=#{form.placeholder.dataSource},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+	<div th:classappend="${cssClass}">
+		<input type="hidden" th:field="*{dataSource}"/>
 	</div>
 </div>
 
