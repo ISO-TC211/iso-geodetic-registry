@@ -386,7 +386,19 @@
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
-		
+	
+	<entry key="form.help.name">The primary name by which this object is identified.</entry>
+	<entry key="form.help.identifier">The unique code used to reference an object in this register.</entry>
+	<entry key="form.help.definition">The attribute &lt;i&gt;definition&lt;/i&gt; shall contain the definition of the concept embodied by this item and be expressed in the operating language of the register.&lt;br&gt;&lt;br&gt;The definition shall be a precise statement of the nature, properties, scope, or essential qualities of the concept as realized by this item.&lt;br&gt;&lt;br&gt;&lt;small&gt;Examples: “Equipment consisting of a platform, which is often enclosed, that is raised and lowered in a vertical shaft to transport humans, equipment, or materials; a lift or (US) elevator.” and “The shape of a buoy.”&lt;/small&gt;</entry>
+	<entry key="form.help.justification">The attribute &lt;i&gt;justification&lt;/i&gt; shall explain why the proposed change (i.e. this proposal) should be implemented.</entry>
+	<entry key="form.help.controlBodyNotes">The optional attribute &lt;i&gt;control body notes&lt;/i&gt; shall contain notes relevant to the control body’s decision concerning this proposal.&lt;br&gt;&lt;br&gt;Individual entries within the notes should be dated.</entry>
+	<entry key="form.help.registerManagerNotes">The optional attribute &lt;i&gt;register manager notes&lt;/i&gt; shall contain notes relevant to the register manager’s handling of the proposal.&lt;br&gt;&lt;br&gt;Individual entries within the notes should be dated.</entry>
+	<entry key="form.help.controlBodyDecisionEvent">The optional attribute &lt;i&gt;control body decision event&lt;/i&gt; shall identify the meeting or other event associated with the control body’s decision concerning this proposal.</entry>
+	
+	<entry key="form.help.alias">An alternative name by which this object is identified.</entry>
+	<entry key="form.help.remarks">Comments on or information about this object.</entry>
+	<entry key="form.help.scope">Description of usage, or limitations of usage, for which this item is valid. If unknown, enter "not known".</entry>
+	
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>
 	<entry key="form.placeholder.description"></entry>
