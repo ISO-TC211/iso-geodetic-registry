@@ -306,7 +306,7 @@
 	<entry key="form.label.easternLongitude">Östl. Länge</entry>
 	<entry key="form.label.westernLongitude">Westl. Länge</entry>
 	<entry key="form.label.remarks">Bemerkungen</entry>
-	<entry key="form.label.originDescription">Herkunftsbeschreibung</entry>
+	<entry key="form.label.anchorDefinition">Herkunftsbeschreibung</entry>
 	<entry key="form.label.informationSource">Informationsquelle</entry>
 	<entry key="form.label.dataSource">Datenquelle</entry>
 	<entry key="form.label.aliases">Aliase</entry>
