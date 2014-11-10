@@ -329,8 +329,8 @@
 </div>
 
 <div th:fragment="nameAndIdentifier">
-	<div class="col-md-8" th:with="property='name',inputType='text',label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+	<div class="col-md-8" th:with="property='name',rows=2,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
+		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
 	<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
