@@ -89,7 +89,6 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse" style="margin-top: 40px">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span sec:authentication="principal.emailAddress">Nutzer</span></li>
-					<li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}" th:text="#{navbar.logout}">Abmelden</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.help}">Help</span> <span class="caret"></span></a>
 						<ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
@@ -98,6 +97,7 @@
 							</li>
 						</ul>
 					</li>
+					<li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}" th:text="#{navbar.logout}">Abmelden</a></li>
 					<li class="dropdown" sec:authorize="!isAuthenticated()">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.login}">Anmelden</span> <span class="caret"></span></a>
 						<ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
