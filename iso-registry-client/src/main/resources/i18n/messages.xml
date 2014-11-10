@@ -352,7 +352,7 @@
 	<entry key="form.label.easternLongitude">Eastern Lon</entry>
 	<entry key="form.label.westernLongitude">Western Lon</entry>
 	<entry key="form.label.remarks">Remarks</entry>
-	<entry key="form.label.originDescription">Origin Description</entry>
+	<entry key="form.label.anchorDefinition">Anchor Definition</entry>
 	<entry key="form.label.informationSource">Information Source</entry>
 	<entry key="form.label.dataSource">Data Source</entry>
 	<entry key="form.label.aliases">Aliases</entry>
