@@ -31,10 +31,12 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	
 	public IdentifiedItemProposalDTO() {
 		super();
+		initializeEmpty();
 	}
 	
 	protected IdentifiedItemProposalDTO(String itemClassName) {
 		super(itemClassName);
+		initializeEmpty();
 	}
 	
 	public IdentifiedItemProposalDTO(IdentifiedItem item) {
@@ -51,6 +53,10 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 
 	public IdentifiedItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
 		super(item, sponsor);
+	}
+	
+	private void initializeEmpty() {
+		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
 	}
 
 	public Integer getIdentifier() {
