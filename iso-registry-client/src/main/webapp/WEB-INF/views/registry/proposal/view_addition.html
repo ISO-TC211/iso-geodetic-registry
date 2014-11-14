@@ -125,5 +125,8 @@
 			<button id="save" th:if="!${isNew} and !${isEdit}" onClick="history.back();" name="save" class="btn btn-primary" th:text="#{button.back}">Zurück</button>
 		</div>
 	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
 </body>
 </html>

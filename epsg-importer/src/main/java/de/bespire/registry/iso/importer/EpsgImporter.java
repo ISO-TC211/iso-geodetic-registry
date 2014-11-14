@@ -59,8 +59,8 @@ public class EpsgImporter
 
 			context = new AnnotationConfigApplicationContext("de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry");
 			
-			NamingSystemsImporter namingSystemsImporter = context.getBean(NamingSystemsImporter.class);
-			namingSystemsImporter.setGenerateIdentifiers(generateIdentifiers);
+//			NamingSystemsImporter namingSystemsImporter = context.getBean(NamingSystemsImporter.class);
+//			namingSystemsImporter.setGenerateIdentifiers(generateIdentifiers);
 
 			AreasImporter areasImporter = context.getBean(AreasImporter.class);
 			areasImporter.setGenerateIdentifiers(generateIdentifiers);
@@ -121,14 +121,14 @@ public class EpsgImporter
 				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", GCP_REGISTER_NAME));
 			}
 
-			RE_ItemClass icNamespace = namingSystemsImporter.getOrCreateItemClass(register, null);
-			if (argList.contains("all") || argList.contains("1") || argList.contains("-ns")) {
-				if (argList.contains("-ns")) {
-					namingSystemsImporter.setLimitToCodes(argList.get(argList.indexOf("-ns") + 1));
-				}
-				Table namingSystemsTable = db.getTable("Naming System");
-				run(namingSystemsImporter, namingSystemsTable, register, sponsor);
-			}				
+//			RE_ItemClass icNamespace = namingSystemsImporter.getOrCreateItemClass(register, null);
+//			if (argList.contains("all") || argList.contains("1") || argList.contains("-ns")) {
+//				if (argList.contains("-ns")) {
+//					namingSystemsImporter.setLimitToCodes(argList.get(argList.indexOf("-ns") + 1));
+//				}
+//				Table namingSystemsTable = db.getTable("Naming System");
+//				run(namingSystemsImporter, namingSystemsTable, register, sponsor);
+//			}				
 
 			RE_ItemClass icUoM = uomImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("2") || argList.contains("-uom")) {

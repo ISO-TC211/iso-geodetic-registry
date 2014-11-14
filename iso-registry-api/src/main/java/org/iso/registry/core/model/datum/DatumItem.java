@@ -67,6 +67,12 @@ public abstract class DatumItem extends IdentifiedItem
 	 */
 	@Column(name = "DATUM_SCOPE", columnDefinition = "text")	
 	private String scope;
+	
+	/**
+	 * Non-standard attribute to differentiate between the date of publication (realizationEpoch)
+	 * and the reference date of this datum.
+	 */
+	private Date coordinateReferenceEpoch;
 
 	public String getAnchorDefinition() {
 		return anchorDefinition;
@@ -114,6 +120,14 @@ public abstract class DatumItem extends IdentifiedItem
 	 */
 	public void setScope(String newVal) {
 		scope = newVal;
+	}
+
+	public Date getCoordinateReferenceEpoch() {
+		return coordinateReferenceEpoch;
+	}
+
+	public void setCoordinateReferenceEpoch(Date coordinateReferenceEpoch) {
+		this.coordinateReferenceEpoch = coordinateReferenceEpoch;
 	}
 
 }

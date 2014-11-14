@@ -2,14 +2,16 @@ package org.iso.registry.core.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 
 import org.hibernate.envers.Audited;
 
@@ -25,8 +27,9 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 	@Basic(optional = false)
 	private Integer identifier;
 
-	@OneToMany(mappedBy = "aliasedItem")
-	private List<Alias> aliases;
+//	@OneToMany(mappedBy = "aliasedItem")
+	@ElementCollection
+	private Set<String> aliases;
 	
 	@Column(name = "REMARKS", columnDefinition = "text")
 	private String remarks;
@@ -55,22 +58,13 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 		this.identifier = identifier;
 	}
 
-	public List<Alias> getAliases() {
-		return Collections.unmodifiableList(this.aliases);
-	}
-	
-	public void setAliases(List<Alias> aliases) {
-		this.aliases = new ArrayList<Alias>();
-		this.aliases.addAll(aliases);
-	}
-	
-	public void addAlias(Alias alias) {
+	public Set<String> getAliases() {
 		if (this.aliases == null) {
-			this.aliases = new ArrayList<Alias>();
+			this.aliases = new HashSet<>();
 		}
-		this.aliases.add(alias);
+		return this.aliases;
 	}
-
+	
 	public String getRemarks() {
 		return remarks;
 	}
@@ -94,5 +88,4 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
 	}
-
 }

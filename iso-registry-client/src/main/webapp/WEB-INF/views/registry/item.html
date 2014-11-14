@@ -233,6 +233,9 @@
 
 		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
 </body>
 <script type="text/javascript" th:inline="text" th:fragment="js-item">
 /* <![CDATA[ */

@@ -40,6 +40,16 @@ var put = function(url, callback) {
 	});
 };
 
+var postDelete = function(url, callback) {
+	$.ajax({	
+		type: "DELETE",
+		url: url,
+		success: function(msg) {
+			return callback();
+		}
+	});
+};
+
 var redirect = function(url) {
 	$.ajax({
 		url: url,

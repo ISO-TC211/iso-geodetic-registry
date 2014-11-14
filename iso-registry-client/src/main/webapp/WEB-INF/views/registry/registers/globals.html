@@ -4,21 +4,60 @@
 	</div>
 </div>
 
+<div th:fragment="formLabel(property, label)" class="control-label" th:for="${property}">
+	<label class="control-label" th:for="${property}">
+		<span th:text="${label}"></span> <a th:id="'popover-help-' + ${property}" href="#" th:if="${help}" th:attr="data-content=${help},data-original-title=${label}" rel="popover" data-placement="right" data-container="body" data-trigger="hover" data-html="true"><span class="glyphicon glyphicon-info-sign" data-trigger="hover" style="margin-left: 5px; vertical-align:top;"></span></a>
+	</label>
+	<script type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			$('#popover-help-[[${property}]]').popover();
+		});
+	/* ]]> */
+	</script>
+</div>
+
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
-	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
+<div th:fragment="dateTimePicker" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
+	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
+	<div class="input-group date" th:id="'datetimepicker-' + ${property}">
+		<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+		<input th:type="text" class="form-control" th:field="*{__${property}__}" th:placeholder="${placeholder}" data-date-format="YYYY-MM-DD"/>  
+		<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
+	</div>
+
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+		$(document).ready(function() {
+			$('#datetimepicker-[[${property}]]').datetimepicker({
+// 				language : 'en',
+// 			    dateFormat: 'dd-mm-yyyy',
+// 			    separator: 'T',
+// 			    timeFormat: 'HH:mm:ssz',
+// 			    ampm: false,
+			    pickTime: false,			    
+// 			    timezoneIso8609: true			
+			});
+		});
+	/* ]]> */
+ 	</script>
+	
+</div>
+
 <div th:fragment="selectIdentifiedItem2" class="form-group">
-	<label class="control-label" th:for="${property}" th:text="${label}"></label>
+	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" th:with="isClarification=${proposal.isClarification()}">
 		<input type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
 		<script type="text/javascript" charset="utf-8" th:inline="text">
@@ -316,17 +355,17 @@
 </div>
 
 <div th:fragment="nameAndIdentifier">
-	<div class="col-md-8" th:with="property='name',inputType='text',label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+	<div class="col-md-8" th:with="property='name',rows=2,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
+		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
-	<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},isRequired='true'">
+	<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
 
 <div th:fragment="aliasesTable(modifier)">
-	<div class="col-md-12" th:unless="!*{aliases} and !${isProposal}">
-		<div class="panel" th:if="${proposal}">
+	<div class="col-md-12" th:unless="!*{aliases} or ${isProposal}">
+		<div class="panel">
 <!-- 			<div class="panel-header"> -->
 <!-- 				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label> -->
 <!-- 			</div> -->
@@ -335,54 +374,100 @@
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.alias}">Alias</th>
-							<th th:text="#{tableheader.namingSystem}">Naming system</th>
-							<th th:text="#{tableheader.remarks}">Remarks</th>
+<!-- 							<th th:text="#{tableheader.namingSystem}">Naming system</th> -->
+<!-- 							<th th:text="#{tableheader.remarks}">Remarks</th> -->
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="alias : *{aliases}">
-							<td th:text="${alias.alias}"/>
-							<td th:text="${alias.namingSystem.name}"/>
-							<td th:text="${alias.remarks}"/>
+							<td th:text="${alias}"/>
+<!-- 							<td th:text="${alias.namingSystem.name}"/> -->
+<!-- 							<td th:text="${alias.remarks}"/> -->
+							<td></td>
 						</tr>
 					</tbody>
 				</table>
-				<button th:if="${isProposal} and !${proposal.isClarification()}" type="button" th:text="#{button.addAlias}" disabled="disabled" class="btn btn-sm btn-default disabled">Add new</button>
+				<button th:if="${isProposal} and !${proposal.isClarification()}" th:id="'addAlias_' + ${modifier}" type="button" th:attr="data-modifier=${modifier}" th:text="#{button.addAlias}" class="btn btn-sm btn-default button-addalias">Add new</button>
 			</div>
 		</div>
-	</div>
 
-	<script type="text/javascript" th:inline="text">
-	/* <![CDATA[ */
-			table = $('#aliasesTable_[[${modifier}]]').dataTable({
-			"sPaginationType": "bs_normal",
-			"bFilter": false,
-			"oLanguage": {
-				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
-				  "sInfo": "[[#{datatable.sInfo}]]",
-				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
-				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
-				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
-				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
-				  "sProcessing": "[[#{datatable.sProcessing}]]",
-				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
-				  "oPaginate": {
-				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
-				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
-				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
-				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+				table = $('#aliasesTable_[[${modifier}]]').dataTable({
+				"sPaginationType": "bs_normal",
+				"bFilter": false,
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 0, "asc" ]],
+				 aoColumns: [
+				    null,
+					{"bSortable" : false}
+				]
+			});
+		
+	// 		$(document).ready(function() {
+	// 			var aliasesTable_[[${modifier}]] = $('#aliasesTable_[[${modifier}]]').dataTable();
+	// 			var aliases_[[${modifier}]]_count = aliasesTable_[[${modifier}]].fnGetData().length();  
+				
+	// 			$('#addAlias_[[${modifier}]]').click(function(e) {
+	// 				var idx = aliases_[[${modifier}]]_count;
+					
+	// 				table.fnAddData([
+	// 					"<input type='text' name='aliases[" + idx + "]' placeholder='[[#{form.placeholder.alias}]]' required='required'/>",
+	// 					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (index - 1) + "' value='" + index + "'>Remove</button>"
+	// 				]);
+					
+	// 				aliases_[[${modifier}]]_count++;
+	// 			});
+	// 		});
+		/* ]]> */
+		</script>
+	</div>
+	
+	<div th:if="${isProposal}" class="form-group">
+		<div class="col-md-12">
+			<label class="control-label" th:for="'aliases_' + ${modifier}" th:text="#{form.label.aliases}"></label>
+			<input type="hidden" style="width: 100%" th:id="'aliases_' + ${modifier}" th:field="*{aliases}"/>
+		</div>
+		
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+		    $(document).ready(function() {
+				$('#aliases_[[${modifier}]]').select2({
+					tags: [],
+					multiple: true,
+					formatNoMatches: "Please enter an alias. You may enter multiple aliases by pressing comma (,).",
+					tokenSeparators: [','],
+					initSelection : function (element, callback) {
+						var data = [];
+				        $(element.val().split(",")).each(function () {
+				            data.push({
+				            	id: this, 
+				            	text: this
+				            });
+				        });
+				        callback(data);
 				    }
-				},
-			 "aaSorting": [[ 0, "asc" ]],
-			 aoColumns: [
-				null,
-				null,
-				{"bSortable" : false}
-			]
-		});	
-	/* ]]> */
-	</script>	
+				});		    	
+		    });
+		/* ]]> */
+		</script>
+	</div>	
 </div>
 
 <div th:fragment="referencedEntitiesTable(modifier)">
@@ -468,13 +553,13 @@
 </div>
 
 <div th:fragment="dataSource (cssClass)">
-	<div th:classappend="${cssClass}" th:with="property='dataSource',inputType='text',label=#{form.label.dataSource},placeholder=#{form.placeholder.dataSource},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+	<div th:classappend="${cssClass}">
+		<input type="hidden" th:field="*{dataSource}"/>
 	</div>
 </div>
 
 <div th:fragment="registerItemDefinition">
-	<div class="col-md-12" th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},isRequired='true'">
+	<div class="col-md-12" th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},help=#{form.help.definition},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
 </div>
@@ -496,13 +581,13 @@
 		<div class="panel-body"> 
 			<div th:fragment="proposalDetails">
 				<div th:unless="${partOfSupersession}">
-					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},isRequired='true'">
+					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},help=#{form.help.justification},isRequired='true'">
 						<div th:replace="registry/registers/globals :: textArea"/>
 					</div>
-					<div th:with="property='registerManagerNotes',rows=6,cols=120,label=#{form.label.registerManagerNotes},placeholder=#{form.placeholder.registerManagerNotes},isRequired='false'">
+					<div th:with="property='registerManagerNotes',rows=6,cols=120,label=#{form.label.registerManagerNotes},placeholder=#{form.placeholder.registerManagerNotes},help=#{form.help.registerManagerNotes},isRequired='false'">
 						<div th:replace="registry/registers/globals :: textArea"/>
 					</div>
-					<div th:with="property='controlBodyNotes',rows=6,cols=120,label=#{form.label.controlBodyNotes},placeholder=#{form.placeholder.controlBodyNotes},isRequired='false'">
+					<div th:with="property='controlBodyNotes',rows=6,cols=120,label=#{form.label.controlBodyNotes},placeholder=#{form.placeholder.controlBodyNotes},help=#{form.help.controlBodyNotes},isRequired='false'">
 						<div th:replace="registry/registers/globals :: textArea"/>
 					</div>
 				</div>

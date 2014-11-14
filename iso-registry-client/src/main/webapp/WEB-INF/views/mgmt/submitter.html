@@ -80,6 +80,9 @@
 									<div class="modal fade" th:id="'dialog-withdraw-' + ${item.proposalUuid}" role="dialog">
 										<div th:include="mgmt/submitter_popup_withdraw :: popup"/>
 									</div>
+									<div class="modal fade" th:id="'dialog-delete-' + ${item.proposalUuid}" role="dialog">
+										<div th:include="mgmt/submitter_popup_delete :: popup"/>
+									</div>
 
 									<td th:text="${item.name}"></td>
 									<td><span th:unless="${#strings.isEmpty(item.itemClassName)}" th:text="#{${item.itemClassName}}"></span></td>
@@ -100,11 +103,14 @@
 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${item.isEditable()} ? #{button.edit} : #{button.details}">Details</button>												
 												</div></li>
 												<li th:if="${item.isNotSubmitted()} or ${#strings.startsWith(item.proposalStatus, 'RETURNED_BY_')}">
-<!-- 													<div style="margin: 5px;"> -->
-<!-- 														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a> -->
-<!-- 													</div> -->
+													<div style="margin: 5px;">
+														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a>
+													</div>
 													<div style="margin: 5px;">
 														<a th:href="'#dialog-submit-' + ${item.proposalUuid}" th:id="'submit_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-success btn-xs" th:text="#{button.submitProposal}">Einreichen</a>
+													</div>
+													<div style="margin: 5px;">
+														<a th:href="'#dialog-delete-' + ${item.proposalUuid}" th:id="'delete_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-danger btn-xs" th:text="#{button.deleteProposal}"></a>
 													</div>
 												</li>
 												<li th:if="${item.isUnderReview()} or ${item.isPending()}">
@@ -126,6 +132,8 @@
 			</div>
 		</div>
 	</div>
+	
+	<div th:include="layout :: foot"></div>
 	
 	<script type="text/javascript" th:inline="text">
 		$(document).ready(function() {

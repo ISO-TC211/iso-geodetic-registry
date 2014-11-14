@@ -83,13 +83,20 @@
 <!-- 				<h1><span>Home</span></h1> -->
 				<img th:src="@{__${basePath}__/resources/images/iso.png}" alt="ISO" id="logo" class="img-responsive pull-left" style="padding-top: 10px; padding-left: 10px"/>
 				<a style="padding-top:15px" class="test navbar-brand" th:href="@{__${basePath}__/}" th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
-
 			</div>
 			
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse navbar-ex1-collapse" style="margin-top: 40px">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span sec:authentication="principal.emailAddress">Nutzer</span></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.help}">Help</span> <span class="caret"></span></a>
+						<ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
+							<li>					
+								<a th:href="@{~/static/gcp-userguide.pdf}" target="_blank" th:text="#{navbar.help.userguide}"></a>
+							</li>
+						</ul>
+					</li>
 					<li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}" th:text="#{navbar.logout}">Abmelden</a></li>
 					<li class="dropdown" sec:authorize="!isAuthenticated()">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.login}">Anmelden</span> <span class="caret"></span></a>
@@ -117,9 +124,6 @@
 								</div>
 							</li>
 						</ul>
-					</li>
-					<li>
-						<a th:href="@{~/static/quickstart-gcp.pdf}" target="_blank" th:title="#{download.quickstart}"><span class="glyphicon glyphicon-question-sign"></span></a>
 					</li>
 				</ul>
 <!-- 				<div class="navbar-form navbar-right"> -->
@@ -155,6 +159,9 @@
 	</div>
 
 	<div th:fragment="foot">
+		<footer class="footer">
+			<p class="pull-right text-muted text-sm"><small><span th:text="#{application.version}"></span></small></p>
+		</footer>
 	</div>
 
 	<div th:fragment="navtree">
@@ -306,6 +313,15 @@
 				</div>
 			</div>
 		</div>
+		
+<!-- 	    <footer class="footer"> -->
+<!-- 	    	<div class="container"> -->
+<!-- 		      	<div class="pull-right"> -->
+<!-- 		      		<p class="text-muted">Software version: <span th:text="#{application.version}"></span></p> -->
+<!-- 		      	</div> -->
+<!-- 			</div> -->
+<!-- 	    </footer>			 -->
+		
 	</div>
 </body>
 
