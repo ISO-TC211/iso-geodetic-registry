@@ -15,6 +15,7 @@ import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.GeodeticDatumItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
+import org.springframework.util.StringUtils;
 
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -35,6 +36,7 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	private ExtentDTO domainOfValidity;
 	private String realizationEpoch;
 	private String scope;
+	private String coordinateReferenceEpoch;
 	
 	private EllipsoidItemProposalDTO ellipsoid;
 	private PrimeMeridianItemProposalDTO primeMeridian;
@@ -91,6 +93,14 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 		this.scope = scope;
 	}
 
+	public String getCoordinateReferenceEpoch() {
+		return coordinateReferenceEpoch;
+	}
+
+	public void setCoordinateReferenceEpoch(String coordinateReferenceEpoch) {
+		this.coordinateReferenceEpoch = coordinateReferenceEpoch;
+	}
+
 	public EllipsoidItemProposalDTO getEllipsoid() {
 		return ellipsoid;
 	}
@@ -126,11 +136,16 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 				datum.setDomainOfValidity(extent);
 			}
 			
-			DateFormat df = new SimpleDateFormat("yyyy");
-			Date epoch = null;
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date realizationEpoch = null;
+			Date coordinateReferenceEpoch = null;
 			try {
-				epoch = df.parse(this.getRealizationEpoch());
-				datum.setRealizationEpoch(epoch);
+				realizationEpoch = df.parse(this.getRealizationEpoch());
+				 if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
+					 coordinateReferenceEpoch = df.parse(this.getCoordinateReferenceEpoch());
+				 }
+				datum.setRealizationEpoch(realizationEpoch);
+				datum.setCoordinateReferenceEpoch(coordinateReferenceEpoch);
 			}
 			catch (ParseException e) {
 				// Ignore

@@ -356,7 +356,8 @@
 	<entry key="form.label.informationSource">Information Source</entry>
 	<entry key="form.label.dataSource">Data Source</entry>
 	<entry key="form.label.aliases">Aliases</entry>
-	<entry key="form.label.realizationEpoch">Realization Epoch</entry>
+	<entry key="form.label.realizationEpoch">Release Date</entry>
+	<entry key="form.label.coordinateReferenceEpoch">Coordinate Reference Epoch</entry>
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
@@ -433,7 +434,8 @@
 	<entry key="form.placeholder.dataSource"></entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
-	<entry key="form.placeholder.realizationEpoch">(year)</entry>
+	<entry key="form.placeholder.realizationEpoch">(YYYY-MM-DD)</entry>
+	<entry key="form.placeholder.coordinateReferenceEpoch">(YYYY-MM-DD)</entry>
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>
