@@ -33,8 +33,8 @@
 <div th:fragment="dateTimePicker" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<div class="input-group date" th:id="'datetimepicker-' + ${property}">
-		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-		<input th:type="text" class="form-control" th:field="*{__${property}__}" data-date-format="YYYY-MM-DD"/>  
+		<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+		<input th:type="text" class="form-control" th:field="*{__${property}__}" th:placeholder="${placeholder}" data-date-format="YYYY-MM-DD"/>  
 		<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
 	</div>
 
