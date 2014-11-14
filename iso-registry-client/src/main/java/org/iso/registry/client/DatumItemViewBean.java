@@ -18,6 +18,7 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 	private ExtentDTO domainOfValidity;
 	private Date realizationEpoch;
 	private String scope;
+	private Date coordinateReferenceEpoch;
 	private EllipsoidItemViewBean ellipsoid;
 	private PrimeMeridianItemViewBean primeMeridian;
 	
@@ -61,6 +62,7 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 		}
 		this.setRealizationEpoch(item.getRealizationEpoch());
 		this.setScope(item.getScope());
+		this.setCoordinateReferenceEpoch(item.getCoordinateReferenceEpoch());
 		
 		if (registerItem instanceof GeodeticDatumItem) {
 			GeodeticDatumItem geodeticDatum = (GeodeticDatumItem)registerItem;
@@ -103,6 +105,14 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 
 	public void setScope(String scope) {
 		this.scope = scope;
+	}
+
+	public Date getCoordinateReferenceEpoch() {
+		return coordinateReferenceEpoch;
+	}
+
+	public void setCoordinateReferenceEpoch(Date coordinateReferenceEpoch) {
+		this.coordinateReferenceEpoch = coordinateReferenceEpoch;
 	}
 
 	public EllipsoidItemViewBean getEllipsoid() {
