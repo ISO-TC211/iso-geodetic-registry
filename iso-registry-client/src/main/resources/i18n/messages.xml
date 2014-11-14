@@ -5,6 +5,7 @@
 	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
 	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
 	<entry key="application.welcome">Welcome</entry>
+	<entry key="application.version">${git.commit.id.describe}-${git.commit.id.abbrev}</entry>
 	
 	<entry key="navbar.setHistoricDate">Historic view</entry>
 	<entry key="navbar.login">Login</entry>
@@ -24,8 +25,8 @@
 	<entry key="navbar.login.label.email">E-mail address</entry>
 	<entry key="navbar.login.label.password">Password</entry>
 	<entry key="navbar.login.button.register">Register</entry>
-	
-	<entry key="download.quickstart">Download the Quick Start Guide</entry>
+	<entry key="navbar.help">Documentation</entry>	
+	<entry key="navbar.help.userguide">User Guide (PDF)</entry>
 
 	<entry key="mgmt.submitter.content.header">Submitting organization: List of proposals</entry>
 	<entry key="mgmt.manager.content.header">Register manager: List of pending proposals</entry>
@@ -40,6 +41,7 @@
 	<entry key="admin.organization.main.header">Master data</entry>
 	<entry key="admin.organization.roles.header">Roles</entry>
 	<entry key="admin.organization.users.header">Users</entry>
+	<entry key="proposal.discussion.content.header">Discuss proposal</entry>
 	
 	<entry key="tableheader.name">Name</entry>
 	<entry key="tableheader.itemClassName">Item class</entry>
@@ -50,6 +52,7 @@
 	<entry key="tableheader.proposalStatus">Proposal status</entry>
 	<entry key="tableheader.decisionStatus">Decision status</entry>
 	<entry key="tableheader.emailAddress">Email address</entry>
+	<entry key="tableheader.accessUrl">User-specific access URL</entry>
 	<entry key="tableheader.organization">Organization</entry>
 	<entry key="tableheader.date">Date</entry>
 	<entry key="tableheader.itemClass">Item class</entry>
@@ -61,6 +64,8 @@
 	<entry key="tableheader.description">Description</entry>
 	<entry key="tableheader.role">Role</entry>
 	<entry key="tableheader.group">Group</entry>
+	<entry key="tableheader.from">From</entry>
+	<entry key="tableheader.subject">Subject</entry>
 	<entry key="tableheader.register">Registers</entry>
 	<entry key="tableheader.identifier">Identifier</entry>
 	<entry key="tableheader.alias">Alias</entry>
@@ -126,6 +131,7 @@
 	<entry key="button.rejectProposal">Reject</entry>
 	<entry key="button.returnProposal">Return</entry>
 	<entry key="button.withdrawProposal">Withdraw</entry>
+	<entry key="button.discussProposal">Discussion</entry>
 	<entry key="button.saveProposal">Save proposal</entry>
 	<entry key="button.finalizeProposal">End appeal period</entry>
 	<entry key="button.appealProposal">Appeal to owner</entry>
@@ -150,6 +156,7 @@
 	<entry key="button.cancel">Cancel</entry>
 	<entry key="button.withdraw">Withdraw</entry>
 	<entry key="button.submitProposal">Submit proposal</entry>
+	<entry key="button.deleteProposal">Delete proposal</entry>
 	<entry key="button.submitting">Submitting...</entry>
 	<entry key="button.save">Save</entry>
 	<entry key="button.saving">Saving...</entry>
@@ -173,6 +180,13 @@
 	<entry key="button.delegations">Permissions</entry>
 	<entry key="button.requestDelegation">Request permission</entry>
 	<entry key="button.changeOrganization">Change affiliation</entry>
+	<entry key="button.newThread">New message</entry>
+	<entry key="button.inviteParticipants">Invite participants</entry>
+	<entry key="button.startDiscussion">Start discussion</entry>
+	<entry key="button.reply">Reply</entry>	
+	<entry key="button.send">Send</entry>
+	<entry key="button.showAccessUrl">Show access URL</entry>	
+	<entry key="button.proposalDetails">Proposal Details</entry>
 	<entry key="button.addBoundingBox">Add bounding box</entry>
 	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
@@ -250,9 +264,13 @@
 	<entry key="popup.delegations.member">Membership approved</entry>
 	<entry key="popup.delegations.requested">The user has requested to be assigned the highlighted roles.</entry>
 	<entry key="popup.delegations.deny">Deny this request</entry>
+	<entry key="popup.message.header">New message</entry>
+	<entry key="popup.inviteParticipants.header">Invite participants</entry>
 	<entry key="popup.itemClass.header">Please select an item class</entry>
 	<entry key="popup.submitProposal.header">Submit proposal</entry>
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
+	<entry key="popup.deleteProposal.header">Delete proposal</entry>
+	<entry key="popup.deleteProposal.reallyDelete">Do you want to delete the proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
 	<entry key="popup.extent.header">Domain of Validity</entry>
@@ -310,6 +328,15 @@
 	<entry key="form.label.onlineResourceLogo">URL to organization logo</entry>
 	<entry key="form.label.isActive">active</entry>
 	<entry key="form.label.linkedOrganization">Linked organization data</entry>
+	<entry key="form.label.finish">Finish</entry>
+	<entry key="form.label.proposalTitle">Item name</entry>
+	<entry key="form.label.proposalType">Proposal type</entry>
+	<entry key="form.label.proposalStatus">Proposal status</entry>
+	<entry key="form.label.from">From</entry>
+	<entry key="form.label.subject">Subject</entry>
+	<entry key="form.label.message">Message</entry>
+	<entry key="form.label.invitees">Send invitations to the following addresses (one e-mail address per line)</entry>
+	<entry key="form.label.alreadyInvited">Already invited</entry>
 	<entry key="form.label.identifier">Identifier</entry>
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
@@ -325,11 +352,12 @@
 	<entry key="form.label.easternLongitude">Eastern Lon</entry>
 	<entry key="form.label.westernLongitude">Western Lon</entry>
 	<entry key="form.label.remarks">Remarks</entry>
-	<entry key="form.label.originDescription">Origin Description</entry>
+	<entry key="form.label.anchorDefinition">Anchor Definition</entry>
 	<entry key="form.label.informationSource">Information Source</entry>
 	<entry key="form.label.dataSource">Data Source</entry>
 	<entry key="form.label.aliases">Aliases</entry>
-	<entry key="form.label.realizationEpoch">Realization Epoch</entry>
+	<entry key="form.label.realizationEpoch">Release Date</entry>
+	<entry key="form.label.coordinateReferenceEpoch">Coordinate Reference Epoch</entry>
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
@@ -359,7 +387,19 @@
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
-		
+	
+	<entry key="form.help.name">The primary name by which this object is identified.</entry>
+	<entry key="form.help.identifier">The unique code used to reference an object in this register.</entry>
+	<entry key="form.help.definition">The attribute &lt;i&gt;definition&lt;/i&gt; shall contain the definition of the concept embodied by this item and be expressed in the operating language of the register.&lt;br&gt;&lt;br&gt;The definition shall be a precise statement of the nature, properties, scope, or essential qualities of the concept as realized by this item.&lt;br&gt;&lt;br&gt;&lt;small&gt;Examples: “Equipment consisting of a platform, which is often enclosed, that is raised and lowered in a vertical shaft to transport humans, equipment, or materials; a lift or (US) elevator.” and “The shape of a buoy.”&lt;/small&gt;</entry>
+	<entry key="form.help.justification">The attribute &lt;i&gt;justification&lt;/i&gt; shall explain why the proposed change (i.e. this proposal) should be implemented.</entry>
+	<entry key="form.help.controlBodyNotes">The optional attribute &lt;i&gt;control body notes&lt;/i&gt; shall contain notes relevant to the control body’s decision concerning this proposal.&lt;br&gt;&lt;br&gt;Individual entries within the notes should be dated.</entry>
+	<entry key="form.help.registerManagerNotes">The optional attribute &lt;i&gt;register manager notes&lt;/i&gt; shall contain notes relevant to the register manager’s handling of the proposal.&lt;br&gt;&lt;br&gt;Individual entries within the notes should be dated.</entry>
+	<entry key="form.help.controlBodyDecisionEvent">The optional attribute &lt;i&gt;control body decision event&lt;/i&gt; shall identify the meeting or other event associated with the control body’s decision concerning this proposal.</entry>
+	
+	<entry key="form.help.alias">An alternative name by which this object is identified.</entry>
+	<entry key="form.help.remarks">Comments on or information about this object.</entry>
+	<entry key="form.help.scope">Description of usage, or limitations of usage, for which this item is valid. If unknown, enter "not known".</entry>
+	
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>
 	<entry key="form.placeholder.description"></entry>
@@ -394,7 +434,8 @@
 	<entry key="form.placeholder.dataSource"></entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
-	<entry key="form.placeholder.realizationEpoch">(year)</entry>
+	<entry key="form.placeholder.realizationEpoch">(YYYY-MM-DD)</entry>
+	<entry key="form.placeholder.coordinateReferenceEpoch">(YYYY-MM-DD)</entry>
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>

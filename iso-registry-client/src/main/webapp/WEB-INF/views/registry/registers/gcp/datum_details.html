@@ -5,7 +5,7 @@
 
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-<!-- 			<div class="row" th:include="registry/registers/globals :: aliasesTable('datum')" /> -->
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('datum')" />
 
 			<div class="row">
 				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
@@ -14,14 +14,8 @@
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='anchorDefinition',inputType='text',label=#{form.label.originDescription},placeholder=#{form.placeholder.originDescription},isRequired='false'">
+				<div class="col-md-12" th:with="property='anchorDefinition',inputType='text',label=#{form.label.anchorDefinition},placeholder=#{form.placeholder.originDescription},isRequired='false'">
 					<div th:replace="registry/registers/globals :: textArea"/>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-12" th:with="property='realizationEpoch',inputType='integer',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 		</div>	<!-- END OF LEFT -->
@@ -44,6 +38,20 @@
 					<div class="col-md-12" th:with="property='primeMeridian',label=#{form.label.primeMeridian},isRequired='true',ajaxPath='PrimeMeridianItem',noAddNew='true'">
 						<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12" th:with="property='realizationEpoch',inputType='text',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='true'">
+					<div th:replace="registry/registers/globals :: dateTimePicker"/>
+<!-- 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12" th:with="property='coordinateReferenceEpoch',inputType='text',label=#{form.label.coordinateReferenceEpoch},placeholder=#{form.placeholder.coordinateReferenceEpoch},isRequired='false'">
+					<div th:replace="registry/registers/globals :: dateTimePicker"/>
+<!-- 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
 				</div>
 			</div>
 		

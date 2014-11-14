@@ -34,5 +34,8 @@
 			<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
 		</div>
 	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
 	<script th:replace="registry/item :: js-item"/>
 </body>
