@@ -25,9 +25,35 @@
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
-	<div th:unless="${inputType} eq 'hidden'" th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
+	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
-	<span th:if="${isRequired}" th:unless="${inputType} eq 'hidden'" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+</div>
+
+<div th:fragment="dateTimePicker" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
+	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
+	<div class="input-group date" th:id="'datetimepicker-' + ${property}">
+		<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+		<input th:type="text" class="form-control" th:field="*{__${property}__}" data-date-format="YYYY-MM-DD"/>  
+		<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
+	</div>
+
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+		$(document).ready(function() {
+			$('#datetimepicker-[[${property}]]').datetimepicker({
+// 				language : 'en',
+// 			    dateFormat: 'dd-mm-yyyy',
+// 			    separator: 'T',
+// 			    timeFormat: 'HH:mm:ssz',
+// 			    ampm: false,
+			    pickTime: false,			    
+// 			    timezoneIso8609: true			
+			});
+		});
+	/* ]]> */
+ 	</script>
+	
 </div>
 
 <div th:fragment="selectIdentifiedItem2" class="form-group">
