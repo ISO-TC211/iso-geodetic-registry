@@ -36,7 +36,7 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 	 * The ellipsoid is degenerate and is actually a sphere. The sphere is completely defined by the semi-major axis, which is
 	 * the radius of the sphere. This attribute this has the value "true" if the figure is a sphere.
 	 */
-	private boolean isSphere = true;
+	private boolean isSphere;
 	
 	/**
 	 * Length of the semi-minor axis of the ellipsoid. 
