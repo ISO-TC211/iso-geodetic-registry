@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="row clearfix" style="margin-top: 0px">
+		
+			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
+				<fieldset>		
+					<input type="hidden" name="_method" value="PUT"/>
+					<input type="hidden" th:field="*{itemClassUuid}"/>
+					<div class="col-md-12 column">
+
+						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.crs}"></span></a>
+									<div class="pull-right">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+								<div id="dataPanel" class="panel-collapse collapse in">								
+									<div class="panel-body">
+										<div th:if="${itemClass}">
+											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
+											<div th:include="registry/registers/gcp/ccrs_details :: details"/>
+										</div> <!-- if ${itemClass} -->
+									</div>
+								</div>
+							</div>
+							
+							<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+
+							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
+
+						</div>
+
+						<div id="validationFailed" class="alert alert-danger" th:utext="#{alert.validationFailed}"/>
+						<div th:replace="registry/registers/proposal-globals :: proposalButtons"/>
+
+					</div>
+					
+				</fieldset>
+			</form>
+			
+		</div>
+	</div>
+
+	<div th:include="layout :: foot"></div>
+
+	<script th:replace="registry/registers/globals :: js-proposal"/>
+	
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			hidePanel('#newAreaPanel');
+			hidePanel('#newDatumPanel');
+			
+			$('#addNew_domainOfValidity').bind('click', function (e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeIn(500);
+				$('#domainOfValidity_select').append('<option value="">New</option>');
+				$('#domainOfValidity_select').val('');
+				$('#domainOfValidity_select').attr('disabled', 'disabled');
+				$('#domainOfValidity').val('');
+
+				showPanel('#newAreaPanel');
+			});
+			
+			$('#newAreaPanelDismiss').bind('click', function(e) {
+				e.preventDefault();
+				$("#newAreaPanel").fadeOut(500);
+				$("#domainOfValidity_select option[value='']").remove();
+				$('#domainOfValidity_select').removeAttr('disabled');
+				$('#domainOfValidity_byid').click();
+
+				hidePanel('#newAreaPanel');
+			});
+
+			$('#addNew_datum').bind('click', function (e) {
+				e.preventDefault();
+				$("#newDatumPanel").fadeIn(500);
+				$('#datum_select').append('<option value="">New</option>');
+				$('#datum_select').val('');
+				$('#datum_select').attr('disabled', 'disabled');
+				$('#datum').val('');
+
+				showPanel('#newDatumPanel');
+			});
+			
+			$('#newDatumPanelDismiss').bind('click', function(e) {
+				e.preventDefault();
+				$("#newDatumPanel").fadeOut(500);
+				$("#datum_select option[value='']").remove();
+				$('#datum_select').removeAttr('disabled');
+				$('#datum_byid').click();
+
+				hidePanel('#newDatumPanel');
+			});
+		
+		});
+	/* ]]> */
+	</script>
+	
+</body>
+</html>
