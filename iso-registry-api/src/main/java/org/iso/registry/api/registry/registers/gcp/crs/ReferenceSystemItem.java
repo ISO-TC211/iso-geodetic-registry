@@ -18,7 +18,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 @Audited @Entity 
 public abstract class ReferenceSystemItem extends IdentifiedItem
 {
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private EX_Extent domainOfValidity;
 
 	public ReferenceSystemItem() {

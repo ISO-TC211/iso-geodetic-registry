@@ -100,8 +100,15 @@ public class ExtentDTO
 		
 		extent.setDescription(this.getDescription());
 		
+		extent.getGeographicElement().clear();
 		for (EX_GeographicBoundingBox boundingBox : this.getGeographicBoundingBoxes()) {
-			extent.getGeographicElement().add(boundingBox);
+			if (isValidBoundingBox(boundingBox)) {
+				extent.getGeographicElement().add(boundingBox);
+			}
 		}
+	}
+
+	private boolean isValidBoundingBox(EX_GeographicBoundingBox boundingBox) {
+		return boundingBox.getEastBoundLongitude() != null && boundingBox.getWestBoundLongitude() != null && boundingBox.getNorthBoundLatitude() != null && boundingBox.getSouthBoundLatitude() != null;
 	}
 }
