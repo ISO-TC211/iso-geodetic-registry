@@ -16,6 +16,7 @@
 
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
+			<div class="row" th:include="registry/registers/globals :: aliasesTable('cs')" />
 			
 			<div class="row">
 				<div th:if="${isProposal}" class="col-md-12" th:with="property='axisUuids',label=#{form.label.coordinateAxis},isRequired='true',ajaxPath='axes',orderBy='name',displayCallback='axisSelectDisplay'">
