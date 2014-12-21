@@ -166,8 +166,6 @@ public class ManagementController
 		RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
 		List<Proposal> proposals = proposalRepository.findBySponsorAndGroupIsNullAndIsConcludedIsFalse(sponsor);
 		for (Proposal proposal : proposals) {
-//			if (!security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters())) {
-//			Hibernate.initialize(proposal.getProposalManagementInformations());
 			if (!security.may(RegistryPermission.READ, proposal)) {
 				continue;
 			}
@@ -179,9 +177,6 @@ public class ManagementController
 			}
 			else {
 				if (!proposal.isFinal()) {
-//					for (RE_ProposalManagementInformation pmi : proposal.getProposalManagementInformations()) {
-//						Hibernate.initialize(pmi);
-//					}
 					proposalViewBeans.add(new RegisterItemViewBean(proposal));
 				}
 			}
