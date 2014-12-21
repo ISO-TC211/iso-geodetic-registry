@@ -532,9 +532,13 @@
 	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
 	<entry key="UnitOfMeasure">Unit of Measurement</entry>
 	<entry key="GeodeticCRS">Geodetic CRS</entry>
+	<entry key="GeodeticCoordinateReferenceSystemItem">Geodetic CRS</entry>
 	<entry key="EngineeringCRS">Engineering CRS</entry>
+	<entry key="EngineeringCoordinateReferenceSystemItem">Engineering CRS</entry>
 	<entry key="VerticalCRS">Vertical CRS</entry>
+	<entry key="VerticalCoordinateReferenceSystemItem">Vertical CRS</entry>
 	<entry key="ProjectedCRS">Projected CRS</entry>
+	<entry key="ProjectedCoordinateReferenceSystemItem">Projected CRS</entry>
 	<entry key="CompoundCRS">Compound CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
 	<entry key="Area">Area of Use</entry>
