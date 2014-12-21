@@ -1,25 +1,15 @@
 package de.bespire.registry.iso.importer;
 
-import org.iso.registry.core.model.Alias;
 import org.iso.registry.core.model.AliasRepository;
 import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.NamingSystemItem;
 import org.iso.registry.core.model.NamingSystemItemRepository;
-import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
-import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.AreaItemRepository;
-import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItemRepository;
-import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItemRepository;
-import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.DatumItemRepository;
-import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.EllipsoidItemRepository;
-import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItemRepository;
-import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +20,6 @@ import com.healthmarketscience.jackcess.Row;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
-import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 
 @Component

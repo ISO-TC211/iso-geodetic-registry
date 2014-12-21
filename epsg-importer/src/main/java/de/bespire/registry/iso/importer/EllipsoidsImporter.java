@@ -55,7 +55,7 @@ public class EllipsoidsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(ELLIPSOID_CODE);
-		proposal.setIdentifier(determineIdentifier("CoordinateEllipsoid", epsgCode));
+		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));
 		
 		proposal.setName((String)row.get(ELLIPSOID_NAME));
 		proposal.setSemiMajorAxis((Double)row.get(SEMI_MAJOR_AXIS));
