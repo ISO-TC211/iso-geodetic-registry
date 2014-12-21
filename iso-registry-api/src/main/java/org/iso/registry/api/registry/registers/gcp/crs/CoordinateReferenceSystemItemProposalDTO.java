@@ -177,7 +177,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				}
 			}
 			if (this.getVerticalCrs() != null && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
-				// By convention, the first CRS is the horizontal component
+				// By convention, the second CRS is the vertical component
 				CompoundCoordinateReferenceSystemItem compoundCrs = (CompoundCoordinateReferenceSystemItem)registerItem;
 				CoordinateReferenceSystemItem verticalCrs = entityManager.find(CoordinateReferenceSystemItem.class, this.getVerticalCrs().getReferencedItemUuid());
 				if (verticalCrs instanceof SingleCoordinateReferenceSystemItem) {
