@@ -1,8 +1,9 @@
 package org.iso.registry.client.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -11,6 +12,8 @@ import javax.persistence.Query;
 import org.hsqldb.lib.StringUtil;
 import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
 import org.iso.registry.core.model.datum.DatumItemRepository;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
+import org.iso.registry.core.model.iso19115.extent.ExtentRepository;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.iso.registry.core.model.operation.OperationMethodItemRepository;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.geoinfoffm.registry.core.Entity;
+
 @Controller
 @RequestMapping("/entities")
 public class DataController
@@ -35,20 +40,29 @@ public class DataController
 	@Autowired
 	private EntityManager entityManager;
 	
+	@Autowired
+	private ExtentRepository extentRepository;
+	
 	@RequestMapping(value = "/by-class/{className}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody List<Object[]> findAll(@PathVariable("className") String className, 
-												@RequestParam(value = "orderBy", defaultValue = "code") String orderBy,
+												@RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
+												@RequestParam(value = "where", required = false) String where,
 												@RequestParam(value = "q", required = false) String search) {
 		StringBuilder q = new StringBuilder();
 		if (StringUtils.isEmpty(orderBy) || "null".equals(orderBy)) {
-			orderBy = "code";
+			orderBy = "name";
 		}
 		
 		q.append("SELECT i.uuid, i.identifier, i.name, i.description FROM " + className + " i WHERE i.status = 'VALID'");
 		if (!StringUtil.isEmpty(search)) {
 			search = "%" + search + "%";
 			q.append(" AND (LOWER(i.name) LIKE '" + search.toLowerCase() + "' OR CAST(i.identifier AS text) LIKE '" + search + "')");
+		}
+		if (!StringUtils.isEmpty(where)) {
+			q.append(" AND (");
+			q.append(where);
+			q.append(")");
 		}
 //		if (filters != null && !filters.isEmpty()) {
 //			q.append(" WHERE");
@@ -140,6 +154,61 @@ public class DataController
 		return query.getResultList();
 	}
 
+	@RequestMapping(value = "/extents", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody List<Object[]> findExtents(@RequestParam(value = "q", required = false) String search,
+													@RequestParam(value = "uuid", required = false) UUID uuid) {
+		StringBuilder q = new StringBuilder();
+		if (uuid != null) {
+			q.append("SELECT e.uuid, e.description FROM EX_Extent e WHERE e.uuid = '" + uuid.toString() + "'");
+			Query query = entityManager.createQuery(q.toString());
+			query.setMaxResults(1);
+			return query.getResultList();
+		}
+		
+		q.append("SELECT e.uuid, e.description FROM EX_Extent e WHERE e.description IS NOT NULL");
+		if (!StringUtils.isEmpty(search)) {
+			search = "%" + search + "%";
+			q.append(" AND (");
+			
+			q.append("LOWER(e.description) LIKE '");
+			q.append(search.toLowerCase());
+			q.append("'");
+			
+			q.append(")");
+		}
+		q.append(" ORDER BY e.description");
+		
+		Query query = entityManager.createQuery(q.toString());
+		List<Object[]> queryResult = query.getResultList();
+		List<Object[]> result = new ArrayList<>();
+		Set<String> descriptions = new HashSet<>();
+		for (Object[] obj : queryResult) {
+			if (!descriptions.contains((String)obj[1])) {
+				result.add(obj);
+				descriptions.add((String)obj[1]);
+			}
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/extents/json", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody EX_Extent findGeographicElements(@RequestParam(value = "uuid") UUID uuid) {
+		EX_Extent extent = extentRepository.findOne(uuid);
+		if (extent != null) {
+			extent.getGeographicElement().size();
+			extent.getVerticalElement().size();
+ 			Entity.unproxify(extent.getGeographicElement());
+			Entity.unproxify(extent.getVerticalElement());
+			
+			return extent;
+		}
+		
+		return null;
+	}
+
 
 	@RequestMapping(value = "/methods/transformation", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -197,7 +266,7 @@ public class DataController
 
 	@RequestMapping(value = "/by-uuid/{itemUuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public @ResponseBody List<Object[]> findByUuid(@PathVariable("itemUuid") UUID uuid, @RequestParam(value = "orderBy", defaultValue = "code") String orderBy) {
+	public @ResponseBody List<Object[]> findByUuid(@PathVariable("itemUuid") UUID uuid, @RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		String jpql = "SELECT i.uuid, i.identifier, i.name FROM RE_RegisterItem i WHERE uuid = '" + uuid.toString() + "' ORDER BY i." + orderBy;
 		return entityManager.createQuery(jpql).getResultList();
 	}
