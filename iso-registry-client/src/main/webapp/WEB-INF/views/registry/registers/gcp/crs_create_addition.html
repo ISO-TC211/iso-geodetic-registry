@@ -20,7 +20,6 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.crs}"></span></a>
-<!-- 									<h3 class="panel-title" th:text="#{header.crs}">CRS</h3> -->
 									<div class="pull-right">
 										<span class="glyphicon glyphicon-chevron-right"></span>
 									</div>
@@ -36,7 +35,6 @@
 							</div>
 							
 							<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
-							<div th:replace="registry/registers/gcp/datum_panel :: newDatumPanel"/>
 
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
