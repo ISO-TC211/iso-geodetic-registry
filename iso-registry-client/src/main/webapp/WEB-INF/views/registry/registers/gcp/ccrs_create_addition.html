@@ -19,7 +19,7 @@
 
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.crs}"></span></a>
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.compoundCrs}"></span></a>
 									<div class="pull-right">
 										<span class="glyphicon glyphicon-chevron-right"></span>
 									</div>
@@ -28,7 +28,7 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:include="registry/registers/gcp/crs_details :: details"/>
+											<div th:include="registry/registers/gcp/ccrs_details :: details"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
