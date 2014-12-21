@@ -384,6 +384,9 @@
 	<entry key="form.label.rangeMeaning">Range meaning</entry>
 	<entry key="form.label.greenwichLongitude">Longitude from Greenwich</entry>
 	<entry key="form.label.greenwichLongitudeUom">Unit</entry>
+	<entry key="form.label.horizontalCrs">Horizontal CRS</entry>
+	<entry key="form.label.verticalCrs">Vertical CRS</entry>
+	<entry key="form.label.selectExtent">Import existing extent</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -449,6 +452,8 @@
 	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
 	<entry key="form.placeholder.formula"></entry>
+
+	<entry key="form.placeholder.selectExtent">[select one to import extent data]</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
