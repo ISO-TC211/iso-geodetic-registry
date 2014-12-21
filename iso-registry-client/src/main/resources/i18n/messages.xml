@@ -111,6 +111,7 @@
 	<entry key="header.myProfile">Your user profile</entry>
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
+	<entry key="header.compoundCrs">Compound Coordinate Reference System</entry>
 	<entry key="header.cs">Coordinate System</entry>
 	<entry key="header.area">Area</entry>
 	<entry key="header.datum">Datum</entry>
@@ -536,6 +537,7 @@
 	<entry key="VerticalCRS">Vertical CRS</entry>
 	<entry key="ProjectedCRS">Projected CRS</entry>
 	<entry key="CompoundCRS">Compound CRS</entry>
+	<entry key="CompoundCoordinateReferenceSystemItem">Compound CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
 	<entry key="Area">Area of Use</entry>
 	<entry key="GeodeticDatum">Geodetic Datum</entry>

@@ -168,8 +168,9 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				// By convention, the first CRS is the horizontal component
 				CompoundCoordinateReferenceSystemItem compoundCrs = (CompoundCoordinateReferenceSystemItem)registerItem;
 				CoordinateReferenceSystemItem horizontalCrs = entityManager.find(CoordinateReferenceSystemItem.class, this.getHorizontalCrs().getReferencedItemUuid());
+				compoundCrs.getComponentReferenceSystem().clear();
 				if (horizontalCrs instanceof SingleCoordinateReferenceSystemItem) {
-					compoundCrs.addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
+					compoundCrs.getComponentReferenceSystem().add((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
 				}
 				else {
 					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", horizontalCrs.getIdentifier()));
@@ -180,7 +181,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				CompoundCoordinateReferenceSystemItem compoundCrs = (CompoundCoordinateReferenceSystemItem)registerItem;
 				CoordinateReferenceSystemItem verticalCrs = entityManager.find(CoordinateReferenceSystemItem.class, this.getVerticalCrs().getReferencedItemUuid());
 				if (verticalCrs instanceof SingleCoordinateReferenceSystemItem) {
-					compoundCrs.addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
+					compoundCrs.getComponentReferenceSystem().add((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
 				}
 				else {
 					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", verticalCrs.getIdentifier()));
