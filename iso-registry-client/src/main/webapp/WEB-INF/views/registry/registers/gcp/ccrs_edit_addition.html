@@ -2,19 +2,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head th:include="layout :: headerFragment" />
-<body th:with="isNew='true'">
+<body>
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
-	
 		<div class="row clearfix" style="margin-top: 0px">
 		
 			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
 				<fieldset>		
+					<input type="hidden" name="_method" value="PUT"/>
+					<input type="hidden" th:field="*{itemClassUuid}"/>
 					<div class="col-md-12 column">
-					
-						<div th:replace="registry/registers/proposal-globals :: itemClassSelector"/> 			
-					
+
 						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
 
 							<div class="panel panel-default">
@@ -28,7 +27,7 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:include="registry/registers/gcp/crs_details :: details"/>
+											<div th:include="registry/registers/gcp/ccrs_details :: details"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
