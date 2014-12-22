@@ -1,7 +1,9 @@
 package org.iso.registry.client;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.core.model.CoordinateSystemType;
+import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
@@ -20,6 +22,8 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 	private ExtentDTO domainOfValidity;
 	private DatumItemViewBean datum;
 	private CoordinateSystemItemViewBean coordinateSystem;
+	private CoordinateReferenceSystemItemViewBean horizontalCrs;
+	private CoordinateReferenceSystemItemViewBean verticalCrs;
 
 	public CoordinateReferenceSystemItemViewBean(Appeal appeal) {
 		super(appeal);
@@ -57,6 +61,13 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 			if (((SingleCoordinateReferenceSystemItem)crsItem).getDatum() != null) {
 				this.setDatum(new DatumItemViewBean(((SingleCoordinateReferenceSystemItem<?>)crsItem).getDatum()));
 			}
+		}
+		else if (crsItem instanceof CompoundCoordinateReferenceSystemItem) {
+			CompoundCoordinateReferenceSystemItem ccrsItem = (CompoundCoordinateReferenceSystemItem)crsItem;
+			// By convention, the first CRS is the horizontal component
+			this.setHorizontalCrs(new CoordinateReferenceSystemItemViewBean(ccrsItem.getComponentReferenceSystem().get(0)));
+			// By convention, the second CRS is the vertical component
+			this.setVerticalCrs(new CoordinateReferenceSystemItemViewBean(ccrsItem.getComponentReferenceSystem().get(1)));
 		}
 		if (crsItem instanceof GeodeticCoordinateReferenceSystemItem) {
 			switch (((GeodeticCoordinateReferenceSystemItem)crsItem).getCoordinateSystem().getAxes().size()) {
@@ -119,5 +130,21 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 
 	public void setCoordinateSystem(CoordinateSystemItemViewBean coordinateSystem) {
 		this.coordinateSystem = coordinateSystem;
+	}
+
+	public CoordinateReferenceSystemItemViewBean getHorizontalCrs() {
+		return horizontalCrs;
+	}
+
+	public void setHorizontalCrs(CoordinateReferenceSystemItemViewBean horizontalCrs) {
+		this.horizontalCrs = horizontalCrs;
+	}
+
+	public CoordinateReferenceSystemItemViewBean getVerticalCrs() {
+		return verticalCrs;
+	}
+
+	public void setVerticalCrs(CoordinateReferenceSystemItemViewBean verticalCrs) {
+		this.verticalCrs = verticalCrs;
 	}
 }

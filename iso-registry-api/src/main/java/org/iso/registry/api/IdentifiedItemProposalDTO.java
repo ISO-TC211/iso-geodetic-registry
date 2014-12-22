@@ -1,6 +1,7 @@
 package org.iso.registry.api;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,6 +69,9 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	}
 
 	public Set<String> getAliases() {
+		if (aliases == null) {
+			this.aliases = new HashSet<>();
+		}
 		return aliases;
 	}
 

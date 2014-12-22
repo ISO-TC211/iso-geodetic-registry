@@ -23,14 +23,42 @@
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',noAddNew='true'">
+					<div th:switch="${itemClassName}">
+<!-- 						<div th:case="all" th:with="ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}"> -->
+						<div th:case="'GeodeticCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'ProjectedCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'VerticalCRS'" th:with="ajaxPaths=${#strings.arraySplit('VerticalDatumItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div> 
+						<div th:case="'EngineeringCRS'" th:with="ajaxPaths=${#strings.arraySplit('EngineeringDatumItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div> 
+					</div>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',noAddNew='true'">
+					<div th:switch="${itemClassName}">
+<!-- 						<div th:case="all" th:with="ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}"> -->
+						<div th:case="'GeodeticCRS'" th:with="ajaxPaths=${#strings.arraySplit('CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'ProjectedCRS'" th:with="ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'VerticalCRS'" th:with="ajaxPaths=${#strings.arraySplit('VerticalCoordinateSystemItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'EngineeringCRS'" th:with="ajaxPaths=${#strings.arraySplit('CartesianCoordinateSystemItem,SphericalCoordinateSystemItem',',')}">
+							<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+						</div>
+					</div>
 				</div>
 			</div>
 

@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head th:include="layout :: headerFragment" />
-<body>
+<body th:with="isNew='true',isEdit='true'">
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
@@ -36,7 +36,9 @@
 								</div>
 							</div>
 	
-							<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+							<div th:unless="${proposal.isClarification()}">
+								<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+							</div>
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
 						</div>

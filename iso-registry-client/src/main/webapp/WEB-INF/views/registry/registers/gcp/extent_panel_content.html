@@ -1,6 +1,72 @@
 <div th:fragment="extentPanelContent">
+	<div th:if="${isProposal}">
+
+		<div th:replace="registry/registers/globals :: formLabel('extent', #{form.label.selectExtent})"/>
+		<div id="selectExtentGroup" th:with="isClarification=${proposal.isClarification()}">
+			<input type="hidden" id="selectExtent" style="width: 100%" />
+			<script type="text/javascript" charset="utf-8" th:inline="text">
+			/* <![CDATA[ */
+				$(function() {
+					$('#selectExtent').select2({
+						placeholder: "[[#{form.placeholder.selectExtent}]]",
+					    allowClear: true,
+						multiple: false,
+						dropdownCssClass: "bigdrop",
+						ajax: {
+							url: "[[@{__${basePath}__/}]]entities/extents",
+							dataType: "json",
+							data: function(term, page) {
+								return {
+									orderBy: 'description',
+									q: term
+								};
+							},
+							results: function (data) {
+								return { 
+									results : $.map(data, function (item) { 
+										return { 
+											id: item[0], 
+											text: item[1], 
+										} 
+									}) 
+								};
+							}
+			            },
+			            initSelection: function(element, callback) {
+		               		var result = [];
+		               		// Collect AJAX requests needed to resolve initially
+		               		// selected items
+		                	$.when($.ajax("[[@{__${basePath}__/}]]entities/extents", {
+		                		uuid: $(element).val(),
+// 								description: $(element).val(),
+		                    	dataType: "json"
+		                	}))
+		                	.done(function(data) {
+		                		item = data[0];
+		                		result.push({
+		                			id: item[0],
+									text: item[1], 
+		                		});
+				                callback(result[0]); 
+		                	});
+			            }						            
+			        });
+					
+					if ([[${proposal.isClarification()}]]) {
+						$('#selectExtent').select2("readonly", true);
+					}
+				});
+			
+			/* ]]> */
+			</script>
+		</div>
+	</div>
+
+
+
+
 	<div class="row">
-		<div class="col-md-12" th:with="property='description',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='true'">
+		<div class="col-md-12" th:with="property='description',modifier='extent',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='true'">
 			<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
@@ -13,7 +79,6 @@
 
 	<div class="tab-content">
 		<div id="geographicExtent" class="tab-pane in active" style="padding-top: 10px">
-
 			<div class="row">
 				<div class="col-md-12">
 					<table id="bboxTable" class="datatable table table-striped" th:with="isEditable=(${isProposal} and !${proposal.isClarification()})">
@@ -30,7 +95,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="row,rowStat : *{geographicBoundingBoxes}">
+							<tr th:each="row,rowStat : *{geographicBoundingBoxes}" th:id="'row-' + ${rowStat.index}">
 								<td>
 									<input th:field="*{geographicBoundingBoxes[__${rowStat.index}__].northBoundLatitude}" th:disabled="!${isEditable}"/>
 								</td>
@@ -92,7 +157,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" id="extentPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+							<button type="button" id="extentPopup_cancel" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Cancel</button>
+							<button type="button" id="extentPopup_ok" class="btn btn-primary" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
 						</div>
 					</div>
 				</div>
@@ -147,23 +213,76 @@
 		 				}
 		 			]
 			});	
-	
+
+			var extentCount = table.fnGetData().length;
+
 			$('#extentPopup_ok').click(function(e) {
 				table = $('#bboxTable').dataTable();
-				var resolverCount = table.fnGetData().length;
 				table.fnAddData([
-				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + resolverCount + "].northBoundLatitude' value='" + $('#northBoundLatitude').val() + "'/>",
-				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + resolverCount + "].eastBoundLongitude' value='" + $('#eastBoundLongitude').val() + "'/>",
-				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + resolverCount + "].southBoundLatitude' value='" + $('#southBoundLatitude').val() + "'/>",
-				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + resolverCount + "].westBoundLongitude' value='" + $('#westBoundLongitude').val() + "'/>",
-					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (resolverCount - 1) + "' value='" + resolverCount + "'>Remove row</button>"
+				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].northBoundLatitude' value='" + $('#northBoundLatitude').val() + "'/>",
+				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].eastBoundLongitude' value='" + $('#eastBoundLongitude').val() + "'/>",
+				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].southBoundLatitude' value='" + $('#southBoundLatitude').val() + "'/>",
+				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].westBoundLongitude' value='" + $('#westBoundLongitude').val() + "'/>",
+					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + extentCount + "' value='" + extentCount + "'>Remove row</button>"
 				]);
+				extentCount++;
 			});
 
 			$(document).on('click', '.btn-deleterow', function(e) {
-				var index = $(this).data('index');
+				var index = '#row-' + $(this).data('index');
+				var row = $(index);
 				table = $('#bboxTable').dataTable();
-				table.fnDeleteRow(index);
+				table.fnDeleteRow(row);
+			});
+			
+			$(document).on('change', '#selectExtent', function(e) {
+				var val = $(this).val();
+				$.ajax({
+					url: "[[@{__${basePath}__/}]]entities/extents/json",
+					data: {
+							uuid: $(this).val(),
+		            },
+				}).done(function(data) {
+					table.fnClearTable();
+					$('#description').val(data.description);
+					$.each(data.geographicElement, function(index, value) {
+						if (value.eastBoundLatitude !== null) {
+							table.fnAddData([
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].northBoundLatitude' value='" + value.northBoundLatitude + "'/>",
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].eastBoundLongitude' value='" + value.eastBoundLongitude + "'/>",
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].southBoundLatitude' value='" + value.southBoundLatitude + "'/>",
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].westBoundLongitude' value='" + value.westBoundLongitude + "'/>",
+								"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + extentCount + "' value='" + extentCount + "'>Remove row</button>"
+							]);
+							extentCount++;
+						}
+					});
+				});
+			});
+			
+			$(document).on('change', '#selectExtent', function(e) {
+				var val = $(this).val();
+				$.ajax({
+					url: "[[@{__${basePath}__/}]]entities/extents/json",
+					data: {
+							uuid: $(this).val(),
+		            },
+				}).done(function(data) {
+					table.fnClearTable();
+					$('#description-extent').val(data.description);
+					$.each(data.geographicElement, function(index, value) {
+						if (value.eastBoundLatitude !== null) {
+							table.fnAddData([
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].northBoundLatitude' value='" + value.northBoundLatitude + "'/>",
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].eastBoundLongitude' value='" + value.eastBoundLongitude + "'/>",
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].southBoundLatitude' value='" + value.southBoundLatitude + "'/>",
+							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].westBoundLongitude' value='" + value.westBoundLongitude + "'/>",
+								"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + extentCount + "' value='" + extentCount + "'>Remove row</button>"
+							]);
+							extentCount++;
+						}
+					});
+				});
 			});
 		});				
 	/* ]]> */		

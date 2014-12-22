@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head th:include="layout :: headerFragment" />
-<body th:with="isNew='true',isEdit='true'">
+<body>
 	<div th:include="layout :: navbarFragment"></div>
 
 	<div class="container">
@@ -18,7 +18,7 @@
 
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.cs}"></span></a>
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel"><span class="panel-title" th:text="#{header.crs}"></span></a>
 									<div class="pull-right">
 										<span class="glyphicon glyphicon-chevron-right"></span>
 									</div>
@@ -27,12 +27,16 @@
 									<div class="panel-body">
 										<div th:if="${itemClass}">
 											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
-											<div th:include="registry/registers/gcp/cs_details :: details"/>
+											<div th:include="registry/registers/gcp/ccrs_details :: details"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
 							</div>
 							
+							<div th:unless="${proposal.isClarification()}">
+								<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+							</div>
+
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
 						</div>

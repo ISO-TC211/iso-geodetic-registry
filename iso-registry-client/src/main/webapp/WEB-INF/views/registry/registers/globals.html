@@ -19,7 +19,7 @@
 
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
-	<input th:id="${property}" th:name="${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}"></input>
+	<input th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -206,7 +206,6 @@
 	</script>
 </div>
 
-
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_byid'" href="#" th:title="#{tooltip.orderByIdentifier}" th:text="#{orderByIdentifier}">[by Identifier]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
@@ -258,10 +257,12 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath + "?orderBy=name",
+							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath,
 							{
-								id : $(this).val(),
-								ajax : 'true'
+								orderBy: 'name',
+								id: $(this).val(),
+								ajax: 'true',
+								[[${where} ? 'where: "' + ${where} + '"' : '']]
 							},
 							function(j) {
 								var options = '';
@@ -294,10 +295,12 @@
 					$("select#[[${property}]]_select").attr('disabled', 'disabled');
 					$('#[[${property}]]_loader').show();
 					$.getJSON(
-							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath + "?orderBy=identifier",
+							"[[@{__${basePath}__/}]]entities/by-class/" + ajaxPath,
 							{
+								orderBy: 'identifier',
 								id : $(this).val(),
-								ajax : 'true'
+								ajax : 'true',
+								[[${where} ? 'where: "' + ${where} + '"' : '']]
 							},
 							function(j) {
 								var options = '';
