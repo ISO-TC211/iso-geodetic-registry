@@ -37,7 +37,9 @@
 								</div>
 							</div>
 	
-							<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+							<div th:unless="${proposal.isClarification()}">
+								<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+							</div>
 							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
 						</div>

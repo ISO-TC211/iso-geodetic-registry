@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
@@ -25,6 +26,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 public class CompoundCoordinateReferenceSystemItem extends CoordinateReferenceSystemItem
 {
 	@ManyToMany
+	@OrderColumn(name = "INDEX")
 	private List<SingleCoordinateReferenceSystemItem<? extends DatumItem>> componentReferenceSystem;
 
 	public CompoundCoordinateReferenceSystemItem() {
@@ -42,17 +44,9 @@ public class CompoundCoordinateReferenceSystemItem extends CoordinateReferenceSy
 	}
 
 	public List<SingleCoordinateReferenceSystemItem<? extends DatumItem>> getComponentReferenceSystem() {
-		return componentReferenceSystem;
-	}
-
-	public void setComponentReferenceSystem(List<SingleCoordinateReferenceSystemItem<? extends DatumItem>> componentReferenceSystem) {
-		this.componentReferenceSystem = componentReferenceSystem;
-	}
-	
-	public void addComponentReferenceSystem(SingleCoordinateReferenceSystemItem<? extends DatumItem> componentReferenceSystem) {
 		if (this.componentReferenceSystem == null) {
 			this.componentReferenceSystem = new ArrayList<SingleCoordinateReferenceSystemItem<? extends DatumItem>>();			
 		}
-		this.componentReferenceSystem.add(componentReferenceSystem);
+		return componentReferenceSystem;
 	}
 }

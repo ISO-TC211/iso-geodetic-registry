@@ -72,6 +72,7 @@ public abstract class DatumItem extends IdentifiedItem
 	 * Non-standard attribute to differentiate between the date of publication (realizationEpoch)
 	 * and the reference date of this datum.
 	 */
+	@Temporal(TemporalType.DATE)
 	private Date coordinateReferenceEpoch;
 
 	public String getAnchorDefinition() {

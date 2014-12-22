@@ -111,6 +111,7 @@
 	<entry key="header.myProfile">Your user profile</entry>
 	<entry key="header.proposalDetails">Proposal details</entry>
 	<entry key="header.crs">Coordinate Reference System</entry>
+	<entry key="header.compoundCrs">Compound Coordinate Reference System</entry>
 	<entry key="header.cs">Coordinate System</entry>
 	<entry key="header.area">Area</entry>
 	<entry key="header.datum">Datum</entry>
@@ -384,6 +385,9 @@
 	<entry key="form.label.rangeMeaning">Range meaning</entry>
 	<entry key="form.label.greenwichLongitude">Longitude from Greenwich</entry>
 	<entry key="form.label.greenwichLongitudeUom">Unit</entry>
+	<entry key="form.label.horizontalCrs">Horizontal CRS</entry>
+	<entry key="form.label.verticalCrs">Vertical CRS</entry>
+	<entry key="form.label.selectExtent">Import existing extent</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -449,6 +453,8 @@
 	<entry key="form.placeholder.greenwichLongitude"></entry>
 	
 	<entry key="form.placeholder.formula"></entry>
+
+	<entry key="form.placeholder.selectExtent">[select one to import extent data]</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
@@ -532,10 +538,15 @@
 	<entry key="CoordinateSystemAxis">Coordinate System Axis</entry>
 	<entry key="UnitOfMeasure">Unit of Measurement</entry>
 	<entry key="GeodeticCRS">Geodetic CRS</entry>
+	<entry key="GeodeticCoordinateReferenceSystemItem">Geodetic CRS</entry>
 	<entry key="EngineeringCRS">Engineering CRS</entry>
+	<entry key="EngineeringCoordinateReferenceSystemItem">Engineering CRS</entry>
 	<entry key="VerticalCRS">Vertical CRS</entry>
+	<entry key="VerticalCoordinateReferenceSystemItem">Vertical CRS</entry>
 	<entry key="ProjectedCRS">Projected CRS</entry>
+	<entry key="ProjectedCoordinateReferenceSystemItem">Projected CRS</entry>
 	<entry key="CompoundCRS">Compound CRS</entry>
+	<entry key="CompoundCoordinateReferenceSystemItem">Compound CRS</entry>
 	<entry key="Ellipsoid">Ellipsoid</entry>
 	<entry key="Area">Area of Use</entry>
 	<entry key="GeodeticDatum">Geodetic Datum</entry>
