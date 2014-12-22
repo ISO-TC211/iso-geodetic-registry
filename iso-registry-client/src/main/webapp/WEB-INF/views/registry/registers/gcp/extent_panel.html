@@ -28,7 +28,10 @@
 				<div class="modal-header">
 					<h4 th:text="#{popup.extent.header}">Extent</h4>
 				</div>
-				<div class="modal-body" th:object="${item.domainOfValidity}">
+				<div th:unless="${isProposal}" class="modal-body" th:object="${item.domainOfValidity}">
+					<div th:include="registry/registers/gcp/extent_panel_content :: extentPanelContent"/>
+				</div>
+				<div th:if="${isProposal}" class="modal-body" th:object="${proposal.domainOfValidity}">
 					<div th:include="registry/registers/gcp/extent_panel_content :: extentPanelContent"/>
 				</div>
 				<div class="modal-footer">
