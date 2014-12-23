@@ -411,7 +411,9 @@ public class RegisterItemController
 
 	@RequestMapping(value = "/{uuid}/clarify", method = RequestMethod.GET)
 	@Transactional
-	public String createClarificationProposal(@PathVariable("uuid") UUID itemUuid, final Model model) throws ItemNotFoundException {
+	public String createClarificationProposal(@PathVariable("uuid") UUID itemUuid, final Model model) throws ItemNotFoundException, UnauthorizedException {
+		security.assertHasRoleWith(SUBMITTER_ROLE_PREFIX);
+		
 		model.addAttribute("isNew", "true");
 		model.addAttribute("isProposal", "true");
 
