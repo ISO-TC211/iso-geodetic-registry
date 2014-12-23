@@ -230,7 +230,6 @@
 
 			$(document).on('click', '.btn-deleterow', function(e) {
 				var index = '#row-' + $(this).data('index');
-				alert(index);
 				var row = $(index);
 				table = $('#bboxTable').dataTable();
 				table.fnDeleteRow(row);

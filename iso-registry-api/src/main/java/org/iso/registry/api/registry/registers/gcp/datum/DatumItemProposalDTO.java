@@ -140,11 +140,14 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 			Date realizationEpoch = null;
 			Date coordinateReferenceEpoch = null;
 			try {
-				realizationEpoch = df.parse(this.getRealizationEpoch());
-				 if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
-					 coordinateReferenceEpoch = df.parse(this.getCoordinateReferenceEpoch());
+				 if (!StringUtils.isEmpty(this.getRealizationEpoch())) {
+					realizationEpoch = df.parse(this.getRealizationEpoch());
 				 }
 				datum.setRealizationEpoch(realizationEpoch);
+				
+				if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
+					coordinateReferenceEpoch = df.parse(this.getCoordinateReferenceEpoch());
+				}
 				datum.setCoordinateReferenceEpoch(coordinateReferenceEpoch);
 			}
 			catch (ParseException e) {
@@ -181,10 +184,15 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 			}
 			
 			if (datum.getRealizationEpoch() != null) {
-				DateFormat df = new SimpleDateFormat("yyyy");
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				this.setRealizationEpoch(df.format(datum.getRealizationEpoch()));
 			}
-			
+
+			if (datum.getCoordinateReferenceEpoch() != null) {
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				this.setCoordinateReferenceEpoch(df.format(datum.getCoordinateReferenceEpoch()));
+			}
+
 			this.setScope(datum.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {
