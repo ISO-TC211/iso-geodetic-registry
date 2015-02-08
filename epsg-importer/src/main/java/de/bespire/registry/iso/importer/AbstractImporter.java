@@ -27,12 +27,13 @@ import com.healthmarketscience.jackcess.Row;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.core.IllegalOperationException;
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
-import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 
@@ -81,7 +82,7 @@ public abstract class AbstractImporter
 	}
 
 	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier)
-			throws InvalidProposalException {
+			throws InvalidProposalException, UnauthorizedException {
 		try {
 			if (itemIdentifier != null) {
 				ai.getItem().setItemIdentifier(itemIdentifier);
@@ -109,7 +110,7 @@ public abstract class AbstractImporter
 			logger.info("> Adding item class '{}' to register '{}'...\n", name, r.getName());
 			ic = new RE_ItemClass();
 			ic.setName(name);
-			ic.addRegister(r);
+			ic.getRegisters().add(r);
 			ic = itemClassRepository.save(ic);
 		}
 
@@ -204,7 +205,7 @@ public abstract class AbstractImporter
 		// Do nothing, must override
 	}
 
-	protected abstract void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException;
+	protected abstract void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException;
 	protected abstract void clearAway();
 	protected abstract String codeProperty();
 
