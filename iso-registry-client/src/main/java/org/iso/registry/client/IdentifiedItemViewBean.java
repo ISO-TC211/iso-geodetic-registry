@@ -3,11 +3,9 @@ package org.iso.registry.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.iso.registry.api.registry.registers.gcp.AliasDTO;
-import org.iso.registry.core.model.Alias;
 import org.iso.registry.core.model.IdentifiedItem;
 
-import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
+import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -47,8 +45,8 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 	}
 
 	@Override
-	protected void addAdditionalProperties(RE_RegisterItem registerItem) {
-		super.addAdditionalProperties(registerItem);
+	protected void addAdditionalProperties(RE_RegisterItem registerItem, boolean loadDetails) {
+		super.addAdditionalProperties(registerItem, loadDetails);
 		
 		if (!(registerItem instanceof IdentifiedItem)) {
 			return;
