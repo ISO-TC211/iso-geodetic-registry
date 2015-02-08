@@ -20,10 +20,10 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 
-import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 
 public class EpsgImporter
@@ -120,7 +120,13 @@ public class EpsgImporter
 			if (register == null) {
 				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", GCP_REGISTER_NAME));
 			}
-
+			
+			authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A", 
+					Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"), 
+							      new SimpleGrantedAuthority("ROLE_SUBMITTER_" + register.getUuid().toString()), 
+							      new SimpleGrantedAuthority("ROLE_MANAGER_" + register.getUuid().toString()), 
+							      new SimpleGrantedAuthority("ROLE_CONTROLBODY_" + register.getUuid().toString())));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 //			RE_ItemClass icNamespace = namingSystemsImporter.getOrCreateItemClass(register, null);
 //			if (argList.contains("all") || argList.contains("1") || argList.contains("-ns")) {
 //				if (argList.contains("-ns")) {
