@@ -24,6 +24,7 @@ import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
 import de.geoinfoffm.registry.api.UserRegistrationException;
+import de.geoinfoffm.registry.api.soap.CreateRegistryUserRequest;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;
@@ -35,7 +36,6 @@ import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
-import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
@@ -43,9 +43,9 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
-import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 public class IsoRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
 {
@@ -179,7 +179,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 			logger.info("> Adding item class to register '{}'...", r.getName());
 			ic = new RE_ItemClass();
 			ic.setName(name);
-			r.addContainedItemClass(ic);
+			r.getContainedItemClasses().add(ic);
 			ic = itemClassRepository.save(ic);
 
 			logger.info(">>> {}", ic.getName());
@@ -190,7 +190,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 
 	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register,
 			RE_ItemClass itemClass, String name, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter)
-			throws InvalidProposalException, InstantiationException, IllegalAccessException {
+			throws InvalidProposalException, InstantiationException, IllegalAccessException, UnauthorizedException {
 		P proposal;
 		proposal = dtoClass.newInstance();
 		proposal.setItemClassUuid(itemClass.getUuid());
@@ -214,7 +214,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 		return ai.getItem();
 	}
 
-	protected void acceptProposal(Addition ai, String decisionEvent) throws InvalidProposalException {
+	protected void acceptProposal(Addition ai, String decisionEvent) throws InvalidProposalException, UnauthorizedException {
 		try {
 			proposalService.reviewProposal(ai);
 			proposalService.acceptProposal(ai, decisionEvent);
@@ -251,7 +251,7 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 	protected RegistryUser createUser(String name, String password, String mail, Role... roles)
 			throws UserRegistrationException, UnauthorizedException {
 
-		RegistryUser existingUser = userRepository.findByEmailAddress(mail);
+		RegistryUser existingUser = userRepository.findByEmailAddressIgnoreCase(mail);
 
 		if (existingUser != null) {
 			return existingUser;
