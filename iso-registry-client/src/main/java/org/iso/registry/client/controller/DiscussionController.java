@@ -8,16 +8,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
-import org.iso.registry.api.forum.PostDTO;
-import org.iso.registry.api.forum.ProposalDiscussionDTO;
-import org.iso.registry.api.forum.ProposalDiscussionInvitationDTO;
-import org.iso.registry.api.forum.ProposalDiscussionService;
 import org.iso.registry.client.controller.registry.ProposalNotFoundException;
-import org.iso.registry.core.forum.Discussion;
-import org.iso.registry.core.forum.Post;
-import org.iso.registry.core.forum.ProposalDiscussion;
-import org.iso.registry.core.forum.ProposalDiscussion.DiscussionType;
-import org.iso.registry.core.forum.ProposalDiscussionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +23,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 
+import de.geoinfoffm.registry.api.forum.PostDTO;
+import de.geoinfoffm.registry.api.forum.ProposalDiscussionDTO;
+import de.geoinfoffm.registry.api.forum.ProposalDiscussionInvitationDTO;
+import de.geoinfoffm.registry.api.forum.ProposalDiscussionService;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.forum.Discussion;
+import de.geoinfoffm.registry.core.forum.Post;
+import de.geoinfoffm.registry.core.forum.ProposalDiscussion;
+import de.geoinfoffm.registry.core.forum.ProposalDiscussion.DiscussionType;
+import de.geoinfoffm.registry.core.forum.ProposalDiscussionRepository;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
-import de.geoinfoffm.registry.persistence.ProposalRepository;
 
 /**
  * @author Florian.Esser
