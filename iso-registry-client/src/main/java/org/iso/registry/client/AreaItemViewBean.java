@@ -2,7 +2,6 @@ package org.iso.registry.client;
 
 import org.iso.registry.core.model.crs.AreaItem;
 
-import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -45,8 +44,8 @@ public class AreaItemViewBean extends IdentifiedItemViewBean
 	}
 
 	@Override
-	protected void addAdditionalProperties(RE_RegisterItem registerItem) {
-		super.addAdditionalProperties(registerItem);
+	protected void addAdditionalProperties(RE_RegisterItem registerItem, boolean loadDetails) {
+		super.addAdditionalProperties(registerItem, loadDetails);
 		
 		if (!(registerItem instanceof AreaItem)) {
 			return;

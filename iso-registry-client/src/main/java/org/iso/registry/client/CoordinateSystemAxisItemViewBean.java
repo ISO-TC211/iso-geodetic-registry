@@ -51,8 +51,8 @@ public class CoordinateSystemAxisItemViewBean extends IdentifiedItemViewBean
 	}
 
 	@Override
-	protected void addAdditionalProperties(RE_RegisterItem registerItem) {
-		super.addAdditionalProperties(registerItem);
+	protected void addAdditionalProperties(RE_RegisterItem registerItem, boolean loadDetails) {
+		super.addAdditionalProperties(registerItem, loadDetails);
 		
 		if (!(registerItem instanceof CoordinateSystemAxisItem)) {
 			return;

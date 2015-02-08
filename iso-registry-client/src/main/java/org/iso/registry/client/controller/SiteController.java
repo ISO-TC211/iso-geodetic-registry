@@ -64,6 +64,8 @@ import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
 import de.geoinfoffm.registry.api.UpdateUserException;
 import de.geoinfoffm.registry.api.UserRegistrationException;
+import de.geoinfoffm.registry.api.soap.CreateOrganizationRequest;
+import de.geoinfoffm.registry.api.soap.CreateRegistryUserRequest;
 import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.ClientConfiguration;
 import de.geoinfoffm.registry.client.web.OrganizationFormBean;
@@ -83,7 +85,6 @@ import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
-import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
@@ -91,10 +92,9 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
-import de.geoinfoffm.registry.soap.CreateOrganizationRequest;
-import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 /**
  * Root controller.
@@ -801,7 +801,7 @@ public class SiteController extends AbstractController
 			initLog.append(String.format("> Adding item class to register '%s'...\n", r.getName()));
 			ic = new RE_ItemClass();
 			ic.setName(name);
-			r.addContainedItemClass(ic);
+			r.getContainedItemClasses().add(ic);
 			ic = itemClassRepository.save(ic);
 
 			initLog.append(String.format(">>> %s\n", ic.getName()));
@@ -812,7 +812,7 @@ public class SiteController extends AbstractController
 		return ic;
 	}
 
-	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, BigInteger itemIdentifier, Organization sponsor, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException {
+	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, BigInteger itemIdentifier, Organization sponsor, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException, UnauthorizedException {
 		P proposal;
 		proposal = BeanUtils.instantiateClass(dtoClass);
 		proposal.setItemClassUuid(itemClass.getUuid());
@@ -838,7 +838,7 @@ public class SiteController extends AbstractController
 		return ai.getItem();
 	}
 
-	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier) throws InvalidProposalException {
+	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier) throws InvalidProposalException, UnauthorizedException {
 		try {
 			if (itemIdentifier != null) {
 				ai.getItem().setItemIdentifier(itemIdentifier);
@@ -884,7 +884,7 @@ public class SiteController extends AbstractController
 	protected RegistryUser createUser(String name, String password, String mail, Organization organization, Role... roles)
 			throws UserRegistrationException, UnauthorizedException {
 		
-		RegistryUser existingUser = userRepository.findByEmailAddress(mail);
+		RegistryUser existingUser = userRepository.findByEmailAddressIgnoreCase(mail);
 		
 		if (existingUser != null) {
 			return existingUser;
