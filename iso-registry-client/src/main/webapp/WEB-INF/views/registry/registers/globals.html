@@ -17,6 +17,17 @@
 	</script>
 </div>
 
+<div th:fragment="popoverLink(id, label, text)">
+	<small><a th:id="'popover-' + ${id}" href="#" th:text="${label}" th:attr="data-content=${text},data-original-title=${label}" rel="popover" data-placement="right" data-container="body" data-trigger="hover" data-html="true"></a></small>
+	<script type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			$('#popover-[[${id}]]').popover();
+		});
+	/* ]]> */
+	</script>
+</div>
+
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<input th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}"></input>
