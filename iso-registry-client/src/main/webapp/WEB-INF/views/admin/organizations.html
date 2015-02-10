@@ -37,19 +37,12 @@
 						</p>
 					</div>
 		
-					<div th:if="${deletedOrganization}" class="alert alert-warning">
-						<p th:text="#{alert.organizationDeleted}">Die Organisation wurde gelöscht.</p>
-					</div>
-			
-					<form th:action="@{__${basePath}__/admin/organization/new}" th:unless="${revision} or ${revisionDate}">
-						<button id="neworganization" class="btn btn-primary" th:text="#{button.newOrganization}">Neue Organisation</button>
-					</form>
-
 					<div style="margin-top: 20px">
 						<table id="orgsTable" class="datatable table table-striped">
 							<thead>
 								<tr>
 									<th th:text="#{tableheader.name}">Name</th>
+									<th th:text="#{tableheader.shortName}">Short name</th>
 									<th />
 								</tr>
 							</thead>
@@ -57,10 +50,14 @@
 		
 								<tr th:each="item : ${organizations}">
 									<td th:text="${item.name}"></td>
+									<td th:text="${item.shortName}"></td>
 									<td>
 										<form th:action="@{__${basePath}__/admin/organization/} + ${item.uuid}" method="get" th:unless="${revision} or ${revisionDate}">
-											<button th:id="'editorganization-' + ${item.uuid}" class="btn btn-xs btn-primary" type="submit" th:text="#{button.edit}">Bearbeiten</button>
-											<button td:id="'deleteorganization-' + ${item.uuid}" class="btn btn-xs btn-warning" th:href="'#confirmdelete-' + ${item.uuid}" data-toggle="modal" th:text="#{button.delete}">Löschen</button>
+											<button th:id="'editorganization-' + ${item.uuid}" class="btn btn-xs btn-default" type="submit" th:text="#{button.edit}">Bearbeiten</button>
+											<button td:id="'deleteorganization-' + ${item.uuid}" class="btn btn-xs btn-danger" type="button" th:href="'#confirmdelete-' + ${item.uuid}" data-toggle="modal" th:text="#{button.delete}" th:disabled="!${item.users.isEmpty()}"></button>
+											<div th:if="!${item.users.isEmpty()}">
+												<div th:replace="registry/registers/globals :: popoverLink('cannotDeleteOrg', #{button.cannotDeleteOrganization}, #{form.help.cannotDeleteOrganization})"/>
+											</div>
 										</form>
 										<div class="modal fade" th:id="'confirmdelete-' + ${item.uuid}"
 											role="dialog">
@@ -77,29 +74,27 @@
 														<div class="modal-footer">
 															<form th:action="@{__${basePath}__/admin/organization/} + ${item.uuid}" method="post">
 																<input hidden="true" name="_method" value="DELETE"/>
-																<button id="confirmdeletion" type="submit" class="btn btn-warning" th:text="#{button.yes}">Ja</button>	
-																<button id="denydeletion" class="btn btn-default btn-primary" data-dismiss="modal" th:text="#{button.no}">Nein</button>
+																<button id="confirmdeletion" type="submit" class="btn btn-danger" th:text="#{button.yes}">Ja</button>	
+																<button id="denydeletion" class="btn btn-default btn-default" data-dismiss="modal" th:text="#{button.no}">Nein</button>
 															</form>
 														</div>
 												</div>
 											</div>
-										</div></td>
+										</div>
+									</td>
 								</tr>
 								<!-- This example data will be removed by thmyeleafe during processing and replaced with the rows generated above -->
 								<tr th:remove="all">
 									<td>Testorganisation 1</td>
+									<td>TST1</td>
+									<td>Kategorie</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-<!-- 				<div th:include="layout :: foot"></div> -->
-<!-- 					</div>	 -->
 				</div>
 			</div>
 		</div>
-		
-	<div th:include="layout :: foot"></div>
-		
 		<script type="text/javascript" th:inline="text">
 			$(document).ready(function() {
 				var table;
@@ -125,6 +120,7 @@
 					 "aaSorting": [[ 0, "asc" ]],
 					 aoColumns: [
 						null,
+						null,
 						{"bSortable" : false}
 					]
 				});	
@@ -141,5 +137,8 @@
 				});
 			});
 		</script>
+		
+		<div th:replace="layout :: foot"></div>
+		
 	</body>
 </html>

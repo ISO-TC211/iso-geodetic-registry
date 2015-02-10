@@ -191,6 +191,7 @@
 	<entry key="button.addBoundingBox">Add bounding box</entry>
 	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
+	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -404,6 +405,8 @@
 	<entry key="form.help.alias">An alternative name by which this object is identified.</entry>
 	<entry key="form.help.remarks">Comments on or information about this object.</entry>
 	<entry key="form.help.scope">Description of usage, or limitations of usage, for which this item is valid. If unknown, enter "not known".</entry>
+	
+	<entry key="form.help.cannotDeleteOrganization">There are still users associated with this organization. Please reassign all users of this organization before deleting it.</entry>
 	
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>
