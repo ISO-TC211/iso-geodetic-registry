@@ -5,15 +5,15 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
-import org.iso.registry.api.forum.ProposalDiscussionInvitationsAddedEvent;
-import org.iso.registry.core.forum.ProposalDiscussion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import de.geoinfoffm.registry.api.AbstractEventListener;
+import de.geoinfoffm.registry.api.forum.ProposalDiscussionInvitationsAddedEvent;
 import de.geoinfoffm.registry.client.web.ClientConfiguration;
+import de.geoinfoffm.registry.core.forum.ProposalDiscussion;
 
 @Component
 public class ProposalDiscussionInvitationsAddedEventListener extends AbstractEventListener implements ApplicationListener<ProposalDiscussionInvitationsAddedEvent> 

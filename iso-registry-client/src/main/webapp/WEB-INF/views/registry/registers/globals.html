@@ -17,9 +17,20 @@
 	</script>
 </div>
 
+<div th:fragment="popoverLink(id, label, text)">
+	<small><a th:id="'popover-' + ${id}" href="#" th:text="${label}" th:attr="data-content=${text},data-original-title=${label}" rel="popover" data-placement="right" data-container="body" data-trigger="hover" data-html="true"></a></small>
+	<script type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			$('#popover-[[${id}]]').popover();
+		});
+	/* ]]> */
+	</script>
+</div>
+
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
-	<input th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:type="${inputType}" th:field="*{__${property}__}"></input>
+	<input th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:field="*{__${property}__}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -361,7 +372,11 @@
 	<div class="col-md-8" th:with="property='name',rows=2,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
-	<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true'">
+	<div th:if="${isProposal}" class="col-md-4">
+		<div th:replace="registry/registers/globals :: formLabel('identifier', #{form.label.identifier})"/>
+		<p th:text="#{form.label.autoAssigned}"/>
+	</div>
+	<div th:unless="${isProposal}" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>

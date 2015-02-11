@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -43,7 +44,7 @@ public class OperationMethodsImporter extends AbstractImporter
 
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
 		OperationMethodItemProposalDTO proposal = new OperationMethodItemProposalDTO();
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
@@ -51,7 +52,7 @@ public class OperationMethodsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(COORD_OP_METHOD_CODE);
-		proposal.setIdentifier(determineIdentifier("OperationMethod", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("OperationMethod", epsgCode));
 		
 		proposal.setName((String)row.get(COORD_OP_METHOD_NAME));
 		proposal.setReversible((Boolean)row.get(REVERSE_OP));
@@ -73,7 +74,7 @@ public class OperationMethodsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

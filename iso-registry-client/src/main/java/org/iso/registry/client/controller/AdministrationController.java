@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -42,12 +43,14 @@ import de.geoinfoffm.registry.api.NoRevisionAtThisPointInTimeException;
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemService;
+import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.UpdateUserException;
+import de.geoinfoffm.registry.api.soap.CreateOrganizationRequest;
+import de.geoinfoffm.registry.api.soap.CreateRegistryUserRequest;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.NotFoundException;
 import de.geoinfoffm.registry.client.web.OrganizationFormBean;
-import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.NonExistentRevisionException;
@@ -56,15 +59,16 @@ import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Delegation;
 import de.geoinfoffm.registry.core.model.DelegationRepository;
 import de.geoinfoffm.registry.core.model.Organization;
+import de.geoinfoffm.registry.core.model.OrganizationRelatedRole;
+import de.geoinfoffm.registry.core.model.OrganizationRelatedRoleRepository;
+import de.geoinfoffm.registry.core.model.OrganizationRepository;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
 import de.geoinfoffm.registry.core.model.RoleRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
-import de.geoinfoffm.registry.persistence.ProposalRepository;
-import de.geoinfoffm.registry.soap.CreateOrganizationRequest;
-import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 /**
  * Controller for the Administration views.
@@ -86,6 +90,9 @@ public class AdministrationController
 
 	@Autowired
 	private OrganizationService organizationService;
+	
+	@Autowired
+	private OrganizationRepository organizationRepository;
 
 	@Autowired
 	private DelegationRepository delegationRepository;
@@ -106,7 +113,13 @@ public class AdministrationController
 	private RoleRepository roleRepository;
 	
 	@Autowired
+	private OrganizationRelatedRoleRepository orgRoleRepository;
+	
+	@Autowired
 	private RegistrySecurity security;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -264,8 +277,9 @@ public class AdministrationController
 	 * @param uuid ID of the user to remove.
 	 * @throws UnauthorizedException 
 	 */
+	@Transactional
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-	public View deleteOrganization(@PathVariable("id") String uuid, final RedirectAttributes redirectAttributes) throws UnauthorizedException {
+	public View deleteUser(@PathVariable("id") String uuid, final RedirectAttributes redirectAttributes) throws UnauthorizedException {
 		try {
 			UUID id = UUID.fromString(uuid);
 			userService.delete(id);
@@ -491,11 +505,33 @@ public class AdministrationController
 	 * @param uuid ID of the organization to remove.
 	 * @throws UnauthorizedException 
 	 */
+	@Transactional
 	@RequestMapping(value = "/organization/{id}", method = RequestMethod.DELETE)
-	public String removeRow(@PathVariable("id") String uuid, final RedirectAttributes redirectAttributes) throws UnauthorizedException {
+	public String deleteOrganization(@PathVariable("id") String uuid, final RedirectAttributes redirectAttributes) throws UnauthorizedException {
 		try {
 			UUID id = UUID.fromString(uuid);
-			organizationService.delete(id);
+			Organization deletee = organizationService.findOne(id);
+			if (deletee == null) {
+				throw new EntityNotFoundException(String.format("Cannot delete non-existing organization '%s'", uuid));
+			}
+
+			Delegation[] delegations = delegationRepository.findByDelegatingOrganization(deletee).toArray(new Delegation[] { });
+			deletee.getDelegations().clear();
+			
+			OrganizationRelatedRole[] roles = orgRoleRepository.findByOrganization(deletee).toArray(new OrganizationRelatedRole[] { }); 
+			deletee.getRoles().clear();
+
+			for (Delegation delegation : delegations) {
+				delegation.getUser().getAuthorizations().remove(delegation);
+				delegationRepository.delete(delegation);
+			}
+			
+			for (OrganizationRelatedRole role : roles) {
+				orgRoleRepository.delete(role);
+			}
+
+			organizationRepository.delete(deletee);
+			
 			redirectAttributes.addFlashAttribute("deletedOrganization", "true");
 		}
 		catch (IllegalArgumentException e) {
@@ -509,7 +545,7 @@ public class AdministrationController
 		}
 		
 		return "redirect:/admin/organizations";
-	}	
+	}
 	
 	@RequestMapping(value = "/proposals", method = RequestMethod.GET)
 	@Transactional

@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.hsqldb.lib.StringUtil;
+import org.iso.registry.api.registry.IsoProposalService;
 import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
 import org.iso.registry.core.model.datum.DatumItemRepository;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
@@ -42,6 +43,9 @@ public class DataController
 	
 	@Autowired
 	private ExtentRepository extentRepository;
+	
+	@Autowired
+	private IsoProposalService isoProposalService;
 	
 	@RequestMapping(value = "/by-class/{className}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -247,11 +251,9 @@ public class DataController
 	@RequestMapping(value = "/identifier/next-available", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody Integer findNextAvailableIdentifier() {
-		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
-		Integer maxCode = (Integer)entityManager.createQuery(jpql).getResultList().get(0);
-		return (maxCode == null) ? 1 : maxCode + 1;
+		return isoProposalService.findNextAvailableIdentifier();
 	}
-
+	
 	@RequestMapping(value = "/identifier/check-availability", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody Long checkIdentifierAvailability(@RequestParam("identifier") Long identifier) {

@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
-import org.iso.registry.core.model.datum.DatumItem;
 
-import de.geoinfoffm.registry.client.web.RegisterItemViewBean;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -43,8 +41,8 @@ public class CoordinateSystemItemViewBean extends IdentifiedItemViewBean
 	}
 
 	@Override
-	protected void addAdditionalProperties(RE_RegisterItem registerItem) {
-		super.addAdditionalProperties(registerItem);
+	protected void addAdditionalProperties(RE_RegisterItem registerItem, boolean loadDetails) {
+		super.addAdditionalProperties(registerItem, loadDetails);
 		
 		if (!(registerItem instanceof CoordinateSystemItem)) {
 			return;

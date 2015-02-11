@@ -1,9 +1,6 @@
 package org.iso.registry.core.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Access;
@@ -24,6 +21,8 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 @Audited @Entity
 public abstract class IdentifiedItem extends RE_RegisterItem
 {
+	private static final long serialVersionUID = 5495508699522335382L;
+
 	@Basic(optional = false)
 	private Integer identifier;
 

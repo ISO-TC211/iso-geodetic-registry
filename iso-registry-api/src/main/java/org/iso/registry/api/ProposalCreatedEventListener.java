@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.core.ProposalCreatedEvent;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
-import de.geoinfoffm.registry.persistence.ProposalRepository;
 
 @Transactional
 @Component

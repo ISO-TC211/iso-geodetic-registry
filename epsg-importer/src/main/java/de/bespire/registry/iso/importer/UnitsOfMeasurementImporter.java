@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.healthmarketscience.jackcess.Row;
 
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -45,7 +46,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 	
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws UnauthorizedException {
 		UnitOfMeasureItemProposalDTO proposal = new UnitOfMeasureItemProposalDTO();
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
@@ -54,7 +55,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 
 		Integer epsgCode = (Integer)row.get(UOM_CODE);
-		proposal.setIdentifier(determineIdentifier("UnitOfMeasurement", epsgCode));
+		Integer identifier = determineIdentifier("UnitOfMeasurement", epsgCode);
 		
 //		proposal.setCode((Integer)row.get(UOM_CODE));
 		proposal.setName((String)row.get(UNIT_OF_MEAS_NAME));
@@ -66,7 +67,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setDescription(proposal.getName());
 		
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
-		if (!targetUomCode.equals(proposal.getIdentifier())) {
+		if (!targetUomCode.equals(identifier)) {
 //			UnitOfMeasureItem standardUnitItem = uomRepository.findByIdentifier(targetUomCode);
 //			UnitOfMeasureItemProposalDTO standardUnit = new UnitOfMeasureItemProposalDTO(standardUnitItem);
 //			proposal.setStandardUnit(standardUnit);
@@ -86,7 +87,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

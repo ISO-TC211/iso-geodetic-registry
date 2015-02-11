@@ -47,6 +47,7 @@ import com.healthmarketscience.jackcess.CursorBuilder;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -125,7 +126,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
 		String type = (String)row.get(COORD_OP_TYPE);
 		if ("conversion".equalsIgnoreCase(type)) {
 			importConversion(row, itemClass, sponsor, register);
@@ -142,14 +143,14 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	}
 	
 	@Transactional
-	protected void importConversion(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
+	protected void importConversion(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
 		SingleOperationItemProposalDTO proposal = createSingleOperationProposal(row, icConversion, sponsor, register);
 		proposal.setOperationType(SingleOperationType.CONVERSION);
 		processProposal(proposal);
 	}
 
 	@Transactional
-	protected void importTransformation(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
+	protected void importTransformation(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
 		SingleOperationItemProposalDTO proposal = createSingleOperationProposal(row, icTransformation, sponsor, register);
 		proposal.setOperationType(SingleOperationType.TRANSFORMATION);
 		processProposal(proposal);
@@ -162,7 +163,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(COORD_OP_CODE);
-		proposal.setIdentifier(determineIdentifier("CoordinateOperation", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("CoordinateOperation", epsgCode));
 		
 		proposal.setName((String)row.get(COORD_OP_NAME));
 		
@@ -262,7 +263,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		}
 	}
 
-	private void processProposal(CoordinateOperationItemProposalDTO proposal) {
+	private void processProposal(CoordinateOperationItemProposalDTO proposal) throws UnauthorizedException {
 		logger.info(">> Imported operation '{}'...", proposal.getName());
 		
 		try {
@@ -270,7 +271,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

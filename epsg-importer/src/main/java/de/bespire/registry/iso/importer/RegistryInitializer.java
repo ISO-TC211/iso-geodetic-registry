@@ -18,6 +18,8 @@ import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
 import de.geoinfoffm.registry.api.UserRegistrationException;
+import de.geoinfoffm.registry.api.soap.CreateOrganizationRequest;
+import de.geoinfoffm.registry.api.soap.CreateRegistryUserRequest;
 import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Organization;
@@ -26,15 +28,13 @@ import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
-import de.geoinfoffm.registry.core.model.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
-import de.geoinfoffm.registry.soap.CreateOrganizationRequest;
-import de.geoinfoffm.registry.soap.CreateRegistryUserRequest;
 
 @Component
 public class RegistryInitializer
@@ -82,7 +82,7 @@ public class RegistryInitializer
 				logger.info("done");
 			}
 			
-			Organization isotc211 = createOrganization("ISO/TC 211");
+			Organization isotc211 = createOrganization("ISO/TC 211", "TC211");
 			
 			RegistryUser submitter = createUser("ISO Registry Submitter", "s", "submitter@example.org", isotc211);
 			RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
@@ -135,7 +135,7 @@ public class RegistryInitializer
 		}
 	}
 
-	protected Organization createOrganization(String name) throws UnauthorizedException {
+	protected Organization createOrganization(String name, String shortName) throws UnauthorizedException {
 		CI_ResponsibleParty respExample = new CI_ResponsibleParty("John Doe", null, null, CI_RoleCode.USER);
 		RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization(name, respExample);
 		orgExample = suborgRepository.save(orgExample);
@@ -145,6 +145,7 @@ public class RegistryInitializer
 		
 		CreateOrganizationRequest cor = new CreateOrganizationRequest();
 		cor.setName(name);
+		cor.setShortName(shortName);
 		cor.setSubmittingOrganization(pt);
 		return orgService.createOrganization(cor);
 	}
@@ -152,7 +153,7 @@ public class RegistryInitializer
 	protected RegistryUser createUser(String name, String password, String mail, Organization organization, Role... roles)
 			throws UserRegistrationException, UnauthorizedException {
 		
-		RegistryUser existingUser = userRepository.findByEmailAddress(mail);
+		RegistryUser existingUser = userRepository.findByEmailAddressIgnoreCase(mail);
 		
 		if (existingUser != null) {
 			return existingUser;
@@ -192,7 +193,7 @@ public class RegistryInitializer
 			logger.info("> Adding item class '{}' to register '{}'...\n", name, r.getName());
 			ic = new RE_ItemClass();
 			ic.setName(name);
-			r.addContainedItemClass(ic);
+			r.getContainedItemClasses().add(ic);
 			ic = itemClassRepository.save(ic);
 		}
 		
