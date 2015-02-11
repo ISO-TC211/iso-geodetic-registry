@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import de.geoinfoffm.registry.api.ProposalServiceImpl;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
@@ -51,6 +52,24 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	@Autowired
 	public IsoProposalServiceImpl(ProposalRepository repository) {
 		super(repository);
+	}
+
+	@Override
+	public Proposal acceptProposal(Proposal proposal, String controlBodyDecisionEvent) throws InvalidProposalException,
+			IllegalOperationException, UnauthorizedException {
+		
+		if (proposal instanceof Addition) {
+			// assign final identifier to IdentifiedItems
+			Addition addition = (Addition)proposal;
+			RE_RegisterItem proposedItem = addition.getItem();
+			if (proposedItem instanceof IdentifiedItem) {
+				Integer identifier = this.findNextAvailableIdentifier();
+				((IdentifiedItem)proposedItem).setIdentifier(identifier);
+				proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
+			}
+		}
+		
+		return super.acceptProposal(proposal, controlBodyDecisionEvent);
 	}
 
 	@Override
