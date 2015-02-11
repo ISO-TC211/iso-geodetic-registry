@@ -23,6 +23,7 @@ import com.healthmarketscience.jackcess.Cursor;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -53,7 +54,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
 		CoordinateSystemItemProposalDTO proposal = new CoordinateSystemItemProposalDTO();
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
@@ -63,7 +64,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 
 		// Add axes
 		Integer epsgCode = (Integer)row.get(COORD_SYS_CODE);
-		proposal.setIdentifier(determineIdentifier("CoordinateSystem", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("CoordinateSystem", epsgCode));
 		
 		Cursor cursor = axisTable.getDefaultCursor();
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -96,12 +97,12 @@ public class CoordinateSystemsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}
 		catch (InvalidProposalException e) {
-			logger.error("!! Failed to imported CS #{}...", proposal.getIdentifier());
+			logger.error("!! Failed to imported CS #{}...", epsgCode);
 			logger.error(e.getMessage(), e);
 		}
 

@@ -3,16 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.iso.registry</groupId>
 	<artifactId>iso-registry</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.3.3</version>
 	<packaging>pom</packaging>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
 	</properties>	
 	<modules>
-		<module>registry/src/iso19135/registry-core</module>
-		<module>registry/src/iso19135/registry-api</module>
-		<module>registry/src/iso19135/registry-persistence</module>
-		<module>registry/src/iso19135/registry-client-base</module>
+		<module>registry-base/src/registry-core</module>
+		<module>registry-base/src/registry-api</module>
+		<module>registry-base/src/registry-persistence</module>
+		<module>registry-base/src/registry-client-base</module>
 		<module>iso-registry-api</module>
 		<module>iso-registry-client</module>
 	</modules>

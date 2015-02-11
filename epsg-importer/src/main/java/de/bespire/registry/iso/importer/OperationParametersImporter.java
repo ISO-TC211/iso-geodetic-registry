@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.healthmarketscience.jackcess.Row;
 
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -29,7 +30,7 @@ public class OperationParametersImporter extends AbstractImporter
 
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws UnauthorizedException {
 		OperationParameterItemProposalDTO proposal = new OperationParameterItemProposalDTO();
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
@@ -40,7 +41,7 @@ public class OperationParametersImporter extends AbstractImporter
 			new Object();
 		}
 		Integer epsgCode = (Integer)row.get(PARAMETER_CODE);
-		proposal.setIdentifier(determineIdentifier("OperationParameter", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("OperationParameter", epsgCode));
 		
 		proposal.setName((String)row.get(PARAMETER_NAME));
 		proposal.setDescription((String)row.get(DESCRIPTION));
@@ -56,7 +57,7 @@ public class OperationParametersImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

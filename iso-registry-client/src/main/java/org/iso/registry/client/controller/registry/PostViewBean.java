@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import org.iso.registry.core.forum.Post;
+import de.geoinfoffm.registry.core.forum.Post;
 
 public class PostViewBean
 {

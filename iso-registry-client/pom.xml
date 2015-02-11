@@ -6,7 +6,7 @@
 	<artifactId>iso-registry-client</artifactId>
 	<name>iso-registry-client</name>
 	<packaging>war</packaging>
-	<version>1.3.2</version>
+	<version>1.3.3</version>
     <scm>
         <connection>scm:git:ssh://git@git.bespire.de:bespire/iso-registry.git</connection>
     </scm>	
@@ -19,6 +19,7 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<hibernate.connection.username>isoreg</hibernate.connection.username>
 		<hibernate.connection.password>isoreg</hibernate.connection.password>
+		<hibernate.connection.schema>public</hibernate.connection.schema>
 		<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg</hibernate.connection.url>
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 		<client.basepath></client.basepath>
@@ -205,7 +206,7 @@
 		<dependency>
 			<groupId>de.geoinfoffm.registry</groupId>
 			<artifactId>registry-client-base</artifactId>
-			<version>HEAD-SNAPSHOT</version>
+			<version>2.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
     <build>
@@ -281,6 +282,25 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+			    <groupId>org.flywaydb</groupId>
+			    <artifactId>flyway-maven-plugin</artifactId>
+			    <version>3.1</version>
+			    <configuration>
+			    	<driver>org.postgresql.Driver</driver>
+			    	<url>${hibernate.connection.url}</url>
+			        <user>${hibernate.connection.username}</user>
+			        <password>${hibernate.connection.password}</password>
+			        <schemas>
+			            <schema>${hibernate.connection.schema}</schema>
+			        </schemas>
+			        <locations>
+			        	<location>classpath:db</location>
+			        </locations>
+			        <encoding>UTF-8</encoding>
+			        <baselineOnMigrate>true</baselineOnMigrate>
+			    </configuration>
 			</plugin>
 
 <!-- 			<plugin> -->
@@ -387,6 +407,7 @@
 				<hibernate.connection.username>isoreg</hibernate.connection.username>
 				<hibernate.connection.password>isoreg</hibernate.connection.password>
 				<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg</hibernate.connection.url>
+				<hibernate.connection.schema>public</hibernate.connection.schema>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<client.basepath></client.basepath>
 				<mail.enabled>true</mail.enabled>

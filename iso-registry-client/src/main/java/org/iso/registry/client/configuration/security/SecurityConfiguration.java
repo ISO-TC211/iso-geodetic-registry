@@ -5,8 +5,6 @@ package org.iso.registry.client.configuration.security;
 
 import javax.sql.DataSource;
 
-import org.iso.registry.api.security.RegistryAuthenticationProvider;
-import org.iso.registry.api.security.RegistryUserDetailsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -39,6 +37,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import de.geoinfoffm.registry.api.security.RegistryAuthenticationProvider;
+import de.geoinfoffm.registry.api.security.RegistryUserDetailsManager;
 import de.geoinfoffm.registry.client.web.BasePathUrlAuthenticationFailureHandler;
 import de.geoinfoffm.registry.client.web.BasePathUrlAuthenticationSuccessHandler;
 import de.geoinfoffm.registry.client.web.BasePathUrlLogoutSuccessHandler;

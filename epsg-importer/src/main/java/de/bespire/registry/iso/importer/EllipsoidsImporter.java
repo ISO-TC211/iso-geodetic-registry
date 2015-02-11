@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.healthmarketscience.jackcess.Row;
 
+import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -46,7 +47,7 @@ public class EllipsoidsImporter extends AbstractImporter
 
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
 		EllipsoidItemProposalDTO proposal = new EllipsoidItemProposalDTO();
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
@@ -55,7 +56,7 @@ public class EllipsoidsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(ELLIPSOID_CODE);
-		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));
 		
 		proposal.setName((String)row.get(ELLIPSOID_NAME));
 		proposal.setSemiMajorAxis((Double)row.get(SEMI_MAJOR_AXIS));
@@ -84,7 +85,7 @@ public class EllipsoidsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}

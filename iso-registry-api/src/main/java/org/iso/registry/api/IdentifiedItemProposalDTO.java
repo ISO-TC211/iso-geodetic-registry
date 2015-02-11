@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
@@ -15,20 +16,14 @@ import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 {
-//	private String nameCodespace;
-//	private String nameCodespaceVersion;
-//	private CI_Citation nameCodespaceCitation;
-	
-	private Integer identifier;
 	private Set<String> aliases;
 	private String remarks;
 	private String informationSource;
 	private String dataSource;
-
 	
 	public IdentifiedItemProposalDTO() {
 		super();
@@ -58,14 +53,6 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	
 	private void initializeEmpty() {
 		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
-	}
-
-	public Integer getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(Integer identifier) {
-		this.identifier = identifier;
 	}
 
 	public Set<String> getAliases() {
@@ -126,8 +113,8 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 				}
 			}
 			
-			item.setIdentifier(this.getIdentifier());
-			item.setItemIdentifier(BigInteger.valueOf(this.getIdentifier().longValue()));
+			item.setIdentifier(-RandomUtils.nextInt());
+			item.setItemIdentifier(BigInteger.valueOf(item.getIdentifier().longValue()));
 			item.setRemarks(this.getRemarks());
 			item.setInformationSource(this.getInformationSource());
 			item.setDataSource(this.getDataSource());
@@ -149,7 +136,6 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 				}
 			}
 			
-			this.setIdentifier(item.getIdentifier());
 			this.setRemarks(item.getRemarks());
 			this.setInformationSource(item.getInformationSource());
 			this.setDataSource(item.getDataSource());

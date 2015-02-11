@@ -6,16 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.velocity.util.SimplePool;
 import org.iso.registry.client.controller.registry.PostViewBean;
-import org.iso.registry.core.forum.Post;
-import org.iso.registry.core.forum.ProposalDiscussion;
-import org.iso.registry.core.forum.ProposalDiscussion.DiscussionType;
 import org.springframework.util.Assert;
 
+import de.geoinfoffm.registry.core.forum.Post;
+import de.geoinfoffm.registry.core.forum.ProposalDiscussion;
+import de.geoinfoffm.registry.core.forum.ProposalDiscussion.DiscussionType;
 import de.geoinfoffm.registry.core.model.ProposalGroup;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
-import de.geoinfoffm.registry.core.model.Supersession;
 
 public class ProposalDiscussionViewBean
 {
@@ -46,7 +44,7 @@ public class ProposalDiscussionViewBean
 		}
 		else if (discussion.getDiscussedProposal() instanceof ProposalGroup) {
 			ProposalGroup pg = (ProposalGroup)discussion.getDiscussedProposal();
-			this.proposalTitle = pg.getName();
+			this.proposalTitle = pg.getTitle();
 		}
 		
 		this.discussionType = discussion.getDiscussionType();

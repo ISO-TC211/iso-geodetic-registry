@@ -191,6 +191,7 @@
 	<entry key="button.addBoundingBox">Add bounding box</entry>
 	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
+	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -242,6 +243,7 @@
 	<entry key="alert.noSupersedingItems">At least one superseding item must be added.</entry>
 	<entry key="alert.registerNotFound">Register "{0}" does not exist.</entry>
 	<entry key="alert.validationFailed">The action cannot be completed due to erroneous or missing form data. Please check all input fields.</entry>
+	<entry key="alert.unauthorized">You are not authorized to access the requested resource.</entry>
 
 	<entry key="popup.newOrganization.header">Details of your organization</entry>
 	<entry key="popup.deleteUser.header">Delete user</entry>
@@ -388,6 +390,7 @@
 	<entry key="form.label.horizontalCrs">Horizontal CRS</entry>
 	<entry key="form.label.verticalCrs">Vertical CRS</entry>
 	<entry key="form.label.selectExtent">Import existing extent</entry>
+	<entry key="form.label.autoAssigned">Will be assigned automatically</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -403,6 +406,8 @@
 	<entry key="form.help.alias">An alternative name by which this object is identified.</entry>
 	<entry key="form.help.remarks">Comments on or information about this object.</entry>
 	<entry key="form.help.scope">Description of usage, or limitations of usage, for which this item is valid. If unknown, enter "not known".</entry>
+	
+	<entry key="form.help.cannotDeleteOrganization">There are still users associated with this organization. Please reassign all users of this organization before deleting it.</entry>
 	
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>
