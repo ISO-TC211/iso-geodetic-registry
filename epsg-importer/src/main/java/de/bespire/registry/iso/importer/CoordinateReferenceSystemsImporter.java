@@ -86,7 +86,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
-		proposal.setIdentifier(crsCode);
+//		proposal.setIdentifier(crsCode);
 		proposal.setName((String)row.get(COORD_REF_SYS_NAME));
 		proposal.setScope((String)row.get(CRS_SCOPE));
 		
@@ -153,7 +153,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported {} CRS #{} ('{}')...", new Object[] { crsType, crsCode, proposal.getName() });
 		}

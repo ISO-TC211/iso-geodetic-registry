@@ -81,13 +81,9 @@ public abstract class AbstractImporter
 		this.generateIdentifiers = true;
 	}
 
-	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier)
+	protected void acceptProposal(Addition ai, String decisionEvent)
 			throws InvalidProposalException, UnauthorizedException {
 		try {
-			if (itemIdentifier != null) {
-				ai.getItem().setItemIdentifier(itemIdentifier);
-				itemService.saveRegisterItem(ai.getItem());
-			}
 			proposalService.reviewProposal(ai);
 			proposalService.acceptProposal(ai, decisionEvent);
 		}

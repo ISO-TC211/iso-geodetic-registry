@@ -42,7 +42,7 @@ public class NamingSystemsImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setIdentifier((Integer)row.get(NAMING_SYSTEM_CODE));
+//		proposal.setIdentifier((Integer)row.get(NAMING_SYSTEM_CODE));
 		proposal.setName((String)row.get(NAMING_SYSTEM_NAME));
 		proposal.setDescription(proposal.getName());
 		
@@ -57,7 +57,7 @@ public class NamingSystemsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

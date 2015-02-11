@@ -390,6 +390,7 @@
 	<entry key="form.label.horizontalCrs">Horizontal CRS</entry>
 	<entry key="form.label.verticalCrs">Vertical CRS</entry>
 	<entry key="form.label.selectExtent">Import existing extent</entry>
+	<entry key="form.label.autoAssigned">Will be assigned automatically</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
