@@ -55,7 +55,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 
 		Integer epsgCode = (Integer)row.get(UOM_CODE);
-		proposal.setIdentifier(determineIdentifier("UnitOfMeasurement", epsgCode));
+		Integer identifier = determineIdentifier("UnitOfMeasurement", epsgCode);
 		
 //		proposal.setCode((Integer)row.get(UOM_CODE));
 		proposal.setName((String)row.get(UNIT_OF_MEAS_NAME));
@@ -67,7 +67,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setDescription(proposal.getName());
 		
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
-		if (!targetUomCode.equals(proposal.getIdentifier())) {
+		if (!targetUomCode.equals(identifier)) {
 //			UnitOfMeasureItem standardUnitItem = uomRepository.findByIdentifier(targetUomCode);
 //			UnitOfMeasureItemProposalDTO standardUnit = new UnitOfMeasureItemProposalDTO(standardUnitItem);
 //			proposal.setStandardUnit(standardUnit);
@@ -87,7 +87,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

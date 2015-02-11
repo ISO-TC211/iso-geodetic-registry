@@ -163,7 +163,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer epsgCode = (Integer)row.get(COORD_OP_CODE);
-		proposal.setIdentifier(determineIdentifier("CoordinateOperation", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("CoordinateOperation", epsgCode));
 		
 		proposal.setName((String)row.get(COORD_OP_NAME));
 		
@@ -271,7 +271,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
