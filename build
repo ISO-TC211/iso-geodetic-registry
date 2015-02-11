@@ -11,6 +11,8 @@ fi
 mkdir -p dist
 rm dist/*
 
+set -e
+
 # update current branch
 
 git pull origin 
@@ -18,7 +20,7 @@ git pull origin
 # update submodule
 
 #cd registry-base
-#git pull origin
+#git fetch origin
 #cd ..
 git submodule update --recursive
 
