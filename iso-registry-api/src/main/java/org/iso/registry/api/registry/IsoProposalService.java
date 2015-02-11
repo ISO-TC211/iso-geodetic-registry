@@ -23,4 +23,6 @@ public interface IsoProposalService extends ProposalService
 	
 	ProposalNote createNote(Proposal proposal, RegistryUser author, String note);
 
+	Integer findNextAvailableIdentifier();
+
 }

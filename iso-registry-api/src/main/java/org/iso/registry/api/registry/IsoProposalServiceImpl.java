@@ -1,9 +1,14 @@
 package org.iso.registry.api.registry;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.lang3.StringUtils;
+import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.ProposalNote;
 import org.iso.registry.core.model.ProposalNoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import de.geoinfoffm.registry.api.ProposalServiceImpl;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
@@ -40,9 +46,30 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	@Autowired
 	private RegistrySecurity security;
 	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
 	@Autowired
 	public IsoProposalServiceImpl(ProposalRepository repository) {
 		super(repository);
+	}
+
+	@Override
+	public Proposal acceptProposal(Proposal proposal, String controlBodyDecisionEvent) throws InvalidProposalException,
+			IllegalOperationException, UnauthorizedException {
+		
+		if (proposal instanceof Addition) {
+			// assign final identifier to IdentifiedItems
+			Addition addition = (Addition)proposal;
+			RE_RegisterItem proposedItem = addition.getItem();
+			if (proposedItem instanceof IdentifiedItem) {
+				Integer identifier = this.findNextAvailableIdentifier();
+				((IdentifiedItem)proposedItem).setIdentifier(identifier);
+				proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
+			}
+		}
+		
+		return super.acceptProposal(proposal, controlBodyDecisionEvent);
 	}
 
 	@Override
@@ -125,4 +152,10 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 		return noteRepository.save(result);
 	}
 	
+	@Override
+	public Integer findNextAvailableIdentifier() {
+		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
+		Integer maxCode = (Integer)entityManager.createQuery(jpql).getResultList().get(0);
+		return (maxCode == null) ? 1 : maxCode + 1;
+	}
 }

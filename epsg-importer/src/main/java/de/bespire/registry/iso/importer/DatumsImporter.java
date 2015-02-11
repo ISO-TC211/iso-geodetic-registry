@@ -79,7 +79,7 @@ public class DatumsImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
-		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
+//		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
 		proposal.setScope((String)row.get(DATUM_SCOPE));
@@ -110,7 +110,7 @@ public class DatumsImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}

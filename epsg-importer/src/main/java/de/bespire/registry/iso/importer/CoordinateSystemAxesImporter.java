@@ -86,7 +86,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setAxisUnit(new UnitOfMeasureItemProposalDTO(uom));
 		
 		Integer epsgCode = (Integer)row.get(COORD_AXIS_CODE);
-		proposal.setIdentifier(determineIdentifier("CoordinateSystemAxis", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("CoordinateSystemAxis", epsgCode));
 		
 		proposal.setName((String)nameRow.get(COORD_AXIS_NAME));
 		proposal.setDescription((String)nameRow.get(DESCRIPTION));
@@ -100,7 +100,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
 		}
