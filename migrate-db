@@ -8,9 +8,6 @@ else
     PROFILESARG="-P ${PROFILES}"
 fi
 
-mkdir -p dist
-rm dist/*
-
 # update current branch
 
 git pull origin 
@@ -22,7 +19,6 @@ git pull origin
 #cd ..
 git submodule update --recursive
 
-# compile
-mvn -Dmaven.test.skip=true ${PROFILESARG} clean package
-cp iso-registry-client/target/*.war dist
+# migrate
+mvn -Dmaven.test.skip=true ${PROFILESARG} flyway:migrate
 
