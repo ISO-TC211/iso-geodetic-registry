@@ -41,7 +41,7 @@ public class OperationParametersImporter extends AbstractImporter
 			new Object();
 		}
 		Integer epsgCode = (Integer)row.get(PARAMETER_CODE);
-		proposal.setIdentifier(determineIdentifier("OperationParameter", epsgCode));
+//		proposal.setIdentifier(determineIdentifier("OperationParameter", epsgCode));
 		
 		proposal.setName((String)row.get(PARAMETER_NAME));
 		proposal.setDescription((String)row.get(DESCRIPTION));
@@ -57,7 +57,7 @@ public class OperationParametersImporter extends AbstractImporter
 			proposalService.submitProposal(ai);
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
-			acceptProposal(ai, decisionEvent, BigInteger.valueOf(proposal.getIdentifier().longValue()));
+			acceptProposal(ai, decisionEvent);
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
