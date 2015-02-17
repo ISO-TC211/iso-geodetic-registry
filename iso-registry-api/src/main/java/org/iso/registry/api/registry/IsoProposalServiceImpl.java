@@ -21,6 +21,8 @@ import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
+import de.geoinfoffm.registry.core.model.Supersession;
+import de.geoinfoffm.registry.core.model.SupersessionPart;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
@@ -61,15 +63,28 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 		if (proposal instanceof Addition) {
 			// assign final identifier to IdentifiedItems
 			Addition addition = (Addition)proposal;
-			RE_RegisterItem proposedItem = addition.getItem();
-			if (proposedItem instanceof IdentifiedItem) {
-				Integer identifier = this.findNextAvailableIdentifier();
-				((IdentifiedItem)proposedItem).setIdentifier(identifier);
-				proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
+			assignItemIdentifier(addition);
+		}
+		else if (proposal instanceof Supersession) {
+			Supersession supersession = (Supersession)proposal;
+			for (Proposal subproposal : supersession.getProposals()) {
+				if (subproposal instanceof Addition) {
+					Addition addition = (Addition)subproposal;
+					assignItemIdentifier(addition);
+				}
 			}
 		}
 		
 		return super.acceptProposal(proposal, controlBodyDecisionEvent);
+	}
+
+	private void assignItemIdentifier(Addition addition) {
+		RE_RegisterItem proposedItem = addition.getItem();
+		if (proposedItem instanceof IdentifiedItem) {
+			Integer identifier = this.findNextAvailableIdentifier();
+			((IdentifiedItem)proposedItem).setIdentifier(identifier);
+			proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
+		}
 	}
 
 	@Override
