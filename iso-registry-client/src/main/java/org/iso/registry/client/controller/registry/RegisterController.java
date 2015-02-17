@@ -71,6 +71,7 @@ import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.ProposalType;
+import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
@@ -82,6 +83,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.security.RegistryUserUtils;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
@@ -329,7 +331,7 @@ public class RegisterController
 		}
 		
 		
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 //		RE_SubmittingOrganization suborg = null;
 //		Collection<Proposal> proposals = proposalRepository.findByDateSubmittedIsNotNull();
 		if (security.isLoggedIn()) {
@@ -463,10 +465,11 @@ public class RegisterController
 			model.addAttribute("itemClassName", selectedItemClass.getName());
 		}
 
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RegistryUser currentUser = security.getCurrentUser();
+		RE_SubmittingOrganization suborg = currentUser.getOrganization().getSubmittingOrganization();
+		proposal.setSponsorUuid(suborg.getUuid());
 		
 		proposal.setProposalType(ProposalType.ADDITION);
-		proposal.setSponsorUuid(suborg.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 		
 		model.addAttribute("proposal", proposal);
@@ -498,8 +501,7 @@ public class RegisterController
 		
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, register);
 		
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 		SupersessionState state = new SupersessionState(register, suborg, itemService);
 		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
 
@@ -598,8 +600,7 @@ public class RegisterController
 		}
 		model.addAttribute("register", targetRegister);
 		
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 
 		model.addAttribute("isNew", "true");
 

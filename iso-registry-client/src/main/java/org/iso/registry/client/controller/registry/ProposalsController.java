@@ -70,6 +70,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.security.RegistryUserUtils;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
@@ -371,9 +372,8 @@ public class ProposalsController
 		
 		model.addAttribute("register", targetRegister);
 		
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
-
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
+		
 		model.addAttribute("isNew", "true");
 		model.addAttribute("partOfSupersession", "true");
 
