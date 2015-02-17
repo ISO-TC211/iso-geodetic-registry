@@ -69,6 +69,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.security.RegistryUserUtils;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationException;
 
@@ -203,8 +204,7 @@ public class RegisterItemController
 			throw new IllegalOperationException(String.format("Cannot retire item with status %s", item.getStatus().name()));
 		}
 		
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 
 		proposalService.createRetirement(item, justification, registerManagerNotes, controlBodyNotes, suborg);
 
@@ -231,8 +231,7 @@ public class RegisterItemController
 
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, item.getRegister());
 
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 		SupersessionState state = new SupersessionState(item.getRegister(), suborg, itemService);
 		state.addSupersededItem(item);
 		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
@@ -282,8 +281,7 @@ public class RegisterItemController
 		}
 		model.addAttribute("register", targetRegister);
 		
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 
 		model.addAttribute("isNew", "true");
 
@@ -431,8 +429,7 @@ public class RegisterItemController
 		proposal.setItemUuid(itemUuid);
 		proposal.setItemClassUuid(itemClass.getUuid());
 
-//		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 		
 		proposal.setProposalType(ProposalType.CLARIFICATION);
 		proposal.setSponsorUuid(suborg.getUuid());
@@ -590,7 +587,7 @@ public class RegisterItemController
 			model.addAttribute("itemClassName", selectedItemClass.getName());
 		}
 
-		RE_SubmittingOrganization suborg = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 
 		proposal.setProposalType(ProposalType.ADDITION);
 		proposal.setSponsorUuid(suborg.getUuid());
