@@ -49,6 +49,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistryPermission;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.security.RegistryUserUtils;
 import de.geoinfoffm.registry.persistence.AppealRepository;
 
 /**
@@ -163,7 +164,7 @@ public class ManagementController
 		
 		List<RegisterItemViewBean> proposalViewBeans = new ArrayList<RegisterItemViewBean>();
 
-		RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
+		RE_SubmittingOrganization sponsor = RegistryUserUtils.getUserSponsor(userRepository);
 		List<Proposal> proposals = proposalRepository.findBySponsorAndGroupIsNullAndIsConcludedIsFalse(sponsor);
 		for (Proposal proposal : proposals) {
 			if (!security.may(RegistryPermission.READ, proposal)) {
