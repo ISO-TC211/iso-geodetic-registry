@@ -248,6 +248,11 @@ public class ProposalsController
 		model.addAttribute("proposal", dto);
 		model.addAttribute("itemClass", dto.getItemClassUuid());
 		
+		RE_ItemClass itemClass = itemClassRepository.findOne(dto.getItemClassUuid());
+		if (itemClass != null) {
+			model.addAttribute("itemClassName", itemClass.getName());
+		}
+		
 		ItemClassConfiguration itemClassConfiguration = null;
 		if (proposal instanceof SimpleProposal) {
 			itemClassConfiguration = itemClassRegistry.getConfiguration(((SimpleProposal)proposal).getItem().getItemClass().getName());
