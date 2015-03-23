@@ -4,6 +4,11 @@
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('ellipsoid')" />
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12">
+					<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetails"/>
+				</div>
+			</div>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
@@ -50,7 +55,7 @@
 		
 		<div class="col-md-6"> <!-- RIGHT -->
 			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
+<!-- 			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" /> -->
 			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->									
 	</div>
