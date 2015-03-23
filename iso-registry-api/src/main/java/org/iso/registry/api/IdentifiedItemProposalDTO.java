@@ -1,7 +1,6 @@
 package org.iso.registry.api;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,20 +8,21 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 {
 	private Set<String> aliases;
 	private String remarks;
-	private String informationSource;
+	private CitationDTO informationSource;
 	private String dataSource;
 	
 	public IdentifiedItemProposalDTO() {
@@ -53,6 +53,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	
 	private void initializeEmpty() {
 		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
+		this.informationSource = new CitationDTO();
 	}
 
 	public Set<String> getAliases() {
@@ -81,11 +82,11 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		this.remarks = remarks;
 	}
 	
-	public String getInformationSource() {
+	public CitationDTO getInformationSource() {
 		return informationSource;
 	}
 
-	public void setInformationSource(String informationSource) {
+	public void setInformationSource(CitationDTO informationSource) {
 		this.informationSource = informationSource;
 	}
 
@@ -116,7 +117,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			item.setIdentifier(-RandomUtils.nextInt());
 			item.setItemIdentifier(BigInteger.valueOf(item.getIdentifier().longValue()));
 			item.setRemarks(this.getRemarks());
-			item.setInformationSource(this.getInformationSource());
+			item.setInformationSource(this.getInformationSource().toJson());
 			item.setDataSource(this.getDataSource());
 		}
 	}
@@ -137,7 +138,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			}
 			
 			this.setRemarks(item.getRemarks());
-			this.setInformationSource(item.getInformationSource());
+			this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
 			this.setDataSource(item.getDataSource());
 		}
 	}

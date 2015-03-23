@@ -421,8 +421,6 @@ public class ProposalsController
 		else {
 			proposalDto = proposalDtoFactory.getProposalDto(proposal);
 			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest);
-//			ServletRequestDataBinder binder = new ServletRequestDataBinder(proposalDto);
-//			binder.bind(servletRequest);
 			
 			proposalService.updateProposal(proposalDto);
 			return "redirect:/management/submitter";

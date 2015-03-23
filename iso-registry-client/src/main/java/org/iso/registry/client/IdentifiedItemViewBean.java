@@ -3,6 +3,7 @@ package org.iso.registry.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
@@ -17,7 +18,7 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 	private Integer identifier;
 	private String remarks;
 	private List<String> aliases;
-	private String informationSource;
+	private CitationDTO informationSource;
 	private String dataSource;
 
 	public IdentifiedItemViewBean(RE_RegisterItem item) {
@@ -56,7 +57,8 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 
 		this.setIdentifier(item.getIdentifier());
 		this.setRemarks(item.getRemarks());
-		this.setInformationSource(item.getInformationSource());
+		this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
+//		this.setInformationSource(item.getInformationSource());
 		this.setDataSource(item.getDataSource());
 		for (String alias : item.getAliases()) {
 			this.addAlias(alias);
@@ -94,11 +96,11 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		this.aliases.add(alias);
 	}
 
-	public String getInformationSource() {
+	public CitationDTO getInformationSource() {
 		return informationSource;
 	}
 
-	public void setInformationSource(String informationSource) {
+	public void setInformationSource(CitationDTO informationSource) {
 		this.informationSource = informationSource;
 	}
 
