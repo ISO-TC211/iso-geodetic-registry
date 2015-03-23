@@ -125,6 +125,7 @@
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
 	<entry key="header.primeMeridian">Prime Meridian</entry>
 	<entry key="header.domainOfValidity">Domain of Validity</entry>
+	<entry key="header.informationSource">Information source</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -192,6 +193,7 @@
 	<entry key="button.addBoundingPolygon">Add bounding polygon</entry>
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
 	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
+	<entry key="button.addAlternateTitle">Add alternate title</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -277,6 +279,7 @@
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
 	<entry key="popup.extent.header">Domain of Validity</entry>
+	<entry key="popup.informationSource.header">Information Source</entry>
 
 	<entry key="tabs.overview">Overview</entry>
 	<entry key="tabs.item">Item details</entry>
@@ -391,6 +394,18 @@
 	<entry key="form.label.verticalCrs">Vertical CRS</entry>
 	<entry key="form.label.selectExtent">Import existing extent</entry>
 	<entry key="form.label.autoAssigned">Will be assigned automatically</entry>
+	<entry key="form.label.title">Title</entry>
+	<entry key="form.label.alternateTitle">Alternate title</entry>
+	<entry key="form.label.author">Author</entry>
+	<entry key="form.label.publisher">Publisher</entry>
+	<entry key="form.label.publicationDate">Publication date</entry>
+	<entry key="form.label.revisionDate">Revision date</entry>
+	<entry key="form.label.edition">Edition</entry>
+	<entry key="form.label.editionDate">Edition date</entry>
+	<entry key="form.label.seriesName">Name of series/journal/periodical</entry>
+	<entry key="form.label.seriesIssueIdentification">Issue</entry>
+	<entry key="form.label.seriesPage">Page</entry>
+	<entry key="form.label.otherCitationDetails">Other citation details</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -460,6 +475,19 @@
 	<entry key="form.placeholder.formula"></entry>
 
 	<entry key="form.placeholder.selectExtent">[select one to import extent data]</entry>
+
+	<entry key="form.placeholder.title">Title</entry>
+	<entry key="form.placeholder.alternateTitle">Alternate title</entry>
+	<entry key="form.placeholder.author">Author</entry>
+	<entry key="form.placeholder.publisher">Publisher</entry>
+	<entry key="form.placeholder.publicationDate">Publication date</entry>
+	<entry key="form.placeholder.revisionDate">Revision date</entry>
+	<entry key="form.placeholder.edition">Edition</entry>
+	<entry key="form.placeholder.editionDate">Edition date</entry>
+	<entry key="form.placeholder.seriesName">Name of series/journal/periodical</entry>
+	<entry key="form.placeholder.seriesIssueIdentification">Issue</entry>
+	<entry key="form.placeholder.seriesPage">Page</entry>
+	<entry key="form.placeholder.otherCitationDetails">Other citation details</entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>

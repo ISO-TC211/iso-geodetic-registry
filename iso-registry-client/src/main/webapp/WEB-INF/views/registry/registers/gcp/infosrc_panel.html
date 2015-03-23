@@ -1,0 +1,43 @@
+<div th:fragment="informationSourceDetailsPanel" id="informationSourceDetailsPanel" class="panel panel-default" th:if="${itemClass}">
+	<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#infosrcPanel"><span class="panel-title" th:text="#{header.informationSource}"></span></a>
+		<div class="pull-right">
+			<span class="glyphicon glyphicon-chevron-right"></span>
+		</div>
+	</div>
+	<div id="extentPanel" class="panel-collapse">
+		<div class="panel-body" th:object="${proposal.informationSource}">
+			<div th:replace="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent"/>
+		</div>								
+	</div>	
+</div>
+
+<div th:fragment="informationSourceDetails" class="form-group">
+	<label class="control-label" for="informationSource" th:text="#{form.label.informationSource}"></label>
+	<div th:if="*{informationSource}">
+		<a id="informationSource" href="#dialog-info-src" data-toggle="modal" th:text="*{informationSource.title}"/>
+	</div>
+	<div th:unless="*{informationSource}">
+		<p th:text="'[' + #{undefined} + ']'"/>
+	</div>
+	
+	<div th:if="*{informationSource}" class="modal fade" id="dialog-info-src" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 th:text="#{popup.informationSource.header}"></h4>
+				</div>
+				<div th:unless="${isProposal}" class="modal-body" th:object="${item.informationSource}">
+					<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent"/>
+				</div>
+				<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource}">
+					<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent"/>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+				</div>
+			</div>
+		</div>							
+	</div>
+	
+</div>
