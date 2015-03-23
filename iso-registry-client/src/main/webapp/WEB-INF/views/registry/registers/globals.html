@@ -372,11 +372,11 @@
 	<div class="col-md-8" th:with="property='name',rows=2,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
-	<div th:if="${isProposal}" class="col-md-4">
+	<div th:if="${isProposal} or *{identifier} lt 0" class="col-md-4">
 		<div th:replace="registry/registers/globals :: formLabel('identifier', #{form.label.identifier})"/>
 		<p th:text="#{form.label.autoAssigned}"/>
 	</div>
-	<div th:unless="${isProposal}" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
+	<div th:unless="${isProposal} or *{identifier} lt 0" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
