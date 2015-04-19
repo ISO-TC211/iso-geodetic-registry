@@ -5,39 +5,64 @@
 			<span class="glyphicon glyphicon-chevron-right"></span>
 		</div>
 	</div>
-	<div id="extentPanel" class="panel-collapse">
-		<div class="panel-body" th:object="${proposal.informationSource}">
-			<div th:replace="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent"/>
-		</div>								
+	<div id="informationSourcePanel" class="panel-collapse">
+		<ul class="nav nav-tabs">
+			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:attr="data-index=${rowStat.index}"><a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab" th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"/></li>
+			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#" th:text="#{button.addInformationSource}"/></li>
+		</ul>
+		<div class="tab-content">
+			<div th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'infosrc-' + ${rowStat.index}" class="tab-pane in" style="padding-top: 10px">
+				<div class="panel-body" th:object="${proposal.informationSource[__${rowStat.index}__]}">
+					<div th:replace="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(__${rowStat.index}__)"/>
+				</div>								
+			</div>
+			<div id="afterTabs"/>
+		</div>
+		
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+			$('#button-addinformationsource').click(function(e) {
+				e.preventDefault();
+				var idx = $('#li-addinformationsource').prev().data('index');
+				idx += 1;
+				$('<li data-index="' + idx + '"><a href="#infosrc-' + idx + '" data-toggle="tab">Source #' + (idx + 1) + '</a></li>').insertBefore('#li-addinformationsource');
+				
+				$('<div id="infosrc-' + idx + '" class="tab-pane" style="padding-top: 10px"/>').insertBefore('#afterTabs');
+				$('#infosrc-' + idx).append('<div id="infosrc-' + idx + '-content" class="panel-body"/>');
+				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource[' + idx + ']');
+				$('#infosrc-' + idx).tab('show');
+			});	            
+		/* ]]> */		
+		</script>
 	</div>	
 </div>
 
 <div th:fragment="informationSourceDetails" class="form-group">
 	<label class="control-label" for="informationSource" th:text="#{form.label.informationSource}"></label>
-	<div th:if="*{informationSource}">
-		<a id="informationSource" href="#dialog-info-src" data-toggle="modal" th:text="*{informationSource.title}"/>
+	<div th:unless="*{informationSource.isEmpty()}" th:each="infosrc,rowstat : *{informationSource}">
+		<a th:id="'informationSource-' + ${rowstat.index}" th:href="'#dialog-info-src-' + ${rowstat.index}" data-toggle="modal" th:text="${infosrc.title}"/>
+		
+		<div class="modal fade" th:id="'dialog-info-src-' + ${rowstat.index}" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 th:text="#{popup.informationSource.header}"></h4>
+					</div>
+					<div th:unless="${isProposal}" class="modal-body" th:object="${item.informationSource[__${rowstat.index}__]}">
+						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
+					</div>
+					<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource[__${rowstat.index}__]}">
+						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+					</div>
+				</div>
+			</div>							
+		</div>
+		
 	</div>
-	<div th:unless="*{informationSource}">
+	<div th:if="*{informationSource.isEmpty()}">
 		<p th:text="'[' + #{undefined} + ']'"/>
-	</div>
-	
-	<div th:if="*{informationSource}" class="modal fade" id="dialog-info-src" role="dialog">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 th:text="#{popup.informationSource.header}"></h4>
-				</div>
-				<div th:unless="${isProposal}" class="modal-body" th:object="${item.informationSource}">
-					<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent"/>
-				</div>
-				<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource}">
-					<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent"/>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
-				</div>
-			</div>
-		</div>							
-	</div>
-	
+	</div>	
 </div>

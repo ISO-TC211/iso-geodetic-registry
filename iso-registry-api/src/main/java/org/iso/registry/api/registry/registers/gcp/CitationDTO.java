@@ -130,6 +130,43 @@ public class CitationDTO
 		
 		return sw.toString();
 	}
+	
+	public CI_Citation toCitation() {
+		CI_Citation result = new CI_Citation();
+		
+		result.setTitle(this.getTitle());
+		result.getAlternateTitle().addAll(this.getAlternateTitle());
+		result.setEdition(this.getEdition());
+		result.setEditionDate(this.getEditionDate());
+		result.setOtherCitationDetails(this.getOtherCitationDetails());
+
+		CI_ResponsibleParty rp = new CI_ResponsibleParty(this.getAuthor(), null, null, CI_RoleCode.AUTHOR);
+		result.getCitedResponsibleParty().add(rp);
+
+		if (!StringUtils.isEmpty(this.getPublicationDate())) {
+			CI_Date publicationDate = new CI_Date();
+			publicationDate.setDateType(CI_DateTypeCode.PUBLICATION);
+			publicationDate.setDate(this.getPublicationDate());
+			result.getDate().add(publicationDate);
+		}
+		
+		if (!StringUtils.isEmpty(this.getRevisionDate())) {
+			CI_Date revisionDate = new CI_Date();
+			revisionDate.setDateType(CI_DateTypeCode.REVISION);
+			revisionDate.setDate(this.getRevisionDate());
+			result.getDate().add(revisionDate);
+		}
+		
+		if (this.getSeries() != null) {
+			CI_Series series = new CI_Series();
+			series.setIssueIdentification(this.getSeries().getIssueIdentification());
+			series.setName(this.getSeries().getName());
+			series.setPage(this.getSeries().getPage());
+			result.setSeries(series);
+		}
+		
+		return result;
+	}
 
 	public String getTitle() {
 		return title;

@@ -21,6 +21,7 @@ import org.iso.registry.core.model.operation.OperationMethodItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -271,6 +272,15 @@ public class DataController
 	public @ResponseBody List<Object[]> findByUuid(@PathVariable("itemUuid") UUID uuid, @RequestParam(value = "orderBy", defaultValue = "name") String orderBy) {
 		String jpql = "SELECT i.uuid, i.identifier, i.name FROM RE_RegisterItem i WHERE uuid = '" + uuid.toString() + "' ORDER BY i." + orderBy;
 		return entityManager.createQuery(jpql).getResultList();
+	}
+	
+	@RequestMapping(value = "/fragments/informationsource")
+	public String getInformationSourceFragment(@RequestParam("index") String index, @RequestParam(value = "objectPath", required = false) String objectPath, final Model model) {
+		if (!StringUtils.isEmpty(objectPath)) {
+			model.addAttribute("objectPath", objectPath);
+		}
+		model.addAttribute("isProposal", "true");
+		return "registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(index='" + index + "')";
 	}
 
 }
