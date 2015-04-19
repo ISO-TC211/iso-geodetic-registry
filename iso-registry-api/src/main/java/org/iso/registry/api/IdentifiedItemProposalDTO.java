@@ -1,7 +1,11 @@
 package org.iso.registry.api;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -12,9 +16,14 @@ import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 
@@ -22,7 +31,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 {
 	private Set<String> aliases;
 	private String remarks;
-	private CitationDTO informationSource;
+	private List<CitationDTO> informationSource;
 	private String dataSource;
 	
 	public IdentifiedItemProposalDTO() {
@@ -53,7 +62,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	
 	private void initializeEmpty() {
 		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
-		this.informationSource = new CitationDTO();
+		this.getInformationSource().add(new CitationDTO());
 	}
 
 	public Set<String> getAliases() {
@@ -82,14 +91,29 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		this.remarks = remarks;
 	}
 	
-	public CitationDTO getInformationSource() {
+	public List<CitationDTO> getInformationSource() {
+		if (this.informationSource == null) {
+			this.informationSource = new ArrayList<CitationDTO>();
+		}
 		return informationSource;
 	}
+	
+//	public CitationDTO getInformationSource(int index) {
+//		if (!this.getInformationSource().isEmpty() && index <= this.getInformationSource().size() - 1) {
+//			return this.getInformationSource().get(index);
+//		}
+//		else {
+//			do {
+//				this.getInformationSource().add(new CitationDTO());
+//			} while (index > this.getInformationSource().size () - 1);
+//			return this.getInformationSource().get(index);
+//		}
+//	}
 
-	public void setInformationSource(CitationDTO informationSource) {
+	public void setInformationSource(List<CitationDTO> informationSource) {
 		this.informationSource = informationSource;
 	}
-
+	
 	public String getDataSource() {
 		return dataSource;
 	}
@@ -117,9 +141,46 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			item.setIdentifier(-RandomUtils.nextInt());
 			item.setItemIdentifier(BigInteger.valueOf(item.getIdentifier().longValue()));
 			item.setRemarks(this.getRemarks());
-			item.setInformationSource(this.getInformationSource().toJson());
+			
+			for (CitationDTO citation : this.getInformationSource()) {
+				item.getInformationSourceCitation().add(citation.toCitation());
+			}
+//			item.setInformationSource(toJson(this.getInformationSource()));
+			
 			item.setDataSource(this.getDataSource());
 		}
+	}
+
+	private static String toJson(Object o) {
+		StringWriter sw = new StringWriter();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			mapper.writeValue(sw, o);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage(), e);
+		}
+		
+		return sw.toString();
+	}
+
+	public static <T> T fromJson(String json, Class<T> type) throws IOException {
+		if (StringUtils.isEmpty(json)) {
+			return null;
+		}
+		
+		ObjectMapper jsonMapper = new ObjectMapper();
+		try {
+			T citation = jsonMapper.readValue(json, type);
+			return citation;
+		}
+		catch (IOException e) {
+//			T result = new CitationDTO();
+//			result.setOtherCitationDetails(json);
+//			return result;
+			throw e;
+		}		
 	}
 
 	@Override
@@ -138,7 +199,35 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			}
 			
 			this.setRemarks(item.getRemarks());
-			this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
+			
+			if (!StringUtils.isEmpty(item.getInformationSource())) {
+//				int start = 0;
+//				int end = item.getInformationSource().indexOf("}") + 1;
+//				while (end > -1) {
+//					String json = item.getInformationSource().substring(start, end);
+//					this.getInformationSource().add(CitationDTO.fromJson(json));
+//					start = end + 1;
+//					end = item.getInformationSource().indexOf("}", start);
+//				}
+				ObjectMapper jsonMapper = new ObjectMapper();
+				try {
+					List<CitationDTO> citationList = jsonMapper.readValue(item.getInformationSource(), jsonMapper.getTypeFactory().constructCollectionType(List.class, CitationDTO.class));
+					this.getInformationSource().addAll(citationList);
+				}
+				catch (JsonParseException | JsonMappingException e) {
+					// Try single value
+					CitationDTO dto = CitationDTO.fromJson(item.getInformationSource());
+					this.getInformationSource().add(dto);
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			for (CI_Citation citation : item.getInformationSourceCitation()) {
+				this.getInformationSource().add(new CitationDTO(citation));
+			}
+
 			this.setDataSource(item.getDataSource());
 		}
 	}

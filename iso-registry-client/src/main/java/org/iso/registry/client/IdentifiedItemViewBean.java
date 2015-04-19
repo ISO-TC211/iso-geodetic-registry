@@ -11,6 +11,7 @@ import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
 import de.geoinfoffm.registry.core.model.Supersession;
+import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class IdentifiedItemViewBean extends RegisterItemViewBean
@@ -18,7 +19,7 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 	private Integer identifier;
 	private String remarks;
 	private List<String> aliases;
-	private CitationDTO informationSource;
+	private List<CitationDTO> informationSource;
 	private String dataSource;
 
 	public IdentifiedItemViewBean(RE_RegisterItem item) {
@@ -57,8 +58,12 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 
 		this.setIdentifier(item.getIdentifier());
 		this.setRemarks(item.getRemarks());
-		this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
+//		this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
 //		this.setInformationSource(item.getInformationSource());
+		for (CI_Citation citation : item.getInformationSourceCitation()) {
+			this.getInformationSource().add(new CitationDTO(citation));
+		}
+		
 		this.setDataSource(item.getDataSource());
 		for (String alias : item.getAliases()) {
 			this.addAlias(alias);
@@ -96,11 +101,14 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		this.aliases.add(alias);
 	}
 
-	public CitationDTO getInformationSource() {
+	public List<CitationDTO> getInformationSource() {
+		if (this.informationSource == null) {
+			this.informationSource = new ArrayList<>();
+		}
 		return informationSource;
 	}
 
-	public void setInformationSource(CitationDTO informationSource) {
+	public void setInformationSource(List<CitationDTO> informationSource) {
 		this.informationSource = informationSource;
 	}
 
