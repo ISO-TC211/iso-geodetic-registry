@@ -25,3 +25,27 @@ ALTER TABLE ci_citation_date
 ALTER TABLE ci_citation_date_aud
 	DROP COLUMN date_date,
 	ADD COLUMN date_date text;
+	
+CREATE TABLE identifieditem_ci_citation
+(
+  identifieditem_uuid uuid NOT NULL,
+  informationsourcecitation_uuid uuid NOT NULL,
+  CONSTRAINT identifieditem_ci_citation_pkey PRIMARY KEY (identifieditem_uuid, informationsourcecitation_uuid),
+  CONSTRAINT fk_krg9ssrb9kwjpuycprcfapba9 FOREIGN KEY (informationsourcecitation_uuid)
+      REFERENCES ci_citation (uuid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT uk_krg9ssrb9kwjpuycprcfapba9 UNIQUE (informationsourcecitation_uuid)
+);
+
+CREATE TABLE identifieditem_ci_citation_aud
+(
+  rev integer NOT NULL,
+  identifieditem_uuid uuid NOT NULL,
+  informationsourcecitation_uuid uuid NOT NULL,
+  revtype smallint,
+  CONSTRAINT identifieditem_ci_citation_aud_pkey PRIMARY KEY (rev, identifieditem_uuid, informationsourcecitation_uuid),
+  CONSTRAINT fk_qwlebgxtr9a15k19aohg4cn1u FOREIGN KEY (rev)
+      REFERENCES revinfo (rev) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
