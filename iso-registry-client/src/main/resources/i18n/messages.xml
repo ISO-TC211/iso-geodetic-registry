@@ -476,18 +476,18 @@
 
 	<entry key="form.placeholder.selectExtent">[select one to import extent data]</entry>
 
-	<entry key="form.placeholder.title">Title</entry>
-	<entry key="form.placeholder.alternateTitle">Alternate title</entry>
-	<entry key="form.placeholder.author">Author</entry>
-	<entry key="form.placeholder.publisher">Publisher</entry>
-	<entry key="form.placeholder.publicationDate">Publication date</entry>
-	<entry key="form.placeholder.revisionDate">Revision date</entry>
-	<entry key="form.placeholder.edition">Edition</entry>
-	<entry key="form.placeholder.editionDate">Edition date</entry>
-	<entry key="form.placeholder.seriesName">Name of series/journal/periodical</entry>
-	<entry key="form.placeholder.seriesIssueIdentification">Issue</entry>
-	<entry key="form.placeholder.seriesPage">Page</entry>
-	<entry key="form.placeholder.otherCitationDetails">Other citation details</entry>
+	<entry key="form.placeholder.title"></entry>
+	<entry key="form.placeholder.alternateTitle"></entry>
+	<entry key="form.placeholder.author"></entry>
+	<entry key="form.placeholder.publisher"></entry>
+	<entry key="form.placeholder.publicationDate"></entry>
+	<entry key="form.placeholder.revisionDate"></entry>
+	<entry key="form.placeholder.edition"></entry>
+	<entry key="form.placeholder.editionDate"></entry>
+	<entry key="form.placeholder.seriesName"></entry>
+	<entry key="form.placeholder.seriesIssueIdentification"></entry>
+	<entry key="form.placeholder.seriesPage"></entry>
+	<entry key="form.placeholder.otherCitationDetails"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
