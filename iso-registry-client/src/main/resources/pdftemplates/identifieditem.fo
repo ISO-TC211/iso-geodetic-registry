@@ -1,0 +1,51 @@
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Identifier</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.identifier</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#foreach($alias in $item.aliases)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Alias</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($alias)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#foreach($infosrc in $item.informationSource)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Information source</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>
+			<fo:table border="none" border-collapse="collapse" table-layout="fixed">
+				<fo:table-column column-width="30%"/>
+				<fo:table-column column-width="70%"/>
+				<fo:table-body>
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Title</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.title)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Author</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.author)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+				</fo:table-body>
+			</fo:table>
+		</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
