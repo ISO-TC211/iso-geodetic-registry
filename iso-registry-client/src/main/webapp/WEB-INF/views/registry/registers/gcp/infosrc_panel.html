@@ -8,7 +8,7 @@
 	<div id="informationSourcePanel" class="panel-collapse">
 		<ul id="infosrc-tabs" class="nav nav-tabs">
 			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:attr="data-index=${rowStat.index}"><a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab" th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"/></li>
-			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span></a></li>
+			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span>&nbsp;&nbsp;<span th:text="#{button.addNew}"></span></a></li>
 		</ul>
 		<div class="tab-content">
 			<div th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'infosrc-' + ${rowStat.index}" class="tab-pane in" style="padding-top: 10px">
@@ -34,7 +34,26 @@
 				
 				$('<div id="infosrc-' + idx + '" class="tab-pane" style="padding-top: 10px"/>').insertBefore('#afterTabs');
 				$('#infosrc-' + idx).append('<div id="infosrc-' + idx + '-content" class="panel-body"/>');
-				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource[' + idx + ']');
+				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource[' + idx + ']', null, function() {
+				    $("#publicationDate-informationSource-" + idx).rules("add", {
+				    	required: '#revisionDate-informationSource-' + idx + ':blank',
+// 				   	    required: function(element) {
+// 				   	    	alert($('#revisionDate-informationSource-' + idx).val());
+// 				   	    	return $('#revisionDate-informationSource-' + idx).is(':empty');
+// 				   	    },
+				   	    onkeyup: false
+				    });
+
+				    $("#revisionDate-informationSource-" + idx).rules("add", {
+				    	required: '#publicationDate-informationSource-' + idx + ':blank',
+// 				   	    required: function(element) {
+// 				   	    	alert($('#publicationDate-informationSource-' + idx).val());
+// 	 			   	    	return $('#publicationDate-informationSource-' + idx).is(':empty');
+// 				   	    },
+				   	    onkeyup: false
+				    });
+				})
+
 				$('#show-infosrc-' + idx).tab('show');
 			});	            
 		
