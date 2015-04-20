@@ -62,7 +62,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	
 	private void initializeEmpty() {
 		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
-		this.getInformationSource().add(new CitationDTO());
+//		this.getInformationSource().add(new CitationDTO());
 	}
 
 	public Set<String> getAliases() {
