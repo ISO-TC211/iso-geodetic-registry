@@ -8,7 +8,7 @@
 	<div id="informationSourcePanel" class="panel-collapse">
 		<ul class="nav nav-tabs">
 			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:attr="data-index=${rowStat.index}"><a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab" th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"/></li>
-			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#" th:text="#{button.addInformationSource}"/></li>
+			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span></a></li>
 		</ul>
 		<div class="tab-content">
 			<div th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'infosrc-' + ${rowStat.index}" class="tab-pane in" style="padding-top: 10px">
