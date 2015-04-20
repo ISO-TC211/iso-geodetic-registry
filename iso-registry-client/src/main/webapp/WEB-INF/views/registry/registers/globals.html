@@ -30,14 +30,16 @@
 
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
-	<input th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:field="*{__${property}__}"></input>
+	<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}"></input>
+	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
-	<textarea th:id="${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
+	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
+	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -372,11 +374,11 @@
 	<div class="col-md-8" th:with="property='name',rows=2,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
 		<div th:replace="registry/registers/globals :: textArea"/>
 	</div>
-	<div th:if="${isProposal}" class="col-md-4">
+	<div th:if="${isProposal} or *{identifier} lt 0" class="col-md-4">
 		<div th:replace="registry/registers/globals :: formLabel('identifier', #{form.label.identifier})"/>
 		<p th:text="#{form.label.autoAssigned}"/>
 	</div>
-	<div th:unless="${isProposal}" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
+	<div th:unless="${isProposal} or *{identifier} lt 0" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
 		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
@@ -457,8 +459,8 @@
 		</script>
 	</div>
 	
-	<div th:if="${isProposal}" class="form-group">
-		<div class="col-md-12">
+	<div th:if="${isProposal}">
+		<div class="col-md-12 form-group">
 			<label class="control-label" th:for="'aliases_' + ${modifier}" th:text="#{form.label.aliases}"></label>
 			<input type="hidden" style="width: 100%" th:id="'aliases_' + ${modifier}" th:field="*{aliases}"/>
 		</div>
@@ -469,6 +471,7 @@
 				$('#aliases_[[${modifier}]]').select2({
 					tags: [],
 					multiple: true,
+					placeholder: '[[#{form.placeholder.aliases}]]',
 					formatNoMatches: "Please enter an alias. You may enter multiple aliases by pressing comma (,).",
 					tokenSeparators: [','],
 					initSelection : function (element, callback) {
@@ -565,9 +568,14 @@
 </div>
 
 <div th:fragment="informationSource (cssClass)">
-	<div th:classappend="${cssClass}" th:with="property='informationSource',rows=2,cols=60,label=#{form.label.informationSource},placeholder=#{form.placeholder.informationSource},isRequired='false'">
-		<div th:replace="registry/registers/globals :: textArea"/>
+	<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+		<div th:class="${cssClass}">
+			<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetails"/>
+		</div>
 	</div>
+<!-- 	<div th:classappend="${cssClass}" th:with="property='informationSource',rows=2,cols=60,label=#{form.label.informationSource},placeholder=#{form.placeholder.informationSource},isRequired='false'"> -->
+<!-- 		<div th:replace="registry/registers/globals :: textArea"/> -->
+<!-- 	</div> -->
 </div>
 
 <div th:fragment="dataSource (cssClass)">
