@@ -32,6 +32,14 @@
 				<targetPath>META-INF</targetPath>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+				<directory>src/main/java/de/geoinfoffm/registry/persistence/migration</directory>
+				<includes>
+					<include>*.sql</include>
+				</includes>
+				<targetPath>de/geoinfoffm/registry/persistence/migration</targetPath>
+				<filtering>false</filtering>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
