@@ -124,7 +124,7 @@
 	<entry key="header.transformation">Transformation</entry>
 	<entry key="header.coordinateAxis">Coordinate System Axis</entry>
 	<entry key="header.primeMeridian">Prime Meridian</entry>
-	<entry key="header.domainOfValidity">Domain of Validity</entry>
+	<entry key="header.extent">Extent</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -344,7 +344,7 @@
 	<entry key="form.label.crsType">CRS type</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Area of Use</entry>
-	<entry key="form.label.domainOfValidity">Domain of Validity</entry>
+	<entry key="form.label.extent">Extent</entry>
 	<entry key="form.label.datum">Datum</entry>
 	<entry key="form.label.coordinateSystem">Coordinate System</entry>
 	<entry key="form.label.isoA2Code">ISO Alpha-2 Code</entry>

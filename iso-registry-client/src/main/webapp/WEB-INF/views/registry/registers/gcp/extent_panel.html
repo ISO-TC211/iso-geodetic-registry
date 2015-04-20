@@ -1,6 +1,6 @@
 <div th:fragment="extentDetailsPanel" id="extentDetailsPanel" class="panel panel-default" th:if="${itemClass}">
 	<div class="panel-heading">
-		<a data-toggle="collapse" data-parent="#accordion" href="#extentPanel"><span class="panel-title" th:text="#{header.domainOfValidity}"></span></a>
+		<a data-toggle="collapse" data-parent="#accordion" href="#extentPanel"><span class="panel-title" th:text="#{header.extent}"></span></a>
 <!-- 		<div class="pull-right"> -->
 <!-- 			<button id="newAreaPanelDismiss" type="button" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-remove"></span></button> -->
 <!-- 			<span class="glyphicon glyphicon-chevron-right"></span> -->
@@ -14,7 +14,7 @@
 </div>
 
 <div th:fragment="extentDetails" class="form-group">
-	<label class="control-label" for="domainOfValidity" th:text="#{form.label.domainOfValidity}"></label>
+	<label class="control-label" for="domainOfValidity" th:text="#{form.label.extent}"></label>
 	<div th:if="*{domainOfValidity}">
 		<a id="domainOfValidity" href="#dialog-extent" data-toggle="modal" th:text="*{domainOfValidity.description}"/>
 	</div>
