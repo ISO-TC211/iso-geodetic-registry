@@ -1,7 +1,3 @@
-[submodule "registry"]
-	path = registry
-	url = git@tango.fesr.de:/opt/git/registry.git
-	branch = dev-iso
 [submodule "registry-base"]
 	path = registry-base
 	url = git@git.bespire.de:bespire/registry-base.git
