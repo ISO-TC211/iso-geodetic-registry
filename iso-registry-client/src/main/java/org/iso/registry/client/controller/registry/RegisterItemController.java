@@ -3,8 +3,10 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,11 +15,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.fop.apps.FOPException;
+import org.apache.fop.apps.Fop;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.apps.MimeConstants;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +133,12 @@ public class RegisterItemController
 	
 	@Autowired
 	private ProposalDtoFactory proposalDtoFactory;
+	
+	@Autowired
+	private VelocityEngine velocityEngine;
+	
+	@Autowired
+	private VelocityContext velocityContext;
 
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -184,6 +207,38 @@ public class RegisterItemController
 		responseHeaders.add("Content-Type", "text/xml; charset=utf-8");
 		return new ResponseEntity<String>(sw.toString(), responseHeaders, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/{uuid}/pdf", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public void viewItemAsPdf(@PathVariable("uuid") UUID itemUuid, final Model model, HttpServletResponse response) throws ItemNotFoundException, InvalidProposalException, IOException, FOPException, TransformerFactoryConfigurationError, TransformerException {
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		RegisterItemViewBean vb = viewBeanFactory.getViewBean(item);
+		
+		model.addAttribute("item", vb);
+		
+		String templateLocation = "pdftemplates/ellipsoid.fo";
+
+//		String sourceXml = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model.asMap());
+		StringWriter sw = new StringWriter();
+		velocityEngine.mergeTemplate(templateLocation, "UTF-8", new VelocityContext(model.asMap(), velocityContext), sw);
+		String sourceXml = sw.toString();
+
+		ServletOutputStream out = response.getOutputStream();
+		
+		final Fop fop = FopFactory.newInstance().newFop(MimeConstants.MIME_PDF, out);
+		final Transformer xf = TransformerFactory.newInstance().newTransformer();
+		xf.setParameter("versionParam", "2.0");
+		final Source src = new StreamSource(new StringReader(sourceXml));
+		final Result result = new SAXResult(fop.getDefaultHandler());
+		xf.transform(src, result);
+
+		out.flush();
+		out.close();
+		response.flushBuffer();
+		
+//		return new ModelAndView(new IdentifiedItemPdfView(), model.asMap());
+	}
+
 
 	@RequestMapping(value = "/{uuid}/retire", method = RequestMethod.GET)
 	@Transactional
