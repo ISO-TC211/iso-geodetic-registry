@@ -62,7 +62,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-12" th:with="property='title',inputType='text',label=#{form.label.title},placeholder=#{form.placeholder.title},isRequired='false'">
+		<div class="col-md-12" th:with="property='title',inputType='text',label=#{form.label.title},placeholder=#{form.placeholder.title},isRequired='true'">
 			<div th:replace="registry/registers/globals :: textArea"/>
 		</div>
 	</div>
@@ -84,7 +84,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='author',modifier='informationSource',inputType='text',label=#{form.label.author},placeholder=#{form.placeholder.author},isRequired='false'">
+		<div class="col-md-12" th:with="property='author',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.author},placeholder=#{form.placeholder.author},isRequired='true'">
 			<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
@@ -94,10 +94,10 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6" th:with="property='publicationDate',modifier='informationSource',inputType='text',label=#{form.label.publicationDate},placeholder=#{form.placeholder.publicationDate},isRequired='false'">
+		<div class="col-md-6" th:with="property='publicationDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.publicationDate},placeholder=#{form.placeholder.publicationDate},isRequired='false'">
 			<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
-		<div class="col-md-6" th:with="property='revisionDate',modifier='informationSource',inputType='text',label=#{form.label.revisionDate},placeholder=#{form.placeholder.revisionDate},isRequired='false'">
+		<div class="col-md-6" th:with="property='revisionDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.revisionDate},placeholder=#{form.placeholder.revisionDate},isRequired='false'">
 			<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
@@ -123,7 +123,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},placeholder=#{form.label.otherCitationDetails},isRequired='false'">
+		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},placeholder=#{form.placeholder.otherCitationDetails},isRequired='false'">
 			<div th:replace="registry/registers/globals :: textArea"/>
 		</div>
 	</div>
@@ -152,7 +152,6 @@
 			$('body').on('click', '.button-add-alternate-title', function() {
 				var idx = $(this).data('index');
 				var count = $('.alternate-title-row-' + idx).data('count');
-				alert(count);
 				$('.alternate-title-row-' + idx).last().after("<div class='row alternate-title-row'><div class='form-group col-md-12'><div class='control-label' for='alternateTitle'><label class='control-label' for='alternateTitle'><span>[[#{form.label.alternateTitle}]]</span></label></div><div class='input-group'><input class='form-control' name='informationSource[" + idx + "].alternateTitle[" + count + "]' value=''/><span class='input-group-btn'><button type='button' class='btn btn-default button-delete-alt-title' id='delete-alt-title-" + count + "'><span class='glyphicon glyphicon-remove'/></button></span></div></div></div>");
 				$('.alternate-title-row-' + idx).data('count', ++count);
 			});
@@ -160,7 +159,6 @@
 			$('body').on('click', '.button-delete-alt-title', function(e) {
 				$(this).closest('.alternate-title-row').remove();
 			});
-			
 		});				
 	/* ]]> */		
 	</script>
