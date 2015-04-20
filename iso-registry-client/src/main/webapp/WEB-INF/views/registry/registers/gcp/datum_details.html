@@ -43,15 +43,15 @@
 
 			<div class="row">
 				<div class="col-md-12" th:with="property='realizationEpoch',inputType='text',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='true'">
-					<div th:replace="registry/registers/globals :: dateTimePicker"/>
-<!-- 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
+<!-- 					<div th:replace="registry/registers/globals :: dateTimePicker"/> -->
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md-12" th:with="property='coordinateReferenceEpoch',inputType='text',label=#{form.label.coordinateReferenceEpoch},placeholder=#{form.placeholder.coordinateReferenceEpoch},isRequired='false'">
-					<div th:replace="registry/registers/globals :: dateTimePicker"/>
-<!-- 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
+<!-- 					<div th:replace="registry/registers/globals :: dateTimePicker"/> -->
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 		

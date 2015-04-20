@@ -443,8 +443,8 @@
 	<entry key="form.placeholder.dataSource"></entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
-	<entry key="form.placeholder.realizationEpoch">(YYYY-MM-DD)</entry>
-	<entry key="form.placeholder.coordinateReferenceEpoch">(YYYY-MM-DD)</entry>
+	<entry key="form.placeholder.realizationEpoch"></entry>
+	<entry key="form.placeholder.coordinateReferenceEpoch"></entry>
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>
