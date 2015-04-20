@@ -459,8 +459,8 @@
 		</script>
 	</div>
 	
-	<div th:if="${isProposal}" class="form-group">
-		<div class="col-md-12">
+	<div th:if="${isProposal}">
+		<div class="col-md-12 form-group">
 			<label class="control-label" th:for="'aliases_' + ${modifier}" th:text="#{form.label.aliases}"></label>
 			<input type="hidden" style="width: 100%" th:id="'aliases_' + ${modifier}" th:field="*{aliases}"/>
 		</div>
@@ -471,6 +471,7 @@
 				$('#aliases_[[${modifier}]]').select2({
 					tags: [],
 					multiple: true,
+					placeholder: '[[#{form.placeholder.aliases}]]',
 					formatNoMatches: "Please enter an alias. You may enter multiple aliases by pressing comma (,).",
 					tokenSeparators: [','],
 					initSelection : function (element, callback) {

@@ -456,6 +456,7 @@
 	<entry key="form.placeholder.remarks"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
 	<entry key="form.placeholder.dataSource"></entry>
+	<entry key="form.placeholder.aliases">Click to enter aliases</entry>
 	<entry key="form.placeholder.originDescription"></entry>
 	<entry key="form.placeholder.informationSource"></entry>
 	<entry key="form.placeholder.realizationEpoch">(YYYY-MM-DD)</entry>
