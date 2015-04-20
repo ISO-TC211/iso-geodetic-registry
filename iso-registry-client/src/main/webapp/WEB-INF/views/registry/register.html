@@ -62,114 +62,9 @@
 										<th></th>
 									</tr>
 								</thead>
-<!-- 								<tbody> -->
-<!-- 									<tr th:each="item : ${items}"> -->
-<!-- 										<td th:text="${item.itemIdentifier}"></td> -->
-<!-- 										<td th:text="${item.name}"></td> -->
-<!-- 										<td th:text="#{${item.itemClassName}}"></td> -->
-<!-- 										<td th:text="#{${item.status}}"></td> -->
-<!-- 										<td> -->
-<!-- 											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid}} + '\''" th:text="#{button.details}">Details</button>												 -->
-<!-- 											<div class="btn-group" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)"> -->
-<!-- 												<button type="button" th:if="${item.isValid()}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
-<!-- 													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
-<!-- 												</button> -->
-<!-- 												<ul class="dropdown-menu" role="menu"> -->
-<!-- 													<li><div style="margin-left: 10px"><button th:id="'clarify_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid} + '/clarify'} + '\''" th:text="#{button.clarification}">Klarstellen</button></div></li> -->
-<!-- 													<li> -->
-<!-- 														<div style="margin-left: 10px; margin-top: 5px"> -->
-<!-- 															<button td:id="'retire_' + ${item.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmretirement-' + ${item.uuid}" data-toggle="modal" th:text="#{button.retirement}">Aufgeben</button> -->
-<!-- 														</div> -->
-														
-<!-- 													</li> -->
-<!-- 												</ul> -->
-														
-<!-- 												<div class="modal fade" th:id="'confirmretirement-' + ${item.uuid}" role="dialog"> -->
-<!-- 													<div class="modal-dialog"> -->
-<!-- 														<div class="modal-content"> -->
-<!-- 															<form th:action="@{__${basePath}__/item/__${item.uuid}__/retire}" method="get"> -->
-<!-- 																<div class="modal-header"> -->
-<!-- 																	<h4 th:text="#{popup.retire.header}">Registereintrag aufgeben</h4> -->
-<!-- 																</div> -->
-<!-- 																<div class="modal-body"> -->
-<!-- 																	<p th:text="#{popup.retire.justification}"> -->
-<!-- 																		Bitte geben Sie eine Begründung für die Aufgabe des Eintrags an. -->
-<!-- 																	</p> -->
-																	
-<!-- 																	Text input -->
-<!-- 																	<div class="form-group"> -->
-<!-- 																		<div class="controls"> -->
-<!-- 																			<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text" />  -->
-<!-- 																		</div> -->
-<!-- 																	</div> -->
-																	
-<!-- 																</div> -->
-<!-- 																<div class="modal-footer"> -->
-<!-- 																	<button id="confirmretirement" type="submit" class="btn btn-warning" th:text="#{button.confirm}">Bestätgigen</button> -->
-<!-- 																	<button id="denyretirement" class="btn btn-primary" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button> -->
-<!-- 																</div> -->
-<!-- 															</form> -->
-<!-- 														</div> -->
-<!-- 													</div> -->
-<!-- 												</div> -->
-	
-<!-- 											</div> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 								</tbody> -->
 							</table>
 						</div>
 					</div>
-
-
-<!-- 					<div id="proposals" class="tab-pane in" th:classappend="(${viewMode} == 'proposals') ? 'active'"> -->
-<!-- 						<div style="margin-top: 20px"> -->
-<!-- 							<table id="proposalsTable" class="datatable table table-striped"> -->
-<!-- 								<thead> -->
-<!-- 									<tr> -->
-<!-- 										<th th:text="#{tableheader.name}">Name</th> -->
-<!-- 										<th th:text="#{tableheader.itemClassName}">Klasse</th> -->
-<!-- 										<th th:text="#{tableheader.proposalType}">Vorschlagsart</th> -->
-<!-- 										<th th:text="#{tableheader.submitter}">Vorschlagende Stelle</th> -->
-<!-- 										<th th:text="#{tableheader.status}">Status</th> -->
-<!-- 										<th></th> -->
-<!-- 									</tr> -->
-<!-- 								</thead> -->
-<!-- 								<tbody> -->
-<!-- 									<tr th:each="item : ${proposedItems}"> -->
-<!-- 										<td th:text="${item.name}"></td> -->
-<!-- 										<td th:text="${item.itemClassName}"></td> -->
-<!-- 										<td th:text="#{${item.proposalType}}"></td> -->
-<!-- 										<td th:text="${item.sponsorName}"></td> -->
-<!-- 										<td th:text="#{${item.proposalStatus}}"></td> -->
-<!-- 										<td> -->
-<!-- 											<div class="btn-group"> -->
-<!-- 												<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
-<!-- 													<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
-<!-- 												</button> -->
-<!-- 												<ul class="dropdown-menu" role="menu"> -->
-<!-- 													<li> -->
-<!-- 														<div style="margin: 5px;"> -->
-<!-- 															<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${@registrySecurity.mayWrite(item.proposalClass, item.proposalUuid)} ? #{button.edit} : #{button.details}">Details</button>												 -->
-<!-- 														</div> -->
-<!-- 													</li> -->
-<!-- 													<li th:if="${item.isUnderReview()} or ${item.isPending()}"> -->
-<!-- 														<div style="margin: 5px;"> -->
-<!-- 															<button th:id="'withdraw_' + ${item.uuid}" class="btn btn-warning btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/withdraw'} + '\', function() { location.reload(); });'" th:text="#{button.withdrawProposal}">Zurückziehen</button> -->
-<!-- 														</div> -->
-<!-- 													</li> -->
-<!-- 													<li th:if="${item.isAppealable()}"><div style="margin: 5px"> -->
-<!-- 														<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button> -->
-<!-- 													</div></li> -->
-<!-- 												</ul> -->
-<!-- 											</div> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 								</tbody> -->
-<!-- 							</table> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-					
 				</div>
 			</div>
 		</div>
@@ -320,6 +215,7 @@
 			"sAjaxSource": "[[@{__${basePath}__/}]]register/[[${register.uuid}]]/containedItems",
 			"bProcessing": true,
 			"bServerSide": true,
+			"bStateSave": true,
 			"fnServerParams": function (aoData) {
 				if ([[${#strings.isEmpty(itemClassFilter)}]]) {
 		            aoData.push({
@@ -456,6 +352,7 @@
 
 		table = $('#proposalsTable').dataTable({
 			"sPaginationType": "bs_normal",
+			"bStateSave": true,
 			"oLanguage": {
 				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
 				  "sInfo": "[[#{datatable.sInfo}]]",
