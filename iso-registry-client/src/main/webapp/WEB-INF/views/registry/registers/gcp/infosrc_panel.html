@@ -6,7 +6,7 @@
 		</div>
 	</div>
 	<div id="informationSourcePanel" class="panel-collapse">
-		<ul class="nav nav-tabs">
+		<ul id="infosrc-tabs" class="nav nav-tabs">
 			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:attr="data-index=${rowStat.index}"><a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab" th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"/></li>
 			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span></a></li>
 		</ul>
@@ -24,14 +24,29 @@
 			$('#button-addinformationsource').click(function(e) {
 				e.preventDefault();
 				var idx = $('#li-addinformationsource').prev().data('index');
-				idx += 1;
-				$('<li data-index="' + idx + '"><a href="#infosrc-' + idx + '" data-toggle="tab">Source #' + (idx + 1) + '</a></li>').insertBefore('#li-addinformationsource');
+				if (idx === null) {
+					idx = 0;
+				}
+				else {
+					idx += 1;
+				}
+				$('<li id="li-infosrc-' + idx + '" data-index="' + idx + '"><a id="show-infosrc-' + idx + '" href="#infosrc-' + idx + '" data-toggle="tab">Source #' + (idx + 1) + ' <button id="delete-infosrc-' + idx + '" type="button" data-index="' + idx + '" class="btn btn-xs btn-default button-close-infosrc"><span class="fa fa-times"></span></button></a></li>').insertBefore('#li-addinformationsource');
 				
 				$('<div id="infosrc-' + idx + '" class="tab-pane" style="padding-top: 10px"/>').insertBefore('#afterTabs');
 				$('#infosrc-' + idx).append('<div id="infosrc-' + idx + '-content" class="panel-body"/>');
 				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource[' + idx + ']');
-				$('#infosrc-' + idx).tab('show');
+				$('#show-infosrc-' + idx).tab('show');
 			});	            
+		
+			$('body').on('click', '.button-close-infosrc', function() {
+				var idx = $(this).data('index');
+				$('#li-infosrc-' + idx).remove();
+				$('#infosrc-' + idx).remove();
+				var first = $('#infosrc-tabs').find('li:first').data('index');
+				if (first !== null) {
+					$('#show-infosrc-' + first).tab('show');
+				}
+			});
 		/* ]]> */		
 		</script>
 	</div>	
