@@ -1,0 +1,30 @@
+#if ($item.semiMajorAxis)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Semi-major axis</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.semiMajorAxis $item.semiMajorAxisUom.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.semiMinorAxis)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Semi-minor axis</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.semiMinorAxis $item.semiMinorAxisUom.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.inverseFlattening)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Inverse flattening</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.inverseFlattening $item.inverseFlatteningUom.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
