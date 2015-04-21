@@ -216,9 +216,8 @@ public class RegisterItemController
 		
 		model.addAttribute("item", vb);
 		
-		String templateLocation = "pdftemplates/ellipsoid.fo";
+		String templateLocation = "pdftemplates/" + item.getItemClass().getName().toLowerCase() + ".fo";
 
-//		String sourceXml = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templatePath, "UTF-8", model.asMap());
 		StringWriter sw = new StringWriter();
 		velocityEngine.mergeTemplate(templateLocation, "UTF-8", new VelocityContext(model.asMap(), velocityContext), sw);
 		String sourceXml = sw.toString();
