@@ -277,7 +277,7 @@
 	<entry key="popup.deleteProposal.reallyDelete">Do you want to delete the proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
-	<entry key="popup.extent.header">Domain of Validity</entry>
+	<entry key="popup.extent.header">Extent</entry>
 	<entry key="popup.informationSource.header">Information Source</entry>
 
 	<entry key="tabs.overview">Overview</entry>
