@@ -16,7 +16,7 @@
 					<fo:table-body>
 						#parse("pdftemplates/item.fo")
 						#parse("pdftemplates/identifieditem.fo")
-						
+						#parse("pdftemplates/ellipsoid_details.fo")
 					</fo:table-body>
             	</fo:table>
             </fo:block>
