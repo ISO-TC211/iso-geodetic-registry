@@ -17,35 +17,15 @@
 </fo:table-row>
 #end
 #foreach($infosrc in $item.informationSource)
+	#parse("pdftemplates/informationsource.fo")
+#end
+#if ($item.dataSource)
 <fo:table-row height="15pt">
 	<fo:table-cell font-style="italic">
-		<fo:block>Information source</fo:block>
+		<fo:block>Data source</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>
-			<fo:table border="none" border-collapse="collapse" table-layout="fixed">
-				<fo:table-column column-width="30%"/>
-				<fo:table-column column-width="70%"/>
-				<fo:table-body>
-					<fo:table-row>
-						<fo:table-cell font-style="italic">
-							<fo:block>Title</fo:block>
-						</fo:table-cell>
-						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.title)</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
-					<fo:table-row>
-						<fo:table-cell font-style="italic">
-							<fo:block>Author</fo:block>
-						</fo:table-cell>
-						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.author)</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
-				</fo:table-body>
-			</fo:table>
-		</fo:block>
+		<fo:block>$esc.html($item.dataSource)</fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
