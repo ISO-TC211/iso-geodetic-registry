@@ -126,6 +126,7 @@
 	<entry key="header.primeMeridian">Prime Meridian</entry>
 	<entry key="header.extent">Extent</entry>
 	<entry key="header.informationSource">Information source</entry>
+	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
 	<entry key="button.acceptProposal">Accept</entry>
@@ -193,6 +194,7 @@
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
 	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 	<entry key="button.addAlternateTitle">Add alternate title</entry>
+	<entry key="button.pdf">Download PDF</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
