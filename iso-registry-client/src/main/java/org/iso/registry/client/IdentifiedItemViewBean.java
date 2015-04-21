@@ -3,6 +3,7 @@ package org.iso.registry.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
@@ -10,6 +11,7 @@ import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
 import de.geoinfoffm.registry.core.model.Supersession;
+import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
 public class IdentifiedItemViewBean extends RegisterItemViewBean
@@ -17,7 +19,7 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 	private Integer identifier;
 	private String remarks;
 	private List<String> aliases;
-	private String informationSource;
+	private List<CitationDTO> informationSource;
 	private String dataSource;
 
 	public IdentifiedItemViewBean(RE_RegisterItem item) {
@@ -56,7 +58,12 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 
 		this.setIdentifier(item.getIdentifier());
 		this.setRemarks(item.getRemarks());
-		this.setInformationSource(item.getInformationSource());
+//		this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
+//		this.setInformationSource(item.getInformationSource());
+		for (CI_Citation citation : item.getInformationSourceCitation()) {
+			this.getInformationSource().add(new CitationDTO(citation));
+		}
+		
 		this.setDataSource(item.getDataSource());
 		for (String alias : item.getAliases()) {
 			this.addAlias(alias);
@@ -94,11 +101,14 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		this.aliases.add(alias);
 	}
 
-	public String getInformationSource() {
+	public List<CitationDTO> getInformationSource() {
+		if (this.informationSource == null) {
+			this.informationSource = new ArrayList<>();
+		}
 		return informationSource;
 	}
 
-	public void setInformationSource(String informationSource) {
+	public void setInformationSource(List<CitationDTO> informationSource) {
 		this.informationSource = informationSource;
 	}
 

@@ -295,7 +295,7 @@
 	<entry key="form.label.crsType">CRS-Art</entry>
 	<entry key="form.label.scope">Scope</entry>
 	<entry key="form.label.areaOfUse">Gültigkeitsgebiet</entry>
-	<entry key="form.label.domainOfValidity">Gültigkeitsgebiet</entry>
+	<entry key="form.label.extent">Gültigkeitsgebiet</entry>
 	<entry key="form.label.datum">Datum</entry>
 	<entry key="form.label.coordinateSystem">Koordinatensystem</entry>
 	<entry key="form.label.isoA2Code">ISO-Alpha-2-Code</entry>

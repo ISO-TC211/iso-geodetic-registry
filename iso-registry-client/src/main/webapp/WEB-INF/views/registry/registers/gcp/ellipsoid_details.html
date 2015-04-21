@@ -8,17 +8,8 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label" th:for="sphere" th:text="#{form.label.shape}"></label>
-						<input type="radio" th:field="*{sphere}" value="false">Ellipsoid</input>
-						<input type="radio" th:field="*{sphere}" value="true">Sphere</input>
-						
-<!-- 						<div class="btn-group" id="sphere" data-toggle="buttons"> -->
-<!-- 							<label class="btn btn-primary">  -->
-<!-- 								<input type="radio" name="isEllipsoid" id="isEllipsoid" th:field="*{sphere}" value="false">Ellipsoid</input> -->
-<!-- 							</label>  -->
-<!-- 							<label class="btn btn-primary">  -->
-<!-- 								<input type="radio" name="options" id="option2" th:field="*{sphere}" value="true">Sphere</input> -->
-<!-- 							</label>  -->
-<!-- 						</div> -->
+						<input id="shape-ellipsoid" type="radio" th:field="*{sphere}" value="false">Ellipsoid</input>
+						<input id="shape-sphere" type="radio" th:field="*{sphere}" value="true">Sphere</input>
 					</div>
 				</div>
 			</div>
@@ -54,4 +45,47 @@
 			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->									
 	</div>
+	
+	<script th:if="${isProposal}" type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			if ([[*{sphere} eq 'true' ? 'true' : 'false']]) {
+				$('#semiMinorAxis').attr('disabled', 'disabled');
+				$('#inverseFlattening').attr('disabled', 'disabled');
+			}
+			
+			$('#shape-ellipsoid').click(function() {
+				$('#semiMinorAxis').removeAttr('disabled');
+				$('#inverseFlattening').removeAttr('disabled');				
+			});
+			
+			$('#shape-sphere').click(function() {
+				$('#semiMinorAxis').val('');
+				$('#semiMinorAxis').attr('disabled', 'disabled');
+				$('#inverseFlattening').val('');				
+				$('#inverseFlattening').attr('disabled', 'disabled');				
+			});
+			
+			$('#semiMinorAxis').keyup(function() {
+				if ($('#semiMinorAxis').val() !== '') {
+					$('#inverseFlattening').val('');
+					$('#inverseFlattening').attr('disabled', 'disabled');				
+				}
+				else {
+					$('#inverseFlattening').removeAttr('disabled');									
+				}
+			});
+
+			$('#inverseFlattening').keyup(function() {
+				if ($('#inverseFlattening').val() !== '') {
+					$('#semiMinorAxis').val('');
+					$('#semiMinorAxis').attr('disabled', 'disabled');				
+				}
+				else {
+					$('#semiMinorAxis').removeAttr('disabled');									
+				}
+			});
+		});
+	/* ]]> */
+	</script>
 </div>
