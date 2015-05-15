@@ -31,8 +31,8 @@
   padding-right: 15px;
 }
 
-/* .main { */
-/*   overflow: auto; */
-/*   padding-bottom: 150px; this needs to be bigger than footer height */
-/* } */
+.container {
+  overflow: auto;
+  padding-bottom: 150px; this needs to be bigger than footer height
+}
   
