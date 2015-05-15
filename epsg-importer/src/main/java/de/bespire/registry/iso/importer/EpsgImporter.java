@@ -213,7 +213,7 @@ public class EpsgImporter
 				run(crsImporter, crsTable, register, sponsor);
 			}				
 
-			if (argList.contains("all") || argList.contains("10") || argList.contains("-alias")) {
+			if (argList.contains("all") || argList.contains("10") || argList.contains("-alias") || argList.contains("-allaliases")) {
 				if (argList.contains("-alias")) {
 					aliasesImporter.setLimitToCodes(argList.get(argList.indexOf("-alias") + 1));
 				}
