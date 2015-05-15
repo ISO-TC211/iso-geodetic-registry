@@ -5,9 +5,11 @@ package org.iso.registry.client.controller.registry;
 
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,8 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -38,9 +42,12 @@ import org.apache.velocity.app.VelocityEngine;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,6 +146,9 @@ public class RegisterItemController
 	
 	@Autowired
 	private VelocityContext velocityContext;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -215,7 +225,8 @@ public class RegisterItemController
 		RegisterItemViewBean vb = viewBeanFactory.getViewBean(item);
 		
 		model.addAttribute("item", vb);
-		
+		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+
 		String templateLocation = "pdftemplates/" + item.getItemClass().getName().toLowerCase() + ".fo";
 
 		StringWriter sw = new StringWriter();
@@ -223,6 +234,10 @@ public class RegisterItemController
 		String sourceXml = sw.toString();
 
 		ServletOutputStream out = response.getOutputStream();
+
+		String filename = String.format("%s_%d.pdf", item.getItemClass().getName(), item.getItemIdentifier());
+		response.setContentType("application/pdf");
+		response.addHeader("Content-Disposition", String.format("form-data; name=\"%s\"; filename=\"%s\"", filename, filename));
 		
 		final Fop fop = FopFactory.newInstance().newFop(MimeConstants.MIME_PDF, out);
 		final Transformer xf = TransformerFactory.newInstance().newTransformer();
@@ -234,8 +249,6 @@ public class RegisterItemController
 		out.flush();
 		out.close();
 		response.flushBuffer();
-		
-//		return new ModelAndView(new IdentifiedItemPdfView(), model.asMap());
 	}
 
 
