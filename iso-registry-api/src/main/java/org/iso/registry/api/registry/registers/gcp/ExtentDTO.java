@@ -109,6 +109,6 @@ public class ExtentDTO
 	}
 
 	private boolean isValidBoundingBox(EX_GeographicBoundingBox boundingBox) {
-		return boundingBox.getEastBoundLongitude() != null && boundingBox.getWestBoundLongitude() != null && boundingBox.getNorthBoundLatitude() != null && boundingBox.getSouthBoundLatitude() != null;
+		return boundingBox != null && boundingBox.getEastBoundLongitude() != null && boundingBox.getWestBoundLongitude() != null && boundingBox.getNorthBoundLatitude() != null && boundingBox.getSouthBoundLatitude() != null;
 	}
 }
