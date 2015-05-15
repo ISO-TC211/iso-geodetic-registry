@@ -1,0 +1,19 @@
+<fo:block font-size="10pt" space-after.optimum="5pt">
+	<fo:table border="solid" border-collapse="collapse" table-layout="fixed">
+		<fo:table-column column-width="30%"/>
+		<fo:table-column column-width="70%"/>
+		<fo:table-body>
+			<fo:table-row height="15pt">
+				<fo:table-cell font-style="italic">
+					<fo:block>Description</fo:block>
+				</fo:table-cell>
+				<fo:table-cell font-weight="bold" font-size="14pt">
+					<fo:block>$esc.html($extent.description)</fo:block>
+				</fo:table-cell>
+			</fo:table-row>
+			#foreach($bbox in $extent.geographicBoundingBoxes)
+				#parse("pdftemplates/geographicboundingbox.fo")
+			#end
+		</fo:table-body>
+	</fo:table>
+</fo:block>
