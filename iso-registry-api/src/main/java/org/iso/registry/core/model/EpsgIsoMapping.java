@@ -1,6 +1,7 @@
 package org.iso.registry.core.model;
 
-import javax.persistence.Basic;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -10,14 +11,14 @@ public class EpsgIsoMapping extends de.geoinfoffm.registry.core.Entity
 	private String itemClass;
 	private Integer epsgCode;
 	@Column(unique = true)
-	private Integer isoCode;
+	private UUID isoUuid;
 
 	private EpsgIsoMapping() { }
 	
-	public EpsgIsoMapping(String itemClass, Integer epsgCode, Integer isoCode) {
+	public EpsgIsoMapping(String itemClass, Integer epsgCode, UUID isoUuid) {
 		this.itemClass = itemClass;
 		this.epsgCode = epsgCode;
-		this.isoCode = isoCode;
+		this.isoUuid = isoUuid;
 	}
 
 	public String getItemClass() {
@@ -36,12 +37,12 @@ public class EpsgIsoMapping extends de.geoinfoffm.registry.core.Entity
 		this.epsgCode = epsgCode;
 	}
 
-	public Integer getIsoCode() {
-		return isoCode;
+	public UUID getIsoUuid() {
+		return isoUuid;
 	}
 
-	public void setIsoCode(Integer isoCode) {
-		this.isoCode = isoCode;
+	public void setIsoUuid(UUID isoUuid) {
+		this.isoUuid = isoUuid;
 	}
 
 }

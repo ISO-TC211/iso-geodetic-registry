@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.UUID;
 
+import org.hibernate.validator.internal.util.privilegedactions.GetConstructor;
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.slf4j.Logger;
@@ -54,7 +56,8 @@ public class AreasImporter extends AbstractImporter
 		proposal.setTargetRegisterUuid(register.getUuid());
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
-		
+
+		Integer epsgCode = (Integer)row.get(codeProperty());
 //		proposal.setIdentifier((Integer)row.get(AREA_CODE));
 		proposal.setName((String)row.get(AREA_NAME));
 		proposal.setDescription((String)row.get(AREA_OF_USE));
@@ -80,7 +83,7 @@ public class AreasImporter extends AbstractImporter
 		proposal.setIsoA3Code((String)row.get(ISO_A3_CODE));
 		proposal.setIsoNCode((Integer)row.get(ISO_N_CODE));
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+//		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		try {
@@ -91,6 +94,7 @@ public class AreasImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

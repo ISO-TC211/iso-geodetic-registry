@@ -60,11 +60,11 @@ public class OperationMethodsImporter extends AbstractImporter
 		proposal.setFormula((String)row.get(FORMULA));
 		proposal.setDescription((String)row.get(EXAMPLE));
 		
-		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, epsgCode, this.isGenerateIdentifiers(), mapRepository);
+		List<GeneralOperationParameterItem> parameters = CoordinateOperationsImporter.findParameters(getParametersUsageTable(), paramRepository, epsgCode, mapRepository);
 		proposal.setParameters(parameters);
 
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		logger.info(">> Imported method '{}'...", proposal.getName());
@@ -75,6 +75,8 @@ public class OperationMethodsImporter extends AbstractImporter
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
 			acceptProposal(ai, decisionEvent);
+
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
