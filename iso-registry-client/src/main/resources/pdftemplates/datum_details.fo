@@ -1,41 +1,41 @@
+#parse("pdftemplates/identifieditem.fo")
+#if ($item.anchorDefinition)
 <fo:table-row height="15pt">
 	<fo:table-cell font-style="italic">
-		<fo:block>Identifier</fo:block>
+		<fo:block>Anchor definition</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$item.identifier</fo:block>
-	</fo:table-cell>
-</fo:table-row>
-#foreach($alias in $item.aliases)
-<fo:table-row height="15pt">
-	<fo:table-cell font-style="italic">
-		<fo:block>Alias</fo:block>
-	</fo:table-cell>
-	<fo:table-cell>
-		<fo:block>$esc.html($alias)</fo:block>
+		<fo:block>$item.anchorDefinition</fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
-#foreach($infosrc in $item.informationSource)
-	#parse("pdftemplates/informationsource.fo")
-#end
-#if ($item.dataSource)
+#if ($item.realizationEpoch)
 <fo:table-row height="15pt">
 	<fo:table-cell font-style="italic">
-		<fo:block>Data source</fo:block>
+		<fo:block>Release date</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.dataSource)</fo:block>
+		<fo:block>$item.realizationEpoch</fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
-#if ($item.remarks)
+#if ($item.coordinateReferenceEpoch)
 <fo:table-row height="15pt">
 	<fo:table-cell font-style="italic">
-		<fo:block>Remarks</fo:block>
+		<fo:block>Coordinate Reference Epoch</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.remarks)</fo:block>
+		<fo:block>$item.coordinateReferenceEpoch</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.scope)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Scope</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.scope</fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end

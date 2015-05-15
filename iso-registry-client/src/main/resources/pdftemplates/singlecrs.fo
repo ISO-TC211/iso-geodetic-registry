@@ -1,0 +1,21 @@
+#parse("pdftemplates/crs.fo")
+#if ($item.datum)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Datum</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($item.datum.name)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.coordinateSystem)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Coordinate System</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($item.coordinateSystem.name)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
