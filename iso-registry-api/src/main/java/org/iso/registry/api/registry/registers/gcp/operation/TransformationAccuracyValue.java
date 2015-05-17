@@ -10,6 +10,8 @@ import org.iso.registry.core.model.iso19103.RecordTypeImpl;
 public class TransformationAccuracyValue implements Record
 {
 	private Float accuracy;
+	
+	protected TransformationAccuracyValue() { }
 
 	public TransformationAccuracyValue(Float accuracy) {
 		this.accuracy = accuracy;
