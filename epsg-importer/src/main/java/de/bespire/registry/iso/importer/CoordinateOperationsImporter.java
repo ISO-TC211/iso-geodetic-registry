@@ -209,10 +209,12 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		Float accuracyValue = (Float)row.get(COORD_OP_ACCURACY);
 		if (accuracyValue != null) {
 			UnitOfMeasureItem metre = uomRepository.findByNameAndStatus("metre", RE_ItemStatus.VALID);
-			TransformationAccuracy trafoAccuracy = new TransformationAccuracy(accuracyValue, metre);
-			DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
-			accuracy.setResult(trafoAccuracy);
-			proposal.addCoordinateOperationAccuracy(accuracy);
+//			TransformationAccuracy trafoAccuracy = new TransformationAccuracy(accuracyValue, metre);
+//			DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
+//			accuracy.setResult(trafoAccuracy);
+//			proposal.addCoordinateOperationAccuracy(accuracy);
+			proposal.setAccuracy(accuracyValue);
+			proposal.setAccuracyUom(metre.getUuid());
 		}		
 		
 		proposal.setRemarks((String)row.get(REMARKS));

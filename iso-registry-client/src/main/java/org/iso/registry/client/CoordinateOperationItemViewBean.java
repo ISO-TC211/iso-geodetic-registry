@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.TransformationAccuracy;
+import org.iso.registry.api.registry.registers.gcp.operation.TransformationAccuracyValue;
+import org.iso.registry.core.model.iso19115.dataquality.DQ_AbsoluteExternalPositionalAccuracy;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 
@@ -19,7 +22,7 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 	private ExtentDTO domainOfValidity;
 	private List<String> scope;
 //	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
-	private Integer accuracy;
+	private Float accuracy;
 	private CoordinateReferenceSystemItemViewBean sourceCrs;
 	private CoordinateReferenceSystemItemViewBean targetCrs;
 
@@ -73,9 +76,16 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 			}
 		}
 
-//		this.setCoordinateOperationAccuracy(item.getCoordinateOperationAccuracy());
-		this.setAccuracy(item.getAccuracy());
-		
+		if (item.getCoordinateOperationAccuracy() != null && item.getCoordinateOperationAccuracy() instanceof DQ_AbsoluteExternalPositionalAccuracy) {
+			DQ_AbsoluteExternalPositionalAccuracy accuracy = (DQ_AbsoluteExternalPositionalAccuracy)item.getCoordinateOperationAccuracy();
+			if (accuracy.getResult() != null && accuracy.getResult() instanceof TransformationAccuracy) {
+				TransformationAccuracy xfAccuracy = (TransformationAccuracy)accuracy.getResult();
+				if (xfAccuracy.getValue() instanceof TransformationAccuracyValue) {
+					TransformationAccuracyValue xfAccuracyValue = (TransformationAccuracyValue)xfAccuracy.getValue();
+					this.setAccuracy(xfAccuracyValue.getAccuracy());
+				}
+			}
+		}
 		if (item.getSourceCrs() != null) {
 			this.setSourceCrs(new CoordinateReferenceSystemItemViewBean(item.getSourceCrs()));
 		}
@@ -115,11 +125,11 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 		this.scope.add(scope);
 	}
 
-	public Integer getAccuracy() {
+	public Float getAccuracy() {
 		return accuracy;
 	}
 
-	public void setAccuracy(Integer accuracy) {
+	public void setAccuracy(Float accuracy) {
 		this.accuracy = accuracy;
 	}
 
