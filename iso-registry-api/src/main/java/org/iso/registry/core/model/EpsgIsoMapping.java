@@ -5,12 +5,14 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class EpsgIsoMapping extends de.geoinfoffm.registry.core.Entity
 {
 	private String itemClass;
 	private Integer epsgCode;
-	@Column(unique = true)
+	@Type(type = "pg-uuid")	
 	private UUID isoUuid;
 
 	private EpsgIsoMapping() { }
