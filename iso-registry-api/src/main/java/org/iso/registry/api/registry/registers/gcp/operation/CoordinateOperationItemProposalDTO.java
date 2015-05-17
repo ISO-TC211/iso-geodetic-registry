@@ -24,7 +24,8 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 	private String operationVersion;
 	private ExtentDTO domainOfValidity;
 	private List<String> scope;
-	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
+//	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
+	private Integer accuracy; // accuracy in m
 	private CoordinateReferenceSystemItemProposalDTO sourceCrs;
 	private CoordinateReferenceSystemItemProposalDTO targetCrs;
 
@@ -80,11 +81,13 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 				item.addScopes(this.getScope());
 			}
 			
-			if (this.getCoordinateOperationAccuracy() != null) {
-				for (DQ_PositionalAccuracy pa : this.getCoordinateOperationAccuracy()) {
-					item.addCoordinateOperationAccuracy(pa);
-				}
-			}
+//			if (this.getCoordinateOperationAccuracy() != null) {
+//				for (DQ_PositionalAccuracy pa : this.getCoordinateOperationAccuracy()) {
+//					item.addCoordinateOperationAccuracy(pa);
+//				}
+//			}
+			
+			item.setAccuracy(this.accuracy);
 			
 			if (this.getSourceCrs() != null && this.getSourceCrs().getReferencedItemUuid() != null) {
 				CoordinateReferenceSystemItem crs = entityManager.find(CoordinateReferenceSystemItem.class, this.getSourceCrs().getReferencedItemUuid());
@@ -116,11 +119,13 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 				this.scope.addAll(item.getScope());
 			}
 			
-			if (item.getCoordinateOperationAccuracy() != null) {
-				for (DQ_PositionalAccuracy pa : item.getCoordinateOperationAccuracy()) {
-					this.addCoordinateOperationAccuracy(pa);
-				}
-			}
+//			if (item.getCoordinateOperationAccuracy() != null) {
+//				for (DQ_PositionalAccuracy pa : item.getCoordinateOperationAccuracy()) {
+//					this.addCoordinateOperationAccuracy(pa);
+//				}
+//			}
+			
+			this.setAccuracy(item.getAccuracy());
 			
 			if (item.getSourceCrs() != null) {
 				this.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(item.getSourceCrs()));
@@ -157,21 +162,29 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		this.scope = scope;
 	}
 
-	public List<? extends DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
-		return coordinateOperationAccuracy;
+	public Integer getAccuracy() {
+		return accuracy;
 	}
 
-	public <T extends DQ_PositionalAccuracy> void setCoordinateOperationAccuracy(List<T> coordinateOperationAccuracy) {
-		this.coordinateOperationAccuracy = new ArrayList<>();
-		this.coordinateOperationAccuracy.addAll(coordinateOperationAccuracy);
+	public void setAccuracy(Integer accuracy) {
+		this.accuracy = accuracy;
 	}
-	
-	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
-		if (this.coordinateOperationAccuracy == null) {
-			this.coordinateOperationAccuracy = new ArrayList<>();
-		}
-		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
-	}
+
+//	public List<? extends DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
+//		return coordinateOperationAccuracy;
+//	}
+//
+//	public <T extends DQ_PositionalAccuracy> void setCoordinateOperationAccuracy(List<T> coordinateOperationAccuracy) {
+//		this.coordinateOperationAccuracy = new ArrayList<>();
+//		this.coordinateOperationAccuracy.addAll(coordinateOperationAccuracy);
+//	}
+//	
+//	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
+//		if (this.coordinateOperationAccuracy == null) {
+//			this.coordinateOperationAccuracy = new ArrayList<>();
+//		}
+//		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
+//	}
 
 	public CoordinateReferenceSystemItemProposalDTO getSourceCrs() {
 		return sourceCrs;
