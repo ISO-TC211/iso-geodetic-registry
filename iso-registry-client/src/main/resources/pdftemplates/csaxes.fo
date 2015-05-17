@@ -1,0 +1,15 @@
+<fo:block font-size="12pt" font-family="sans-serif" line-height="24pt" space-before.optimum="15pt" padding-top="3pt">Axes</fo:block>
+#set($csitem = $item)
+#foreach($axis in $csitem.axes)
+	#set($item = $axis)
+    <fo:block font-size="10pt" space-after.optimum="5pt">
+    	<fo:table border="solid" border-collapse="collapse" table-layout="fixed">
+			<fo:table-column column-width="30%"/>
+			<fo:table-column column-width="70%"/>
+			<fo:table-body>
+				#parse("pdftemplates/item.fo")
+				#parse("pdftemplates/csaxis_details.fo")
+			</fo:table-body>
+    	</fo:table>
+    </fo:block>
+#end

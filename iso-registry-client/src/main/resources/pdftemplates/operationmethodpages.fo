@@ -1,0 +1,5 @@
+#set($opitem = $item)
+
+#set($itemdetails = "pdftemplates/operationmethod_details.fo")
+#set($itemafter = "pdftemplates/parametersblock.fo")
+#parse("pdftemplates/itempage.fo")

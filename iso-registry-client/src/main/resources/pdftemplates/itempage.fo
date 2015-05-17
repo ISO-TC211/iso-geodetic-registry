@@ -1,0 +1,14 @@
+<fo:page-sequence master-reference="simple">
+	<fo:static-content flow-name="page-footer">
+		<fo:block font-size="8pt" font-family="sans-serif" text-align="right">
+			<fo:inline>Retrieved: ${downloadDate}</fo:inline>
+		</fo:block>
+	</fo:static-content>
+    <fo:flow flow-name="xsl-region-body">
+		<fo:block font-size="18pt" font-family="sans-serif" line-height="24pt" space-after.optimum="15pt" background-color="blue" color="white" text-align="center" padding-top="3pt">ISO Registry of Geodetic Codes &amp; Parameters</fo:block>
+    	#parse("pdftemplates/itemdetails.fo")
+	    #if($itemafter && $itemafter != "")
+		    #parse($itemafter)
+		#end
+    </fo:flow>
+</fo:page-sequence>

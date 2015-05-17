@@ -1,0 +1,11 @@
+#set($crsitem = $item)
+
+#set($itemdetails = "pdftemplates/compoundcrs_details.fo")
+#set($itemafter = "pdftemplates/extentblock.fo")
+#parse("pdftemplates/itempage.fo")
+
+#set($item = $crsitem.horizontalCrs)
+#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
+
+#set($item = $crsitem.verticalCrs)
+#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")

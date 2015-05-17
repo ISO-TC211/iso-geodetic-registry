@@ -1,0 +1,11 @@
+#parse("pdftemplates/coordinateoperation.fo")
+#if ($item.method)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Operation method</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.method.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
