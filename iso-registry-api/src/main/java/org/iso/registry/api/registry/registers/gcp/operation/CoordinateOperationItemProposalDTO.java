@@ -2,22 +2,26 @@ package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
+import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.iso19115.dataquality.DQ_AbsoluteExternalPositionalAccuracy;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
+import org.iso.registry.core.model.iso19115.dataquality.DQ_Result;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -25,7 +29,8 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 	private ExtentDTO domainOfValidity;
 	private List<String> scope;
 //	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
-	private Integer accuracy; // accuracy in m
+	private Float accuracy;
+	private UUID accuracyUom;
 	private CoordinateReferenceSystemItemProposalDTO sourceCrs;
 	private CoordinateReferenceSystemItemProposalDTO targetCrs;
 
@@ -87,7 +92,14 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 //				}
 //			}
 			
-			item.setAccuracy(this.accuracy);
+			if (this.getAccuracy() != null && this.getAccuracyUom() != null) {
+				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getAccuracyUom());
+				TransformationAccuracy trafoAccuracy = new TransformationAccuracy(this.getAccuracy(), uom);
+				DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
+				accuracy.setResult(trafoAccuracy);
+				item.addCoordinateOperationAccuracy(accuracy);
+
+			}
 			
 			if (this.getSourceCrs() != null && this.getSourceCrs().getReferencedItemUuid() != null) {
 				CoordinateReferenceSystemItem crs = entityManager.find(CoordinateReferenceSystemItem.class, this.getSourceCrs().getReferencedItemUuid());
@@ -119,13 +131,17 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 				this.scope.addAll(item.getScope());
 			}
 			
-//			if (item.getCoordinateOperationAccuracy() != null) {
-//				for (DQ_PositionalAccuracy pa : item.getCoordinateOperationAccuracy()) {
-//					this.addCoordinateOperationAccuracy(pa);
-//				}
-//			}
-			
-			this.setAccuracy(item.getAccuracy());
+			if (item.getCoordinateOperationAccuracy() != null && !item.getCoordinateOperationAccuracy().isEmpty()) {
+				// Only one entry is currently supported
+				DQ_PositionalAccuracy positionalAccuracy = item.getCoordinateOperationAccuracy().get(0);
+				if (positionalAccuracy.getResult() != null && positionalAccuracy.getResult() instanceof TransformationAccuracy) {
+					TransformationAccuracy accuracy = (TransformationAccuracy)positionalAccuracy.getResult();
+					TransformationAccuracyValue accuracyValue = (TransformationAccuracyValue)accuracy.getValue();
+					UnitOfMeasureItem accuracyUom = (UnitOfMeasureItem)accuracy.getValueUnit();
+					this.setAccuracy(accuracyValue.getAccuracy());
+					this.setAccuracyUom(accuracyUom.getUuid());
+				}
+			}
 			
 			if (item.getSourceCrs() != null) {
 				this.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(item.getSourceCrs()));
@@ -162,14 +178,6 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		this.scope = scope;
 	}
 
-	public Integer getAccuracy() {
-		return accuracy;
-	}
-
-	public void setAccuracy(Integer accuracy) {
-		this.accuracy = accuracy;
-	}
-
 //	public List<? extends DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
 //		return coordinateOperationAccuracy;
 //	}
@@ -185,6 +193,22 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 //		}
 //		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
 //	}
+
+	public Float getAccuracy() {
+		return accuracy;
+	}
+
+	public void setAccuracy(Float accuracy) {
+		this.accuracy = accuracy;
+	}
+
+	public UUID getAccuracyUom() {
+		return accuracyUom;
+	}
+
+	public void setAccuracyUom(UUID accuracyUom) {
+		this.accuracyUom = accuracyUom;
+	}
 
 	public CoordinateReferenceSystemItemProposalDTO getSourceCrs() {
 		return sourceCrs;

@@ -9,8 +9,8 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -36,13 +36,8 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	@ElementCollection
 	private List<String> scope;
 	
-//	@ManyToMany(cascade = CascadeType.ALL)
-//	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
-	
-	/*
-	 * Accuracy in m. 
-	 */
-	private Integer accuracy;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	
 	@ManyToOne
 	private CoordinateReferenceSystemItem sourceCrs;
@@ -97,27 +92,19 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 		this.scope.addAll(scopes);
 	}
 
-//	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
-//		return coordinateOperationAccuracy;
-//	}
-//
-//	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
-//		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
-//	}
-//	
-//	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
-//		if (this.coordinateOperationAccuracy == null) {
-//			this.coordinateOperationAccuracy = new ArrayList<>();
-//		}
-//		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
-//	}
-
-	public Integer getAccuracy() {
-		return accuracy;
+	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
+		return coordinateOperationAccuracy;
 	}
 
-	public void setAccuracy(Integer accuracy) {
-		this.accuracy = accuracy;
+	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
+		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
+	}
+	
+	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
+		if (this.coordinateOperationAccuracy == null) {
+			this.coordinateOperationAccuracy = new ArrayList<>();
+		}
+		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
 	}
 
 	public CoordinateReferenceSystemItem getSourceCrs() {
