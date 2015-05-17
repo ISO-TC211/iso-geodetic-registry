@@ -1,0 +1,21 @@
+#parse("pdftemplates/datum_details.fo")
+#if ($item.ellipsoid)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Ellipsoid</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.ellipsoid.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.primeMeridian)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Prime Meridian</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.primeMeridian.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
