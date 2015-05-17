@@ -1,14 +1,8 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO.CoordinateReferenceSystemType;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
@@ -23,8 +17,6 @@ import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.DatumItemRepository;
-import org.iso.registry.core.model.iso19115.extent.EX_Extent;
-import org.iso.registry.core.model.iso19115.extent.EX_GeographicBoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,21 +102,35 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			throw new RuntimeException(String.format("Invalid CRS type: %s", crsType));
 		}
 		
+		Integer horizontalCrsCode = (Integer)row.get(CMPD_HORIZCRS_CODE);
+		if (horizontalCrsCode != null) {
+			CoordinateReferenceSystemItem crs = crsRepository.findOne(findMappedCode(horizontalCrsCode));
+			proposal.setHorizontalCrs(new CoordinateReferenceSystemItemProposalDTO(crs));
+		}
+
+		Integer verticalCrsCode = (Integer)row.get(CMPD_VERTCRS_CODE);
+		if (verticalCrsCode != null) {
+			CoordinateReferenceSystemItem crs = crsRepository.findOne(findMappedCode(verticalCrsCode));
+			proposal.setVerticalCrs(new CoordinateReferenceSystemItemProposalDTO(crs));			
+		}
+
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
-		AreaItem area = areaRepository.findByIdentifier(areaCode);
-		if (area != null) {
-			ExtentDTO extent = new ExtentDTO();
-			extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
-			extent.setDescription(area.getName());
-			proposal.setDomainOfValidity(extent);
+		if (areaCode != null) {
+			AreaItem area = areaRepository.findOne(findMappedCode("Area", areaCode));
+			if (area != null) {
+				ExtentDTO extent = new ExtentDTO();
+				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
+				extent.setDescription(area.getName());
+				proposal.setDomainOfValidity(extent);
+			}
+			else {
+				logger.error(">>> CRS #{} referenced invalid Area #{}", crsCode, areaCode);
+			}
 		}
-		else {
-			logger.error(">>> CRS #{} referenced invalid Area #{}", crsCode, areaCode);
-		}
-		
+			
 		Integer csCode = (Integer)row.get(COORD_SYS_CODE);
 		if (csCode != null) {
-			CoordinateSystemItem cs = csRepository.findByIdentifier(csCode);
+			CoordinateSystemItem cs = csRepository.findOne(findMappedCode(csCode));
 			if (cs != null) {
 				proposal.setCoordinateSystem(new CoordinateSystemItemProposalDTO(cs));
 			}
@@ -135,7 +141,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		
 		Integer datumCode = (Integer)row.get(DATUM_CODE);
 		if (datumCode != null) {
-			DatumItem datum = datumRepository.findByIdentifier(datumCode);
+			DatumItem datum = datumRepository.findOne(findMappedCode(datumCode));
 			if (datum != null) {
 				proposal.setDatum(new DatumItemProposalDTO(datum));
 			}
@@ -145,7 +151,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		}		
 		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		try {
@@ -156,6 +162,8 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported {} CRS #{} ('{}')...", new Object[] { crsType, crsCode, proposal.getName() });
+			
+			addMapping(ai.getItem().getItemClass().getName(), crsCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
@@ -288,24 +296,24 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		
 		CoordinateReferenceSystemItem crs = null;
 
-//		Integer csCode = (Integer)row.get(COORD_SYS_CODE);
-//		logger.info(">>> data references CS {}", csCode);
-//		if (csCode != null) {
-//			crs = crsRepository.findByIdentifier(crsCode);
-//			
-//			CoordinateSystemItem cs = csRepository.findByIdentifier(csCode);
-//			if (cs != null) {
-//				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setCoordinateSystem(cs);
-//				logger.info(">>> fixed reference to CS {}", csCode);
-//			}
-//		}
+		Integer csCode = (Integer)row.get(COORD_SYS_CODE);
+		if (csCode != null) {
+			logger.info(">>> data references CS {}", csCode);
+			crs = crsRepository.findOne(findMappedCode(crsCode));
+			
+			CoordinateSystemItem cs = csRepository.findOne(findMappedCode(csCode));
+			if (cs != null) {
+				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setCoordinateSystem(cs);
+				logger.info(">>> fixed reference to CS {}", csCode);
+			}
+		}
 
 		Integer datumCode = (Integer)row.get(DATUM_CODE);
-		logger.info(">>> data references Datum {}", datumCode);
 		if (datumCode != null) {
-			crs = crsRepository.findByIdentifier(crsCode);
+			logger.info(">>> data references Datum {}", datumCode);
+			crs = crsRepository.findOne(findMappedCode(crsCode));
 			
-			DatumItem datum = datumRepository.findByIdentifier(datumCode);
+			DatumItem datum = datumRepository.findOne(findMappedCode(datumCode));
 			if (datum != null) {
 				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setDatum(datum);
 				logger.info(">>> fixed reference to Datum {}", datumCode);
@@ -315,39 +323,45 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			}
 		}		
 
-//		Integer baseCrsCode = (Integer)row.get(SOURCE_GEOGCRS_CODE);
-//		if (baseCrsCode != null) {
-//			crs = crsRepository.findByIdentifier(crsCode);
-//			
-//			CoordinateReferenceSystemItem baseCrs = crsRepository.findByIdentifier(baseCrsCode);
-//			if (baseCrs != null) {
-//				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)baseCrs);
-//			}
-//		}
-//
-//		Integer horizontalCrsCode = (Integer)row.get(CMPD_HORIZCRS_CODE);
-//		if (horizontalCrsCode != null) {
-//			if (crs == null) {
-//				crs = crsRepository.findByIdentifier(crsCode);
-//			}
-//			
-//			CoordinateReferenceSystemItem horizontalCrs = crsRepository.findByIdentifier(horizontalCrsCode);
-//			if (horizontalCrs == null) {
-//				((CompoundCoordinateReferenceSystemItem)crs).addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
-//			}
-//		}
-//		
-//		Integer verticalCrsCode = (Integer)row.get(CMPD_VERTCRS_CODE);
-//		if (horizontalCrsCode != null) {
-//			if (crs == null) {
-//				crs = crsRepository.findByIdentifier(crsCode);
-//			}
-//			
-//			CoordinateReferenceSystemItem verticalCrs = crsRepository.findByIdentifier(verticalCrsCode);
-//			if (verticalCrs == null) {
-//				((CompoundCoordinateReferenceSystemItem)crs).addComponentReferenceSystem((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
-//			}
-//		}
+		Integer baseCrsCode = (Integer)row.get(SOURCE_GEOGCRS_CODE);
+		if (baseCrsCode != null) {
+			logger.info(">>> data references base CRS {}", baseCrsCode);
+			crs = crsRepository.findOne(findMappedCode(crsCode));
+			
+			CoordinateReferenceSystemItem baseCrs = crsRepository.findOne(findMappedCode(baseCrsCode));
+			if (baseCrs != null) {
+				logger.info(">>> fixed reference to base CRS {}", baseCrsCode);
+				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)baseCrs);
+			}
+		}
+
+		Integer horizontalCrsCode = (Integer)row.get(CMPD_HORIZCRS_CODE);
+		if (horizontalCrsCode != null) {
+			logger.info(">>> data references horizontal CRS {}", horizontalCrsCode);
+			if (crs == null) {
+				crs = crsRepository.findOne(findMappedCode(crsCode));
+			}
+			
+			CoordinateReferenceSystemItem horizontalCrs = crsRepository.findOne(findMappedCode(horizontalCrsCode));
+			if (horizontalCrs == null) {
+				logger.info(">>> fixed reference to horizontal CRS {}", horizontalCrs);
+				((CompoundCoordinateReferenceSystemItem)crs).getComponentReferenceSystem().add((SingleCoordinateReferenceSystemItem<? extends DatumItem>)horizontalCrs);
+			}
+		}
+		
+		Integer verticalCrsCode = (Integer)row.get(CMPD_VERTCRS_CODE);
+		if (verticalCrsCode != null) {
+			logger.info(">>> data references vertical CRS {}", verticalCrsCode);
+			if (crs == null) {
+				crs = crsRepository.findOne(findMappedCode(crsCode));
+			}
+			
+			CoordinateReferenceSystemItem verticalCrs = crsRepository.findOne(findMappedCode(verticalCrsCode));
+			if (verticalCrs == null) {
+				((CompoundCoordinateReferenceSystemItem)crs).getComponentReferenceSystem().add((SingleCoordinateReferenceSystemItem<? extends DatumItem>)verticalCrs);
+				logger.info(">>> fixed reference to vertical CRS {}", verticalCrs);
+			}
+		}
 
 		if (crs != null) {
 			crsRepository.save(crs);

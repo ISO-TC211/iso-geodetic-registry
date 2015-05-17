@@ -62,7 +62,7 @@ public class EllipsoidsImporter extends AbstractImporter
 		proposal.setSemiMajorAxis((Double)row.get(SEMI_MAJOR_AXIS));
 
 		Integer uomCode = (Integer)row.get(UOM_CODE);
-		UnitOfMeasureItem uom = uomRepository.findByIdentifier(findMappedCode("UnitOfMeasurement", uomCode));
+		UnitOfMeasureItem uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
 		proposal.setSemiMajorAxisUom(new UnitOfMeasureItemProposalDTO(uom));
 		
 		if ((Double)row.get(SEMI_MINOR_AXIS) != null) {
@@ -77,7 +77,7 @@ public class EllipsoidsImporter extends AbstractImporter
 		proposal.setSphere(!((Boolean)row.get(ELLIPSOID_SHAPE)).booleanValue());
 
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		try {
@@ -88,6 +88,7 @@ public class EllipsoidsImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

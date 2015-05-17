@@ -42,12 +42,13 @@ public class NamingSystemsImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
+		Integer epsgCode = (Integer)row.get(codeProperty());
 //		proposal.setIdentifier((Integer)row.get(NAMING_SYSTEM_CODE));
 		proposal.setName((String)row.get(NAMING_SYSTEM_NAME));
 		proposal.setDescription(proposal.getName());
 		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		logger.info(">> Imported '{}'...", proposal.getName());
@@ -58,6 +59,7 @@ public class NamingSystemsImporter extends AbstractImporter
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
 			acceptProposal(ai, decisionEvent);
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
