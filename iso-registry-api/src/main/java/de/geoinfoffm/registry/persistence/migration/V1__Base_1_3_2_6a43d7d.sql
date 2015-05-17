@@ -5479,7 +5479,7 @@ ALTER TABLE ONLY re_register_aud
 --
 
 ALTER TABLE ONLY re_register_itemclasses_aud
-    ADD CONSTRAINT re_register_itemclasses_aud_pkey PRIMARY KEY (rev, itemclassid, registerid);
+    ADD CONSTRAINT re_register_itemclasses_aud_pkey PRIMARY KEY (rev, registerid, itemclassid);
 
 
 --
@@ -7567,7 +7567,7 @@ ALTER TABLE ONLY operationmethoditem
 --
 
 ALTER TABLE ONLY re_register_itemclasses
-    ADD CONSTRAINT fk_eqjxto9nmqe4mkpliasbeviiv FOREIGN KEY (registerid) REFERENCES re_itemclass(uuid);
+    ADD CONSTRAINT fk_eqjxto9nmqe4mkpliasbeviiv FOREIGN KEY (itemclassid) REFERENCES re_itemclass(uuid);
 
 
 --
@@ -8008,7 +8008,7 @@ ALTER TABLE ONLY re_registeritem
 --
 
 ALTER TABLE ONLY re_register_itemclasses
-    ADD CONSTRAINT fk_is6x6oac0b0335i09xbykp4d1 FOREIGN KEY (itemclassid) REFERENCES re_register(uuid);
+    ADD CONSTRAINT fk_is6x6oac0b0335i09xbykp4d1 FOREIGN KEY (registerid) REFERENCES re_register(uuid);
 
 
 --
