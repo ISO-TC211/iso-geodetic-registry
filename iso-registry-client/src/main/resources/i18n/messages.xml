@@ -407,6 +407,8 @@
 	<entry key="form.label.seriesIssueIdentification">Issue</entry>
 	<entry key="form.label.seriesPage">Page</entry>
 	<entry key="form.label.otherCitationDetails">Other citation details</entry>
+	<entry key="form.label.accuracy">Accuracy</entry>
+	<entry key="form.label.accuracyUom">Accuracy unit</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -490,6 +492,9 @@
 	<entry key="form.placeholder.seriesIssueIdentification"></entry>
 	<entry key="form.placeholder.seriesPage"></entry>
 	<entry key="form.placeholder.otherCitationDetails"></entry>
+
+	<entry key="form.placeholder.accuracy"></entry>
+	<entry key="form.placeholder.accuracyUom"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
