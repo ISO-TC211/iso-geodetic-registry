@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.ConcatenatedOperationItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.CoordinateOperationItemProposalDTO;
@@ -214,7 +215,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 //			accuracy.setResult(trafoAccuracy);
 //			proposal.addCoordinateOperationAccuracy(accuracy);
 			proposal.setAccuracy(accuracyValue);
-			proposal.setAccuracyUom(metre.getUuid());
+			proposal.setAccuracyUom(new UnitOfMeasureItemProposalDTO(metre));
 		}		
 		
 		proposal.setRemarks((String)row.get(REMARKS));

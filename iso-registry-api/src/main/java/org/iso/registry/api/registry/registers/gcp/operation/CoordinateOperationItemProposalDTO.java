@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
@@ -17,6 +18,7 @@ import org.iso.registry.core.model.iso19115.dataquality.DQ_Result;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
+import org.isotc211.iso19139.common.UnitOfMeasure_PropertyType;
 
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -30,7 +32,7 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 	private List<String> scope;
 //	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	private Float accuracy;
-	private UUID accuracyUom;
+	private UnitOfMeasureItemProposalDTO accuracyUom;
 	private CoordinateReferenceSystemItemProposalDTO sourceCrs;
 	private CoordinateReferenceSystemItemProposalDTO targetCrs;
 
@@ -93,7 +95,7 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 //			}
 			
 			if (this.getAccuracy() != null && this.getAccuracyUom() != null) {
-				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getAccuracyUom());
+				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getAccuracyUom().getReferencedItemUuid());
 				TransformationAccuracy trafoAccuracy = new TransformationAccuracy(this.getAccuracy(), uom);
 				DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
 				accuracy.setResult(trafoAccuracy);
@@ -139,7 +141,7 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 					TransformationAccuracyValue accuracyValue = (TransformationAccuracyValue)accuracy.getValue();
 					UnitOfMeasureItem accuracyUom = (UnitOfMeasureItem)accuracy.getValueUnit();
 					this.setAccuracy(accuracyValue.getAccuracy());
-					this.setAccuracyUom(accuracyUom.getUuid());
+					this.setAccuracyUom(new UnitOfMeasureItemProposalDTO(accuracyUom));
 				}
 			}
 			
@@ -202,11 +204,11 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		this.accuracy = accuracy;
 	}
 
-	public UUID getAccuracyUom() {
+	public UnitOfMeasureItemProposalDTO getAccuracyUom() {
 		return accuracyUom;
 	}
 
-	public void setAccuracyUom(UUID accuracyUom) {
+	public void setAccuracyUom(UnitOfMeasureItemProposalDTO accuracyUom) {
 		this.accuracyUom = accuracyUom;
 	}
 
