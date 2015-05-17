@@ -73,7 +73,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 			do {
 				Row axisRow = cursor.getCurrentRow();
 				Integer axisCode = (Integer)axisRow.get(CoordinateSystemAxesImporter.COORD_AXIS_CODE);
-				CoordinateSystemAxisItem axis = axisRepository.findByIdentifier(findMappedCode("CoordinateSystemAxis", axisCode));
+				CoordinateSystemAxisItem axis = axisRepository.findOne(findMappedCode("CoordinateSystemAxis", axisCode));
 				if (axis == null) {
 					logger.error("!!! Missing axis #{}", axisCode.toString());
 				}
@@ -89,7 +89,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		proposal.setType(csType);
 		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 
 		try {
@@ -100,6 +100,8 @@ public class CoordinateSystemsImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
+
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error("!! Failed to imported CS #{}...", epsgCode);

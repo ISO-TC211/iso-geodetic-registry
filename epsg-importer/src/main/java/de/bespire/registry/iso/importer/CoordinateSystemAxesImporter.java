@@ -1,9 +1,9 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
@@ -76,9 +76,9 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setAxisAbbreviation((String)row.get(COORD_AXIS_ABBREVIATION));
 		
 		Integer uomEpsgCode = (Integer)row.get(UOM_CODE);
-//		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasurement", uomEpsgCode);
-		Integer uomCode = findMappedCode("UnitOfMeasurement", uomEpsgCode);
-		UnitOfMeasureItem uom = uomRepository.findByIdentifier(uomCode);
+//		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasure", uomEpsgCode);
+		UUID uomCode = findMappedCode("UnitOfMeasure", uomEpsgCode);
+		UnitOfMeasureItem uom = uomRepository.findOne(uomCode);
 		if (uom == null) {
 			logger.error("!!! Missing UoM #{}", uomEpsgCode.toString());
 			return;
@@ -92,7 +92,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setDescription((String)nameRow.get(DESCRIPTION));
 		
 		proposal.setRemarks((String)nameRow.get(REMARKS));
-		proposal.setInformationSource((String)nameRow.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)nameRow.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)nameRow.get(DATA_SOURCE));
 		
 		try {
@@ -103,6 +103,8 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
+
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

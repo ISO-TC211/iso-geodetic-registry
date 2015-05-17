@@ -9,8 +9,8 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -36,7 +36,7 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	@ElementCollection
 	private List<String> scope;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	
 	@ManyToOne

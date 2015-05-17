@@ -47,7 +47,7 @@ public class OperationParametersImporter extends AbstractImporter
 		proposal.setDescription((String)row.get(DESCRIPTION));
 		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		logger.info(">> Imported parameter '{}'...", proposal.getName());
@@ -58,6 +58,8 @@ public class OperationParametersImporter extends AbstractImporter
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
 			acceptProposal(ai, decisionEvent);
+
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

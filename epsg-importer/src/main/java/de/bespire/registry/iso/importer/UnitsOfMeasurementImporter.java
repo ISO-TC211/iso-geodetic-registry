@@ -55,7 +55,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 
 		Integer epsgCode = (Integer)row.get(UOM_CODE);
-		Integer identifier = determineIdentifier("UnitOfMeasurement", epsgCode);
+//		Integer identifier = determineIdentifier("UnitOfMeasure", epsgCode);
 		
 //		proposal.setCode((Integer)row.get(UOM_CODE));
 		proposal.setName((String)row.get(UNIT_OF_MEAS_NAME));
@@ -67,7 +67,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setDescription(proposal.getName());
 		
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
-		if (!targetUomCode.equals(identifier)) {
+		if (!targetUomCode.equals(epsgCode)) {
 //			UnitOfMeasureItem standardUnitItem = uomRepository.findByIdentifier(targetUomCode);
 //			UnitOfMeasureItemProposalDTO standardUnit = new UnitOfMeasureItemProposalDTO(standardUnitItem);
 //			proposal.setStandardUnit(standardUnit);
@@ -77,7 +77,7 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		}
 		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		logger.info(">> Imported '{}'...", proposal.getName());
@@ -88,6 +88,8 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
 			acceptProposal(ai, decisionEvent);
+			
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
@@ -123,9 +125,9 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
 		if (targetUomCode != null) {
-			uom = uomRepository.findByIdentifier(uomCode);
+			uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
 			
-			UnitOfMeasureItem targetUom = uomRepository.findByIdentifier(targetUomCode);
+			UnitOfMeasureItem targetUom = uomRepository.findOne(findMappedCode("UnitOfMeasure", targetUomCode));
 			if (targetUom != null) {
 				uom.setStandardUnit(targetUom);
 			}

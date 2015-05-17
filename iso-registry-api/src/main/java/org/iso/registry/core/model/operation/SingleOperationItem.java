@@ -19,7 +19,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 
 @Access(AccessType.FIELD)
 @Audited @Entity
-public class SingleOperationItem extends CoordinateOperationItem
+public abstract class SingleOperationItem extends CoordinateOperationItem
 {
 	@ManyToOne
 	private OperationMethodItem method;
