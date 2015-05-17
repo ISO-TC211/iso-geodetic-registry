@@ -104,7 +104,7 @@ public class DataController
 		return query.getResultList();
 	}
 	
-	@RequestMapping(value = "/methods/conversion", method = RequestMethod.GET)
+	@RequestMapping(value = "/methods", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody List<Object[]> findConversionMethods(@RequestParam(value = "q", required = false) String search) {
 		StringBuilder q = new StringBuilder();
@@ -212,22 +212,6 @@ public class DataController
 		}
 		
 		return null;
-	}
-
-
-	@RequestMapping(value = "/methods/transformation", method = RequestMethod.GET)
-	@Transactional(readOnly = true)
-	public @ResponseBody List<Object[]> findTransformationMethods(@RequestParam(value = "q", required = false) String search) {
-		StringBuilder q = new StringBuilder();
-		q.append("SELECT i.uuid, i.identifier, i.name FROM TransformationItem i WHERE i.status = 'VALID'");
-		if (!StringUtils.isEmpty(search)) {
-			search = "%" + search + "%";
-			q.append(" AND (LOWER(i.name) LIKE '" + search.toLowerCase() + "' OR CAST(i.identifier AS text) LIKE '" + search + "')");
-		}
-		q.append(" ORDER BY i.name");
-		
-		Query query = entityManager.createQuery(q.toString());
-		return query.getResultList();
 	}
 
 	@RequestMapping(value = "/parameters/{methodUuid}", method = RequestMethod.GET)

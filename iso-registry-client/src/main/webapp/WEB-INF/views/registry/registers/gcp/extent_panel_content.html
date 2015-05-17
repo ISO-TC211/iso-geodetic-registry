@@ -170,7 +170,7 @@
 	<script type="text/javascript" th:inline="text">
 		/* <![CDATA[ */
 			$(document).ready(function() {
-				table = $('#bboxTable').dataTable({
+				bboxtable = $('#bboxTable').dataTable({
 					"bPaginate": false,
 					"bFilter": false,
 					"oLanguage": {
@@ -214,11 +214,11 @@
 		 			]
 			});	
 
-			var extentCount = table.fnGetData().length;
+			var extentCount = bboxtable.fnGetData().length;
 
 			$('#extentPopup_ok').click(function(e) {
-				table = $('#bboxTable').dataTable();
-				table.fnAddData([
+				bboxtable = $('#bboxTable').dataTable();
+				bboxtable.fnAddData([
 				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].northBoundLatitude' value='" + $('#northBoundLatitude').val() + "'/>",
 				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].eastBoundLongitude' value='" + $('#eastBoundLongitude').val() + "'/>",
 				    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].southBoundLatitude' value='" + $('#southBoundLatitude').val() + "'/>",
@@ -231,8 +231,8 @@
 			$(document).on('click', '.btn-deleterow', function(e) {
 				var index = '#row-' + $(this).data('index');
 				var row = $(index);
-				table = $('#bboxTable').dataTable();
-				table.fnDeleteRow(row);
+				bboxtable = $('#bboxTable').dataTable();
+				bboxtable.fnDeleteRow(row);
 			});
 			
 			$(document).on('change', '#selectExtent', function(e) {
@@ -243,11 +243,11 @@
 							uuid: $(this).val(),
 		            },
 				}).done(function(data) {
-					table.fnClearTable();
+					bboxtable.fnClearTable();
 					$('#description').val(data.description);
 					$.each(data.geographicElement, function(index, value) {
 						if (value.eastBoundLatitude !== null) {
-							table.fnAddData([
+							bboxtable.fnAddData([
 							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].northBoundLatitude' value='" + value.northBoundLatitude + "'/>",
 							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].eastBoundLongitude' value='" + value.eastBoundLongitude + "'/>",
 							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].southBoundLatitude' value='" + value.southBoundLatitude + "'/>",
@@ -268,11 +268,11 @@
 							uuid: $(this).val(),
 		            },
 				}).done(function(data) {
-					table.fnClearTable();
+					bboxtable.fnClearTable();
 					$('#description-extent').val(data.description);
 					$.each(data.geographicElement, function(index, value) {
 						if (value.eastBoundLatitude !== null) {
-							table.fnAddData([
+							bboxtable.fnAddData([
 							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].northBoundLatitude' value='" + value.northBoundLatitude + "'/>",
 							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].eastBoundLongitude' value='" + value.eastBoundLongitude + "'/>",
 							    "<input type='number' name='domainOfValidity.geographicBoundingBoxes[" + extentCount + "].southBoundLatitude' value='" + value.southBoundLatitude + "'/>",
