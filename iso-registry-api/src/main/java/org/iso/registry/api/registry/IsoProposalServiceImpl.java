@@ -171,6 +171,6 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	public Integer findNextAvailableIdentifier() {
 		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
 		Integer maxCode = (Integer)entityManager.createQuery(jpql).getResultList().get(0);
-		return (maxCode == null) ? 1 : maxCode + 1;
+		return (maxCode == null || maxCode < 1) ? 1 : maxCode + 1;
 	}
 }

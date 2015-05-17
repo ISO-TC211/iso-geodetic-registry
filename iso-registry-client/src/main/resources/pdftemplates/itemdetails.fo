@@ -1,0 +1,12 @@
+<fo:block font-size="10pt" space-after.optimum="15pt">
+	<fo:table border="solid" border-collapse="collapse" table-layout="fixed">
+		<fo:table-column column-width="30%"/>
+		<fo:table-column column-width="70%"/>
+		<fo:table-body>
+			#parse("pdftemplates/item.fo")
+			#if($itemdetails)
+				#parse($itemdetails)
+			#end
+		</fo:table-body>
+	</fo:table>
+</fo:block>
