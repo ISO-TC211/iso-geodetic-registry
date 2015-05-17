@@ -1,7 +1,5 @@
 package org.iso.registry.api;
 
-import org.iso.registry.api.initialization.IsoRegistryInitializer;
-import org.iso.registry.api.registry.IsoProposalService;
 import org.iso.registry.api.registry.IsoProposalServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +15,12 @@ import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategy;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategyImpl;
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.OrganizationServiceImpl;
+import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistrySecurityImpl;
-import de.geoinfoffm.registry.api.RegistryUserService;
-import de.geoinfoffm.registry.api.RegistryUserServiceImpl;
 import de.geoinfoffm.registry.core.model.DelegationRepository;
 import de.geoinfoffm.registry.core.model.OrganizationRepository;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
-import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
 
@@ -49,7 +45,7 @@ public class IsoApiConfiguration
 	
 	@Autowired
 	@Bean
-	public IsoProposalService isoProposalService(ProposalRepository repository) {
+	public ProposalService proposalService(ProposalRepository repository) {
 		return new IsoProposalServiceImpl(repository);
 	}
 	

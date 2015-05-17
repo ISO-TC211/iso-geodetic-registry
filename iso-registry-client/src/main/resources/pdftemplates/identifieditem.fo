@@ -1,0 +1,41 @@
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Identifier</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.identifier</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#foreach($alias in $item.aliases)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Alias</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($alias)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#foreach($infosrc in $item.informationSource)
+	#parse("pdftemplates/informationsource.fo")
+#end
+#if ($item.dataSource)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Data source</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($item.dataSource)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.remarks)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Remarks</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($item.remarks)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end

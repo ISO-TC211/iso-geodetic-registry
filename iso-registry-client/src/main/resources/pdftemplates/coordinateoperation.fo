@@ -1,0 +1,53 @@
+#parse("pdftemplates/identifieditem.fo")
+#if ($item.operationVersion)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Operation version</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.operationVersion</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.scope && !$item.scope.isEmpty())
+	#foreach ($scope in $item.scope)
+	<fo:table-row height="15pt">
+		<fo:table-cell font-style="italic">
+			<fo:block>Scope</fo:block>
+		</fo:table-cell>
+		<fo:table-cell>
+			<fo:block>$scope</fo:block>
+		</fo:table-cell>
+	</fo:table-row>
+	#end
+#end
+#if ($item.accuracy)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Operation accuracy</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.accuracy m</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.sourceCrs)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Source CRS</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.sourceCrs.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.targetCrs)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Target CRS</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.targetCrs.name</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end

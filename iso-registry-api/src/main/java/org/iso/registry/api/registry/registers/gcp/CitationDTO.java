@@ -140,8 +140,15 @@ public class CitationDTO
 		result.setEditionDate(this.getEditionDate());
 		result.setOtherCitationDetails(this.getOtherCitationDetails());
 
-		CI_ResponsibleParty rp = new CI_ResponsibleParty(this.getAuthor(), null, null, CI_RoleCode.AUTHOR);
-		result.getCitedResponsibleParty().add(rp);
+		if (!StringUtils.isEmpty(this.getAuthor())) {
+			CI_ResponsibleParty rp = new CI_ResponsibleParty(this.getAuthor(), null, null, CI_RoleCode.AUTHOR);
+			result.getCitedResponsibleParty().add(rp);
+		}
+		if (!StringUtils.isEmpty(this.getPublisher())) {
+			CI_ResponsibleParty rp = new CI_ResponsibleParty(null, this.getPublisher(), null, CI_RoleCode.PUBLISHER);
+			result.getCitedResponsibleParty().add(rp);			
+		}
+		
 
 		if (!StringUtils.isEmpty(this.getPublicationDate())) {
 			CI_Date publicationDate = new CI_Date();

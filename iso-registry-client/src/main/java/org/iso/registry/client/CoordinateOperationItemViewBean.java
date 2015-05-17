@@ -18,7 +18,8 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 	private String operationVersion;
 	private ExtentDTO domainOfValidity;
 	private List<String> scope;
-	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
+//	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
+	private Integer accuracy;
 	private CoordinateReferenceSystemItemViewBean sourceCrs;
 	private CoordinateReferenceSystemItemViewBean targetCrs;
 
@@ -71,7 +72,10 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 				this.addScope(scope);
 			}
 		}
-		this.setCoordinateOperationAccuracy(item.getCoordinateOperationAccuracy());
+
+//		this.setCoordinateOperationAccuracy(item.getCoordinateOperationAccuracy());
+		this.setAccuracy(item.getAccuracy());
+		
 		if (item.getSourceCrs() != null) {
 			this.setSourceCrs(new CoordinateReferenceSystemItemViewBean(item.getSourceCrs()));
 		}
@@ -111,13 +115,21 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 		this.scope.add(scope);
 	}
 
-	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
-		return coordinateOperationAccuracy;
+	public Integer getAccuracy() {
+		return accuracy;
 	}
 
-	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
-		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
+	public void setAccuracy(Integer accuracy) {
+		this.accuracy = accuracy;
 	}
+
+//	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
+//		return coordinateOperationAccuracy;
+//	}
+//
+//	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
+//		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
+//	}
 
 	public CoordinateReferenceSystemItemViewBean getSourceCrs() {
 		return sourceCrs;

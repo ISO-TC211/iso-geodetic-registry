@@ -36,8 +36,13 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	@ElementCollection
 	private List<String> scope;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
+//	@ManyToMany(cascade = CascadeType.ALL)
+//	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
+	
+	/*
+	 * Accuracy in m. 
+	 */
+	private Integer accuracy;
 	
 	@ManyToOne
 	private CoordinateReferenceSystemItem sourceCrs;
@@ -92,19 +97,27 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 		this.scope.addAll(scopes);
 	}
 
-	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
-		return coordinateOperationAccuracy;
+//	public List<DQ_PositionalAccuracy> getCoordinateOperationAccuracy() {
+//		return coordinateOperationAccuracy;
+//	}
+//
+//	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
+//		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
+//	}
+//	
+//	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
+//		if (this.coordinateOperationAccuracy == null) {
+//			this.coordinateOperationAccuracy = new ArrayList<>();
+//		}
+//		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
+//	}
+
+	public Integer getAccuracy() {
+		return accuracy;
 	}
 
-	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
-		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
-	}
-	
-	public void addCoordinateOperationAccuracy(DQ_PositionalAccuracy coordinateOperationAccuracy) {
-		if (this.coordinateOperationAccuracy == null) {
-			this.coordinateOperationAccuracy = new ArrayList<>();
-		}
-		this.coordinateOperationAccuracy.add(coordinateOperationAccuracy);
+	public void setAccuracy(Integer accuracy) {
+		this.accuracy = accuracy;
 	}
 
 	public CoordinateReferenceSystemItem getSourceCrs() {

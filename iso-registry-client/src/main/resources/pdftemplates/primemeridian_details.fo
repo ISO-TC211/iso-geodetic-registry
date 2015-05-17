@@ -1,0 +1,11 @@
+#parse("pdftemplates/identifieditem.fo")
+#if ($item.greenwichLongitude)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Greenwich longitude</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.greenwichLongitude #if($item.greenwichLongitudeUom.symbol)$item.greenwichLongitudeUom.symbol#else$item.greenwichLongitudeUom.name#end</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
