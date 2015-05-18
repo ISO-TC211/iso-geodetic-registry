@@ -2,18 +2,6 @@
 	<div class="row">
 		<div class="col-md-6">
 
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},isRequired='true'"> -->
-<!-- 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-			
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col-md-12" th:with="property='name',rows=5,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},isRequired='true'"> -->
-<!-- 					<div th:replace="registry/registers/globals :: textArea"/> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-
 			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('cs')" />
@@ -33,12 +21,6 @@
 		</div>
 	</div>
 
-<!-- 	<div th:unless="${isProposal}" class="row">	 -->
-<!-- 		<div class="col-md-12" th:with="property='axes',label=#{form.label.coordinateAxis},columns=${#strings.arraySplit('code,name,axisAbbreviation,axisUnit.name,axisDirection.code',',')},editable='false'"> -->
-<!-- 			<div th:replace="registry/registers/globals :: referencedEntitiesTable('axis')"/> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-				
 	<div class="row" th:unless="${isProposal}">
 		<div class="col-md-12">
 			<table id="axesTable" class="table table-striped">
