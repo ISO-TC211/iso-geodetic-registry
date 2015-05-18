@@ -82,7 +82,10 @@ public class RegistryInitializer
 				logger.info("done");
 			}
 			
-			Organization isotc211 = createOrganization("ISO/TC 211", "TC211");
+			Organization isotc211 = orgService.findByName("ISO/TC 211");
+			if (isotc211 == null) {
+				isotc211 = createOrganization("ISO/TC 211", "TC211");
+			}
 			
 			RegistryUser submitter = createUser("ISO Registry Submitter", "s", "submitter@example.org", isotc211);
 			RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
