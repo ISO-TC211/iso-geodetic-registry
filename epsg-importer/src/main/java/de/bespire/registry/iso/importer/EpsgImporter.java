@@ -109,11 +109,19 @@ public class EpsgImporter
 
 			RegistryInitializer initializer = context.getBean(RegistryInitializer.class);
 			if (argList.contains("all") || argList.contains("init")) {
-				initializer.initializeRegistry();
+				if (argList.contains("demo")) {
+					initializer.initializeRegistry(RegistryInitializer.Mode.DEMO);
+				}
+				else if (argList.contains("production")) {
+					initializer.initializeRegistry(RegistryInitializer.Mode.PRODUCTION);					
+				}
+				else {
+					throw new IllegalArgumentException("Must provide either 'demo' or 'production' when specifying 'init'");
+				}
 			}
 			
 			SubmittingOrganizationRepository suborgRepository = context.getBean(SubmittingOrganizationRepository.class);
-			RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
+			RE_SubmittingOrganization sponsor = suborgRepository.findByName("ISO/TC 211");
 			
 			EntityManager em = context.getBean(EntityManager.class);
 
