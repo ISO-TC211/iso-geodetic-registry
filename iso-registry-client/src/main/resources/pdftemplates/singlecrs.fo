@@ -19,3 +19,23 @@
 	</fo:table-cell>
 </fo:table-row>
 #end
+#if ($item.conversion)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Conversion</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($item.conversion.name)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end
+#if ($item.baseCrs)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Base CRS</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$esc.html($item.baseCrs.name)</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end

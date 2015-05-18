@@ -568,10 +568,8 @@
 </div>
 
 <div th:fragment="informationSource (cssClass)">
-	<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
-		<div th:class="${cssClass}">
-			<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetails"/>
-		</div>
+	<div th:if="!${isProposal} or ${proposal.isClarification()}" th:class="${cssClass}">
+		<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetails"/>
 	</div>
 <!-- 	<div th:classappend="${cssClass}" th:with="property='informationSource',rows=2,cols=60,label=#{form.label.informationSource},placeholder=#{form.placeholder.informationSource},isRequired='false'"> -->
 <!-- 		<div th:replace="registry/registers/globals :: textArea"/> -->
