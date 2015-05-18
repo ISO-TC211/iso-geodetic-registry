@@ -426,6 +426,7 @@
 	<entry key="form.help.alias">An alternative name by which this object is identified.</entry>
 	<entry key="form.help.remarks">Comments on or information about this object.</entry>
 	<entry key="form.help.scope">Description of usage, or limitations of usage, for which this item is valid. If unknown, enter "not known".</entry>
+	<entry key="form.help.axisAbbreviation">The abbreviation of the axis name (e.g. X, Y, H etc.). [max. 255 characters]</entry>
 	
 	<entry key="form.help.cannotDeleteOrganization">There are still users associated with this organization. Please reassign all users of this organization before deleting it.</entry>
 	
