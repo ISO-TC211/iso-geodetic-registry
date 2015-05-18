@@ -58,6 +58,12 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 @Component
 public class CoordinateOperationsImporter extends AbstractImporter
 {
+	public static enum Mode {
+		CONVERSION,
+		TRANSFORMATION,
+		CONCATENATED
+	}
+	
 	private static final Logger logger = LoggerFactory.getLogger(CoordinateOperationsImporter.class);
 	
 	public static final String COORD_OP_CODE = "COORD_OP_CODE";
@@ -124,18 +130,37 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	private Table parameterValuesTable;
 	private Table pathTable;
 	
+	private Mode mode;
+	
 	@Override
 	@Transactional
 	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException {
 		String type = (String)row.get(COORD_OP_TYPE);
 		if ("conversion".equalsIgnoreCase(type)) {
+			if (!Mode.CONVERSION.equals(this.getMode())) {
+				logger.info(">> Skipping conversion");
+				return;
+			}
 			importConversion(row, itemClass, sponsor, register);
 		}
 		else if ("transformation".equalsIgnoreCase(type)) {
+			if (!Mode.TRANSFORMATION.equals(this.getMode())) {
+				logger.info(">> Skipping transformation");
+				return;
+			}
 			importTransformation(row, itemClass, sponsor, register);
 		}
 		else if ("concatenated operation".equalsIgnoreCase(type)) {
-			// must be added in second pass 
+			if (!Mode.CONCATENATED.equals(this.getMode())) {
+				logger.info(">> Skipping conversion");
+				return;
+			}
+			try {
+				importConcatenated(row, icConcatOp, sponsor, register);
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
 		}
 		else {
 			throw new RuntimeException(String.format("Unexpected operation type: %s", type));
@@ -396,16 +421,6 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	@Override
 	@Transactional
 	protected void fixReference(Row row, RE_SubmittingOrganization sponsor, RE_Register register) {
-		String type = (String)row.get(COORD_OP_TYPE);
-		if ("concatenated operation".equalsIgnoreCase(type)) {
-			// second pass
-			try {
-				importConcatenated(row, icConcatOp, sponsor, register);
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e.getMessage(), e);
-			}
-		}
 	}
 
 	protected List<SingleOperationItem> findOperations(Integer concatOperationCode) throws IOException {
@@ -514,6 +529,14 @@ public class CoordinateOperationsImporter extends AbstractImporter
 
 	public void setPathTable(Table pathTable) {
 		this.pathTable = pathTable;
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Mode mode) {
+		this.mode = mode;
 	}
 
 	@Override

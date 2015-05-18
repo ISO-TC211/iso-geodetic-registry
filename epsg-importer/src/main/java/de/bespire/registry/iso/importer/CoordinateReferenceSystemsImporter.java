@@ -1,22 +1,27 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO.CoordinateReferenceSystemType;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItemRepository;
+import org.iso.registry.core.model.crs.GeneralDerivedCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.ProjectedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.DatumItemRepository;
+import org.iso.registry.core.model.operation.ConversionItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +40,12 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 @Component
 public class CoordinateReferenceSystemsImporter extends AbstractImporter
 {
+	public static enum Mode {
+		SINGLE,
+		DERIVED_PROJECTED,
+		COMPOUND
+	}
+	
 	private static final Logger logger = LoggerFactory.getLogger(CoordinateReferenceSystemsImporter.class);
 
 	public static final String COORD_REF_SYS_CODE = "COORD_REF_SYS_CODE";
@@ -67,6 +78,16 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 	private RE_ItemClass icProjected;
 	private RE_ItemClass icCompound;
 	
+	private Mode mode;
+	
+	public Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Mode mode) {
+		this.mode = mode;
+	}
+
 	@Override
 	@Transactional
 	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
@@ -78,24 +99,47 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
+		
+		logger.info(">> Starting import of CRS #{}", crsCode);
+		
 //		proposal.setIdentifier(crsCode);
 		proposal.setName((String)row.get(COORD_REF_SYS_NAME));
 		proposal.setScope((String)row.get(CRS_SCOPE));
 		
 		String crsType = (String)row.get(COORD_REF_SYS_KIND);
 		if (crsType.equalsIgnoreCase("GEOGRAPHIC 2D") || crsType.equalsIgnoreCase("GEOGRAPHIC 3D") || crsType.equalsIgnoreCase("GEOCENTRIC")) {
+			if (Mode.COMPOUND.equals(this.getMode())) {
+				logger.error(">> Skipping non-compound CRS {}", crsCode);
+				return;
+			}
 			proposal.setType(CoordinateReferenceSystemType.GEODETIC);
 		}
 		else if (crsType.equalsIgnoreCase("ENGINEERING")) {			
+			if (Mode.COMPOUND.equals(this.getMode())) {
+				logger.error(">> Skipping non-compound CRS {}", crsCode);
+				return;
+			}
 			proposal.setType(CoordinateReferenceSystemType.ENGINEERING);
 		}
 		else if (crsType.equalsIgnoreCase("COMPOUND")) {			
+			if (!Mode.COMPOUND.equals(this.getMode())) {
+				logger.error(">> Skipping compound CRS {}", crsCode);
+				return;
+			}
 			proposal.setType(CoordinateReferenceSystemType.COMPOUND);
 		}
 		else if (crsType.equalsIgnoreCase("PROJECTED")) {			
+			if (!Mode.DERIVED_PROJECTED.equals(this.getMode())) {
+				logger.error(">> Skipping projected CRS {}", crsCode);
+				return;
+			}
 			proposal.setType(CoordinateReferenceSystemType.PROJECTED);
 		}
 		else if (crsType.equalsIgnoreCase("VERTICAL")) {			
+			if (Mode.COMPOUND.equals(this.getMode())) {
+				logger.error(">> Skipping non-compound CRS {}", crsCode);
+				return;
+			}
 			proposal.setType(CoordinateReferenceSystemType.VERTICAL);
 		}
 		else {
@@ -149,7 +193,51 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 				logger.error(">>> CRS #{} referenced non-existent Datum #{}", crsCode, datumCode);				
 			}
 		}		
+
+		Integer baseCrsCode = (Integer)row.get(SOURCE_GEOGCRS_CODE);
+		if (baseCrsCode != null) {
+			if (!Mode.DERIVED_PROJECTED.equals(this.getMode())) {
+				logger.error(">> Skipping derived/projected CRS {}", crsCode);
+				return;
+			}
+			CoordinateReferenceSystemItem baseCrs = crsRepository.findOne(findMappedCode(baseCrsCode));
+			if (baseCrs != null) {
+				proposal.setBaseCrs(new CoordinateReferenceSystemItemProposalDTO(baseCrs));
+			}
+			else {
+				logger.error(">>> CRS #{} referenced non-existent base CRS #{}", crsCode, baseCrsCode);				
+			}
+		}
+		else {
+			if (Mode.DERIVED_PROJECTED.equals(this.getMode())) {
+				logger.error(">> Skipping non-derived/non-projected CRS {}", crsCode);
+				return;
+			}			
+		}
 		
+		Integer conversionCode = (Integer)row.get(PROJECTION_CONV_CODE);
+		if (conversionCode != null) {
+			if (!Mode.DERIVED_PROJECTED.equals(this.getMode())) {
+				logger.error(">> Skipping derived/projected CRS {}", crsCode);
+				return;
+			}
+			UUID conversionUuid = findMappedCode("Conversion", conversionCode);
+			if (conversionUuid != null) {
+				ConversionItem conversion = em.find(ConversionItem.class, conversionUuid);
+				SingleOperationItemProposalDTO dto = new SingleOperationItemProposalDTO(conversion);
+				proposal.setConversion(dto);
+			}
+			else {
+				logger.info(">>> references (yet) unknown conversion {}", conversionCode);
+			}
+		}
+		else {
+			if (Mode.DERIVED_PROJECTED.equals(this.getMode())) {
+				logger.error(">> Skipping non-derived/non-projected CRS {}", crsCode);
+				return;
+			}			
+		}
+
 		proposal.setRemarks((String)row.get(REMARKS));
 		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
@@ -238,6 +326,10 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 	public RE_ItemClass getOrCreateItemClass(RE_Register register, Row row) {
 		String crsType = (String)row.get(COORD_REF_SYS_KIND);
 		
+		if (!"COMPOUND".equalsIgnoreCase(crsType) && !"PROJECTED".equalsIgnoreCase(crsType)) {
+			
+		}
+		
 		return this.getOrCreateItemClass(register, crsType);
 	}
 	
@@ -292,9 +384,36 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
 		logger.info(".");
 		logger.info(".");
-		logger.info("Fixing references for CRS #{}...", crsCode);
 		
-		CoordinateReferenceSystemItem crs = null;
+		UUID uuid = findMappedCode(crsCode);
+		if (uuid == null) {
+			logger.info("Skipping unknown CRS #{}", crsCode);
+			return;
+		}
+
+		CoordinateReferenceSystemItem crs = crsRepository.findOne(findMappedCode(crsCode));
+		switch (this.getMode()) {
+			case SINGLE:
+				if (crs instanceof GeneralDerivedCoordinateReferenceSystemItem || crs instanceof CompoundCoordinateReferenceSystemItem) {
+					logger.info("Skipping CRS #{} (wrong mode)", crsCode);
+					return;
+				}
+				break;
+			case DERIVED_PROJECTED:
+				if (crs instanceof SingleCoordinateReferenceSystemItem || crs instanceof CompoundCoordinateReferenceSystemItem) {
+					logger.info("Skipping CRS #{} (wrong mode)", crsCode);
+					return;
+				}
+				break;
+			case COMPOUND:
+				if (crs instanceof GeneralDerivedCoordinateReferenceSystemItem || crs instanceof SingleCoordinateReferenceSystemItem) {
+					logger.info("Skipping CRS #{} (wrong mode)", crsCode);
+					return;
+				}
+				break;
+		}
+
+		logger.info("Fixing references for CRS #{}...", crsCode);
 
 		Integer csCode = (Integer)row.get(COORD_SYS_CODE);
 		if (csCode != null) {
@@ -331,7 +450,27 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			CoordinateReferenceSystemItem baseCrs = crsRepository.findOne(findMappedCode(baseCrsCode));
 			if (baseCrs != null) {
 				logger.info(">>> fixed reference to base CRS {}", baseCrsCode);
-				((SingleCoordinateReferenceSystemItem<DatumItem>)crs).setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)baseCrs);
+				((GeneralDerivedCoordinateReferenceSystemItem<DatumItem>)crs).setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)baseCrs);
+			}
+		}
+		
+		Integer conversionCode = (Integer)row.get(PROJECTION_CONV_CODE);
+		if (conversionCode != null) {
+			logger.info(">>> data references conversion {}", conversionCode);
+			if (crs == null) {
+				crs = crsRepository.findOne(findMappedCode(crsCode));
+			}
+			
+			UUID conversionUuid = findMappedCode("Conversion", conversionCode);
+			if (conversionUuid != null) {
+				ConversionItem conversion = em.find(ConversionItem.class, conversionUuid);
+				if (conversion == null) {
+					logger.info(">>> fixed reference to conversion {}", conversion);
+					((GeneralDerivedCoordinateReferenceSystemItem)crs).setConversion(conversion);
+				}
+			}
+			else {
+				logger.info(">>> references (yet) unknown conversion {}", conversionCode);
 			}
 		}
 
