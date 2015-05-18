@@ -65,14 +65,17 @@
 				</div>
 			</div>
 
-			<div class="row" th:if="${itemClassName} eq 'ProjectedCRS'">
-				<div class="col-md-12" th:with="property='baseCrs',label=#{form.label.baseCrs},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('GeodeticCoordinateReferenceSystemItem',',')}">
+			<div class="row" th:unless="${itemClassName} eq 'CompoundCRS'">
+				<div th:if="${itemClassName} eq 'ProjectedCRS'" class="col-md-12" th:with="property='baseCrs',label=#{form.label.baseCrs},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('GeodeticCoordinateReferenceSystemItem',',')}">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+				</div>
+				<div th:unless="${itemClassName} eq 'ProjectedCRS'" class="col-md-12" th:with="property='baseCrs',label=#{form.label.baseCrs},isRequired='false',noAddNew='true',ajaxPaths=${#strings.arraySplit('GeodeticCoordinateReferenceSystemItem,EngineeringCoordinateReferenceSystemItem,VerticalCoordinateReferenceSystemItem',',')}">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
-			<div class="row" th:if="${itemClassName} eq 'ProjectedCRS'">
-				<div class="col-md-12" th:with="property='conversion',label=#{form.label.conversion},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem',',')}">
+			<div class="row" th:unless="${itemClassName} eq 'CompoundCRS'">
+				<div class="col-md-12" th:with="property='conversion',label=#{form.label.conversion},isRequired=(${itemClassName} eq 'ProjectedCRS'),noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem',',')}">
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
