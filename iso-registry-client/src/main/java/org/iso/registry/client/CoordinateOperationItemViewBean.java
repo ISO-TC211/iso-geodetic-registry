@@ -6,6 +6,7 @@ import java.util.List;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.TransformationAccuracy;
 import org.iso.registry.api.registry.registers.gcp.operation.TransformationAccuracyValue;
+import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_AbsoluteExternalPositionalAccuracy;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
@@ -23,6 +24,7 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 	private List<String> scope;
 //	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	private Float accuracy;
+	private UnitOfMeasureItemViewBean accuracyUom;
 	private CoordinateReferenceSystemItemViewBean sourceCrs;
 	private CoordinateReferenceSystemItemViewBean targetCrs;
 
@@ -76,13 +78,15 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 			}
 		}
 
-		if (item.getCoordinateOperationAccuracy() != null && item.getCoordinateOperationAccuracy() instanceof DQ_AbsoluteExternalPositionalAccuracy) {
-			DQ_AbsoluteExternalPositionalAccuracy accuracy = (DQ_AbsoluteExternalPositionalAccuracy)item.getCoordinateOperationAccuracy();
+		if (item.getCoordinateOperationAccuracy() != null && !item.getCoordinateOperationAccuracy().isEmpty()) {
+			DQ_AbsoluteExternalPositionalAccuracy accuracy = (DQ_AbsoluteExternalPositionalAccuracy)item.getCoordinateOperationAccuracy().get(0);
 			if (accuracy.getResult() != null && accuracy.getResult() instanceof TransformationAccuracy) {
 				TransformationAccuracy xfAccuracy = (TransformationAccuracy)accuracy.getResult();
 				if (xfAccuracy.getValue() instanceof TransformationAccuracyValue) {
 					TransformationAccuracyValue xfAccuracyValue = (TransformationAccuracyValue)xfAccuracy.getValue();
 					this.setAccuracy(xfAccuracyValue.getAccuracy());
+					UnitOfMeasureItem accuracyUom = (UnitOfMeasureItem)xfAccuracy.getValueUnit();
+					this.setAccuracyUom(new UnitOfMeasureItemViewBean(accuracyUom, false));
 				}
 			}
 		}
@@ -140,6 +144,14 @@ public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
 //	public void setCoordinateOperationAccuracy(List<DQ_PositionalAccuracy> coordinateOperationAccuracy) {
 //		this.coordinateOperationAccuracy = coordinateOperationAccuracy;
 //	}
+
+	public UnitOfMeasureItemViewBean getAccuracyUom() {
+		return accuracyUom;
+	}
+
+	public void setAccuracyUom(UnitOfMeasureItemViewBean accuracyUom) {
+		this.accuracyUom = accuracyUom;
+	}
 
 	public CoordinateReferenceSystemItemViewBean getSourceCrs() {
 		return sourceCrs;
