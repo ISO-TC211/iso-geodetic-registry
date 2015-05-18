@@ -11,6 +11,7 @@ import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
+import org.iso.registry.core.model.operation.ConversionItem;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -43,9 +44,12 @@ public abstract class SingleCoordinateReferenceSystemItem<D extends DatumItem> e
 	/**
 	 * Set if this CRS is derived
 	 */
+	@ManyToOne
 	private SingleCoordinateReferenceSystemItem<D> baseCrs;
-	//private ConversionItem conversion;
 
+	@ManyToOne
+	private ConversionItem conversion;
+	
 	protected SingleCoordinateReferenceSystemItem() {
 		super();
 	}
@@ -75,13 +79,27 @@ public abstract class SingleCoordinateReferenceSystemItem<D extends DatumItem> e
 	public void setCoordinateSystem(CoordinateSystemItem newVal) {
 		coordinateSystem = newVal;
 	}
-
-	public SingleCoordinateReferenceSystemItem<D> getBaseCrs() {
-		return baseCrs;
+	
+	public <T extends SingleCoordinateReferenceSystemItem<D>> T getBaseCrs() {
+		return (T)baseCrs;
 	}
 
-	public void setBaseCrs(SingleCoordinateReferenceSystemItem<D> baseCrs) {
+	public <T extends SingleCoordinateReferenceSystemItem<D>> void setBaseCrs(T baseCrs) {
 		this.baseCrs = baseCrs;
+	}
+
+	/**
+	 * @return the conversion
+	 */
+	public ConversionItem getConversion() {
+		return conversion;
+	}
+
+	/**
+	 * @param conversion the conversion to set
+	 */
+	public void setConversion(ConversionItem conversion) {
+		this.conversion = conversion;
 	}
 
 }//end SC_SingleCRS
