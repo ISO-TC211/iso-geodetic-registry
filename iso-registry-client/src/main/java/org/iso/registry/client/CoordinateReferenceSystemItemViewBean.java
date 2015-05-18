@@ -1,10 +1,13 @@
 package org.iso.registry.client;
 
+import net.opengis.gml.v321.SingleOperationPropertyType;
+
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.core.model.CoordinateSystemType;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.GeneralDerivedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
@@ -24,6 +27,8 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 	private CoordinateSystemItemViewBean coordinateSystem;
 	private CoordinateReferenceSystemItemViewBean horizontalCrs;
 	private CoordinateReferenceSystemItemViewBean verticalCrs;
+	private CoordinateReferenceSystemItemViewBean baseCrs;
+	private SingleOperationItemViewBean conversion;
 
 	public CoordinateReferenceSystemItemViewBean(Appeal appeal) {
 		super(appeal);
@@ -77,6 +82,16 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 				case 3:
 					this.setType(CoordinateSystemType.GEOGRAPHIC_3D);
 					break;
+			}
+		}
+		
+		if (crsItem instanceof GeneralDerivedCoordinateReferenceSystemItem) {
+			GeneralDerivedCoordinateReferenceSystemItem<?> derivedCrs = (GeneralDerivedCoordinateReferenceSystemItem<?>)crsItem;
+			if (derivedCrs.getBaseCrs() != null) {
+				this.setBaseCrs(new CoordinateReferenceSystemItemViewBean(derivedCrs.getBaseCrs()));
+			}
+			if (derivedCrs.getConversion() != null) {
+				this.setConversion(new SingleOperationItemViewBean(derivedCrs.getConversion()));
 			}
 		}
 		
@@ -146,5 +161,21 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 
 	public void setVerticalCrs(CoordinateReferenceSystemItemViewBean verticalCrs) {
 		this.verticalCrs = verticalCrs;
+	}
+
+	public CoordinateReferenceSystemItemViewBean getBaseCrs() {
+		return baseCrs;
+	}
+
+	public void setBaseCrs(CoordinateReferenceSystemItemViewBean baseCrs) {
+		this.baseCrs = baseCrs;
+	}
+
+	public SingleOperationItemViewBean getConversion() {
+		return conversion;
+	}
+
+	public void setConversion(SingleOperationItemViewBean conversion) {
+		this.conversion = conversion;
 	}
 }

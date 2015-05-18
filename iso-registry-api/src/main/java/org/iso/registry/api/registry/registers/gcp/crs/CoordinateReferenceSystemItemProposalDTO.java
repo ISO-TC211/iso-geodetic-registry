@@ -6,19 +6,25 @@ import javax.persistence.EntityManager;
 
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO.SingleOperationType;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.GeneralDerivedCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.ProjectedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
+import org.iso.registry.core.model.operation.ConversionItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemItemProposalDTO
 {
@@ -27,7 +33,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		ENGINEERING,
 		GEODETIC,
 		PROJECTED,
-		VERTICAL
+		VERTICAL,
 	}
 //	private RS_Identifier identifier;
 	private CoordinateReferenceSystemType type;
@@ -37,6 +43,9 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 	private DatumItemProposalDTO datum;
 	
 	private CoordinateReferenceSystemItemProposalDTO sourceCrs;
+	
+	private CoordinateReferenceSystemItemProposalDTO baseCrs;
+	private SingleOperationItemProposalDTO conversion;
 	// TODO Projection
 	
 	private CoordinateReferenceSystemItemProposalDTO horizontalCrs;
@@ -102,6 +111,22 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		this.sourceCrs = sourceCrs;
 	}
 
+	public CoordinateReferenceSystemItemProposalDTO getBaseCrs() {
+		return baseCrs;
+	}
+
+	public void setBaseCrs(CoordinateReferenceSystemItemProposalDTO baseCrs) {
+		this.baseCrs = baseCrs;
+	}
+
+	public SingleOperationItemProposalDTO getConversion() {
+		return conversion;
+	}
+
+	public void setConversion(SingleOperationItemProposalDTO conversion) {
+		this.conversion = conversion;
+	}
+
 	public CoordinateReferenceSystemItemProposalDTO getHorizontalCrs() {
 		return horizontalCrs;
 	}
@@ -156,12 +181,12 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				if (crs == null) {
 					new Object();
 				}
-				if (crs instanceof SingleCoordinateReferenceSystemItem<?>) {
-					singleCrs.setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)crs);
-				}
-				else {
-					throw new RuntimeException(String.format("Illegal CRS used as base CRS: %d is not a Single CRS", crs.getIdentifier()));
-				}
+//				if (crs instanceof SingleCoordinateReferenceSystemItem<?>) {
+//					singleCrs.setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)crs);
+//				}
+//				else {
+//					throw new RuntimeException(String.format("Illegal CRS used as base CRS: %d is not a Single CRS", crs.getIdentifier()));
+//				}
 			}
 			
 			if (this.getHorizontalCrs() != null && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
@@ -188,6 +213,18 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				}
 			}
 			
+			if (this.getBaseCrs() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
+				SingleCoordinateReferenceSystemItem singleCrs = (SingleCoordinateReferenceSystemItem)registerItem;
+				SingleCoordinateReferenceSystemItem baseCrs = entityManager.find(SingleCoordinateReferenceSystemItem.class, this.getBaseCrs().getReferencedItemUuid());
+				singleCrs.setBaseCrs(baseCrs);
+			}
+			
+			if (this.getConversion() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
+				SingleCoordinateReferenceSystemItem singleCrs = (SingleCoordinateReferenceSystemItem)registerItem;
+				ConversionItem conversion = entityManager.find(ConversionItem.class, this.getConversion().getReferencedItemUuid());
+				singleCrs.setConversion(conversion);
+			}
+			
 //			item.setAliases(aliases);
 		}
 	}
@@ -212,9 +249,9 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 					this.setDatum(new DatumItemProposalDTO(scrsItem.getDatum())); 
 				}
 				
-				if (scrsItem.getBaseCrs() != null) {
-					this.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(scrsItem.getBaseCrs()));
-				}
+//				if (scrsItem.getBaseCrs() != null) {
+//					this.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(scrsItem.getBaseCrs()));
+//				}
 
 			}
 			
@@ -226,6 +263,21 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				}
 				if (ccrsItem.getComponentReferenceSystem().size() > 1) {
 					this.setVerticalCrs(new CoordinateReferenceSystemItemProposalDTO(ccrsItem.getComponentReferenceSystem().get(1)));
+				}
+			}
+			
+			if (crsItem instanceof GeneralDerivedCoordinateReferenceSystemItem) {
+				GeneralDerivedCoordinateReferenceSystemItem<?> derivedCrs = (GeneralDerivedCoordinateReferenceSystemItem<?>)crsItem;
+				if (derivedCrs.getConversion() != null) {
+					SingleOperationItemProposalDTO conversion = new SingleOperationItemProposalDTO(derivedCrs.getConversion());
+					conversion.setOperationType(SingleOperationType.CONVERSION);
+				}
+			}
+			
+			if (crsItem instanceof ProjectedCoordinateReferenceSystemItem) {
+				ProjectedCoordinateReferenceSystemItem projectedCrs = (ProjectedCoordinateReferenceSystemItem)crsItem;
+				if (projectedCrs.getBaseCrs() != null) {
+					this.setBaseCrs(new GeodeticCoordinateReferenceSystemItemProposalDTO(projectedCrs.getBaseCrs()));
 				}
 			}
 		}

@@ -1541,7 +1541,8 @@ CREATE TABLE engineeringcrs (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid NOT NULL,
     datum_uuid uuid
 );
@@ -1573,7 +1574,8 @@ CREATE TABLE engineeringcrs_aud (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid,
     datum_uuid uuid
 );
@@ -1946,7 +1948,8 @@ CREATE TABLE geodeticcrs (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid NOT NULL,
     datum_uuid uuid
 );
@@ -1978,7 +1981,8 @@ CREATE TABLE geodeticcrs_aud (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid,
     datum_uuid uuid
 );
@@ -2616,7 +2620,8 @@ CREATE TABLE projectedcrs (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid NOT NULL,
     datum_uuid uuid
 );
@@ -2648,7 +2653,8 @@ CREATE TABLE projectedcrs_aud (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid,
     datum_uuid uuid
 );
@@ -3944,7 +3950,8 @@ CREATE TABLE verticalcrs (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid NOT NULL,
     datum_uuid uuid
 );
@@ -3976,7 +3983,8 @@ CREATE TABLE verticalcrs_aud (
     remarks text,
     domainofvalidity_uuid uuid,
     crs_scope text,
-    basecrs bytea,
+    basecrs_uuid uuid,
+    conversion_uuid uuid,
     coordinatesystem_uuid uuid,
     datum_uuid uuid
 );
