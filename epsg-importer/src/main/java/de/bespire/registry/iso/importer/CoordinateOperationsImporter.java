@@ -221,7 +221,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		if (areaCode != null) {
-			AreaItem area = areaRepository.findByIdentifier(areaCode);
+			AreaItem area = areaRepository.findOne(findMappedCode("Area", areaCode));
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
