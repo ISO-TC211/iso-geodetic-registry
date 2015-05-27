@@ -7,6 +7,7 @@
 	</div>
 	<div class="col-md-9">
 		<div class="container">
+			<a id="downloadPdf" class="btn btn-sm btn-default pull-right" target="_blank" th:href="@{__${basePath}__/item/__*{uuid}__/pdf}" style="margin-top: 0px"><span th:text="#{button.pdf}"></span>&nbsp;&nbsp;<span class="fa fa-file-pdf-o"></span></a>												
 			<div th:replace="registry/item :: itemTabs"/>
 	
 			<div class="tab-content">
@@ -31,7 +32,7 @@
 	
 			</div>
 	
-			<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
+			<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>
 		</div>
 	</div>
 	

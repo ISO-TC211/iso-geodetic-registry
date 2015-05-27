@@ -16,7 +16,7 @@
 <div th:fragment="extentDetails" class="form-group">
 	<label class="control-label" for="domainOfValidity" th:text="#{form.label.extent}"></label>
 	<div th:if="*{domainOfValidity}">
-		<a id="domainOfValidity" href="#dialog-extent" data-toggle="modal" th:text="*{domainOfValidity.description}"/>
+		<a id="domainOfValidity" href="#dialog-extent" data-toggle="modal" th:text="*{domainOfValidity.description} ? *{domainOfValidity.description} : ('[' + #{untitled} + ']')"/>
 	</div>
 	<div th:unless="*{domainOfValidity}">
 		<p th:text="'[' + #{undefined} + ']'"/>

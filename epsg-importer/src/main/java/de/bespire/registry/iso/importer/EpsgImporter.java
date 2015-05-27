@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,12 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 
+import de.bespire.registry.iso.importer.CoordinateReferenceSystemsImporter.Mode;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
+import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 
 public class EpsgImporter
@@ -106,17 +109,27 @@ public class EpsgImporter
 
 			RegistryInitializer initializer = context.getBean(RegistryInitializer.class);
 			if (argList.contains("all") || argList.contains("init")) {
-				initializer.initializeRegistry();
+				if (argList.contains("demo")) {
+					initializer.initializeRegistry(RegistryInitializer.Mode.DEMO);
+				}
+				else if (argList.contains("production")) {
+					initializer.initializeRegistry(RegistryInitializer.Mode.PRODUCTION);					
+				}
+				else {
+					throw new IllegalArgumentException("Must provide either 'demo' or 'production' when specifying 'init'");
+				}
 			}
 			
 			SubmittingOrganizationRepository suborgRepository = context.getBean(SubmittingOrganizationRepository.class);
-			RE_SubmittingOrganization sponsor = suborgRepository.findAll().get(0);
+			RE_SubmittingOrganization sponsor = suborgRepository.findByName("ISO/TC 211");
 			
 			EntityManager em = context.getBean(EntityManager.class);
 
 			RegisterRepository registerRepository = context.getBean(RegisterRepository.class);
 			RE_Register register = registerRepository.findByName(GCP_REGISTER_NAME);
-			
+
+			ItemClassRepository itemClassRepository = context.getBean(ItemClassRepository.class);
+
 			if (register == null) {
 				throw new RuntimeException(String.format("Registry not initialized: Register '%s' not found", GCP_REGISTER_NAME));
 			}
@@ -183,6 +196,7 @@ public class EpsgImporter
 				run(csImporter, csTable, register, sponsor);
 			}				
 
+			RE_ItemClass icArea = areasImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("7") || argList.contains("-area")) {
 				if (argList.contains("-area")) {
 					areasImporter.setLimitToCodes(argList.get(argList.indexOf("-area") + 1));
@@ -202,24 +216,17 @@ public class EpsgImporter
 				run(datumsImporter, datumsTable, register, sponsor);
 			}				
 				
-			for (String type : new String[] { "GEOCENTRIC", "ENGINEERING", "VERTICAL", "COMPOUND" }) {
+			for (String type : new String[] { "GEOCENTRIC", "ENGINEERING", "VERTICAL", "COMPOUND", "PROJECTED" }) {
 				RE_ItemClass icCRS = crsImporter.getOrCreateItemClass(register, type);
 			}
 			if (argList.contains("all") || argList.contains("9") || argList.contains("-crs")) {
 				if (argList.contains("-crs")) {
 					crsImporter.setLimitToCodes(argList.get(argList.indexOf("-crs") + 1));
 				}
+				crsImporter.setMode(Mode.SINGLE);
 				Table crsTable = db.getTable("Coordinate Reference System");
 				run(crsImporter, crsTable, register, sponsor);
 			}				
-
-			if (argList.contains("all") || argList.contains("10") || argList.contains("-alias")) {
-				if (argList.contains("-alias")) {
-					aliasesImporter.setLimitToCodes(argList.get(argList.indexOf("-alias") + 1));
-				}
-				Table aliasTable = db.getTable("Alias");
-				run(aliasesImporter, aliasTable, register, sponsor);
-			}
 
 			RE_ItemClass icParam = paramsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("11") || argList.contains("-param")) {
@@ -239,14 +246,74 @@ public class EpsgImporter
 				run(methodsImporter, methodsTable, register, sponsor);
 			}				
 
-			RE_ItemClass icOperarion = opsImporter.getOrCreateItemClass(register, null);
+			RE_ItemClass icOperation = opsImporter.getOrCreateItemClass(register, null);
 			if (argList.contains("all") || argList.contains("13") || argList.contains("-op")) {
 				if (argList.contains("-op")) {
 					opsImporter.setLimitToCodes(argList.get(argList.indexOf("-op") + 1));
 				}
+				opsImporter.setMode(CoordinateOperationsImporter.Mode.CONVERSION);
 				Table coopTable = db.getTable("Coordinate_Operation");
 				run(opsImporter, coopTable, register, sponsor);
+			}			
+
+			if (argList.contains("all") || argList.contains("9") || argList.contains("-crs")) {
+				crsImporter.setMode(Mode.DERIVED_PROJECTED);
+				Table crsTable = db.getTable("Coordinate Reference System");
+				run(crsImporter, crsTable, register, sponsor);
 			}				
+
+			if (argList.contains("all") || argList.contains("9") || argList.contains("-crs")) {
+				crsImporter.setMode(Mode.COMPOUND);
+				Table crsTable = db.getTable("Coordinate Reference System");
+				run(crsImporter, crsTable, register, sponsor);
+			}				
+
+			if (argList.contains("all") || argList.contains("13") || argList.contains("-op")) {
+				if (argList.contains("-op")) {
+					opsImporter.setLimitToCodes(argList.get(argList.indexOf("-op") + 1));
+				}
+				opsImporter.setMode(CoordinateOperationsImporter.Mode.TRANSFORMATION);
+				Table coopTable = db.getTable("Coordinate_Operation");
+				run(opsImporter, coopTable, register, sponsor);
+			}			
+
+			if (argList.contains("all") || argList.contains("13") || argList.contains("-op")) {
+				if (argList.contains("-op")) {
+					opsImporter.setLimitToCodes(argList.get(argList.indexOf("-op") + 1));
+				}
+				opsImporter.setMode(CoordinateOperationsImporter.Mode.CONCATENATED);
+				Table coopTable = db.getTable("Coordinate_Operation");
+				run(opsImporter, coopTable, register, sponsor);
+			}			
+
+			if (argList.contains("all") || argList.contains("9") || argList.contains("-crs")) {
+				Table crsTable = db.getTable("Coordinate Reference System");
+				fixReferences(crsImporter, register, sponsor, crsTable);
+			}				
+
+			if (argList.contains("all") || argList.contains("10") || argList.contains("-alias") || argList.contains("-allaliases")) {
+				if (argList.contains("-alias")) {
+					aliasesImporter.setLimitToCodes(argList.get(argList.indexOf("-alias") + 1));
+				}
+				Table aliasTable = db.getTable("Alias");
+				run(aliasesImporter, aliasTable, register, sponsor);
+			}
+			
+			register = registerRepository.findOne(register.getUuid());
+			
+			Query q = em.createQuery("SELECT c FROM RE_ItemClass c JOIN FETCH c.registers WHERE c.name = :name");
+			q.setParameter("name", icArea.getName());
+			icArea = (RE_ItemClass)q.getSingleResult();
+			
+			try {
+				register.getContainedItemClasses().remove(icArea);
+				icArea.getRegisters().remove(register);
+				itemClassRepository.save(icArea);
+				registerRepository.save(register);
+			}
+			catch (Throwable t) {
+				logger.error(t.getMessage(), t);
+			}
 		}
 		finally {
 			db.close();
@@ -303,7 +370,29 @@ public class EpsgImporter
 			} while (i <= rowCount);
 		}
 		
+		fixReferences(importer, register, sponsor, table);
+	
+//		for (int i = 0; i < table.getRowCount(); i++) {
+//			Row row = table.getNextRow();
+//
+//			logger.info("> Importing row #{}...", i + 1);
+//			RE_ItemClass itemClass = importer.getOrCreateItemClass(register, row); 
+//			if (itemClass == null) { 
+//				new Object();
+//			}
+//			importer.importRow(row, itemClass, sponsor, register);
+//
+////			if (i > 200) break;
+//		}
+	}
+
+	private static void fixReferences(AbstractImporter importer, RE_Register register,
+			RE_SubmittingOrganization sponsor, Table table) throws IOException {
+		int i;
 		if (importer.mustFixReferences()) {
+			Cursor cursor = table.getDefaultCursor();
+			int rowCount = table.getRowCount();
+
 			cursor.beforeFirst();
 
 			i = 1;
@@ -322,20 +411,6 @@ public class EpsgImporter
 				i += 100;
 			} while (i <= rowCount);
 		}
-		
-	
-//		for (int i = 0; i < table.getRowCount(); i++) {
-//			Row row = table.getNextRow();
-//
-//			logger.info("> Importing row #{}...", i + 1);
-//			RE_ItemClass itemClass = importer.getOrCreateItemClass(register, row); 
-//			if (itemClass == null) { 
-//				new Object();
-//			}
-//			importer.importRow(row, itemClass, sponsor, register);
-//
-////			if (i > 200) break;
-//		}
 	}
 
 }

@@ -1,15 +1,17 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.iso.registry.api.IdentifiedItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.EpsgIsoMapping;
 import org.iso.registry.core.model.EpsgIsoMappingRepository;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
@@ -48,7 +50,7 @@ public abstract class AbstractImporter
 	public static final String CHANGE_ID = "CHANGE_ID";
 	public static final String DEPRECATED = "DEPRECATED";
 	
-	public static final String IMPORT_SOURCE = "Import from EPSG Geodetic Parameter Data Set v7.6";
+	public static final String IMPORT_SOURCE = "Import from EPSG Geodetic Parameter Data Set v8.7";
 	
 	@PersistenceContext
 	protected EntityManager em;
@@ -201,7 +203,7 @@ public abstract class AbstractImporter
 		// Do nothing, must override
 	}
 
-	protected abstract void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException;
+	protected abstract void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException;
 	protected abstract void clearAway();
 	protected abstract String codeProperty();
 
@@ -238,44 +240,76 @@ public abstract class AbstractImporter
 		this.generateIdentifiers = generateIdentifiers;
 	}
 
-	protected EpsgIsoMapping addMapping(String itemClass, Integer epsgCode, Integer isoCode) {
-		EpsgIsoMapping mapping = new EpsgIsoMapping(itemClass, epsgCode, isoCode);
+	protected EpsgIsoMapping addMapping(String itemClass, Integer epsgCode, UUID isoUuid) {
+		logger.info(">> Added mapping {} -> {}", epsgCode, isoUuid.toString());
+
+		EpsgIsoMapping mapping = new EpsgIsoMapping(itemClass, epsgCode, isoUuid);
 		return mapRepository.save(mapping);
 	}
 	
-	protected Integer determineIdentifier(String itemClass, Integer epsgCode) {
-		Integer identifier;
-		if (generateIdentifiers) {
-			identifier = findNextAvailableIdentifier();
-			addMapping(itemClass, epsgCode, identifier);
-		}
-		else {
-			identifier = epsgCode;
+//	protected Integer determineIdentifier(String itemClass, Integer epsgCode) {
+//		Integer identifier;
+//		if (generateIdentifiers) {
+//			identifier = findNextAvailableIdentifier();
+//			addMapping(itemClass, epsgCode, identifier);
+//		}
+//		else {
+//			identifier = epsgCode;
+//		}
+//		
+//		return identifier;			
+//	}
+//	
+//	private Integer findNextAvailableIdentifier() {
+//		String jpql = "SELECT MAX(i.itemIdentifier) FROM IdentifiedItem i";
+//		Integer maxCode = (Integer)em.createQuery(jpql).getResultList().get(0);
+//
+//		Integer result;
+//		if (maxCode == null || maxCode < 0) {
+//			result = 1;
+//		}
+//		else {
+//			result = maxCode + 1;
+//		}
+//		
+//		logger.info(">>> Next available identifier: {}", result);
+//		return result;
+//	}
+	protected Integer findMappedCode(UUID uuid) {
+		Integer result = mapRepository.findByUuid(uuid);
+		if (result == null) {
+			logger.error("Could not find EPSG code for UUID {}", uuid);
 		}
 		
-		return identifier;			
+		return result;		
 	}
 	
-	private Integer findNextAvailableIdentifier() {
-		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
-		Integer maxCode = (Integer)em.createQuery(jpql).getResultList().get(0);
+	protected UUID findMappedCode(Integer epsgCode) {
+		UUID result = mapRepository.findByEpsgCode(epsgCode);
+		if (result == null) {
+			logger.error("Could not find mapping for EPSG code {}", epsgCode);
+		}
 		
-		Integer result = (maxCode == null) ? 1 : maxCode + 1;
-		logger.info(">>> Next available identifier: {}", result);
+		return result;		
+	}
+	
+	protected UUID findMappedCode(String itemClass, Integer epsgCode) { 
+		UUID result = mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
+		if (result == null) {
+			logger.error("Could not find mapping for EPSG code {} in item class {}", epsgCode, itemClass);
+		}
+		
 		return result;
 	}
-	
-	protected Integer findMappedCode(String itemClass, Integer epsgCode) {
-		if (this.generateIdentifiers) {
-			return mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
-		}
-		else {
-			return epsgCode;
-		}
-	}
 
-	protected static Integer findMappedCode(String itemClass, Integer epsgCode, EpsgIsoMappingRepository mapRepository) {
+	protected static UUID findMappedCode(String itemClass, Integer epsgCode, EpsgIsoMappingRepository mapRepository) {
 		return mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
 	}
 
+	protected void addInformationSource(IdentifiedItemProposalDTO proposal, String text) {
+		CitationDTO citation = new CitationDTO();
+		citation.setPublisher(text);
+		
+		proposal.getInformationSource().add(citation);
+	}
 }

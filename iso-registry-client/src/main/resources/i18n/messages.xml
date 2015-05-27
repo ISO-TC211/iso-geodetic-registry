@@ -126,6 +126,7 @@
 	<entry key="header.primeMeridian">Prime Meridian</entry>
 	<entry key="header.extent">Extent</entry>
 	<entry key="header.informationSource">Information source</entry>
+	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
 	<entry key="button.acceptProposal">Accept</entry>
@@ -193,6 +194,7 @@
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
 	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 	<entry key="button.addAlternateTitle">Add alternate title</entry>
+	<entry key="button.pdf">Download</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -369,6 +371,7 @@
 	<entry key="form.label.factorB">Nominator (factor B)</entry>
 	<entry key="form.label.factorC">Denominator (factor C)</entry>
 	<entry key="form.label.measureType">Measure type</entry>
+	<entry key="form.label.symbol">Symbol</entry>
 	<entry key="form.label.shape">Shape</entry>
 	<entry key="form.label.semiMajorAxis">Semi major axis</entry>
 	<entry key="form.label.semiMajorAxisUom">Unit of Measure</entry>
@@ -380,6 +383,8 @@
 	<entry key="form.label.operationVersion">Operation Version</entry>
 	<entry key="form.label.sourceCrs">Source CRS</entry>
 	<entry key="form.label.targetCrs">Target CRS</entry>
+	<entry key="form.label.baseCrs">Base CRS</entry>
+	<entry key="form.label.conversion">Conversion</entry>
 	<entry key="form.label.coordinateAxis">Coordinate Axes</entry>
 	<entry key="form.label.axisAbbreviation">Axis abbreviation</entry>
 	<entry key="form.label.axisDirection">Axis direction</entry>
@@ -405,6 +410,8 @@
 	<entry key="form.label.seriesIssueIdentification">Issue</entry>
 	<entry key="form.label.seriesPage">Page</entry>
 	<entry key="form.label.otherCitationDetails">Other citation details</entry>
+	<entry key="form.label.accuracy">Accuracy</entry>
+	<entry key="form.label.accuracyUom">Accuracy unit</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -420,6 +427,7 @@
 	<entry key="form.help.alias">An alternative name by which this object is identified.</entry>
 	<entry key="form.help.remarks">Comments on or information about this object.</entry>
 	<entry key="form.help.scope">Description of usage, or limitations of usage, for which this item is valid. If unknown, enter "not known".</entry>
+	<entry key="form.help.axisAbbreviation">The abbreviation of the axis name (e.g. X, Y, H etc.). [max. 255 characters]</entry>
 	
 	<entry key="form.help.cannotDeleteOrganization">There are still users associated with this organization. Please reassign all users of this organization before deleting it.</entry>
 	
@@ -463,10 +471,11 @@
 
 	<entry key="form.placeholder.factorB"></entry>
 	<entry key="form.placeholder.factorC"></entry>
+	<entry key="form.placeholder.symbol">[max. 255 characters]</entry>
 
-	<entry key="form.placeholder.operationVersion"></entry>
+	<entry key="form.placeholder.operationVersion">[max. 255 characters]</entry>
 
-	<entry key="form.placeholder.axisAbbreviation"></entry>
+	<entry key="form.placeholder.axisAbbreviation">[max. 255 characters]</entry>
 	<entry key="form.placeholder.minimumValue"></entry>
 	<entry key="form.placeholder.maximumValue"></entry>
 
@@ -488,6 +497,9 @@
 	<entry key="form.placeholder.seriesIssueIdentification"></entry>
 	<entry key="form.placeholder.seriesPage"></entry>
 	<entry key="form.placeholder.otherCitationDetails"></entry>
+
+	<entry key="form.placeholder.accuracy"></entry>
+	<entry key="form.placeholder.accuracyUom"></entry>
 	
 	<entry key="form.signup.pleaseSelectOrganization">-- Select your organization --</entry>
 	<entry key="form.signup.button.organizationDetails">My organization is not listed</entry>
@@ -604,5 +616,12 @@
 	<entry key="OperationMethod">Operation Method</entry>
 	<entry key="OperationParameter">Operation Parameter</entry>
 	<entry key="Transformation">Transformation</entry>
+
+	<entry key="ConcatenatedOperationItem">Concatenated Operation</entry>
+	<entry key="ConversionItem">Conversion</entry>
+	<entry key="SingleOperationItem">Single Operation</entry>
+	<entry key="OperationMethodItem">Operation Method</entry>
+	<entry key="OperationParameterItem">Operation Parameter</entry>
+	<entry key="TransformationItem">Transformation</entry>
 
 </properties>

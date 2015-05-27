@@ -59,11 +59,11 @@ public class PrimeMeridiansImporter extends AbstractImporter
 		proposal.setGreenwichLongitude((Double)row.get(GREENWICH_LONGITUDE));
 
 		Integer uomCode = (Integer)row.get(UOM_CODE);
-		UnitOfMeasureItem uom = uomRepository.findByIdentifier(findMappedCode("UnitOfMeasurement", uomCode));
+		UnitOfMeasureItem uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
 		proposal.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO(uom));
 
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		try {
@@ -74,6 +74,7 @@ public class PrimeMeridiansImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

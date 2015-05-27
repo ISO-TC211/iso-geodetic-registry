@@ -28,6 +28,8 @@ public class TransformationAccuracy extends QuantitativeResult
 	
 	@ManyToOne
 	private UnitOfMeasureItem accuracyUnit;
+	
+	protected TransformationAccuracy() { }
 
 	public TransformationAccuracy(Float accuracy, UnitOfMeasureItem accuracyUnit) {
 		this.accuracy = accuracy;

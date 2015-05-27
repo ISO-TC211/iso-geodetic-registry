@@ -2,15 +2,15 @@ package de.bespire.registry.iso.importer;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.ConcatenatedOperationItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.CoordinateOperationItemProposalDTO;
@@ -58,6 +58,12 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 @Component
 public class CoordinateOperationsImporter extends AbstractImporter
 {
+	public static enum Mode {
+		CONVERSION,
+		TRANSFORMATION,
+		CONCATENATED
+	}
+	
 	private static final Logger logger = LoggerFactory.getLogger(CoordinateOperationsImporter.class);
 	
 	public static final String COORD_OP_CODE = "COORD_OP_CODE";
@@ -124,18 +130,37 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	private Table parameterValuesTable;
 	private Table pathTable;
 	
+	private Mode mode;
+	
 	@Override
 	@Transactional
-	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
+	protected void importRow(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException {
 		String type = (String)row.get(COORD_OP_TYPE);
 		if ("conversion".equalsIgnoreCase(type)) {
+			if (!Mode.CONVERSION.equals(this.getMode())) {
+				logger.info(">> Skipping conversion");
+				return;
+			}
 			importConversion(row, itemClass, sponsor, register);
 		}
 		else if ("transformation".equalsIgnoreCase(type)) {
+			if (!Mode.TRANSFORMATION.equals(this.getMode())) {
+				logger.info(">> Skipping transformation");
+				return;
+			}
 			importTransformation(row, itemClass, sponsor, register);
 		}
 		else if ("concatenated operation".equalsIgnoreCase(type)) {
-			// must be added in second pass 
+			if (!Mode.CONCATENATED.equals(this.getMode())) {
+				logger.info(">> Skipping conversion");
+				return;
+			}
+			try {
+				importConcatenated(row, icConcatOp, sponsor, register);
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
 		}
 		else {
 			throw new RuntimeException(String.format("Unexpected operation type: %s", type));
@@ -143,17 +168,19 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	}
 	
 	@Transactional
-	protected void importConversion(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
+	protected void importConversion(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException {
 		SingleOperationItemProposalDTO proposal = createSingleOperationProposal(row, icConversion, sponsor, register);
 		proposal.setOperationType(SingleOperationType.CONVERSION);
-		processProposal(proposal);
+		Addition ai = processProposal(proposal);
+		addMapping(ai.getItem().getItemClass().getName(), (Integer)row.get(codeProperty()), ai.getItem().getUuid());
 	}
 
 	@Transactional
-	protected void importTransformation(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException {
+	protected void importTransformation(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException {
 		SingleOperationItemProposalDTO proposal = createSingleOperationProposal(row, icTransformation, sponsor, register);
 		proposal.setOperationType(SingleOperationType.TRANSFORMATION);
-		processProposal(proposal);
+		Addition ai = processProposal(proposal);
+		addMapping(ai.getItem().getItemClass().getName(), (Integer)row.get(codeProperty()), ai.getItem().getUuid());
 	}
 
 	private void setOperationItemValues(CoordinateOperationItemProposalDTO proposal, Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
@@ -169,7 +196,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		
 		Integer sourceCrsCode = (Integer)row.get(SOURCE_CRS_CODE);
 		if (sourceCrsCode != null) {
-			CoordinateReferenceSystemItem sourceCrs = crsRepository.findByIdentifier(findMappedCode("CoordinateReferenceSystem", sourceCrsCode));
+			CoordinateReferenceSystemItem sourceCrs = crsRepository.findOne(findMappedCode(sourceCrsCode));
 			if (sourceCrs != null) {
 				proposal.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(sourceCrs));
 			}
@@ -180,7 +207,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 
 		Integer targetCrsCode = (Integer)row.get(TARGET_CRS_CODE);
 		if (targetCrsCode != null) {
-			CoordinateReferenceSystemItem targetCrs = crsRepository.findByIdentifier(findMappedCode("CoordinateReferenceSystem", targetCrsCode));
+			CoordinateReferenceSystemItem targetCrs = crsRepository.findOne(findMappedCode(targetCrsCode));
 			if (targetCrs != null) {
 				proposal.setTargetCrs(new CoordinateReferenceSystemItemProposalDTO(targetCrs));
 			}
@@ -194,7 +221,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		if (areaCode != null) {
-			AreaItem area = areaRepository.findByIdentifier(areaCode);
+			AreaItem area = areaRepository.findOne(findMappedCode("Area", areaCode));
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
@@ -208,14 +235,16 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		Float accuracyValue = (Float)row.get(COORD_OP_ACCURACY);
 		if (accuracyValue != null) {
 			UnitOfMeasureItem metre = uomRepository.findByNameAndStatus("metre", RE_ItemStatus.VALID);
-			TransformationAccuracy trafoAccuracy = new TransformationAccuracy(accuracyValue, metre);
-			DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
-			accuracy.setResult(trafoAccuracy);
-			proposal.addCoordinateOperationAccuracy(accuracy);
+//			TransformationAccuracy trafoAccuracy = new TransformationAccuracy(accuracyValue, metre);
+//			DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
+//			accuracy.setResult(trafoAccuracy);
+//			proposal.addCoordinateOperationAccuracy(accuracy);
+			proposal.setAccuracy(accuracyValue);
+			proposal.setAccuracyUom(new UnitOfMeasureItemProposalDTO(metre));
 		}		
 		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 	}
 	
@@ -226,7 +255,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		Integer operationCode = (Integer)row.get(COORD_OP_CODE);
 
 		Integer methodCode = (Integer)row.get(COORD_OP_METHOD_CODE);
-		OperationMethodItem method = methodRepository.findByIdentifier(findMappedCode("operationMethod", methodCode));
+		OperationMethodItem method = methodRepository.findOne(findMappedCode("OperationMethod", methodCode));
 		if (method != null) {
 			proposal.setMethod(new OperationMethodItemProposalDTO(method));
 		}
@@ -243,9 +272,9 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			// TODO Wohin damit??? 
 		}
 
-		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode, this.isGenerateIdentifiers(), mapRepository);
+		List<GeneralOperationParameterItem> parameters = findParameters(parametersUsageTable, paramRepository, methodCode, mapRepository);
 		for (GeneralOperationParameterItem parameter : parameters) {
-			OperationParameterValue paramValue = findParameterValue(operationCode, methodCode, parameter.getIdentifier());
+			OperationParameterValue paramValue = findParameterValue(operationCode, methodCode, findMappedCode(parameter.getUuid()));
 			proposal.addParameterValue(paramValue);
 		}
 
@@ -263,7 +292,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		}
 	}
 
-	private void processProposal(CoordinateOperationItemProposalDTO proposal) throws UnauthorizedException {
+	private Addition processProposal(CoordinateOperationItemProposalDTO proposal) throws UnauthorizedException, InvalidProposalException {
 		logger.info(">> Imported operation '{}'...", proposal.getName());
 		
 		try {
@@ -272,9 +301,12 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			
 			String decisionEvent = AbstractImporter.IMPORT_SOURCE;
 			acceptProposal(ai, decisionEvent);
+			
+			return ai;
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);
+			throw e;
 		}		
 	}
 
@@ -300,7 +332,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 //		}
 //		
 //		proposal.setRemarks((String)row.get(REMARKS));
-//		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+//		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 //		proposal.setDataSource((String)row.get(DATA_SOURCE));
 //		
 //		try {
@@ -321,7 +353,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 //		return null;
 //	}
 //
-	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code, boolean useMappedCode, EpsgIsoMappingRepository mapRepository) throws IOException {
+	static List<GeneralOperationParameterItem> findParameters(Table parametersUsageTable, OperationParameterItemRepository paramRepository, Integer code, EpsgIsoMappingRepository mapRepository) throws IOException {
 		List<GeneralOperationParameterItem> result = new ArrayList<>();
 		
 		Cursor usageCursor = parametersUsageTable.getDefaultCursor();
@@ -333,8 +365,8 @@ public class CoordinateOperationsImporter extends AbstractImporter
 				Row usageRow = usageCursor.getCurrentRow();
 				Integer parameterCode = (Integer)usageRow.get(PARAMETER_CODE);
 				
-				Integer paramIdentifier = (useMappedCode ? findMappedCode("OperationParameter", parameterCode, mapRepository) : parameterCode);
-				OperationParameterItem param = paramRepository.findByIdentifier(paramIdentifier);
+				UUID paramIdentifier = findMappedCode("OperationParameter", parameterCode, mapRepository);
+				OperationParameterItem param = paramRepository.findOne(paramIdentifier);
 				if (param != null) {
 					result.add(param);
 				}
@@ -362,10 +394,10 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		else {
 			Double paramValue = (Double)valueRow.get(PARAMETER_VALUE);
 			String fileRef = (String)valueRow.get(PARAM_VALUE_FILE_REF);
-			OperationParameterItem parameter = paramRepository.findByIdentifier(paramCode);
+			OperationParameterItem parameter = paramRepository.findOne(findMappedCode("OperationParameter", paramCode));
 			if (paramValue != null && fileRef == null) {
 				Integer uomCode = (Integer)valueRow.get(UOM_CODE);
-				UnitOfMeasureItem uom = uomRepository.findByIdentifier(uomCode);
+				UnitOfMeasureItem uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
 				Measure measure = new Measure(paramValue, uom);
 				return new OperationParameterValue(parameter, measure);
 			}
@@ -389,16 +421,6 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	@Override
 	@Transactional
 	protected void fixReference(Row row, RE_SubmittingOrganization sponsor, RE_Register register) {
-		String type = (String)row.get(COORD_OP_TYPE);
-		if ("concatenated operation".equalsIgnoreCase(type)) {
-			// second pass
-			try {
-				importConcatenated(row, icConcatOp, sponsor, register);
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e.getMessage(), e);
-			}
-		}
 	}
 
 	protected List<SingleOperationItem> findOperations(Integer concatOperationCode) throws IOException {
@@ -420,7 +442,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		}			
 		
 		for (int i = 1; i <= orderedOps.size(); i++) {
-			CoordinateOperationItem param = opsRepository.findByIdentifier(orderedOps.get(i));
+			CoordinateOperationItem param = opsRepository.findOne(findMappedCode("CoordinateOperation", orderedOps.get(i)));
 			if (param != null && param instanceof SingleOperationItem) {
 				result.add((SingleOperationItem)param);
 			}
@@ -507,6 +529,14 @@ public class CoordinateOperationsImporter extends AbstractImporter
 
 	public void setPathTable(Table pathTable) {
 		this.pathTable = pathTable;
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Mode mode) {
+		this.mode = mode;
 	}
 
 	@Override

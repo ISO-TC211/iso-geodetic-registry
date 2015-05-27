@@ -19,7 +19,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 @Access(AccessType.FIELD)
 @Table(name = "ProjectedCRS")
 @Audited @Entity
-public class ProjectedCoordinateReferenceSystemItem extends SingleCoordinateReferenceSystemItem<GeodeticDatumItem>
+public class ProjectedCoordinateReferenceSystemItem extends GeneralDerivedCoordinateReferenceSystemItem<GeodeticDatumItem>
 {
 	public ProjectedCoordinateReferenceSystemItem() {
 		super();
@@ -33,5 +33,27 @@ public class ProjectedCoordinateReferenceSystemItem extends SingleCoordinateRefe
 		
 		super.setBaseCrs(baseCrs);
 	}
-	
+
+	@Override
+	public GeodeticCoordinateReferenceSystemItem getBaseCrs() {
+		return (GeodeticCoordinateReferenceSystemItem)super.getBaseCrs();
+	}
+
+	@Override
+	public <T extends SingleCoordinateReferenceSystemItem<GeodeticDatumItem>> void setBaseCrs(T baseCrs) {
+		if (!GeodeticCoordinateReferenceSystemItem.class.isAssignableFrom(baseCrs.getClass())) {
+			throw new IllegalArgumentException("The base CRS of a projected CRS must be geodetic");
+		}
+		super.setBaseCrs(baseCrs);
+	}
+
+	@Override
+	public GeodeticDatumItem getDatum() {
+		return super.getDatum();
+	}
+
+	@Override
+	public void setDatum(GeodeticDatumItem newVal) {
+		super.setDatum(newVal);
+	}
 }

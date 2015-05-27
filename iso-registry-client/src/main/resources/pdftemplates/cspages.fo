@@ -1,0 +1,5 @@
+#set($csitem = $item)
+
+#set($itemdetails = "pdftemplates/identifieditem.fo")
+#set($itemafter = "pdftemplates/csaxes.fo")
+#parse("pdftemplates/itempage.fo")

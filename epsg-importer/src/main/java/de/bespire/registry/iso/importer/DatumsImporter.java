@@ -1,14 +1,8 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
@@ -23,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.healthmarketscience.jackcess.Row;
 
@@ -79,6 +71,7 @@ public class DatumsImporter extends AbstractImporter
 
 		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
+		Integer epsgCode = (Integer)row.get(DATUM_CODE);
 //		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
@@ -89,20 +82,27 @@ public class DatumsImporter extends AbstractImporter
 		Integer pmCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 
-		EllipsoidItem ellipsoid = ellipsoidRepository.findByIdentifier(elCode);
-		PrimeMeridianItem primeMeridian = pmRepository.findByIdentifier(pmCode);
-		AreaItem area = areaRepository.findByIdentifier(areaCode);
-
-		proposal.setEllipsoid(new EllipsoidItemProposalDTO(ellipsoid));
-		proposal.setPrimeMeridian(new PrimeMeridianItemProposalDTO(primeMeridian));
-		if (area != null) {
-			ExtentDTO extent = new ExtentDTO();
-			extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
-			extent.setDescription(area.getName());
-			proposal.setDomainOfValidity(extent);
+		if (elCode != null) {
+			EllipsoidItem ellipsoid = ellipsoidRepository.findOne(findMappedCode("Ellipsoid", elCode));
+			proposal.setEllipsoid(new EllipsoidItemProposalDTO(ellipsoid));
 		}
+		if (pmCode != null) {
+			PrimeMeridianItem primeMeridian = pmRepository.findOne(findMappedCode("PrimeMeridian", pmCode));
+			proposal.setPrimeMeridian(new PrimeMeridianItemProposalDTO(primeMeridian));
+
+		}
+		if (areaCode != null) {
+			AreaItem area = areaRepository.findOne(findMappedCode("Area", areaCode));
+			if (area != null) {
+				ExtentDTO extent = new ExtentDTO();
+				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
+				extent.setDescription(area.getName());
+				proposal.setDomainOfValidity(extent);
+			}
+		}
+		
 		proposal.setRemarks((String)row.get(REMARKS));
-		proposal.setInformationSource((String)row.get(INFORMATION_SOURCE));
+		addInformationSource(proposal, (String)row.get(INFORMATION_SOURCE));
 		proposal.setDataSource((String)row.get(DATA_SOURCE));
 		
 		try {
@@ -113,6 +113,8 @@ public class DatumsImporter extends AbstractImporter
 			acceptProposal(ai, decisionEvent);
 
 			logger.info(">> Imported '{}'...", proposal.getName());
+
+			addMapping(ai.getItem().getItemClass().getName(), epsgCode, ai.getItem().getUuid());
 		}
 		catch (InvalidProposalException e) {
 			logger.error(e.getMessage(), e);

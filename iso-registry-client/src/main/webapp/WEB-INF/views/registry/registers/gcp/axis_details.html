@@ -5,7 +5,7 @@
 			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
 			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
 			<div class="row">
-				<div class="col-md-6" th:with="property='axisAbbreviation',inputType='text',label=#{form.label.axisAbbreviation},placeholder=#{form.placeholder.axisAbbreviation},isRequired='true'">
+				<div class="col-md-6" th:with="property='axisAbbreviation',inputType='text',label=#{form.label.axisAbbreviation},placeholder=#{form.placeholder.axisAbbreviation},help=#{form.help.axisAbbreviation},isRequired='true'">
 					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-6 form-group">

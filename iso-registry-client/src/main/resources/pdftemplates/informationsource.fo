@@ -1,0 +1,135 @@
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Information source</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>
+			<fo:table border="none" border-collapse="collapse" table-layout="fixed">
+				<fo:table-column column-width="30%"/>
+				<fo:table-column column-width="70%"/>
+				<fo:table-body>
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Title</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>#if ($infosrc.title)$esc.html($infosrc.title)#end</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#if ($infosrc.author)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Author</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.author)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#foreach($altTitle in $item.alternateTitle)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Alternate title</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($altTitle)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#if ($infosrc.publisher)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Publisher</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.publisher)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#if ($infosrc.publicationDate)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Publication date</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.publicationDate)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#if ($infosrc.revisionDate)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Revision date</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.revisionDate)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#if ($infosrc.edition)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Edition</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.edition)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#if ($infosrc.editionDate)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Edition date</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.editionDate)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+					#if ($infosrc.series)
+						#if ($infosrc.series.name)
+						<fo:table-row>
+							<fo:table-cell font-style="italic">
+								<fo:block>Series/Journal name</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block>$esc.html($infosrc.series.name)</fo:block>
+							</fo:table-cell>
+						</fo:table-row>
+						#end
+						#if ($infosrc.series.issueIdentification)
+							<fo:table-row>
+								<fo:table-cell font-style="italic">
+									<fo:block>Issue identification</fo:block>
+								</fo:table-cell>
+								<fo:table-cell>
+									<fo:block>$esc.html($infosrc.series.issueIdentification)</fo:block>
+								</fo:table-cell>
+							</fo:table-row>
+						#end
+						#if ($infosrc.series.page)
+							<fo:table-row>
+								<fo:table-cell font-style="italic">
+									<fo:block>Page</fo:block>
+								</fo:table-cell>
+								<fo:table-cell>
+									<fo:block>$esc.html($infosrc.series.page)</fo:block>
+								</fo:table-cell>
+							</fo:table-row>
+						#end
+					#end
+					#if ($infosrc.otherCitationDetails)
+					<fo:table-row>
+						<fo:table-cell font-style="italic">
+							<fo:block>Other citation details</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>$esc.html($infosrc.otherCitationDetails)</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					#end
+				</fo:table-body>
+			</fo:table>
+		</fo:block>
+	</fo:table-cell>
+</fo:table-row>

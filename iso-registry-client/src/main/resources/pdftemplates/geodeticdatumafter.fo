@@ -1,0 +1,15 @@
+#parse("pdftemplates/datumafter.fo")
+
+#set($datumitem = $item)
+
+<fo:block font-size="12pt" font-family="sans-serif" line-height="24pt" space-before.optimum="15pt" padding-top="3pt">Ellipsoid</fo:block>
+#set($item = $datumitem.ellipsoid)
+#set($itemdetails = "pdftemplates/identifieditem.fo")
+#set($itemafter = "")
+#parse("pdftemplates/itemdetails.fo")
+
+<fo:block font-size="12pt" font-family="sans-serif" line-height="24pt" space-before.optimum="15pt" padding-top="3pt">Prime Meridian</fo:block>
+#set($item = $datumitem.primeMeridian)
+#set($itemdetails = "pdftemplates/identifieditem.fo")
+#set($itemafter = "")
+#parse("pdftemplates/itemdetails.fo")

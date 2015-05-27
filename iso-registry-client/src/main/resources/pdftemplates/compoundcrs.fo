@@ -1,0 +1,2 @@
+#set($pages = "pdftemplates/compoundcrspages.fo")
+#parse("pdftemplates/itemmaster.fo")

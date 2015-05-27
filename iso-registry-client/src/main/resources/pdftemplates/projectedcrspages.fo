@@ -1,0 +1,25 @@
+#set($crsitem = $item)
+
+#set($itemdetails = "pdftemplates/singlecrs.fo")
+#set($itemafter = "pdftemplates/extentblock.fo")
+#parse("pdftemplates/itempage.fo")
+
+#if ($crsitem.datum)
+	#set($item = $crsitem.datum)
+	#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
+#end
+
+#if ($crsitem.coordinateSystem)
+	#set($item = $crsitem.coordinateSystem)
+	#parse("pdftemplates/cspages.fo")
+#end
+
+#if ($crsitem.conversion)
+	#set($item = $crsitem.conversion)
+	#parse("pdftemplates/conversionpages.fo")
+#end
+
+#if ($crsitem.baseCrs)
+	#set($item = $crsitem.baseCrs)
+	#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
+#end

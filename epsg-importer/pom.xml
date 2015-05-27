@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.bespire.registry.iso</groupId>
 	<artifactId>epsg-importer</artifactId>
-	<version>1.2</version>
+	<version>1.4.1</version>
 	<properties>
 		<java-version>1.7</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
@@ -112,7 +112,7 @@
 		<dependency>
 			<groupId>org.iso.registry</groupId>
 			<artifactId>iso-registry-api</artifactId>
-			<version>HEAD-SNAPSHOT</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.healthmarketscience.jackcess</groupId>
@@ -173,7 +173,7 @@
 				<hibernate.connection.username>isoreg</hibernate.connection.username>
 				<hibernate.connection.password>isoreg</hibernate.connection.password>
 				<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg-import</hibernate.connection.url>
-				<hibernate.hbm2ddl.auto>create</hibernate.hbm2ddl.auto>
+				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<client.basepath></client.basepath>
 				<mail.enabled>true</mail.enabled>
 				<mail.from.name>Registry</mail.from.name>

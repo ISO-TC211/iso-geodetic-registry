@@ -74,7 +74,7 @@
 <div th:fragment="informationSourceDetails" class="form-group">
 	<label class="control-label" for="informationSource" th:text="#{form.label.informationSource}"></label>
 	<div th:unless="*{informationSource.isEmpty()}" th:each="infosrc,rowstat : *{informationSource}">
-		<a th:id="'informationSource-' + ${rowstat.index}" th:href="'#dialog-info-src-' + ${rowstat.index}" data-toggle="modal" th:text="${infosrc.title}"/>
+		<a th:id="'informationSource-' + ${rowstat.index}" th:href="'#dialog-info-src-' + ${rowstat.index}" data-toggle="modal" th:text="${infosrc.title} ? ${infosrc.title} : ('[' + #{untitled} + ']')"/>
 		
 		<div class="modal fade" th:id="'dialog-info-src-' + ${rowstat.index}" role="dialog">
 			<div class="modal-dialog modal-lg">

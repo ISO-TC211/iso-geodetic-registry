@@ -19,6 +19,14 @@
 					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='accuracy',inputType='number',label=#{form.label.accuracy},placeholder=#{form.placeholder.accuracy},isRequired='false'">
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+				<div class="col-md-8" th:with="property='accuracyUom',label=#{form.label.accuracyUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
+					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
 
 			<div class="row">
 				<div class="col-md-12">
@@ -41,7 +49,7 @@
 									multiple: false,
 									dropdownCssClass: "bigdrop",
 									ajax: {
-										url: "[[@{__${basePath}__/}]]entities/methods/transformation",
+										url: "[[@{__${basePath}__/}]]entities/methods",
 										dataType: "json",
 										data: function(term, page) {
 											return {
