@@ -2,22 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.iso.registry</groupId>
+	<parent>
+        <groupId>org.iso.registry</groupId>
+        <artifactId>iso-registry-parent</artifactId>
+        <version>1.4.2-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>	
 	<artifactId>iso-registry-client</artifactId>
 	<name>iso-registry-client</name>
 	<packaging>war</packaging>
-	<version>1.4.2-SNAPSHOT</version>
     <scm>
         <connection>scm:git:ssh://git@git.bespire.de:bespire/iso-registry.git</connection>
     </scm>	
 	<properties>
-		<java-version>1.7</java-version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
-		<registry-base-version>2.0.2-SNAPSHOT</registry-base-version>
-		<org.springframework-version>4.0.2.RELEASE</org.springframework-version>
-		<org.springframework.security-version>3.2.1.RELEASE</org.springframework.security-version>
-		<org.aspectj-version>1.6.10</org.aspectj-version>
-		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<hibernate.connection.username>isoreg</hibernate.connection.username>
 		<hibernate.connection.password>isoreg</hibernate.connection.password>
 		<hibernate.connection.schema>public</hibernate.connection.schema>
@@ -40,7 +37,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
@@ -52,7 +48,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework-version}</version>
 		</dependency>
 				
 		<!-- AspectJ -->
@@ -116,7 +111,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -146,7 +140,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${org.springframework-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -163,7 +156,6 @@
 		<dependency>
 			<groupId>org.iso.registry</groupId>
 			<artifactId>iso-registry-api</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
@@ -197,17 +189,14 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>${org.springframework.security-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>${org.springframework.security-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.geoinfoffm.registry</groupId>
 			<artifactId>registry-client-base</artifactId>
-			<version>${registry-base-version}</version>
 		</dependency>
 	</dependencies>
     <build>
@@ -337,7 +326,7 @@
 							<!-- Only changing prefix since properties conflicts with jgit above -->
 							<prefix>git</prefix>
 							<verbose>true</verbose>
-							<dotGitDirectory>../.git</dotGitDirectory>
+							<dotGitDirectory>../../.git</dotGitDirectory>
 							<!-- We're using a pom in this example -->
 							<skipPoms>false</skipPoms>
 							<gitDescribe>
