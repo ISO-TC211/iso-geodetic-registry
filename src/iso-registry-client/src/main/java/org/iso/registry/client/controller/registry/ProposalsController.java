@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,7 @@ import de.geoinfoffm.registry.core.PropertyConfiguration;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalGroup;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUser;
@@ -71,6 +73,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.core.security.RegistryUserUtils;
+import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
 import de.geoinfoffm.registry.persistence.SupersessionRepository;
@@ -132,6 +135,9 @@ public class ProposalsController
 
 	@Autowired
 	private ConversionService conversionService;
+	
+	@Autowired
+	private ProposalWorkflowManager workflowManager;
 
 	@RequestMapping(value = "/", method = RequestMethod.POST/*, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE*/)
 	@Transactional
@@ -228,7 +234,7 @@ public class ProposalsController
 	/*
 	 * View proposal
 	 */
-	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	@Transactional
 	public String viewProposal(WebRequest request, 
 							   @PathVariable("uuid") UUID proposalUuid, 
@@ -239,50 +245,70 @@ public class ProposalsController
 		if (proposal == null) {
 			throw new ProposalNotFoundException(proposalUuid);
 		}
-
-		security.assertMayRead(proposal);
-		if ("true".equals(forceEdit)) {
-			security.assertMayWrite(proposal);
-		}
 		
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(proposal);
 		model.addAttribute("proposal", dto);
 		model.addAttribute("itemClass", dto.getItemClassUuid());
 		
-		RE_ItemClass itemClass = itemClassRepository.findOne(dto.getItemClassUuid());
-		if (itemClass != null) {
-			model.addAttribute("itemClassName", itemClass.getName());
+		if (!dto.getSupersededItems().isEmpty()) {
+			Set<RegisterItemViewBean> supersededItems = new HashSet<RegisterItemViewBean>();
+			for (UUID uuid : dto.getSupersededItems()) {
+				RE_RegisterItem supersededItem = itemService.findOne(uuid);
+				RegisterItemViewBean rvb = viewBeanFactory.getViewBean(supersededItem);
+				supersededItems.add(rvb);
+			}
+			model.addAttribute("supersededItems", supersededItems);
 		}
 		
+		if (!dto.getNewSupersedingItems().isEmpty() || !dto.getExistingSupersedingItems().isEmpty()) {
+			Set<RegisterItemViewBean> supersedingItems = new HashSet<RegisterItemViewBean>();
+			for (UUID uuid : dto.getExistingSupersedingItems()) {
+				RE_RegisterItem supersedingItem = itemService.findOne(uuid);
+				supersedingItems.add(viewBeanFactory.getViewBean(supersedingItem));
+			}
+			
+			for (RegisterItemProposalDTO newItem : dto.getNewSupersedingItems()) {
+				RE_RegisterItem supersedingItem = itemService.findOne(newItem.getItemUuid());
+				supersedingItems.add(viewBeanFactory.getViewBean(supersedingItem));
+			}
+			
+			model.addAttribute("supersedingItems", supersedingItems);
+		}
+
 		ItemClassConfiguration itemClassConfiguration = null;
+		RegisterItemViewBean rvb = null;
 		if (proposal instanceof SimpleProposal) {
 			itemClassConfiguration = itemClassRegistry.getConfiguration(((SimpleProposal)proposal).getItem().getItemClass().getName());
 			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
+			rvb = viewBeanFactory.getViewBean(proposal);
+		}
+//		else if (proposal instanceof HierarchicalProposal && ((HierarchicalProposal)proposal).getPrimaryProposal() instanceof SimpleProposal) {
+//			HierarchicalProposal group = (HierarchicalProposal)proposal;
+//			if (group.getPrimaryProposal() != null) {
+//				SimpleProposal primaryProposal = (SimpleProposal)group.getPrimaryProposal();
+//				itemClassConfiguration = itemClassRegistry.getConfiguration(primaryProposal.getItem().getItemClass().getName());
+//				model.addAttribute("itemClassConfiguration", itemClassConfiguration);
+//				rvb = viewBeanFactory.getViewBean(primaryProposal);
+//			}
+//		}
+		else if (proposal instanceof Supersession) {
+			rvb = RegisterItemViewBean.forProposal((Supersession)proposal, workflowManager);
+		}
+		else if (proposal instanceof ProposalGroup) {
+			rvb = RegisterItemViewBean.forProposal((ProposalGroup)proposal, workflowManager);
+		}
+		
+		if (rvb == null) {
+			throw new RuntimeException(String.format("No view bean for proposal '%s' [class: %s]", proposal.getTitle(), proposal.getClass().getCanonicalName()));
 		}
 
-		RegisterItemProposalDTO rvb = proposalDtoFactory.getProposalDto(proposal);
-//		RegisterItemViewBean rvb = viewBeanFactory.getViewBean(proposal);
 		model.addAttribute("rvb", rvb);
-		
-		model.addAttribute("isProposal", "true");
-		
-		RE_SubmittingOrganization sponsor = suborgRepository.findOne(rvb.getSponsorUuid());
-//		if (rvb.getProposalType().equals(ProposalType.SUPERSESSION)) {
-//			Supersession s = (Supersession)proposal;
-//			
-//			RE_Register register = registerRepository.findByName(new CharacterString(rvb.getRegisterName()));
-//			SupersessionState state = new SupersessionState(register, sponsor, itemService);
-//			request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
-//			
-//			state.setControlBodyNotes(s.getSupersessionParts().get(0).getControlBodyNotes());
-//			state.setRegisterManagerNotes(s.getSupersessionParts().get(0).getRegisterManagerNotes());
-//			for (RE_RegisterItem supersededItem : s.getSupersededItems()) {
-//				state.addSupersededItem(supersededItem, itemService.findFinalAdditionInformation(supersededItem));
-//			}
-//			for (RE_RegisterItem supersedingItems : s.getSupersedingItems()) {
-//
-//			model.addAttribute("state", state);
+//		if (proposal instanceof SimpleProposal) {
+//			itemClassConfiguration = itemClassRegistry.getConfiguration(((SimpleProposal)proposal).getItem().getItemClass().getName());
+//			model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 //		}
+
+		model.addAttribute("isProposal", "true");
 		
 		String viewName;
 		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewProposalTemplate())) {
@@ -290,7 +316,7 @@ public class ProposalsController
 		}
 		else {
 			StringBuilder viewNameBuilder = new StringBuilder("registry/proposal/");
-			if (proposal.isEditable() || ("true".equals(forceEdit) && proposal.isWithdrawable())) {
+			if (workflowManager.isEditable(proposal) || ("true".equals(forceEdit) && workflowManager.isWithdrawable(proposal))) {
 				viewNameBuilder.append("edit_");
 				
 				if (proposal instanceof Supersession) {
@@ -563,7 +589,7 @@ public class ProposalsController
 		security.assertMayWrite(pmi);
 		
 		if (!StringUtils.isEmpty(operation)) {
-			proposal = new RegisterItemProposalDTO(pmi);
+			proposal = new RegisterItemProposalDTO(pmi, proposalDtoFactory);
 			UUID uuid = UUID.fromString(itemUuid);
 			// perform special operation
 			if ("removeSupersedingItem".equals(operation)) {
@@ -714,11 +740,11 @@ public class ProposalsController
 			throw new ProposalNotFoundException(proposalUuid);
 		}
 
-		if (proposal.isUnderReview()) {
+		if (workflowManager.isUnderReview(proposal)) {
 			security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
 			proposalService.returnProposal(proposal, "[Register Manager] " + noteToSubmitter);
 		}
-		else if (proposal.isPending()) {
+		else if (workflowManager.isPending(proposal)) {
 			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 			proposalService.returnProposal(proposal, "[Control Body] " + noteToSubmitter);			
 		}
@@ -755,14 +781,14 @@ public class ProposalsController
 	@Transactional
 	public ResponseEntity<?> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
 											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
-		logger.debug("POST /proposal/{}/reject", proposalUuid);
+		logger.debug("POST /proposals/{}/reject", proposalUuid);
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
 			throw new ProposalNotFoundException(proposalUuid);
 		}
 		
-		if (proposal.isPending()) {
+		if (workflowManager.isPending(proposal)) {
 			security.assertHasEntityRelatedRoleForAll(CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 			proposalService.rejectProposal(proposal, controlBodyDecisionEvent);			
 		}
@@ -779,7 +805,7 @@ public class ProposalsController
 	public String appealProposal(@PathVariable("uuid") UUID proposalUuid,
 			final Model model) throws ProposalNotFoundException, UnauthorizedException {
 		
-		logger.debug("GET /proposal/{}/appeal", proposalUuid);
+		logger.debug("GET /proposals/{}/appeal", proposalUuid);
 
 		security.assertIsLoggedIn();
 		
@@ -787,17 +813,13 @@ public class ProposalsController
 		if (proposal == null) {
 			throw new ProposalNotFoundException(proposalUuid);
 		}
-
-		security.assertMayRead(proposal);
-		security.assertMayWrite(proposal);
 		
-		RegistryUser registryUser =  security.getCurrentUser();
+		Appeal appeal = proposalService.findAppeal(proposal);
+		if (appeal != null) {
+			model.addAttribute("appeal", appeal);
+		}
 
-//		if (!proposal.getSponsor().getUuid().equals(registryUser.getOrganizationName() .getOrganization().getSubmittingOrganization().getUuid())) {
-//			throw new UnauthorizedException("You are not authorized to access this resource");
-//		}
-
-		RegisterItemViewBean rvb = new RegisterItemViewBean(proposal);		
+		RegisterItemViewBean rvb = RegisterItemViewBean.forProposal(proposal, workflowManager);		
 		model.addAttribute("proposal", rvb);
 
 		return "registry/appeal";

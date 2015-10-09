@@ -94,6 +94,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.core.security.RegistryUserUtils;
+import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationException;
 
@@ -149,6 +150,9 @@ public class RegisterItemController
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private ProposalWorkflowManager workflowManager;
 
 	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -299,7 +303,7 @@ public class RegisterItemController
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, item.getRegister());
 
 		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		SupersessionState state = new SupersessionState(item.getRegister(), suborg, itemService);
+		SupersessionState state = new SupersessionState(item.getRegister(), suborg, workflowManager);
 		state.addSupersededItem(item);
 		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
 

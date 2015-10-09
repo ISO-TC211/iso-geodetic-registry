@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -69,6 +70,7 @@ import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
 import de.geoinfoffm.registry.core.model.RoleRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 
 /**
  * Controller for the Administration views.
@@ -120,6 +122,9 @@ public class AdministrationController
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private ProposalWorkflowManager workflowManager;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -386,7 +391,7 @@ public class AdministrationController
 		
 		model.addAttribute("organization", new OrganizationFormBean(org));
 		
-		List<RegistryUser> users = userRepository.findByOrganization(org);
+		Collection<RegistryUser> users = userRepository.findByOrganization(org);
 		model.addAttribute("users", users);
 		
 		List<Delegation> delegations = delegationRepository.findByDelegatingOrganization(org);
@@ -554,14 +559,14 @@ public class AdministrationController
 
 		List<Proposal> proposals = proposalRepository.findAll();
 		for (Proposal proposal : proposals) {
-			if (proposal.hasGroup()) continue; // only show top-level proposals
+			if (proposal.hasParent()) continue; // only show top-level proposals
 			
 			Appeal appeal = proposalService.findAppeal(proposal);
 			if (appeal != null) {
-				proposedItemViewBeans.add(new RegisterItemViewBean(appeal));
+				proposedItemViewBeans.add(RegisterItemViewBean.forAppeal(appeal, workflowManager));
 			}
 			else {
-				proposedItemViewBeans.add(new RegisterItemViewBean(proposal));
+				proposedItemViewBeans.add(RegisterItemViewBean.forProposal(proposal, workflowManager));
 			}
 		}
 		

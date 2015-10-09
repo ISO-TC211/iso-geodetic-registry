@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +13,16 @@ import de.geoinfoffm.registry.api.AbstractEventListener;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.client.web.ClientConfiguration;
 import de.geoinfoffm.registry.core.RegistryUserCreatedEvent;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 
 @Component
 public class RegistryUserCreatedEventListener extends AbstractEventListener implements ApplicationListener<RegistryUserCreatedEvent>
 {
 	private Logger logger = LoggerFactory.getLogger(RegistryUserCreatedEventListener.class);
+	
+	@Autowired
+	private RegistryConfiguration registryConfiguration;
 	
 	public RegistryUserCreatedEventListener() {
 	}
@@ -43,7 +48,7 @@ public class RegistryUserCreatedEventListener extends AbstractEventListener impl
 
         try {
         	this.sendMailToUser(user, "mail.subject.signup.confirmation", "mailtemplates/new_user_confirmation", 
-        			ClientConfiguration.getMailBaseUrl(), model);
+        			registryConfiguration.getMailBaseUrl(), model);
         }
     	catch (Throwable t) {
     		logger.error("Sending mail failed: " + t.getMessage(), t);

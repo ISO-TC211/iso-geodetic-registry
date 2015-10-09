@@ -7,18 +7,23 @@ import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import de.geoinfoffm.registry.api.AbstractEventListener;
 import de.geoinfoffm.registry.api.forum.ProposalDiscussionInvitationsAddedEvent;
 import de.geoinfoffm.registry.client.web.ClientConfiguration;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.forum.ProposalDiscussion;
 
 @Component
 public class ProposalDiscussionInvitationsAddedEventListener extends AbstractEventListener implements ApplicationListener<ProposalDiscussionInvitationsAddedEvent> 
 {
 	private static final Logger logger = LoggerFactory.getLogger(ProposalDiscussionInvitationsAddedEventListener.class);
+	
+	@Autowired
+	private RegistryConfiguration registryConfiguration;
 
 	@Override
 	public void onApplicationEvent(ProposalDiscussionInvitationsAddedEvent event) {
@@ -29,7 +34,7 @@ public class ProposalDiscussionInvitationsAddedEventListener extends AbstractEve
 
 		final ProposalDiscussion discussion = event.getSource();
 
-		final String confirmationUrlBase = ClientConfiguration.getMailBaseUrl() + "discussion/"; 				
+		final String confirmationUrlBase = registryConfiguration.getMailBaseUrl() + "discussion/"; 				
 
 		for (String invitee : event.getInviteeMailAddresses()) {
 			String token = discussion.getTokenByInvitee(invitee);
@@ -42,7 +47,7 @@ public class ProposalDiscussionInvitationsAddedEventListener extends AbstractEve
 	        try {
 	        	InternetAddress recipient = new InternetAddress(invitee);
 	        	this.sendMail(recipient, "mail.subject.discussion.invitation", "mailtemplates/discussion_invitation", "de", 
-	        			ClientConfiguration.getMailBaseUrl(), model);
+	        			registryConfiguration.getMailBaseUrl(), model);
 	        }
 	    	catch (Throwable t) {
 	    		logger.error("Sending mail failed: " + t.getMessage(), t);
