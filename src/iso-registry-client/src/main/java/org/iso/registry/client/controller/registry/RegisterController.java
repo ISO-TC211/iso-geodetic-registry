@@ -84,6 +84,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.core.security.RegistryUserUtils;
+import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
@@ -152,6 +153,9 @@ public class RegisterController
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private ProposalWorkflowManager workflowManager;
 	
 	private Map<String, RE_ItemClass> itemClassCache = new HashMap<>();
 	
@@ -271,7 +275,7 @@ public class RegisterController
 		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();
 		for (RE_RegisterItem item : items.getContent()) {
-			RegisterItemViewBean rvb = new RegisterItemViewBean(item, false);
+			RegisterItemViewBean rvb = RegisterItemViewBean.forItem(item, false, workflowManager);
 			rvb.setStatus(messageSource.getMessage(item.getStatus().toString(), null, LocaleContextHolder.getLocale()));
 			rvb.setItemClassName(messageSource.getMessage(item.getItemClass().getName().toString(), null, LocaleContextHolder.getLocale()));
 			viewBeans.add(rvb);
@@ -502,7 +506,7 @@ public class RegisterController
 		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, register);
 		
 		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
-		SupersessionState state = new SupersessionState(register, suborg, itemService);
+		SupersessionState state = new SupersessionState(register, suborg, workflowManager);
 		request.setAttribute("supersession", state, WebRequest.SCOPE_SESSION);
 
 		model.addAttribute("state", state);
@@ -786,6 +790,8 @@ public class RegisterController
 
 	
 	public static class SupersessionState {
+		private ProposalWorkflowManager workflowManager;
+
 		private String step;
 //		private Set<RegisterItemViewBean> validItems;
 		private RE_SubmittingOrganization sponsor;
@@ -796,30 +802,17 @@ public class RegisterController
 		private String registerManagerNotes;
 		private String controlBodyNotes;
 		
-		public SupersessionState(RE_Register register, RE_SubmittingOrganization sponsor, RegisterItemService itemService) {
+		public SupersessionState(RE_Register register, RE_SubmittingOrganization sponsor, ProposalWorkflowManager workflowManager) {
 			this.sponsor = sponsor;
+			this.workflowManager = workflowManager;
 			
-//			step = "supersededItems";
 			step = "supersedingItems";
-			
-//			validItems = new HashSet<RegisterItemViewBean>();			
-//			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(register, RE_ItemStatus.VALID);
-//			for (RE_RegisterItem validItem : validItemsDb) {
-//				validItems.add(new RegisterItemViewBean(validItem));
-//			}
 		}
 		
 		public SupersessionState(Supersession proposal, RegisterItemService itemService) {
 			this.sponsor = proposal.getSponsor();
-//			step = "supersededItems";
 			step = "supersedingItems";
 		
-//			validItems = new HashSet<RegisterItemViewBean>();			
-//			Set<RE_RegisterItem> validItemsDb = itemService.findByRegisterAndStatus(proposal.getTargetRegister(), RE_ItemStatus.VALID);
-//			for (RE_RegisterItem validItem : validItemsDb) {
-//				validItems.add(new RegisterItemViewBean(validItem));
-//			}
-			
 			for (RE_RegisterItem supersededItem : proposal.getSupersededItems()) {
 				this.addSupersededItem(supersededItem);
 			}
@@ -890,7 +883,7 @@ public class RegisterController
 		}
 
 		public void addExistingSupersedingItem(RE_RegisterItem existingItem) {
-			this.existingSupersedingItems.add(new RegisterItemViewBean(existingItem));
+			this.existingSupersedingItems.add(RegisterItemViewBean.forItem(existingItem, true, workflowManager));
 		}
 		
 		public void removeSupersedingItem(UUID uuid) {
@@ -931,7 +924,7 @@ public class RegisterController
 		
 		public void addSupersededItem(RE_RegisterItem supersededItem) {
 			if (!this.getSupersededItemUuids().contains(supersededItem.getUuid())) {
-				supersededItems.add(new RegisterItemViewBean(supersededItem));
+				supersededItems.add(RegisterItemViewBean.forItem(supersededItem, true, workflowManager));
 			}
 		}
 		
