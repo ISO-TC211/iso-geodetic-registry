@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class SingleOperationItemProposalDTO extends CoordinateOperationItemProposalDTO
@@ -51,9 +52,8 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 		// TODO Auto-generated constructor stub
 	}
 
-	public SingleOperationItemProposalDTO(Proposal proposal) {
-		super(proposal);
-		// TODO Auto-generated constructor stub
+	public SingleOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
+		super(proposal, factory);
 	}
 
 	public SingleOperationItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

@@ -11,7 +11,6 @@ import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItem
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.GeneralDerivedCoordinateReferenceSystemItem;
-import org.iso.registry.core.model.crs.GeodeticCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.ProjectedCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
@@ -20,6 +19,7 @@ import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.ConversionItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -67,8 +67,8 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		super(proposal, sponsor);
 	}
 
-	public CoordinateReferenceSystemItemProposalDTO(Proposal proposal) {
-		super(proposal);
+	public CoordinateReferenceSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
+		super(proposal, factory);
 	}
 	
 	public CoordinateReferenceSystemType getType() {
@@ -144,7 +144,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 	}
 
 	@Override
-	public List<RegisterItemProposalDTO> getDependentProposals() {
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		return super.findDependentProposals(this.getDatum());
 	}
 

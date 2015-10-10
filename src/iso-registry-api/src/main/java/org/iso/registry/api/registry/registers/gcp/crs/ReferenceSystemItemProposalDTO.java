@@ -8,6 +8,7 @@ import org.isotc211.iso19135.RE_RegisterItem_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public abstract class ReferenceSystemItemProposalDTO extends IdentifiedItemProposalDTO
@@ -28,8 +29,8 @@ public abstract class ReferenceSystemItemProposalDTO extends IdentifiedItemPropo
 		super(proposal, sponsor);
 	}
 
-	public ReferenceSystemItemProposalDTO(Proposal proposal) {
-		super(proposal);
+	public ReferenceSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
+		super(proposal, factory);
 	}
 
 	public ReferenceSystemItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
