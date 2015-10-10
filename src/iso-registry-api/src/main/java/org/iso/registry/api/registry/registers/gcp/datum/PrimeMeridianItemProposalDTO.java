@@ -7,14 +7,14 @@ import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.UnitOfMeasureItem;
-import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -49,9 +49,8 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
-	public PrimeMeridianItemProposalDTO(Proposal proposal) {
-		super(proposal);
-		// TODO Auto-generated constructor stub
+	public PrimeMeridianItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
+		super(proposal, factory);
 	}
 
 	public PrimeMeridianItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

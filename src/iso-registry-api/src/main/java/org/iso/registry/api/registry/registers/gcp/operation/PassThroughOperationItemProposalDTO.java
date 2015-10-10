@@ -6,6 +6,7 @@ import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class PassThroughOperationItemProposalDTO extends CoordinateOperationItemProposalDTO
@@ -30,8 +31,8 @@ public class PassThroughOperationItemProposalDTO extends CoordinateOperationItem
 		// TODO Auto-generated constructor stub
 	}
 
-	public PassThroughOperationItemProposalDTO(Proposal proposal) {
-		super(proposal);
+	public PassThroughOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
+		super(proposal, factory);
 		// TODO Auto-generated constructor stub
 	}
 

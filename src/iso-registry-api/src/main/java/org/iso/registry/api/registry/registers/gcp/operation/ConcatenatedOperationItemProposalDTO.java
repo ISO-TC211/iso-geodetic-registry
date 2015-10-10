@@ -6,6 +6,7 @@ import java.util.List;
 import org.iso.registry.core.model.operation.ConcatenatedOperationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -33,9 +34,8 @@ public class ConcatenatedOperationItemProposalDTO extends CoordinateOperationIte
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConcatenatedOperationItemProposalDTO(Proposal proposal) {
-		super(proposal);
-		// TODO Auto-generated constructor stub
+	public ConcatenatedOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
+		super(proposal, factory);
 	}
 
 	public ConcatenatedOperationItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
