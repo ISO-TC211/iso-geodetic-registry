@@ -22,13 +22,13 @@ import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.Supersession;
-import de.geoinfoffm.registry.core.model.SupersessionPart;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ProposalManagementInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 
 public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoProposalService
@@ -47,6 +47,9 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	
 	@Autowired
 	private RegistrySecurity security;
+	
+	@Autowired
+	private ProposalWorkflowManager workflowManager;
 	
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -130,13 +133,13 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 			throw new InvalidProposalException("Cannot return null proposal.");
 		}
 
-		if (proposal.isUnderReview()) {
+		if (workflowManager.isUnderReview(proposal)) {
 			// Returned by register manager
 			security.hasEntityRelatedRoleForAll(RegistrySecurity.MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
 			proposal.setStatus(STATUS_RETURNED_BY_MANAGER);
 			
 		}
-		else if (proposal.isPending()) {
+		else if (workflowManager.isPending(proposal)) {
 			// Returned by control body
 			security.hasEntityRelatedRoleForAll(RegistrySecurity.CONTROLBODY_ROLE_PREFIX, proposal.getAffectedRegisters());
 			proposal.setStatus(STATUS_RETURNED_BY_CONTROLBODY);
