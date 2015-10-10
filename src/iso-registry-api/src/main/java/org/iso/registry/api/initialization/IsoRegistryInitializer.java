@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ViewResolver;
 
+import de.geoinfoffm.registry.api.AbstractRegistryInitializer;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
@@ -47,7 +48,7 @@ import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationReposito
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 
-public class IsoRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
+public class IsoRegistryInitializer extends AbstractRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
 {
 	private static final Logger logger = LoggerFactory.getLogger(IsoRegistryInitializer.class);
 	
@@ -75,95 +76,79 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 
 	@Override
 	@Transactional
-	public synchronized void initializeRegistry() {
-		logger.info("Initializing registry...");
+	protected void initialize() throws UserRegistrationException, UnauthorizedException, InstantiationException, IllegalAccessException, InvalidProposalException {
+		RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");
+		if (adminGroup == null) {
+			logger.info("> Creating ROLE_ADMIN...");
+			adminGroup = new RegistryUserGroup("ROLE_ADMIN");
+			groupRepository.save(adminGroup);
+		}
 
-		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-		try { 
-//			Authentication authentication = PreAuthenticatedAuthenticationToken("SYSTEM", "N/A",
-//					Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-			Authentication authentication = new RunAsUserToken("SYSTEM", "SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")), currentAuth.getClass());
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		CI_ResponsibleParty respExample = new CI_ResponsibleParty("Johne Doe", null, null, CI_RoleCode.USER);
+		RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization("EXAMPLE", respExample);
+		suborgRepository.save(orgExample);
 
-			RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");
-			if (adminGroup == null) {
-				logger.info("> Creating ROLE_ADMIN...");
-				adminGroup = new RegistryUserGroup("ROLE_ADMIN");
-				groupRepository.save(adminGroup);
-			}
+		RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
+		RegistryUser ex = createUser("Sam Submitter", "s", "submitter@example.org");
 
-			CI_ResponsibleParty respExample = new CI_ResponsibleParty("Johne Doe", null, null, CI_RoleCode.USER);
-			RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization("EXAMPLE", respExample);
-			suborgRepository.save(orgExample);
-
-			RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
-			RegistryUser ex = createUser("Sam Submitter", "s", "submitter@example.org");
-
-			String registerName = "Geodetic Codes & Parameters";
-			RE_Register r = registerService.findByName(registerName);
-			if (r == null) {
-				logger.info("> Creating register...");
-				r = registerService.createRegister(registerName, rt, rt, rt, roleService, RE_Register.class,
-						new ParameterizedRunnable<RE_Register>() {
-							@Override
-							public void run(RE_Register parameter) {
-							}
-						});
-
-				eventPublisher.publishEvent(new RegistersChangedEvent(this));
-
-				logger.info(">>> {} (owner = {}; manager = {})", new Object[] { r.getName(), r.getOwner().getName(), r.getManager().getName() });
-			}
-
-			Role submitterRole = registerService.getSubmitterRole(r);
-			logger.info(">>> Adding submitter {}", ex.getEmailAddress());
-
-			RE_ItemClass icCrs = this.addItemClass("CoordinateReferenceSystem", r);
-			RE_ItemClass icArea = this.addItemClass("Area", r);
-
-//			final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
-//					new ParameterizedRunnable<AreaItemProposalDTO>() {
-//						@Override
-//						public void run(AreaItemProposalDTO parameter) {
-//							parameter.setCode(1262);
-//							parameter.setSouthBoundLatitude(-90.0);
-//							parameter.setNorthBoundLatitude(+90.0);
-//							parameter.setWestBoundLongitude(-180.0);
-//							parameter.setEastBoundLongitude(+180.0);
-//						}
-//					});
-//			this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
-//					new ParameterizedRunnable<AreaItemProposalDTO>() {
-//						@Override
-//						public void run(AreaItemProposalDTO parameter) {
-//							parameter.setCode(1624);
-//							parameter.setSouthBoundLatitude(49.1);
-//							parameter.setNorthBoundLatitude(53.75);
-//							parameter.setWestBoundLongitude(5.87);
-//							parameter.setEastBoundLongitude(7.5);
-//						}
-//					});
-
-			this.registerItem(r, icCrs, "WGS 84", CoordinateReferenceSystemItemProposalDTO.class,
-					new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {
+		String registerName = "Geodetic Codes & Parameters";
+		RE_Register r = registerService.findByName(registerName);
+		if (r == null) {
+			logger.info("> Creating register...");
+			r = registerService.createRegister(registerName, rt, rt, rt, roleService, RE_Register.class,
+					new ParameterizedRunnable<RE_Register>() {
 						@Override
-						public void run(CoordinateReferenceSystemItemProposalDTO parameter) {
-//							parameter.setCode(4326);
-//							parameter.setArea(new AreaItemProposalDTO(worldArea.getUuid()));
-//							parameter.setScope("Horizontal component of 3D system. Used by the GPS satellite navigation "
-//									+ "system and for NATO military geodetic surveying.");
-//							parameter.setType(CoordinateSystemType.GEOGRAPHIC_2D);
+						public void run(RE_Register parameter) {
 						}
 					});
 
-			logger.info("Initialization complete.");
+			eventPublisher.publishEvent(new RegistersChangedEvent(this));
+
+			logger.info(">>> {} (owner = {}; manager = {})", new Object[] { r.getName(), r.getOwner().getName(), r.getManager().getName() });
 		}
-		catch (Throwable t) {
-			logger.error(t.getMessage(), t);
-		}
-		finally {
-			SecurityContextHolder.getContext().setAuthentication(currentAuth);
-		}
+
+		Role submitterRole = registerService.getSubmitterRole(r);
+		logger.info(">>> Adding submitter {}", ex.getEmailAddress());
+
+		RE_ItemClass icCrs = this.addItemClass("CoordinateReferenceSystem", r);
+		RE_ItemClass icArea = this.addItemClass("Area", r);
+
+//		final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
+//				new ParameterizedRunnable<AreaItemProposalDTO>() {
+//					@Override
+//					public void run(AreaItemProposalDTO parameter) {
+//						parameter.setCode(1262);
+//						parameter.setSouthBoundLatitude(-90.0);
+//						parameter.setNorthBoundLatitude(+90.0);
+//						parameter.setWestBoundLongitude(-180.0);
+//						parameter.setEastBoundLongitude(+180.0);
+//					}
+//				});
+//		this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
+//				new ParameterizedRunnable<AreaItemProposalDTO>() {
+//					@Override
+//					public void run(AreaItemProposalDTO parameter) {
+//						parameter.setCode(1624);
+//						parameter.setSouthBoundLatitude(49.1);
+//						parameter.setNorthBoundLatitude(53.75);
+//						parameter.setWestBoundLongitude(5.87);
+//						parameter.setEastBoundLongitude(7.5);
+//					}
+//				});
+
+		this.registerItem(r, icCrs, "WGS 84", CoordinateReferenceSystemItemProposalDTO.class,
+				new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {
+					@Override
+					public void run(CoordinateReferenceSystemItemProposalDTO parameter) {
+//						parameter.setCode(4326);
+//						parameter.setArea(new AreaItemProposalDTO(worldArea.getUuid()));
+//						parameter.setScope("Horizontal component of 3D system. Used by the GPS satellite navigation "
+//								+ "system and for NATO military geodetic surveying.");
+//						parameter.setType(CoordinateSystemType.GEOGRAPHIC_2D);
+					}
+				});
+
+		logger.info("Initialization complete.");
 	}
 
 	private RE_ItemClass addItemClass(String name, RE_Register r) {
@@ -227,25 +212,8 @@ public class IsoRegistryInitializer implements RegistryInitializer, ApplicationE
 
 	@Override
 	@Transactional
-	public synchronized void loadExampleData() throws InvalidProposalException, UserRegistrationException,
-			UnauthorizedException {
+	public synchronized void loadExampleData() throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
 		logger.info("Loading example data...");
-
-		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-		try {
-			Authentication authentication = new RunAsUserToken("SYSTEM", "SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")), currentAuth.getClass());
-//			Authentication authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A",
-//					Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-
-			logger.info("Finished loading example data.");
-		}
-		catch (Throwable t) {
-			logger.error(t.getMessage(), t);
-		}
-		finally {
-			SecurityContextHolder.getContext().setAuthentication(currentAuth);
-		}
 	}
 
 	protected RegistryUser createUser(String name, String password, String mail, Role... roles)
