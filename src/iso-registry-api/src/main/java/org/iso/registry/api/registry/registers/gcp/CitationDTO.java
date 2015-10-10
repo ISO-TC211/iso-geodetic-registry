@@ -3,12 +3,11 @@ package org.iso.registry.api.registry.registers.gcp;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Date;
