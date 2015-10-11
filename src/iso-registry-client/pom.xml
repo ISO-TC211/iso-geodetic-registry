@@ -399,6 +399,7 @@
 				<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg</hibernate.connection.url>
 				<hibernate.connection.schema>public</hibernate.connection.schema>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
+				<flyway.migration>true</flyway.migration>
 				<client.basepath></client.basepath>
 				<mail.enabled>true</mail.enabled>
 				<mail.from.name>Registry</mail.from.name>
