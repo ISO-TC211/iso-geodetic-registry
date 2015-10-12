@@ -245,7 +245,7 @@
 	<entry key="alert.noSupersededItems">At least one item must be selected.</entry>
 	<entry key="alert.noSupersedingItems">At least one superseding item must be added.</entry>
 	<entry key="alert.registerNotFound">Register "{0}" does not exist.</entry>
-	<entry key="alert.validationFailed">The action cannot be completed due to erroneous or missing form data. Please check all input fields.</entry>
+	<entry key="alert.validationFailed">The action cannot be completed due to erroneous or missing form data. Please check the following input fields:</entry>
 	<entry key="alert.unauthorized">You are not authorized to access the requested resource.</entry>
 
 	<entry key="popup.newOrganization.header">Details of your organization</entry>
@@ -570,6 +570,7 @@
 	
 	<entry key="mandatoryField">Mandatory field</entry>
 	<entry key="undefined">undefined</entry>
+	<entry key="noDescription">description missing</entry>
 	<entry key="itemDetails">Link to item details</entry>
 
 	<entry key="NamingSystem">Naming System</entry>
