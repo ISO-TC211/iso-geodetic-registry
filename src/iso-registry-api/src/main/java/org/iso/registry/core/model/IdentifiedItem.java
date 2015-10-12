@@ -37,10 +37,10 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 	private String remarks;
 	
 	@Column(name = "INFORMATION_SOURCE", columnDefinition = "text")
-	private String informationSource;
+	private String informationSourceText;
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<CI_Citation> informationSourceCitation;
+	private Set<CI_Citation> informationSource;
 
 	@Column(name = "DATA_SOURCE", columnDefinition = "text")
 	private String dataSource;
@@ -78,23 +78,23 @@ public abstract class IdentifiedItem extends RE_RegisterItem
 		this.remarks = remarks;
 	}
 
-	public String getInformationSource() {
+	public String getInformationSourceText() {
+		return informationSourceText;
+	}
+
+	public void setInformationSourceText(String informationSource) {
+		this.informationSourceText = informationSource;
+	}
+
+	public Set<CI_Citation> getInformationSource() {
+		if (this.informationSource == null) {
+			this.informationSource = new HashSet<>();
+		}
 		return informationSource;
 	}
 
-	public void setInformationSource(String informationSource) {
-		this.informationSource = informationSource;
-	}
-
-	public Set<CI_Citation> getInformationSourceCitation() {
-		if (this.informationSourceCitation == null) {
-			this.informationSourceCitation = new HashSet<>();
-		}
-		return informationSourceCitation;
-	}
-
-	public void setInformationSourceCitation(Set<CI_Citation> informationSourceCitation) {
-		this.informationSourceCitation = informationSourceCitation;
+	public void setInformationSource(Set<CI_Citation> informationSourceCitation) {
+		this.informationSource = informationSourceCitation;
 	}
 
 	public String getDataSource() {

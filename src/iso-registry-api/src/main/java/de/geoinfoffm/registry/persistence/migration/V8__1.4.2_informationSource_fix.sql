@@ -1,0 +1,5 @@
+ALTER TABLE identifieditem_ci_citation
+	RENAME COLUMN informationsourcecitation_uuid TO informationsource_uuid;
+
+ALTER TABLE identifieditem_ci_citation_aud
+	RENAME COLUMN informationsourcecitation_uuid TO informationsource_uuid;

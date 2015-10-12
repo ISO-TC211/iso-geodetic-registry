@@ -144,7 +144,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			item.setRemarks(this.getRemarks());
 			
 			for (CitationDTO citation : this.getInformationSource()) {
-				item.getInformationSourceCitation().add(citation.toCitation());
+				item.getInformationSource().add(citation.toCitation());
 			}
 //			item.setInformationSource(toJson(this.getInformationSource()));
 			
@@ -201,7 +201,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			
 			this.setRemarks(item.getRemarks());
 			
-			if (!StringUtils.isEmpty(item.getInformationSource())) {
+			if (!StringUtils.isEmpty(item.getInformationSourceText())) {
 //				int start = 0;
 //				int end = item.getInformationSource().indexOf("}") + 1;
 //				while (end > -1) {
@@ -212,12 +212,12 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 //				}
 				ObjectMapper jsonMapper = new ObjectMapper();
 				try {
-					List<CitationDTO> citationList = jsonMapper.readValue(item.getInformationSource(), jsonMapper.getTypeFactory().constructCollectionType(List.class, CitationDTO.class));
+					List<CitationDTO> citationList = jsonMapper.readValue(item.getInformationSourceText(), jsonMapper.getTypeFactory().constructCollectionType(List.class, CitationDTO.class));
 					this.getInformationSource().addAll(citationList);
 				}
 				catch (JsonParseException | JsonMappingException e) {
 					// Try single value
-					CitationDTO dto = CitationDTO.fromJson(item.getInformationSource());
+					CitationDTO dto = CitationDTO.fromJson(item.getInformationSourceText());
 					this.getInformationSource().add(dto);
 				}
 				catch (IOException e) {
@@ -225,7 +225,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 				}
 			}
 			
-			for (CI_Citation citation : item.getInformationSourceCitation()) {
+			for (CI_Citation citation : item.getInformationSource()) {
 				this.getInformationSource().add(new CitationDTO(citation));
 			}
 

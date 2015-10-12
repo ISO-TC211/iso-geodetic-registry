@@ -60,7 +60,7 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 		this.setRemarks(item.getRemarks());
 //		this.setInformationSource(CitationDTO.fromJson(item.getInformationSource()));
 //		this.setInformationSource(item.getInformationSource());
-		for (CI_Citation citation : item.getInformationSourceCitation()) {
+		for (CI_Citation citation : item.getInformationSource()) {
 			this.getInformationSource().add(new CitationDTO(citation));
 		}
 		
