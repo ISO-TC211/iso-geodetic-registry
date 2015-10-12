@@ -1,0 +1,15 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('param')" />
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->									
+	</div>
+</div>

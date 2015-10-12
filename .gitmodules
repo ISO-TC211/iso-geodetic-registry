@@ -1,4 +1,4 @@
 [submodule "registry-base"]
-	path = registry-base
+	path = src/registry-base
 	url = git@git.bespire.de:bespire/registry-base.git
 	branch = dev
