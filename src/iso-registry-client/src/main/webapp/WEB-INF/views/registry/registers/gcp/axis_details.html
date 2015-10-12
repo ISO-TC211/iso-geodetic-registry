@@ -1,12 +1,12 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
-			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('param')" />
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('param')" />
 			<div class="row">
 				<div class="col-md-6" th:with="property='axisAbbreviation',inputType='text',label=#{form.label.axisAbbreviation},placeholder=#{form.placeholder.axisAbbreviation},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-6 form-group">
 					<label class="control-label" th:for="axisDirection" th:text="#{form.label.axisDirection}"></label>
@@ -15,15 +15,15 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12" th:with="property='axisUnit',label=#{form.label.axisUnit},isRequired='false',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+					<div th:replace="globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='minimumValue',inputType='number',label=#{form.label.minimumValue},placeholder=#{form.placeholder.minimumValue},isRequired='false'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-4" th:with="property='maximumValue',inputType='number',label=#{form.label.maximumValue},placeholder=#{form.placeholder.maximumValue},isRequired='false'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-4 form-group">
 					<label class="control-label" th:for="rangeMeaning" th:text="#{form.label.rangeMeaning}"></label>
@@ -33,9 +33,9 @@
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->									
 	</div>
 	<script type="text/javascript" charset="utf-8" th:inline="text">

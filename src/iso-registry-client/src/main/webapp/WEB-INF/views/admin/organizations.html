@@ -56,7 +56,7 @@
 											<button th:id="'editorganization-' + ${item.uuid}" class="btn btn-xs btn-default" type="submit" th:text="#{button.edit}">Bearbeiten</button>
 											<button td:id="'deleteorganization-' + ${item.uuid}" class="btn btn-xs btn-danger" type="button" th:href="'#confirmdelete-' + ${item.uuid}" data-toggle="modal" th:text="#{button.delete}" th:disabled="!${item.users.isEmpty()}"></button>
 											<div th:if="!${item.users.isEmpty()}">
-												<div th:replace="registry/registers/globals :: popoverLink('cannotDeleteOrg-' + ${item.uuid}, #{button.cannotDeleteOrganization}, #{form.help.cannotDeleteOrganization})"/>
+												<div th:replace="globals :: popoverLink('cannotDeleteOrg-' + ${item.uuid}, #{button.cannotDeleteOrganization}, #{form.help.cannotDeleteOrganization})"/>
 											</div>
 										</form>
 										<div class="modal fade" th:id="'confirmdelete-' + ${item.uuid}"

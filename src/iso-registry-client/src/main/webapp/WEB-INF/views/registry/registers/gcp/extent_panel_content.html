@@ -1,7 +1,7 @@
 <div th:fragment="extentPanelContent">
 	<div th:if="${isProposal}">
 
-		<div th:replace="registry/registers/globals :: formLabel('extent', #{form.label.selectExtent})"/>
+		<div th:replace="globals :: formLabel('extent', #{form.label.selectExtent})"/>
 		<div id="selectExtentGroup" th:with="isClarification=${proposal.isClarification()}">
 			<input type="hidden" id="selectExtent" style="width: 100%" />
 			<script type="text/javascript" charset="utf-8" th:inline="text">
@@ -67,7 +67,7 @@
 
 	<div class="row">
 		<div class="col-md-12" th:with="property='description',modifier='extent',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='true'">
-			<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 

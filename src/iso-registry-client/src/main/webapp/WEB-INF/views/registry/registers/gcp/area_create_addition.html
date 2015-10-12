@@ -30,14 +30,14 @@
 								<div id="dataPanel" class="panel-collapse collapse in">								
 									<div class="panel-body">
 										<div th:if="${itemClass}">
-											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
+											<div th:replace="globals :: itemClassNotConfiguredWarning"/> 			
 											<div th:replace="registry/registers/gcp/area_details :: details"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
 								</div>
 							</div>
 			
-							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
+							<div th:replace="globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
 						</div>
 						
@@ -54,7 +54,7 @@
 
 	<div th:include="layout :: foot"></div>
 	
-	<script th:replace="registry/registers/globals :: js-proposal"/>
+	<script th:replace="globals :: js-proposal"/>
 	
 </body>
 </html>

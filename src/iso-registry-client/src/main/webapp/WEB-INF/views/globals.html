@@ -29,22 +29,22 @@
 </div>
 
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}"></input>
 	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}"></input>
+	<div th:replace="globals :: formLabel(${property}, ${label})"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
-	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
 	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
 	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}"/>
+	<div th:replace="globals :: formLabel(${property}, ${label})"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <div th:fragment="dateTimePicker" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
-	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
+	<div th:replace="globals :: formLabel(${property}, ${label})"/>
 	<div class="input-group date" th:id="'datetimepicker-' + ${property}">
 		<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 		<input th:type="text" class="form-control" th:field="*{__${property}__}" th:placeholder="${placeholder}" data-date-format="YYYY-MM-DD"/>  
@@ -70,7 +70,7 @@
 </div>
 
 <div th:fragment="selectIdentifiedItem2" class="form-group">
-	<div th:replace="registry/registers/globals :: formLabel(${property}, ${label})"/>
+	<div th:replace="globals :: formLabel(${property}, ${label})"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" th:with="isClarification=${proposal.isClarification()}">
 		<input type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
 		<script type="text/javascript" charset="utf-8" th:inline="text">
@@ -372,14 +372,14 @@
 
 <div th:fragment="nameAndIdentifier">
 	<div class="col-md-8" th:with="property='name',rows=2,cols=60,label=#{form.label.name},placeholder=#{form.placeholder.name},help=#{form.help.name},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textArea"/>
+		<div th:replace="globals :: textArea"/>
 	</div>
 	<div th:if="${isProposal} or *{identifier} lt 0" class="col-md-4">
-		<div th:replace="registry/registers/globals :: formLabel('identifier', #{form.label.identifier})"/>
+		<div th:replace="globals :: formLabel('identifier', #{form.label.identifier})"/>
 		<p th:text="#{form.label.autoAssigned}"/>
 	</div>
 	<div th:unless="${isProposal} or *{identifier} lt 0" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
-		<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 	</div>
 </div>
 
@@ -563,7 +563,7 @@
 
 <div th:fragment="remarks (cssClass)">
 	<div th:classappend="${cssClass}" th:with="property='remarks',rows=5,cols=60,label=#{form.label.remarks},placeholder=#{form.placeholder.remarks},isRequired='false'">
-		<div th:replace="registry/registers/globals :: textArea"/>
+		<div th:replace="globals :: textArea"/>
 	</div>
 </div>
 
@@ -572,7 +572,7 @@
 		<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetails"/>
 	</div>
 <!-- 	<div th:classappend="${cssClass}" th:with="property='informationSource',rows=2,cols=60,label=#{form.label.informationSource},placeholder=#{form.placeholder.informationSource},isRequired='false'"> -->
-<!-- 		<div th:replace="registry/registers/globals :: textArea"/> -->
+<!-- 		<div th:replace="globals :: textArea"/> -->
 <!-- 	</div> -->
 </div>
 
@@ -584,11 +584,12 @@
 
 <div th:fragment="registerItemDefinition">
 	<div class="col-md-12 hidden" th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},help=#{form.help.definition},isRequired='true'">
-		<div th:replace="registry/registers/globals :: textArea"/>
+		<div th:replace="globals :: textArea"/>
 	</div>
 	
 	<script th:fragment="js-proposal" type="text/javascript" th:inline="text">
 	/* <![CDATA[ */
+	    $('#definition').val($('#name').val());
 		$('#name').bind('keypress keyup blur', function() {
 	    	$('#definition').val($(this).val());
 		});
@@ -614,13 +615,13 @@
 			<div th:fragment="proposalDetails">
 				<div th:unless="${partOfSupersession}">
 					<div th:with="property='justification',rows=6,cols=120,label=#{form.label.justification},placeholder=#{form.placeholder.justification},help=#{form.help.justification},isRequired='true'">
-						<div th:replace="registry/registers/globals :: textArea"/>
+						<div th:replace="globals :: textArea"/>
 					</div>
 					<div th:with="property='registerManagerNotes',rows=6,cols=120,label=#{form.label.registerManagerNotes},placeholder=#{form.placeholder.registerManagerNotes},help=#{form.help.registerManagerNotes},isRequired='false'">
-						<div th:replace="registry/registers/globals :: textArea"/>
+						<div th:replace="globals :: textArea"/>
 					</div>
 					<div th:with="property='controlBodyNotes',rows=6,cols=120,label=#{form.label.controlBodyNotes},placeholder=#{form.placeholder.controlBodyNotes},help=#{form.help.controlBodyNotes},isRequired='false'">
-						<div th:replace="registry/registers/globals :: textArea"/>
+						<div th:replace="globals :: textArea"/>
 					</div>
 				</div>
 			</div>
