@@ -1,0 +1,265 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('conv')" />
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12" th:with="isClarification=${proposal.isClarification()}">
+					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" th:with="property='sourceCrs',label=#{form.label.sourceCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
+					<div th:replace="globals :: selectIdentifiedItem2"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" th:with="property='targetCrs',label=#{form.label.targetCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
+					<div th:replace="globals :: selectIdentifiedItem2"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='accuracy',inputType='number',label=#{form.label.accuracy},placeholder=#{form.placeholder.accuracy},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+				<div class="col-md-8" th:with="property='accuracyUom',label=#{form.label.accuracyUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
+					<div th:replace="globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label" th:for="method" th:text="#{form.label.conversionMethod}"></label>
+						<div th:unless="${isProposal}">
+							<!-- form-backing bean: RegisterItemViewBean -->
+							<div th:if="*{method}" th:with="uuid=*{method.uuid}">
+								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.identifier} + '] ' + *{method.name}"></a>
+							</div>
+							<div th:unless="*{method}">
+								[<span th:text="#{undefined}"></span>]
+							</div>		
+						</div>
+						<input th:if="${isProposal}" type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
+						<script th:if="${isProposal}" type="text/javascript" charset="utf-8" th:inline="text">
+						/* <![CDATA[ */
+							$(function() {
+								$('#method').select2({
+									multiple: false,
+									dropdownCssClass: "bigdrop",
+									ajax: {
+										url: "[[@{__${basePath}__/}]]entities/methods",
+										dataType: "json",
+										data: function(term, page) {
+											return {
+												q: term
+											};
+										},
+										results: function (data) {
+											return { 
+												results : $.map(data, function (item) { 
+													return { 
+														id: item[0], 
+														text: item[2] + " [" + item[1] + "]", 
+													} 
+												}) 
+											};
+										}
+						            },
+						            initSelection: function(element, callback) {
+				                		var result = [];
+				                		// Collect AJAX requests needed to resolve initially
+				                		// selected items
+					                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+					                    	dataType: "json"
+					                	}))
+					                	.done(function(data) {
+	 						                var item = data[0].toString().split(",");
+					                		result.push({
+					                			id: item[0],
+												text: item[2] + " [" + item[1] + "]", 
+					                		});
+							                callback(result[0]); 
+					                	});
+						            }						            
+						        });
+								
+								if ([[${proposal.isClarification()}]]) {
+									$('#method').select2("readonly", true);
+								}
+							});
+						
+						/* ]]> */
+						</script>
+					</div>
+				</div>				
+			</div>
+
+			<div th:with="property='operationVersion',inputType='text',label=#{form.label.operationVersion},placeholder=#{form.placeholder.operationVersion},isRequired='false'">
+				<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+			</div>
+
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row">
+				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
+					<div th:replace="globals :: textArea"/>
+				</div>
+			</div>
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<table id="parametersTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th th:text="#{tableheader.parameter}">Parameter</th>
+						<th th:text="#{tableheader.parameterType}">Parameter type</th>
+						<th th:text="#{tableheader.value}">Value</th>
+						<th th:text="#{tableheader.uom}">UoM</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="parameterValue,row : *{parameterValues}">
+						<td th:text="${parameterValue.parameterName}"></td>
+						<td>
+							<input th:if="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" required="required" th:readonly="${proposal.isClarification()}" style="width: 100%"/>
+							<input th:unless="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" readonly="readonly" style="width: 100%"/>
+						</td>
+						<td>
+							<div class="form-group" th:if="${isProposal}">
+								<input type="text" class="form-control input-sm required" th:value="${parameterValue.value}" th:disabled="${proposal.isClarification()}" th:readonly="${proposal.isClarification()}" th:required="!${proposal.isClarification()}"/>
+							</div>
+							<span th:unless="${isProposal}" th:text="${parameterValue.value}"></span>
+						</td>
+						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
+							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
+							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
+						</td>							
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+	    var paramTypeSelect = function(element) {
+			element.select2({
+				width: 'resolve',
+				dropdownAutoWidth : true,
+				data: [
+						{ id: 'MEASURE', text: 'measure (w/ UoM)' },
+						{ id: 'FILE', text: 'parameter file name' },
+						{ id: 'STRING', text: 'text' },
+						{ id: 'INTEGER', text: 'number' },
+				]				
+			});
+		};
+	            
+	    var uomSelect = function(element) {
+			element.select2({
+				width: 'resolve',
+				ajax: {
+					url: "[[@{__${basePath}__/}]]entities/by-class/UnitOfMeasureItem",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: 'name',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) { 
+								return { 
+									text: item[2] + " [" + item[1] + "]", 
+									id: item[0] 
+								} 
+							}) 
+						};
+					},
+				},
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+                    	dataType: "json"
+                	}))
+                	.done(function(data) {
+                		item = data[0];
+                		result.push({
+                			id: item[0],
+							text: item[2] + " [" + item[1] + "]", 
+                		});
+		                callback(result[0]); 
+                	});
+	            }						            
+			});        						
+		};
+
+       	$(document).ready(function() {
+       		$('#parametersTable').dataTable({
+       			"bPaginate": false,
+       			"bFilter": false,
+	   			 aoColumns: [
+   						{"bSortable" : false, "sWidth": "35%"},
+  						{"bSortable" : false, "sWidth": "10%"},
+   						{"bSortable" : false, "sWidth": "20%"},
+   						{"bSortable" : false, "sWidth": "35%"}
+   					]
+       		});
+       		
+       		$('.select-uom').each(function() {
+				uomSelect($(this));
+       		});
+
+       		$('.select-paramtype').each(function() {
+				paramTypeSelect($(this));
+       		});
+       		
+       		$('#parametersTable').on('change', '.select-paramtype', function(e) {
+       			var idx = $(this).data('index');
+       			if ($(this).val() == 'MEASURE') {
+       				$('#parameterUom_' + idx).removeAttr('disabled');
+       				$('#parameterUom_' + idx).select2('enable', true);
+       				$('#parameterUom_' + idx).select2('readonly', false);
+       				$('#parameterUom_' + idx).attr('required', 'required');
+       			}
+       			else {
+       				$('#parameterUom_' + idx).val('');
+       				$('#parameterUom_' + idx).select2('enable', false);
+       				$('#parameterUom_' + idx).removeAttr('required');
+       			}
+       		});
+
+			$('#method').change(function(e) {
+				table = $('#parametersTable').dataTable();
+				table.fnClearTable();
+            	$.when($.ajax("[[@{__${basePath}__/}]]entities/parameters/" + $(this).val(), {
+                	dataType: "json"
+            	}))
+            	.done(function (data) {
+            		$.each(data, function(idx, item) {
+        				table.fnAddData([
+        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
+        					"<input type='hidden' id='paramValueType_" + idx + "' data-index='" + idx + "' class='select-paramtype' name='parameterValues[" + idx + "].parameterType' value='MEASURE' required='required' style='width: 100%'/>",
+        					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
+						]);
+        				uomSelect($('#parameterUom_' + idx));
+        				paramTypeSelect($('#paramValueType_' + idx));
+            		});
+            	});
+			});
+       	});		
+	/* ]]> */
+	</script>
+	
+</div>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment">
+</head>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{mgmt.submitter.content.header}">Proposed item</h3>
+					</div>
+					<div style="padding: 10px">
+						<div class="control-group" style="margin-top: 10px; margin-bottom: 10px">
+							<button id="proposeNew" class="btn btn-success" data-toggle="modal" href="#addNewItem" th:text="#{button.addition}">Item registrieren</button>
+
+								<div class="modal fade" th:id="addNewItem" role="dialog">
+									<div class="modal-dialog">
+										<form method="post">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 th:text="#{popup.createProposal.header}">Itemklasse wählen</h4>
+												</div>
+												<div class="modal-body">
+	
+													<div class="form-group">
+														<label class="form-label" for="register" th:text="#{form.label.targetRegister}">Item-Klasse</label>
+														<div class="controls">
+															<div class="input-group">
+																<select id="register" name="register" required="true">
+																	<option th:each="register : ${@registerRepository.findAll()}"
+																			th:value="${register.uuid}"
+																			th:text="${register.name}"></option>
+																</select>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+														<div class="input-group">
+															<select id="itemClass" name="itemClass" required="true">
+<!-- 																<option th:text="#{form.select.choose}" value=""/> -->
+																<option th:each="anItemClass : ${@itemClassRepository.findAllOrderByName()}"
+																		th:value="${anItemClass[0]}"
+																		th:text="#{${anItemClass[1]}}"></option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" id="addition" class="btn btn-success" th:text="#{button.addition}">Item registrieren</button>
+													<button type="button" name="cancel" data-dismiss="modal" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+
+
+						</div>
+						<table id="proposalsTable" class="datatable table table-striped">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.title}">Titel</th>
+									<th th:text="#{tableheader.itemClass}">Klasse</th>
+									<th th:text="#{tableheader.proposalType}">Vorschlagstyp</th>
+									<th th:text="#{tableheader.proposalStatus}">Status</th>
+									<th></th>
+								</tr>
+							</thead>
+<!-- 							<tbody> -->
+<!-- 								<tr th:each="item : ${proposals}"> -->
+<!-- 									<div class="modal fade" th:id="'dialog-submit-' + ${item.proposalUuid}" role="dialog"> -->
+<!-- 										<div th:include="mgmt/submitter_popup_submit :: popup"/> -->
+<!-- 									</div> -->
+<!-- 									<div class="modal fade" th:id="'dialog-withdraw-' + ${item.proposalUuid}" role="dialog"> -->
+<!-- 										<div th:include="mgmt/submitter_popup_withdraw :: popup"/> -->
+<!-- 									</div> -->
+<!-- 									<div class="modal fade" th:id="'dialog-delete-' + ${item.proposalUuid}" role="dialog"> -->
+<!-- 										<div th:include="mgmt/submitter_popup_delete :: popup"/> -->
+<!-- 									</div> -->
+
+<!-- 									<td th:text="${item.name}"></td> -->
+<!-- 									<td><span th:unless="${#strings.isEmpty(item.itemClassName)}" th:text="#{${item.itemClassName}}"></span></td> -->
+<!-- 									<td th:utext="#{${item.proposalType}}"></td>											 -->
+<!-- 									<td> -->
+<!-- 										<span th:text="#{${item.proposalStatus}}"></span>&nbsp;&nbsp;<a th:unless="${#lists.isEmpty(@proposalNoteRepository.findByProposalUuid(item.proposalUuid))}" class="fa fa-envelope" data-toggle="modal" th:href="'#dialog-notes-' + ${item.proposalUuid}" th:title="#{tooltip.proposalNotes}"></a> -->
+<!-- 										<div class="modal fade" th:id="'dialog-notes-' + ${item.proposalUuid}" role="dialog" th:unless="${#lists.isEmpty(@proposalNoteRepository.findByProposalUuid(item.proposalUuid))}"> -->
+<!-- 											<div th:include="mgmt/submitter_popup_notes :: popup"/> -->
+<!-- 										</div>										 -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<div class="btn-group"> -->
+<!-- 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
+<!-- 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
+<!-- 											</button> -->
+<!-- 											<ul class="dropdown-menu" role="menu"> -->
+<!-- 												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}"><div style="margin: 5px;"> -->
+<!-- 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${item.isEditable()} ? #{button.edit} : #{button.details}">Details</button>												 -->
+<!-- 												</div></li> -->
+<!-- 												<li th:if="${item.isNotSubmitted()} or ${#strings.startsWith(item.proposalStatus, 'RETURNED_BY_')}"> -->
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a> -->
+<!-- 													</div> -->
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<a th:href="'#dialog-submit-' + ${item.proposalUuid}" th:id="'submit_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-success btn-xs" th:text="#{button.submitProposal}">Einreichen</a> -->
+<!-- 													</div> -->
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<a th:href="'#dialog-delete-' + ${item.proposalUuid}" th:id="'delete_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-danger btn-xs" th:text="#{button.deleteProposal}"></a> -->
+<!-- 													</div> -->
+<!-- 												</li> -->
+<!-- 												<li th:if="${item.isUnderReview()} or ${item.isPending()}"> -->
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<a th:href="'#dialog-withdraw-' + ${item.proposalUuid}" th:id="'withdraw_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-warning btn-xs" th:text="#{button.withdrawProposal}">Einreichen</a> -->
+<!-- 													</div> -->
+<!-- 												</li> -->
+<!-- 												<li th:if="${item.isAppealable()}"><div style="margin: 5px"> -->
+<!-- 													<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button> -->
+<!-- 												</div></li> -->
+<!-- 											</ul> -->
+<!-- 										</div> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
+	<div th:replace="globals :: js-lists"/>
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+		$(document).ready(function() {
+		    var reloadTable = function() { 
+				var table = $('#proposalsTable').dataTable();
+				table.fnReloadAjax(null, null, null, true);
+			};
+
+			$('#proposalsTable').on('click', '.button-details', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/proposals/}]]' + uuid;
+			});
+
+			$('#proposalsTable').on('click', '.button-discussion', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/discussion/SUBMITTER/}]]' + uuid;
+			});
+			
+			$('#proposalsTable').on('click', '.button-submitproposal', function(e) {
+				var uuid = $(this).data('uuid');
+				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/submit', null, function(success, errorThrown) {
+					if (success) {
+						showProcessing(uuid, 4);
+						clearCell(uuid, 5);
+					}
+					else {
+						showError(errorThrown, '[[@{__${basePath}__}]]');
+					}
+				});
+				$('#submitpopup-' + uuid).modal('hide');
+				showLoader(uuid, 4);
+			});
+
+			$('#proposalsTable').on('click', '.button-withdrawproposal', function(e) {
+				var uuid = $(this).data('uuid');
+				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/withdraw', null, function(success, errorThrown) {
+					if (success) {
+						document.location.reload();
+					}
+					else {
+						showError(errorThrown, '[[@{__${basePath}__}]]');
+					}
+				});
+				$('#withdrawpopup-' + uuid).modal('hide');
+				showLoader(uuid, 4);
+			});
+
+			$('#proposalsTable').on('click', '.button-deleteproposal', function(e) {
+				var uuid = $(this).data('uuid');
+				postDelete('[[@{__${basePath}__/proposals/}]]' + uuid, function(success, errorThrown) {
+					if (success) {
+						showProcessing(uuid, 4);
+						clearCell(uuid, 5);
+					}
+					else {
+						alert(errorThrown);
+						showError(errorThrown, '[[@{__${basePath}__}]]');
+					}
+				});
+				$('#deletepopup-' + uuid).modal('hide');
+				showLoader(uuid, 4);
+			});
+
+
+			$('#proposalsTable').on('click', '.button-appealproposal', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '/appeal';
+			});
+			
+				
+			var selected = new Array();
+
+			var table = $('#proposalsTable').dataTable({
+				"sAjaxSource": "[[@{__${basePath}__/}]]management/submitter/proposals",
+				"bProcessing": true,
+				"bServerSide": true,
+				"bStateSave": true,
+				"bInfo": true,
+				"fnServerParams": function (aoData) {
+		        },
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				"fnRowCallback": function(nRow, aData, iDisplayIndex) {
+//	 	            $('#proposalsTable tbody tr').each(function () {
+//	 	                if (jQuery.inArray(aData[0], selected) != -1) {
+//	 	                    $(this).addClass('row-selected');
+//	 	                }
+//	 	            });
+//	 	            return nRow;
+		        },
+				"fnDrawCallback": function( oSettings ) {
+//	 		           $('#proposalsTable tbody tr').each( function () {
+//	 		                var iPos = table.fnGetPosition( this );
+//	 		                if (iPos != null) {
+//	 		                    var aData = table.fnGetData( iPos );
+//	 		                    if (jQuery.inArray(aData[0], selected) != -1)
+//	 		                        $(this).addClass('row-selected');
+//	 		                }
+//	 		                $(this).click( function () {
+//	 		                    var iPos = table.fnGetPosition(this);
+//	 		                    var aData = table.fnGetData(iPos);
+//	 		                    var iId = aData[0];
+//	 		                    is_in_array = jQuery.inArray(iId, selected);
+//	 		                    if (is_in_array == -1) {
+//	 		                        selected[selected.length] = iId;
+//	 		                    }
+//	 		                    else {
+//	 		                        selected = jQuery.grep(selected, function(value) {
+//	 		                            return value != iId;
+//	 		                        });
+//	 		                    }
+//	 		                    if ( $(this).hasClass('row-selected') ) {
+//	 		                        $(this).removeClass('row-selected');
+//	 		                    }
+//	 		                    else {
+//	 		                        $(this).addClass('row-selected');
+//	 		                    }
+//	 		                });
+//	 		            });				
+				},				
+				"aaSorting": [[ 3, "asc" ]],
+				"aoColumns": [
+					{ 
+						"mDataProp": "title",
+						"sWidth": "50%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "itemClassName",
+						"sWidth": "15%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{ 	
+						"mDataProp": "proposalType",
+						"sWidth": "15%",
+					 	"bSortable": false
+					},
+					{ 
+						"mDataProp": "proposalStatus",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{ 
+						"sWidth": "10%",
+						"bSortable": false
+					},
+				],
+				"aoColumnDefs": [
+					{ "aTargets": [4],
+					  "mData": null,
+					  "mRender": function (data, type, full) {
+						  var actions = "";
+						  var dropdownActions = [];
+						  if (full.notSubmitted) {
+							  if (full.group) {
+								  dropdownActions.push(detailsButton(full.proposalUuid));
+								  dropdownActions.push(dissolveGroupButton(full));
+								  actions += dissolveGroupPopup(full);
+							  }
+							  else {
+								  dropdownActions.push(detailsButton(full.proposalUuid));
+								  dropdownActions.push(addToGroupButton(full));
+								  actions += addToGroupPopup(full);
+							  }
+							  dropdownActions.push(deleteButton(full));
+							  actions += deletePopup(full);
+							  dropdownActions.push(discussionButton(full));
+							  if(full.submitter){
+							  	dropdownActions.push(submitButton(full));
+							  	actions += submitPopup(full);
+							  }
+						  }
+						  if (full.underReview || full.pending || full.pendingChangeRequest) {
+							  dropdownActions.push(detailsButton(full.proposalUuid));
+							  if(full.submitter){
+								  dropdownActions.push(withdrawButton(full));
+							  }
+							  actions += withdrawPopup(full);
+						  }
+						  if (full.appealable && full.submitter) {
+							  dropdownActions.push(detailsButton(full.proposalUuid));
+							  dropdownActions.push(appealButton(full));
+						  }
+						  
+						  actions += dropdownMenu(full.proposalUuid, dropdownActions);
+						  
+						  return actions;
+																			
+					  }
+					}
+				]
+			});
+			
+			$('.datatable').each(function(){
+				var datatable = $(this);
+				// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+				var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+				search_input.attr('placeholder', '[[#{datatable.searchPlaceholder.title}]]');
+				search_input.addClass('form-control input-sm');
+				// LENGTH - Inline-Form control
+				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+				length_sel.addClass('form-control input-sm');
+			});
+			
+			$('#creategroup').click(function() {
+			    $(this).button('loading');
+				var data = { 'groupName' : $('#groupName').val() };
+				postForm('[[@{__${basePath}__/management/submitter/creategroup}]]', data, function(success, response) {
+					if (success) {
+						location.href = '[[@{__${basePath}__/proposals/}]]' + response;
+					}
+					else {
+						showError(response, '[[@{__${basePath}__}]]');
+					}
+				});
+			});
+
+			$('body').on('click', '.button-dissolvegroup', function() {
+			    $(this).button('loading');
+				var uuid = $(this).data('uuid');
+				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/dissolve', null, function(success, errorThrown) {
+					if (success) {
+						location.reload();
+					}
+					else {
+						showError(errorThrown, '[[@{__${basePath}__}]]');					
+					}
+				});
+			});
+
+			$('body').on('click', '.button-addtogroup', function() {
+			    $(this).button('loading');
+				var uuid = $(this).data('uuid');
+				initGroupSelect(uuid);
+			});
+
+		});
+		
+	/* ]]> */
+	</script>
+	
+</body>
+</html>
