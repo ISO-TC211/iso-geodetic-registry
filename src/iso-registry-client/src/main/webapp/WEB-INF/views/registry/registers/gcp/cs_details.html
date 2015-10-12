@@ -2,22 +2,22 @@
 	<div class="row">
 		<div class="col-md-6">
 
-			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
-			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('cs')" />
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('cs')" />
 			
 			<div class="row">
 				<div th:if="${isProposal}" class="col-md-12" th:with="property='axisUuids',label=#{form.label.coordinateAxis},isRequired='true',ajaxPath='axes',orderBy='name',displayCallback='axisSelectDisplay'">
-					<div th:replace="registry/registers/globals :: selectMultipleIdentifiedItems2"/>
+					<div th:replace="globals :: selectMultipleIdentifiedItems2"/>
 				</div>
 			</div>
 			
 		</div>
 
 		<div class="col-md-6">
-			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>
 	</div>
 

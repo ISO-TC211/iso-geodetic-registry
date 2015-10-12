@@ -1,9 +1,9 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
-			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('ellipsoid')" />
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('ellipsoid')" />
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
@@ -15,34 +15,34 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='semiMajorAxis',inputType='number',label=#{form.label.semiMajorAxis},placeholder=#{form.placeholder.semiMajorAxis},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-8" th:with="property='semiMajorAxisUom',label=#{form.label.semiMajorAxisUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+					<div th:replace="globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='semiMinorAxis',inputType='number',label=#{form.label.semiMinorAxis},placeholder=#{form.placeholder.semiMinorAxis},isRequired='false'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 <!-- 				<div class="col-md-8" th:with="property='semiMinorAxisUom',label=#{form.label.semiMinorAxisUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
-<!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
+<!-- 					<div th:replace="globals :: selectIdentifiedItem"/> -->
 <!-- 				</div> -->
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='inverseFlattening',inputType='number',label=#{form.label.inverseFlattening},placeholder=#{form.placeholder.inverseFlattening},isRequired='false'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 <!-- 				<div class="col-md-8" th:with="property='inverseFlatteningUom',label=#{form.label.inverseFlatteningUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
-<!-- 					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/> -->
+<!-- 					<div th:replace="globals :: selectIdentifiedItem"/> -->
 <!-- 				</div> -->
 			</div>
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->									
 	</div>
 	

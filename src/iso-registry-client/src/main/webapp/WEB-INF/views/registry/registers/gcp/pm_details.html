@@ -1,23 +1,23 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
-			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('pm')" />
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('pm')" />
 			<div class="row">
 				<div class="col-md-6" th:with="property='greenwichLongitude',inputType='text',label=#{form.label.greenwichLongitude},placeholder=#{form.placeholder.greenwichLongitude},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-6" th:with="property='greenwichLongitudeUom',label=#{form.label.greenwichLongitudeUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+					<div th:replace="globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->									
 	</div>
 	<script type="text/javascript" charset="utf-8" th:inline="text">

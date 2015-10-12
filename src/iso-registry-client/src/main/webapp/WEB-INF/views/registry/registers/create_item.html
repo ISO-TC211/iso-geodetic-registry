@@ -26,7 +26,7 @@
 								<div id="dataPanel" class="panel-collapse collapse in">								
 									<div class="panel-body">
 										<div th:if="${itemClass}">
-											<div th:replace="registry/registers/globals :: itemClassNotConfiguredWarning"/> 			
+											<div th:replace="globals :: itemClassNotConfiguredWarning"/> 			
 											<div th:replace="${detailsTemplate} :: details"/>
 										</div> <!-- if ${itemClass} -->
 									</div>
@@ -39,7 +39,7 @@
 							<div th:unless="${proposal.isClarification()}">
 								<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetailsPanel"/>
 							</div>
-							<div th:replace="registry/registers/globals :: proposalDetailsPanel (isCollapsible='true')"/>
+							<div th:replace="globals :: proposalDetailsPanel (isCollapsible='true')"/>
 
 						</div>
 						
@@ -55,6 +55,6 @@
 
 	<div th:include="layout :: foot"></div>
 	
-	<script th:replace="registry/registers/globals :: js-proposal"/>
+	<script th:replace="globals :: js-proposal"/>
 	
 </body>

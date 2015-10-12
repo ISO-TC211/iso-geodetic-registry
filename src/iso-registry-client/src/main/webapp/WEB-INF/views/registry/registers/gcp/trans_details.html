@@ -1,30 +1,30 @@
 <div th:fragment="details">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
-			<div class="row" th:include="registry/registers/globals :: nameAndIdentifier" />
-			<div class="row" th:include="registry/registers/globals :: registerItemDefinition"/>
-			<div class="row" th:include="registry/registers/globals :: aliasesTable('conv')" />
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('conv')" />
 			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
-				<div class="col-md-12">
+				<div class="col-md-12" th:with="isClarification=${proposal.isClarification()}">
 					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12" th:with="property='sourceCrs',label=#{form.label.sourceCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+					<div th:replace="globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12" th:with="property='targetCrs',label=#{form.label.targetCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem2"/>
+					<div th:replace="globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='accuracy',inputType='number',label=#{form.label.accuracy},placeholder=#{form.placeholder.accuracy},isRequired='false'">
-					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-8" th:with="property='accuracyUom',label=#{form.label.accuracyUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
-					<div th:replace="registry/registers/globals :: selectIdentifiedItem"/>
+					<div th:replace="globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
@@ -97,7 +97,7 @@
 			</div>
 
 			<div th:with="property='operationVersion',inputType='text',label=#{form.label.operationVersion},placeholder=#{form.placeholder.operationVersion},isRequired='false'">
-				<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 			</div>
 
 		</div>	<!-- END OF LEFT -->
@@ -105,12 +105,12 @@
 		<div class="col-md-6"> <!-- RIGHT -->
 			<div class="row">
 				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
-					<div th:replace="registry/registers/globals :: textArea"/>
+					<div th:replace="globals :: textArea"/>
 				</div>
 			</div>
-			<div class="row" th:include="registry/registers/globals :: remarks (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: informationSource (cssClass='col-md-12')" />
-			<div class="row" th:include="registry/registers/globals :: dataSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->
 	</div>
 	<div class="row">
@@ -146,7 +146,7 @@
 			</table>
 		</div>
 	</div>
-
+	
 	<script type="text/javascript" th:inline="text">
 	/*<![CDATA[ */
 	    var paramTypeSelect = function(element) {
