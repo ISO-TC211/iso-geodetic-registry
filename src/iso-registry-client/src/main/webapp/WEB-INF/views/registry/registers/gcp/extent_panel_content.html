@@ -62,11 +62,11 @@
 		</div>
 	</div>
 
-
-
-
 	<div class="row">
-		<div class="col-md-12" th:with="property='description',modifier='extent',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='true'">
+		<div th:unless="${isClarification}" class="col-md-12" th:with="property='description',modifier='extent',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='true'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+		<div th:if="${isClarification}" class="col-md-12" th:with="property='description',modifier='extent',inputType='text',label=#{form.label.description},placeholder=#{form.placeholder.description},isRequired='false',isReadOnly='true'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
