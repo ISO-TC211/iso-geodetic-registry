@@ -62,14 +62,14 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-12" th:with="property='title',inputType='text',label=#{form.label.title},placeholder=#{form.placeholder.title},isRequired='true'">
+		<div class="col-md-12" th:with="property='title',inputType='text',label=#{form.label.title},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.title},isRequired='true'">
 			<div th:replace="globals :: textArea"/>
 		</div>
 	</div>
 	<div th:class="'alternate-title-row-' + ${index}" th:attr="data-count=${objectPath} ? '0' : *{alternateTitle.size()}"/>
 	<div th:unless="${objectPath}" th:each="altTitle,rowStat : *{alternateTitle}" th:id="'altTitleRow-' + ${rowStat.index}" class="row alternate-title-row">
 		<div class="form-group col-md-12">
-			<div th:replace="registry/registers/globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
+			<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
 			<div class="input-group">
 				<input th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
 				<span class="input-group-btn" th:if="${isProposal}">
@@ -84,46 +84,46 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='author',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.author},placeholder=#{form.placeholder.author},isRequired='true'">
+		<div class="col-md-12" th:with="property='author',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.author},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.author},isRequired='true'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='publisher',modifier='informationSource',inputType='text',label=#{form.label.publisher},placeholder=#{form.placeholder.publisher},isRequired='false'">
+		<div class="col-md-12" th:with="property='publisher',modifier='informationSource',inputType='text',label=#{form.label.publisher},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.publisher},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6" th:with="property='publicationDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.publicationDate},placeholder=#{form.placeholder.publicationDate},isRequired='false'">
+		<div class="col-md-6" th:with="property='publicationDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.publicationDate},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.publicationDate},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
-		<div class="col-md-6" th:with="property='revisionDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.revisionDate},placeholder=#{form.placeholder.revisionDate},isRequired='false'">
-			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6" th:with="property='edition',modifier='informationSource',inputType='text',label=#{form.label.edition},placeholder=#{form.placeholder.edition},isRequired='false'">
-			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
-		</div>
-		<div class="col-md-6" th:with="property='editionDate',modifier='informationSource',inputType='text',label=#{form.label.editionDate},placeholder=#{form.placeholder.editionDate},isRequired='false'">
+		<div class="col-md-6" th:with="property='revisionDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.revisionDate},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.revisionDate},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='series.name',modifier='informationSource',inputType='text',label=#{form.label.seriesName},placeholder=#{form.placeholder.seriesName},isRequired='false'">
+		<div class="col-md-6" th:with="property='edition',modifier='informationSource',inputType='text',label=#{form.label.edition},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.edition},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+		<div class="col-md-6" th:with="property='editionDate',modifier='informationSource',inputType='text',label=#{form.label.editionDate},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.editionDate},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6" th:with="property='series.issueIdentification',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
-			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
-		</div>
-		<div class="col-md-6" th:with="property='series.page',modifier='informationSource',inputType='text',label=#{form.label.seriesPage},placeholder=#{form.placeholder.seriesPage},isRequired='false'">
+		<div class="col-md-12" th:with="property='series.name',modifier='informationSource',inputType='text',label=#{form.label.seriesName},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesName},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},placeholder=#{form.placeholder.otherCitationDetails},isRequired='false'">
+		<div class="col-md-6" th:with="property='series.issueIdentification',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+		<div class="col-md-6" th:with="property='series.page',modifier='informationSource',inputType='text',label=#{form.label.seriesPage},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesPage},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.otherCitationDetails},isRequired='false'">
 			<div th:replace="globals :: textArea"/>
 		</div>
 	</div>

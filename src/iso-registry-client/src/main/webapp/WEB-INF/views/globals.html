@@ -29,17 +29,17 @@
 </div>
 
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}"></input>
-	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}"></input>
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
+	<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="{isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
-	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}"/>
-	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}"/>
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
+	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -661,6 +661,7 @@
 		$('#validationFailed').hide();
 		$('#pleaseWait').hide();
 
+		var submitted = false;
 		$('#proposal').validate({
 			ignore: '.hidden',
 // 			debug: true,
@@ -668,6 +669,7 @@
 				// 'this' refers to the form
 				var errors = validator.numberOfInvalids();
 // 				alert(errors);
+				submitted = true;
 				$('#validationFailed').show();				
 			},
 			submitHandler: function(form) {
@@ -693,7 +695,25 @@
 			unhighlight: function(element, errorClass, validClass) {
 				$(element).removeClass(errorClass).addClass(validClass);
 				$(element).closest(".form-group").removeClass(errorClass);
-			}			
+			},
+			showErrors: function (errorMap, errorList) {
+				if (submitted) {
+					var summary = '[[#{alert.validationFailed}]]<br/><ul>';
+					$(errorList).each(function() {
+						var element = $('#' + this.element.id);
+						summary += '<li>';
+						if (element.attr('data-label-parent')) {
+							summary += element.data('label-parent') + '/';
+						}
+						summary += element.data('label');
+						summary += '</li>';
+					});
+					summary += "</ul>"
+					$('#validationFailed').html(summary);
+					submitted = false;
+				}
+				this.defaultShowErrors();					
+			}
 		});
 
 		if (!$('#identifier').val()) {
@@ -749,4 +769,344 @@
 	    }
 	});
 /* ]]> */
+</script>
+
+<script th:fragment="js-lists" type="text/javascript" th:inline="text">
+/* <![CDATA[ */
+  	var itemActionButton = function(action, itemUuid, bsclass, text) {
+		return '<button type="button" id="' + action + '-' + itemUuid + '" class="btn btn-' + bsclass + ' btn-xs button-' + action + ' action-' + itemUuid + '" data-uuid="' + itemUuid + '">' + text + '</button>';
+	};
+
+	var clarifyButton = function(itemUuid) {
+		return itemActionButton('clarify', itemUuid, 'primary', '[[#{button.clarification}]]');
+	}
+	
+	var retireButton = function(itemUuid) {
+		return itemActionButton('retire', itemUuid, 'danger', '[[#{button.retirement}]]');
+	}
+             
+	var detailsButton = function(itemUuid, additionalClasses) {
+		var classes;
+		if (typeof additionalClasses === 'undefined') {
+			classes = '';
+		}
+		else {
+			classes = additionalClasses;
+		}
+		return '<button type="button" id="details-' + itemUuid + '" class="btn btn-default btn-xs button-details ' + classes + ' action-' + itemUuid + '" data-uuid="' + itemUuid + '">[[#{button.details}]]</button>';
+	};
+	
+	var addToGroupButton = function(item) {
+		return '<a href="#addtogrouppopup-' + item.proposalUuid + '" id="addtogroup-' + item.proposalUuid + '" data-toggle="modal" class="btn btn-default btn-xs button-addtogroup action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.addToGroup}]]</a>';
+	}
+
+	var addToGroupButtonNoPopup = function(item) {
+		return '<button type="button" id="addtogroup-' + item.proposalUuid + '" class="btn btn-default btn-xs button-addtogroup action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.addToGroup}]]</button>';
+	}
+
+	var removeFromGroupButton = function(item) {
+		return '<a href="#removefromgrouppopup-' + item.proposalUuid + '" id="removefromgroup-' + item.proposalUuid + '" data-toggle="modal" class="btn btn-danger btn-xs button-removefromgroup action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.removeFromGroup}]]</a>';
+	}
+
+	var dissolveGroupButton = function(item) {
+		return '<a href="#dissolvegrouppopup-' + item.proposalUuid + '" id="dissolvegroup-' + item.proposalUuid + '" data-toggle="modal" class="btn btn-default btn-xs action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.dissolveGroup}]]</a>';
+	}
+	
+	var discussionButton = function(item) {
+		return '<button type="button" id="details_' + item.proposalUuid + '" class="btn btn-primary btn-xs button-discussion action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.discussProposal}]]</button>';
+	}
+	
+	var submitButton = function(item) {
+		return '<a href="#submitpopup-' + item.proposalUuid + '" id="submit-' + item.proposalUuid + '" data-toggle="modal" class="btn btn-success btn-xs action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.submitProposal}]]</a>';
+	};
+	
+	var withdrawButton = function(item) {
+		return '<a href="#withdrawpopup-' + item.proposalUuid + '" id="withdraw-' + item.proposalUuid + '" data-toggle="modal" class="btn btn-warning btn-xs action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.withdrawProposal}]]</a>';
+	};
+	
+	var deleteButton = function(item) {
+		return '<a href="#deletepopup-' + item.proposalUuid + '" id="delete-' + item.proposalUuid + '" data-toggle="modal" class="btn btn-danger btn-xs action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.deleteProposal}]]</a>';
+	};
+	
+	var appealButton = function(item) {
+		return '<button type="button" id="appeal-' + item.proposalUuid + '" class="btn btn-warning btn-xs button-appealproposal action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '">[[#{button.appealProposal}]]</button>';
+	};
+	
+	var decideButton = function(item) {
+		return '<button type="button" id="decide-' + item.proposalUuid + '" class="btn btn-primary btn-xs button-decideproposal" data-uuid="' + item.proposalUuid + '">[[#{button.decideProposal}]]</button>';	
+	};
+	
+	var addToGroupPopup = function(item) {
+		var result = 
+			'<div class="modal fade" id="addtogrouppopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.addToGroup.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							groupSelect(item) +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" id="addtogroup-' + item.proposalUuid + '" class="btn btn-success button-addtogroup" disabled="disabled" data-uuid="' + item.proposalUuid + '">[[#{button.addToGroup}]]</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		return result;
+	};
+
+	var removeFromGroupPopup = function(item) {
+		var proposalUuid = item.proposalUuid;
+		
+		var result = 
+			'<div class="modal fade" id="removefromgrouppopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.removeFromGroup.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							'<span>[[#{popup.removeFromGroup.reallyRemove}]]</span>' +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" id="doremovefromgroup-' + item.proposalUuid + '" class="btn btn-danger button-doremovefromgroup" data-uuid="' + item.proposalUuid + '">[[#{button.removeFromGroup}]]</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		result = result.replace('\{0\}', item.title);
+
+		return result;
+	};
+
+	var groupSelect = function(item) {
+		var result =
+			'<input type="hidden" class="select-group" id="groupselect-' + item.proposalUuid + '" style="width: 100%"/>';
+			
+		return result;
+	};
+	
+	var dissolveGroupPopup = function(item) {
+		var result = 
+			'<div class="modal fade" id="dissolvegrouppopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.dissolveGroup.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							'<p>[[#{popup.dissolveGroup.reallyDissolve}]]</p>' +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" class="btn btn-danger button-dissolvegroup" data-uuid="' + item.proposalUuid + '">[[#{button.dissolveGroup}]]</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		result = result.replace('\{0\}', item.title);
+		
+		return result;
+	};
+	
+	var itemPopup = function(itemUuid, itemTitle, action, headerText, bodyHtml, okText, okType) {
+		var result = 
+			'<div class="modal fade" id="' + action + 'popup-' + itemUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>' + headerText + '</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							bodyHtml +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" class="btn btn-' + okType + ' button-popup-' + action + '" data-uuid="' + itemUuid + '">' + okText + '</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="[[#{button.cancel}]]">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		result = result.replace('\{0\}', itemTitle);
+		
+		return result;		
+	};
+	
+	var retirePopupBody = function(itemUuid) {
+		return '<form id="retirepopupform-' + itemUuid + '">' +
+				'<p>[[#{popup.retire.justification}]]</p>' +
+				'<div class="form-group">' +
+					'<div class="controls">' +
+						'<textarea id="justification-' + itemUuid + '" name="justification" rows="3" cols="40" class="form-control" required="required" type="text"></textarea>' +
+// 						'<textarea id="justification-' + itemUuid + '" name="justification" rows="3" cols="40" class="form-control" required="required" type="text" />' +
+					'</div>' +
+				'</div>' +
+			'</form>';			
+	};
+	
+	var retirePopup = function(itemUuid) {
+		var body = retirePopupBody(itemUuid);
+		return itemPopup(itemUuid, '', 'retire', '[[#{popup.retire.header}]]', body, '[[#{button.retirement}]]', 'danger');
+	};
+	
+	var submitPopup = function(item) {
+		var result = 
+			'<div class="modal fade" id="submitpopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.submitProposal.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							'<p>[[#{popup.submitProposal.reallySubmit}]]</p>' +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" class="btn btn-success button-submitproposal" data-uuid="' + item.proposalUuid + '">[[#{button.submitProposal}]]</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		result = result.replace('\{0\}', item.title);
+		
+		return result;
+	};
+	
+	var withdrawPopup = function(item) {
+		var result = 
+			'<div class="modal fade" id="withdrawpopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.withdrawProposal.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							'<p>[[#{popup.withdrawProposal.reallyWithdraw}]]</p>' +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" class="btn btn-warning button-withdrawproposal" data-uuid="' + item.proposalUuid + '">[[#{button.withdrawProposal}]]</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		result = result.replace('\{0\}', item.title);
+		
+		return result;
+	};
+	
+	var deletePopup = function(item) {
+		var result = 
+			'<div class="modal fade" id="deletepopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.deleteProposal.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							'<p>[[#{popup.deleteProposal.reallyDelete}]]</p>' +
+						'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" class="btn btn-danger button-deleteproposal" data-uuid="' + item.proposalUuid + '">[[#{button.deleteProposal}]]</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+		
+		result = result.replace('\{0\}', item.title);
+		
+		return result;
+	};
+	
+	var showLoader = function(uuid, idx) {
+		$('#proposalrow-' + uuid + ' td:nth-child(' + idx + ')').html('<img style="margin-left: 20px" src="[[@{__${basePath}__/resources/images/loader.gif}]]"/>');
+	}
+	
+	var showReload = function(uuid, idx) {
+		$('#proposalrow-' + uuid + ' td:nth-child(' + idx + ')').text('[[#{datatable.pleaseReload}]]');		
+	}
+
+	var showProcessing = function(uuid, idx) {
+		$('#proposalrow-' + uuid + ' td:nth-child(' + idx + ')').text('[[#{PROCESSING}]]');		
+	}
+	
+	var clearCell = function(uuid, idx) {
+		$('#proposalrow-' + uuid + ' td:nth-child(' + idx + ')').empty();		
+	}
+
+	var dropdownMenu = function(uuid, actions) {
+		if (actions.length === 0) {
+			return '';
+		}
+		
+		var result = '<div class="btn-group">' +
+		         '<button id="actions-' + uuid + '" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+				   '<span>[[#{button.action}]]</span> <span class="caret"></span>' +
+				 '</button>' +
+				 '<ul class="dropdown-menu" role="menu">';
+	
+		$.each(actions, function(i, val) {
+			result += '<li><div style="margin-left: 10px; margin-top: 5px">' + val + '</div></li>';	
+		});
+				 
+		result += '</ul></div>';
+		
+		return result;
+	};
+	
+	var initGroupSelect = function(proposalUuid) {
+		$('#groupselect-' + proposalUuid).select2({
+			width: 'resolve',
+			dropdownCssClass: "bigdrop",
+			dropdownAutoWidth: "true",
+			ajax: {
+				url: "[[@{__${basePath}__/entities/proposalgroups}]]",
+				dataType: "json",
+				data: function(term, page) {
+					return {
+						orderBy: 'name',
+						q: term
+					};
+				},
+				results: function (data) {
+					return { 
+						results : $.map(data, function (item) { 
+							return { 
+								text: item[1], 
+								id: item[0] 
+							} 
+						}) 
+					};
+				},
+			},
+		});
+		
+		$('#groupselect-' + proposalUuid).change(function() {
+			$('#addtogroup-' + proposalUuid).removeAttr('disabled');
+		});
+	
+		$('#addtogroup-' + proposalUuid).click(function() {
+			var groupUuid = $('#groupselect-' + proposalUuid).val();
+			var data = { 'addedProposalUuid' : proposalUuid };
+			postForm('[[@{__${basePath}__/proposals/' + groupUuid + '/addproposal}]]', data, function(success, errorThrown) {
+				if (success) {
+					location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+		});	
+	};
+	/* ]]> */
 </script>
