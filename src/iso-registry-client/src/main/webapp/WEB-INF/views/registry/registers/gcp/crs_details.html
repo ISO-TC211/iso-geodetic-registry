@@ -75,7 +75,7 @@
 			</div>
 
 			<div class="row" th:unless="${itemClassName} eq 'CompoundCRS'">
-				<div class="col-md-12" th:with="property='conversion',label=#{form.label.conversion},isRequired=(${itemClassName} eq 'ProjectedCRS'),noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem',',')}">
+				<div class="col-md-12" th:with="property='operation',label=#{form.label.operation},isRequired=(${itemClassName} eq 'ProjectedCRS'),isReadOnly='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem,TransformationItem',',')}">
 					<div th:replace="globals :: selectIdentifiedItem"/>
 				</div>
 			</div>

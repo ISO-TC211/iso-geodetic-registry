@@ -390,7 +390,9 @@
 	<entry key="form.label.sourceCrs">Source CRS</entry>
 	<entry key="form.label.targetCrs">Target CRS</entry>
 	<entry key="form.label.baseCrs">Base CRS</entry>
+	<entry key="form.label.operation">Operation</entry>
 	<entry key="form.label.conversion">Conversion</entry>
+	<entry key="form.label.transformation">Transformation</entry>
 	<entry key="form.label.coordinateAxis">Coordinate Axes</entry>
 	<entry key="form.label.axisAbbreviation">Axis abbreviation</entry>
 	<entry key="form.label.axisDirection">Axis direction</entry>

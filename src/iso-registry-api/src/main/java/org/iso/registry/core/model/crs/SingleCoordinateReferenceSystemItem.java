@@ -12,6 +12,7 @@ import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.ConversionItem;
+import org.iso.registry.core.model.operation.SingleOperationItem;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -48,7 +49,7 @@ public abstract class SingleCoordinateReferenceSystemItem<D extends DatumItem> e
 	private SingleCoordinateReferenceSystemItem<D> baseCrs;
 
 	@ManyToOne
-	private ConversionItem conversion;
+	private SingleOperationItem operation;
 	
 	protected SingleCoordinateReferenceSystemItem() {
 		super();
@@ -91,15 +92,15 @@ public abstract class SingleCoordinateReferenceSystemItem<D extends DatumItem> e
 	/**
 	 * @return the conversion
 	 */
-	public ConversionItem getConversion() {
-		return conversion;
+	public SingleOperationItem getOperation() {
+		return operation;
 	}
 
 	/**
-	 * @param conversion the conversion to set
+	 * @param operation the conversion to set
 	 */
-	public void setConversion(ConversionItem conversion) {
-		this.conversion = conversion;
+	public void setOperation(SingleOperationItem operation) {
+		this.operation = operation;
 	}
 
 }//end SC_SingleCRS

@@ -90,8 +90,8 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 			if (derivedCrs.getBaseCrs() != null) {
 				this.setBaseCrs(new CoordinateReferenceSystemItemViewBean(derivedCrs.getBaseCrs()));
 			}
-			if (derivedCrs.getConversion() != null) {
-				this.setConversion(new SingleOperationItemViewBean(derivedCrs.getConversion()));
+			if (derivedCrs.getOperation() != null) {
+				this.setConversion(new SingleOperationItemViewBean(derivedCrs.getOperation()));
 			}
 		}
 		
