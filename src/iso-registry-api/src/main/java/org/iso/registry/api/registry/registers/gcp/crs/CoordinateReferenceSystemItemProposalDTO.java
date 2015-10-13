@@ -17,6 +17,8 @@ import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.ConversionItem;
+import org.iso.registry.core.model.operation.SingleOperationItem;
+import org.iso.registry.core.model.operation.TransformationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
@@ -45,7 +47,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 	private CoordinateReferenceSystemItemProposalDTO sourceCrs;
 	
 	private CoordinateReferenceSystemItemProposalDTO baseCrs;
-	private SingleOperationItemProposalDTO conversion;
+	private SingleOperationItemProposalDTO operation;
 	// TODO Projection
 	
 	private CoordinateReferenceSystemItemProposalDTO horizontalCrs;
@@ -119,12 +121,12 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		this.baseCrs = baseCrs;
 	}
 
-	public SingleOperationItemProposalDTO getConversion() {
-		return conversion;
+	public SingleOperationItemProposalDTO getOperation() {
+		return operation;
 	}
 
-	public void setConversion(SingleOperationItemProposalDTO conversion) {
-		this.conversion = conversion;
+	public void setOperation(SingleOperationItemProposalDTO operation) {
+		this.operation = operation;
 	}
 
 	public CoordinateReferenceSystemItemProposalDTO getHorizontalCrs() {
@@ -219,10 +221,10 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				singleCrs.setBaseCrs(baseCrs);
 			}
 			
-			if (this.getConversion() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
+			if (this.getOperation() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
 				SingleCoordinateReferenceSystemItem singleCrs = (SingleCoordinateReferenceSystemItem)registerItem;
-				ConversionItem conversion = entityManager.find(ConversionItem.class, this.getConversion().getReferencedItemUuid());
-				singleCrs.setConversion(conversion);
+				SingleOperationItem operation = entityManager.find(SingleOperationItem.class, this.getOperation().getReferencedItemUuid());
+				singleCrs.setOperation(operation);
 			}
 			
 //			item.setAliases(aliases);
@@ -268,9 +270,17 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 			
 			if (crsItem instanceof GeneralDerivedCoordinateReferenceSystemItem) {
 				GeneralDerivedCoordinateReferenceSystemItem<?> derivedCrs = (GeneralDerivedCoordinateReferenceSystemItem<?>)crsItem;
-				if (derivedCrs.getConversion() != null) {
-					SingleOperationItemProposalDTO conversion = new SingleOperationItemProposalDTO(derivedCrs.getConversion());
-					conversion.setOperationType(SingleOperationType.CONVERSION);
+				if (derivedCrs.getOperation() != null) {
+					SingleOperationItemProposalDTO operation = new SingleOperationItemProposalDTO(derivedCrs.getOperation());
+					if (derivedCrs.getOperation() instanceof ConversionItem) {
+						operation.setOperationType(SingleOperationType.CONVERSION);						
+					}
+					else if (derivedCrs.getOperation() instanceof TransformationItem) {
+						operation.setOperationType(SingleOperationType.TRANSFORMATION);
+					}
+					else {
+						throw new IllegalStateException(String.format("Derived CRS operation of type '%s' is not supported", derivedCrs.getOperation().getClass().getCanonicalName()));
+					}
 				}
 			}
 			
