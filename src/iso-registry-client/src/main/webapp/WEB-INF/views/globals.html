@@ -226,8 +226,8 @@
 		<!-- form-backing bean: RegisterItemProposalDTO -->
 		<input th:unless="${index}" hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}" style="width: 100%"/>
 		<input th:if="${index}" hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__[__${index}__].referencedItemUuid}"/>
-		<select th:unless="${isClarification}" th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}"></select>
-		<span th:unless="${noAddNew} or ${isClarification}" class="input-group-btn">
+		<select th:unless="${isClarification}" th:id="${property} + '_select'" th:name="${property} + '_select'" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}"></select>
+		<span th:unless="${noAddNew} or ${isClarification} or ${isReadOnly}" class="input-group-btn">
 			<button th:id="'addNew_' + ${property}" class="btn btn-default btn-addnew" type="button" th:text="${addNewLabel} ? ${addNewLabel} : #{button.addNew}">Add new</button>
 		</span>
 		<div th:if="${isClarification}" th:with="uuid=*{__${property}__.referencedItemUuid}">
@@ -288,7 +288,12 @@
 											+ '</option>';
 								}
 								$("select#[[${property}]]_select").html(options);
-								$("select#[[${property}]]_select").removeAttr('disabled');
+								if (!$('select#[[${property}]]_select').is('[readonly]')) {
+									$("select#[[${property}]]_select").removeAttr('disabled');
+								}
+								else {
+									$("select#[[${property}]]_select").attr('disabled', 'disabled');									
+								}
 	
 								$('#[[${property}]]_byname').addClass('bold');
 								$('#[[${property}]]_byid').removeClass('bold');
@@ -326,7 +331,12 @@
 											+ '</option>';
 								}
 								$("select#[[${property}]]_select").html(options);
-								$("select#[[${property}]]_select").removeAttr('disabled');
+								if (!$('select#[[${property}]]_select').is('[readonly]')) {
+									$("select#[[${property}]]_select").removeAttr('disabled');
+								}
+								else {
+									$("select#[[${property}]]_select").attr('disabled', 'disabled');									
+								}
 	
 								$('#[[${property}]]_byid').addClass('bold');
 								$('#[[${property}]]_byname').removeClass('bold');
