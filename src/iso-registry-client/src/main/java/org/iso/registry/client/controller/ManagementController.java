@@ -366,6 +366,7 @@ public class ManagementController
 				rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
 			}
 
+			rvb.setSubmitter(security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters()));
 			proposalViewBeans.add(rvb);
 		}
 		DatatablesResult result = new DatatablesResult(proposals.getTotalElements(), proposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);

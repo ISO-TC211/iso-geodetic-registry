@@ -135,7 +135,7 @@
 	
 	<div th:include="layout :: foot"></div>
 	
-	<div th:replace="globals :: js-lists"/>
+	<div th:replace="globals-lists :: js-lists"/>
 	<script type="text/javascript" th:inline="text">
 	/*<![CDATA[ */
 		$(document).ready(function() {
@@ -319,14 +319,14 @@
 							  dropdownActions.push(deleteButton(full));
 							  actions += deletePopup(full);
 							  dropdownActions.push(discussionButton(full));
-							  if(full.submitter){
+							  if (full.submitter) {
 							  	dropdownActions.push(submitButton(full));
 							  	actions += submitPopup(full);
 							  }
 						  }
 						  if (full.underReview || full.pending || full.pendingChangeRequest) {
 							  dropdownActions.push(detailsButton(full.proposalUuid));
-							  if(full.submitter){
+							  if (full.submitter) {
 								  dropdownActions.push(withdrawButton(full));
 							  }
 							  actions += withdrawPopup(full);

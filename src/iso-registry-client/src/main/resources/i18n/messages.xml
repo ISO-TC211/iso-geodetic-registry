@@ -230,6 +230,13 @@
 	<entry key="ROLE_SUBMITTER">Submitter</entry>
 	<entry key="ROLE_OWNER">Register owner</entry>
 
+	<entry key="de.geoinfoffm.registry.core.model.Addition">Addition</entry>
+	<entry key="de.geoinfoffm.registry.core.model.Clarification">Clarification</entry>
+	<entry key="de.geoinfoffm.registry.core.model.Supersession">Supersession</entry>
+	<entry key="de.geoinfoffm.registry.core.model.SupersessionPart">Supersession</entry>
+	<entry key="de.geoinfoffm.registry.core.model.Retirement">Retirement</entry>
+	<entry key="de.geoinfoffm.registry.core.model.ProposalGroup">Proposal Group</entry>
+
 	<entry key="alert.loginFailed">Login failed. Please check your login credentials.</entry>
 	<entry key="alert.userCreated">The user was created successfully.</entry>
 	<entry key="alert.userDeleted">The user was deleted.</entry>
