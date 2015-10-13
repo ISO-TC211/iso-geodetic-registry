@@ -21,32 +21,26 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 public class ConcatenatedOperationItem extends CoordinateOperationItem
 {
 	@ManyToMany
-	private List<CoordinateOperationItem> coordOperation;
+	private List<SingleOperationItem> coordinateOperations;
 
 	protected ConcatenatedOperationItem() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ConcatenatedOperationItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
 			RE_AdditionInformation additionInformation) {
 		super(register, itemClass, name, definition, additionInformation);
-		// TODO Auto-generated constructor stub
 	}
 
-	public List<CoordinateOperationItem> getCoordOperation() {
-		return coordOperation;
-	}
-
-	public void setCoordOperation(List<CoordinateOperationItem> coordOperation) {
-		this.coordOperation = coordOperation;
-	}
-	
-	public void addCoordOperation(CoordinateOperationItem coordOperation) {
-		if (this.coordOperation != null) {
-			this.coordOperation = new ArrayList<>();
+	public List<SingleOperationItem> getCoordinateOperations() {
+		if (this.coordinateOperations == null) {
+			this.coordinateOperations = new ArrayList<>();
 		}
-		this.coordOperation.add(coordOperation);
+
+		return coordinateOperations;
 	}
 
+	public void setCoordinateOperations(List<SingleOperationItem> coordOperation) {
+		this.coordinateOperations = coordOperation;
+	}
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="ConcatenatedOperation">
+	<dtoClass>org.iso.registry.api.registry.registers.gcp.operation.ConcatenatedOperationItemProposalDTO</dtoClass>
+	<viewBeanClass>org.iso.registry.client.ConcatenatedOperationItemViewBean</viewBeanClass>
+	<viewItemTemplate>registry/registers/gcp/concatop_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/concatop_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/concatop_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/concatop_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>
