@@ -75,13 +75,31 @@
 			</div>
 
 			<div class="row" th:unless="${itemClassName} eq 'CompoundCRS'">
-				<div class="col-md-12" th:with="property='conversion',label=#{form.label.conversion},isRequired=(${itemClassName} eq 'ProjectedCRS'),noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem',',')}">
+				<div class="col-md-12" th:with="property='operation',label=#{form.label.operation},isRequired=(${itemClassName} eq 'ProjectedCRS'),isReadOnly='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem,TransformationItem',',')}">
 					<div th:replace="globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 
 			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
 		</div>
+
+		<script th:if="${isProposal}" th:unless="${itemClassName} eq 'CompoundCRS'" type="text/javascript" charset="utf-8" th:inline="text">
+		/* <![CDATA[ */
+			$(document).ready(function() {
+				$('#baseCrs_select').on('change', function() {
+					if ($('#baseCrs_select').val() !== '') {
+						$('#operation_select').removeAttr('readonly');
+						$('#operation_select').removeAttr('disabled');
+					}
+					else {
+						$('#operation_select').val('');
+						$('#operation_select').attr('readonly', 'readonly');
+						$('#operation_select').attr('disabled', 'disabled');						
+					}
+				});
+			});	        
+		/* ]]> */
+		</script>
 		
 	</div>
 
