@@ -44,6 +44,7 @@
 	<entry key="proposal.discussion.content.header">Discuss proposal</entry>
 	
 	<entry key="tableheader.name">Name</entry>
+	<entry key="tableheader.title">Title</entry>
 	<entry key="tableheader.itemClassName">Item class</entry>
 	<entry key="tableheader.status">Status</entry>
 	<entry key="tableheader.proposalType">Proposal type</entry>
@@ -420,6 +421,7 @@
 	<entry key="form.label.otherCitationDetails">Other citation details</entry>
 	<entry key="form.label.accuracy">Accuracy</entry>
 	<entry key="form.label.accuracyUom">Accuracy unit</entry>
+	<entry key="form.label.coordinateOperations">Coordinate Operations</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -518,6 +520,7 @@
 	<entry key="form.validation.confirmPassword">The passwords do not match</entry>
 
 	<entry key="label.placeholder.operationMethodParameters">Click to select parameters...</entry>
+	<entry key="label.placeholder.coordinateOperations">Click to select operations...</entry>
 	
 	<entry key="form.signup.validation.organizationNameExists">An organization with this name exists. Please select it from the list on the left and leave this field empty.</entry>
 	
