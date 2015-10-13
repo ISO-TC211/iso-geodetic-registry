@@ -190,7 +190,20 @@
 										<tbody>
 											<tr>
 												<td th:text="#{proposedChange}"></td>
-												<td th:text="*{proposedChange}"></td>
+												<td>
+													<table class="table table-striped">
+														<thead>
+															<th th:text="#{changedProperty}"></th>
+															<th th:text="#{changedValue}"></th>
+														</thead>
+														<tbody>
+															<tr th:each="change : ${pmi.fromJson('__*{proposedChange}__')}">
+																<td th:text="#{${change.key}}"></td>
+																<td th:text="${change.value}"></td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
 											</tr>
 											<tr th:if="*{dateProposed}">
 												<td th:text="#{dateProposed}"></td>
