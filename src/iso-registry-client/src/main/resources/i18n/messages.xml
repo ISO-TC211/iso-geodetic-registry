@@ -386,7 +386,7 @@
 	<entry key="form.label.inverseFlattening">Inverse flattening</entry>
 	<entry key="form.label.operationParameters">Parameters</entry>
 	<entry key="form.label.formula">Formula</entry>
-	<entry key="form.label.conversionMethod">Operation Method</entry>
+	<entry key="form.label.conversionMethod">Coordinate Operation Method</entry>
 	<entry key="form.label.operationVersion">Operation Version</entry>
 	<entry key="form.label.sourceCrs">Source CRS</entry>
 	<entry key="form.label.targetCrs">Target CRS</entry>
@@ -623,15 +623,15 @@
 	<entry key="ConcatenatedOperation">Concatenated Operation</entry>
 	<entry key="Conversion">Conversion</entry>
 	<entry key="SingleOperation">Single Operation</entry>
-	<entry key="OperationMethod">Operation Method</entry>
-	<entry key="OperationParameter">Operation Parameter</entry>
+	<entry key="OperationMethod">Coordinate Operation Method</entry>
+	<entry key="OperationParameter">Coordinate Operation Parameter</entry>
 	<entry key="Transformation">Transformation</entry>
 
 	<entry key="ConcatenatedOperationItem">Concatenated Operation</entry>
 	<entry key="ConversionItem">Conversion</entry>
 	<entry key="SingleOperationItem">Single Operation</entry>
-	<entry key="OperationMethodItem">Operation Method</entry>
-	<entry key="OperationParameterItem">Operation Parameter</entry>
+	<entry key="OperationMethodItem">Coordinate Operation Method</entry>
+	<entry key="OperationParameterItem">Coordinate Operation Parameter</entry>
 	<entry key="TransformationItem">Transformation</entry>
 
 </properties>
