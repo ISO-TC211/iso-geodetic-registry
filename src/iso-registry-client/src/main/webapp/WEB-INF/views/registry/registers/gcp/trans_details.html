@@ -5,7 +5,7 @@
 			<div class="row" th:include="globals :: registerItemDefinition"/>
 			<div class="row" th:include="globals :: aliasesTable('conv')" />
 			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
-				<div class="col-md-12" th:with="isClarification=${proposal.isClarification()}">
+				<div class="col-md-12" th:with="isClarification=${isProposal} ? ${proposal.isClarification()} : 'false'">
 					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
 				</div>
 			</div>

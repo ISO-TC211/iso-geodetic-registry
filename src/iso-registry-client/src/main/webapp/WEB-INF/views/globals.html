@@ -38,8 +38,8 @@
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
-	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
-	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -660,7 +660,7 @@
 
 		var submitted = false;
 		$('#proposal').validate({
-			ignore: '.hidden',
+			ignore: '.hidden, [readonly=readonly]',
 // 			debug: true,
 			invalidHandler: function(event, validator) {
 				// 'this' refers to the form

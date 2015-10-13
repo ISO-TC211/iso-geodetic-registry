@@ -1,7 +1,7 @@
 <div th:fragment="informationSourcePanelContent(index)">
 	<div th:if="${isProposal}">
 <!-- 		<div th:replace="globals :: formLabel('informationSource', #{form.label.editInformationSource})"/> -->
-		<div th:unless="true" id="selectInformationSourceGroup" th:with="isClarification=${proposal.isClarification()}">
+		<div th:unless="true" id="selectInformationSourceGroup">
 			<input type="hidden" id="selectInformationSource" style="width: 100%" />
 			<script type="text/javascript" charset="utf-8" th:inline="text">
 			/* <![CDATA[ */
@@ -78,7 +78,7 @@
 			</div>
 		</div>
 	</div>
-	<div th:if="${isProposal}" class="row">
+	<div th:if="${isProposal}" th:unless="${isReadOnly}" class="row">
 		<div class="form-group col-md-4">
 			<button th:id="'addAlternateTitle-' + ${index}" type="button" th:attr="data-index=${index}" class="btn btn-default button-add-alternate-title" th:text="#{button.addAlternateTitle}"/>
 		</div>

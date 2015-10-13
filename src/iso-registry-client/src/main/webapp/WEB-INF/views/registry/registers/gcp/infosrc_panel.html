@@ -85,7 +85,7 @@
 					<div th:unless="${isProposal}" class="modal-body" th:object="${item.informationSource[__${rowstat.index}__]}">
 						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
 					</div>
-					<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource[__${rowstat.index}__]}">
+					<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource[__${rowstat.index}__]}" th:with="isReadOnly='true'">
 						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
 					</div>
 					<div class="modal-footer">
