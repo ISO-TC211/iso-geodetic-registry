@@ -21,48 +21,43 @@
 									<th th:text="#{tableheader.date}">Datum</th>
 									<th th:text="#{tableheader.name}">Name</th>
 									<th th:text="#{tableheader.itemClass}">Klasse</th>
+									<th th:text="#{tableheader.submitter}">Submitter</th>
 									<th th:text="#{tableheader.proposalType}">Vorschlagstyp</th>
 									<th th:text="#{tableheader.proposalStatus}">Status</th>
 									<th></th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="item : ${proposals}">
-									<td th:text="${item.proposalDate}"></td>
-									<td th:text="${item.name}"></td>
-									<td th:text="${item.itemClassName}"></td>
-									<td th:text="#{${item.proposalType}}"></td>											
-									<td th:text="#{${item.proposalStatus}}"></td>
-									<td>
-										<div class="btn-group" th:unless="${item.proposalGroupUuid}">
-											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu" role="menu">
-												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}">
-													<div style="margin: 5px;">
-														<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
-													</div>
-												</li>
-												<li th:if="${item.isPending()}">
-													<div style="margin: 5px;">
-														<a th:href="@{__${basePath}__/discussion/CONTROLBODY/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a>
-													</div>
-													<div style="margin: 5px">
-														<button th:id="'decide_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</td>
+<!-- 							<tbody> -->
+<!-- 								<tr th:each="item : ${proposals}"> -->
+<!-- 									<td th:text="${item.proposalDate}"></td> -->
+<!-- 									<td th:text="${item.name}"></td> -->
+<!-- 									<td th:text="${item.itemClassName}"></td> -->
+<!-- 									<td th:text="#{${item.proposalType}}"></td>											 -->
+<!-- 									<td th:text="#{${item.proposalStatus}}"></td> -->
 <!-- 									<td> -->
-<!-- 										<div class="control-group"> -->
-<!-- 											<button th:unless="${item.isRetirement()} or ${item.isSupersession()}" th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												 -->
-<!-- 											<button th:id="'decide_' + ${item.uuid}" th:if="${item.isPending()}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button> -->
+<!-- 										<div class="btn-group" th:unless="${item.proposalGroupUuid}"> -->
+<!-- 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
+<!-- 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
+<!-- 											</button> -->
+<!-- 											<ul class="dropdown-menu" role="menu"> -->
+<!-- 												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}"> -->
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												 -->
+<!-- 													</div> -->
+<!-- 												</li> -->
+<!-- 												<li th:if="${item.isPending()}"> -->
+<!-- 													<div style="margin: 5px;"> -->
+<!-- 														<a th:href="@{__${basePath}__/discussion/CONTROLBODY/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a> -->
+<!-- 													</div> -->
+<!-- 													<div style="margin: 5px"> -->
+<!-- 														<button th:id="'decide_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'window.location.replace(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\');'" th:text="#{button.decideProposal}">Entscheiden</button> -->
+<!-- 													</div> -->
+<!-- 												</li> -->
+<!-- 											</ul> -->
 <!-- 										</div> -->
 <!-- 									</td> -->
-								</tr>
-							</tbody>
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
 						</table>
 					</div>
 				</div>
@@ -72,12 +67,18 @@
 	
 	<div th:include="layout :: foot"></div>
 	
-	
-		<script type="text/javascript" th:inline="text">
+	<div th:replace="globals-lists :: js-lists"/>
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
 		$(document).ready(function() {
 			var table;
 	
 			table = $('#proposalsTable').dataTable({
+				"sAjaxSource": "[[@{__${basePath}__/}]]management/controlbody/proposals",
+				"bProcessing": true,
+				"bServerSide": true,
+				"bStateSave": true,
+ 				"bInfo": true,
 				"sPaginationType": "bs_normal",
 				"oLanguage": {
 					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
@@ -86,7 +87,7 @@
 					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
 					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
 					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
-					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
 					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
 					  "oPaginate": {
 					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
@@ -95,16 +96,87 @@
 					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
 					    }
 					},
-				 "aaSorting": [[ 2, "asc" ]],
-				 aoColumns: [
-					null,
-					null,
-					null,
-					null,
-					null,
-					{"bSortable" : false}
+				 "aaSorting": [[ 1, "asc" ]],
+				"aoColumns": [
+					{ 
+						"mDataProp": "proposalDate",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "title",
+						"sWidth": "30%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "itemClassName",
+						"sWidth": "15%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{ 
+						"mDataProp": "sponsorName",
+						"sWidth": "15%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{ 	
+						"mDataProp": "proposalType",
+						"sWidth": "10%",
+					 	"bSortable": false
+					},
+					{ 
+						"mDataProp": "proposalStatus",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{ 
+						"sWidth": "10%",
+						"bSortable": false
+					},
+				],
+				"aoColumnDefs": [
+					{ "aTargets": [3],
+							"mData": null,
+							"mRender": function (data, type, full) {
+								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
+								return $("<div/>").append($href).html();
+							}
+					},
+					{ "aTargets": [6],
+						  "mData": null,
+						  "mRender": function (data, type, full) {
+							  var actions = "";
+							  var dropdownActions = [];
+							  dropdownActions.push(detailsButton(full.proposalUuid));
+							  dropdownActions.push(discussionButton(full));
+							  if (!full.pendingChangeRequest) {
+							  	dropdownActions.push(decideButton(full));
+							  }
+							  
+							  actions += dropdownMenu(full.proposalUuid, dropdownActions);
+							  
+							  return actions;
+																				
+						  }
+						},
 				]
 			});	
+			
+			$('#proposalsTable').on('click', '.button-details', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '?role=controlbody';
+			});
+
+			$('#proposalsTable').on('click', '.button-discussion', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/discussion/CONTROLBODY/}]]' + uuid;
+			});
+			
+			$('#proposalsTable').on('click', '.button-decideproposal', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '/review';
+			});		
 	
 			$('.datatable').each(function(){
 				var datatable = $(this);
@@ -117,7 +189,7 @@
 				length_sel.addClass('form-control input-sm');
 			});
 		});
+	/* ]]> */
 	</script>
-	
 </body>
 </html>
