@@ -376,7 +376,7 @@
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
-	<entry key="form.label.factorB">Nominator (factor B)</entry>
+	<entry key="form.label.factorB">Numerator (factor B)</entry>
 	<entry key="form.label.factorC">Denominator (factor C)</entry>
 	<entry key="form.label.measureType">Measure type</entry>
 	<entry key="form.label.shape">Shape</entry>
