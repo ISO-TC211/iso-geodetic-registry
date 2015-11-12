@@ -285,11 +285,12 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	protected void importConcatenated(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
 		ConcatenatedOperationItemProposalDTO proposal = new ConcatenatedOperationItemProposalDTO();
 		this.setOperationItemValues(proposal, row, icConcatOp, sponsor, register);
-		
-		List<SingleOperationItem> ops = findOperations((Integer)row.get(COORD_OP_CODE));
-		for (SingleOperationItem op : ops) {
-			proposal.addCoordOperation(new SingleOperationItemProposalDTO(op));
-		}
+
+		// TODO fix
+//		List<SingleOperationItem> ops = findOperations((Integer)row.get(COORD_OP_CODE));
+//		for (SingleOperationItem op : ops) {
+//			proposal.addCoordOperation(new SingleOperationItemProposalDTO(op));
+//		}
 	}
 
 	private Addition processProposal(CoordinateOperationItemProposalDTO proposal) throws UnauthorizedException, InvalidProposalException {
