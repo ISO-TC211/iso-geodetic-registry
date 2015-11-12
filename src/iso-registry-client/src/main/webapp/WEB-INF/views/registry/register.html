@@ -71,8 +71,8 @@
 	</div>
 	
 	<div th:include="layout :: foot"></div>
-	
 
+	<div th:replace="globals-lists :: js-lists"/>
 <script type="text/javascript" th:inline="text">
 /*<![CDATA[ */
             
@@ -123,21 +123,8 @@
 	    });
 	};
 
-	
-	var detailsButton = function(item) {
-		return '<button type="button" id="details_' + item.uuid + '" class="btn btn-default btn-xs button-details" data-uuid="' + item.uuid + '">[[#{button.details}]]</button>';
-	};
-
-	var clarifyButton = function(item) {
-		return '<button type="button" id="clarify_' + item.uuid + '" class="btn btn-primary btn-xs button-clarify" data-uuid="' + item.uuid + '">[[#{button.clarification}]]</button>';
-	};
-
 	var retireButton = function(item) {
 		return '<button type="button" id="retire_' + item.uuid + '" class="btn btn-xs btn-danger" href="#confirmretirement-' + item.uuid +'" data-toggle="modal">[[#{button.retirement}]]</button>';
-	};
-
-	var supersedeButton = function(item) {
-		return '<button type="button" id="supersede_' + item.uuid + '" class="btn btn-warning btn-xs button-supersede" data-uuid="' + item.uuid + '">[[#{button.supersession}]]</button>';
 	};
 
 	var retirePopup = function(item) {
@@ -177,20 +164,45 @@
 	          '</div>';
 	}
 
-	var dropdownMenu = function(actions) {
-		var result = '<div class="btn-group">' +
-		         '<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
-				   '<span>[[#{button.action}]]</span> <span class="caret"></span>' +
-				 '</button>' +
-				 '<ul class="dropdown-menu" role="menu">';
+	var invalidateButton = function(item) {
+		return '<button type="button" id="invalidate_' + item.uuid + '" class="btn btn-xs btn-danger" href="#confirminvalidation-' + item.uuid +'" data-toggle="modal">[[#{button.invalidation}]]</button>';
+	};
 
-		$.each(actions, function(i, val) {
-			result += '<li><div style="margin-left: 10px; margin-top: 5px">' + val + '</div></li>';	
-		});
-				 
-		result += '</ul></div>';
-		
-		return result;
+	var invalidatePopup = function(item) {
+		return '<div class="modal fade" id="confirminvalidation-' + item.uuid + '" role="dialog">' +
+			      '<div class="modal-dialog">' +
+				    '<div class="modal-content">' +
+					  '<form action="[[@{__${basePath}__/}]]item/' + item.uuid + '/invalidate" method="get">' +
+					    '<div class="modal-header"><h4>[[#{popup.invalidate.header}]]</h4></div>' +
+						  '<div class="modal-body">' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="justification">[[#{popup.invalidate.justification}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="justification" name="justification" rows="4" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="registerManagerNotes">[[#{popup.invalidate.registerManagerNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="registerManagerNotes" name="registerManagerNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="controlBodyNotes">[[#{popup.invalidate.controlBodyNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="controlBodyNotes" name="controlBodyNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+						  '</div>' +
+						  '<div class="modal-footer">' +
+							'<button id="confirminvalidation" type="submit" class="btn btn-danger">[[#{button.confirm}]]</button>' +
+							'<button id="denyinvalidation" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
+						'</div>' +
+					  '</form>' +
+				    '</div>' +
+			      '</div>' +
+		        '</div>' +
+	          '</div>';
 	}
 
 	$('#contentsTable').on('click', '.button-details', function(e) {
@@ -206,6 +218,16 @@
 	$('#contentsTable').on('click', '.button-supersede', function(e) {
 		var uuid = $(this).data('uuid');
 		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/supersede';
+	});
+
+	$('#contentsTable').on('click', '.button-retire', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/retire';
+	});
+
+	$('#contentsTable').on('click', '.button-invalidate', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/invalidate';
 	});
 
 	$(document).ready(function() {
@@ -285,9 +307,11 @@
 						  dropdownActions.push(clarifyButton(full));
 						  dropdownActions.push(supersedeButton(full));
 						  dropdownActions.push(retireButton(full));
+						  dropdownActions.push(invalidateButton(full));
 						  
-						  actions += dropdownMenu(dropdownActions);
+						  actions += dropdownMenu(full.itemUuid, dropdownActions);
 						  actions += retirePopup(full);
+						  actions += invalidatePopup(full);
 					  }
 					  
 					  return actions;

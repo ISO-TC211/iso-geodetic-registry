@@ -38,9 +38,9 @@ import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
  */
 @Configuration
 @Import(ApiConfiguration.class)
-@ComponentScan(basePackages = { "de.geoinfoffm.registry", "org.iso.registry" })
+@ComponentScan(basePackages = { "de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" })
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"de.geoinfoffm.registry", "org.iso.registry"}, 
+@EnableJpaRepositories(basePackages = {"de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" }, 
 					   repositoryFactoryBeanClass = EntityBackendFactoryBean.class)
 public class IsoApiConfiguration 
 {
