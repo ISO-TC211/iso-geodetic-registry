@@ -225,7 +225,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			if (conversionUuid != null) {
 				ConversionItem conversion = em.find(ConversionItem.class, conversionUuid);
 				SingleOperationItemProposalDTO dto = new SingleOperationItemProposalDTO(conversion);
-				proposal.setConversion(dto);
+				proposal.setOperation(dto);
 			}
 			else {
 				logger.info(">>> references (yet) unknown conversion {}", conversionCode);
@@ -466,7 +466,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 				ConversionItem conversion = em.find(ConversionItem.class, conversionUuid);
 				if (conversion == null) {
 					logger.info(">>> fixed reference to conversion {}", conversion);
-					((GeneralDerivedCoordinateReferenceSystemItem)crs).setConversion(conversion);
+					((GeneralDerivedCoordinateReferenceSystemItem)crs).setOperation(conversion);
 				}
 			}
 			else {
