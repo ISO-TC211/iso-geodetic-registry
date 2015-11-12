@@ -347,7 +347,7 @@ public class RegisterItemController
 
 		RE_Register targetRegister = item.getRegister();
 		if (targetRegister == null) {
-			redirectAttributes.addFlashAttribute("registerName", targetRegister.getName());
+			redirectAttributes.addFlashAttribute("registerName", "<null>");
 			return "registry/register_notfound";
 		}
 		model.addAttribute("register", targetRegister);
