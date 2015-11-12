@@ -65,6 +65,15 @@ var goback = function() {
 	window.location.replace(document.referrer);
 };                                  
 
+var showError = function(errorText, basePath) {
+	var url = basePath + '/error';
+	var form = $('<form action="' + url + '" method="post">' +
+	  '<input type="hidden" name="errorDetails" value="' + escape(errorText) + '" />' +
+	  '</form>');
+	$('body').append(form);
+	form.submit();
+}
+
 String.prototype.trunc = String.prototype.trunc || function(n) {
     return this.length > n ? this.substr(0, n - 1) + '&hellip;' : this;
 };
