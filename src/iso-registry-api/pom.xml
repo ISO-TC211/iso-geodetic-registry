@@ -4,7 +4,7 @@
 	<parent>
         <groupId>org.iso.registry</groupId>
         <artifactId>iso-registry-parent</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.2</version>
         <relativePath>..</relativePath>
     </parent>	
 	<artifactId>iso-registry-api</artifactId>
@@ -14,7 +14,6 @@
 		<org.springframework-version>4.0.2.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
-		<registry-base-version>2.0.2-SNAPSHOT</registry-base-version>
 	</properties>
 	<repositories>
 <!-- 	<repository>
