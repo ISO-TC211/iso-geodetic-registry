@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment">
+</head>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="container-fluid" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title" th:text="#{mgmt.manager.content.header}">Proposed item</h3>
+					</div>
+					<div style="padding: 10px">
+						<table id="proposalsTable" class="datatable table table-striped">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.date}">Datum</th>
+									<th th:text="#{tableheader.name}">Name</th>
+									<th th:text="#{tableheader.itemClass}">Klasse</th>
+									<th th:text="#{tableheader.targetRegister}">Register</th>
+									<th th:text="#{tableheader.proposalType}">Vorschlagstyp</th>
+									<th th:text="#{tableheader.proposalStatus}">Status</th>
+									<th th:text="#{tableheader.disposition}"></th>
+									<th></th>
+								</tr>
+							</thead>
+<!-- 							<tbody> -->
+<!-- 								<tr th:each="item : ${proposals}"> -->
+<!-- 									<td th:text="${item.name}"></td> -->
+<!-- 									<td th:text="${item.itemClassName}"></td> -->
+<!-- 									<td th:utext="#{${item.proposalType}}"></td>											 -->
+<!-- 									<td th:text="#{${item.proposalStatus}}"></td> -->
+<!-- 									<td> -->
+<!-- 										<div class="btn-group" th:unless="${item.proposalGroupUuid}"> -->
+<!-- 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
+<!-- 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
+<!-- 											</button> -->
+<!-- 											<ul class="dropdown-menu" role="menu"> -->
+<!-- 												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}"><div style="margin: 5px;"> -->
+<!-- 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												 -->
+<!-- 												</div></li> -->
+<!-- 												<li th:if="${item.isUnderReview()}"><div style="margin: 5px"> -->
+<!-- 													<button th:id="'review_' + ${item.uuid}" th:if="${item.isUnderReview()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '/review\''" th:text="#{button.reviewProposal}">Begutachten</button> -->
+<!-- 												</div></li> -->
+<!-- 											</ul> -->
+<!-- 										</div> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
+	<div th:replace="globals-lists :: js-lists"/>
+	
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+	            
+	    var reloadTable = function() { 
+			var table = $('#proposalsTable').dataTable();
+			table.fnReloadAjax(null, null, null, true);
+		};
+	
+		$('#proposalsTable').on('click', '.button-details', function(e) {
+			var uuid = $(this).data('uuid');
+			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid;
+		});
+
+		$('#finishedProposalsTable').on('click', '.button-details', function(e) {
+			var uuid = $(this).data('uuid');
+			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid;
+		});
+
+		$('#proposalsTable').on('click', '.button-discussion', function(e) {
+			var uuid = $(this).data('uuid');
+			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '/discussion';
+		});
+
+		$('#proposalsTable').on('click', '.button-ballot', function(e) {
+			var uuid = $(this).data('uuid');
+			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '/ballot';
+		});
+
+		$('#proposalsTable').on('click', '.button-submitproposal', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/submit', null, function(success, errorThrown) {
+				if (success) {
+// 					showReload(uuid, 4);
+					document.location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#submitpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+	
+		$('#proposalsTable').on('click', '.button-withdrawproposal', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/withdraw', null, function(success, errorThrown) {
+				if (success) {
+					showReload(uuid, 4);
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#withdrawpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+		$('#proposalsTable').on('click', '.button-deleteproposal', function(e) {
+			var uuid = $(this).data('uuid');
+			postDelete('[[@{__${basePath}__/proposals/}]]' + uuid, function(success, errorThrown) {
+				if (success) {
+					document.location.reload();
+				}
+				else {
+					alert(errorThrown);
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#deletepopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+		$('#proposalsTable').on('click', '.button-reviewproposal', function(e) {
+			var uuid = $(this).data('uuid');
+			location.href = "[[@{__${basePath}__/proposals/}]]" + uuid + "/review";
+		});
+
+		$('#proposalsTable').on('click', '.button-startdiscussion', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/discussion/start', null, function(success, errorThrown) {
+				if (success) {
+					document.location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#startdiscussionpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+		$('#proposalsTable').on('click', '.button-enddiscussion', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/discussion/end', null, function(success, errorThrown) {
+				if (success) {
+					document.location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#enddiscussionpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+		$('#proposalsTable').on('click', '.button-startballot', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/ballot/start', null, function(success, errorThrown) {
+				if (success) {
+					document.location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#startballotpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+		$('#proposalsTable').on('click', '.button-endballot', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/ballot/end', null, function(success, errorThrown) {
+				if (success) {
+					document.location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#endballotpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+		$('#proposalsTable').on('click', '.button-endappeal', function(e) {
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/appeal/end', null, function(success, errorThrown) {
+				if (success) {
+					document.location.reload();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+			$('#endappealpopup-' + uuid).modal('hide');
+			showLoader(uuid, 5);
+		});
+
+			
+		var selected =  new Array();
+	
+		$(document).ready(function() {
+			var table;
+			
+			table = $('#proposalsTable').dataTable({
+				"sAjaxSource": "[[@{__${basePath}__/}]]management/manager/proposals",
+				"bProcessing": true,
+				"bServerSide": true,
+				"bStateSave": true,
+				"bInfo": true,
+				"fnServerParams": function (aoData) {
+		        },
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				"fnRowCallback": function(nRow, aData, iDisplayIndex) {
+		        },
+				"fnDrawCallback": function( oSettings ) {
+				},				
+				"aaSorting": [[ 5, "asc" ]],
+				"aoColumns": [
+					{ 
+						"mDataProp": "proposalDate",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "title",
+						"sWidth": "25%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "itemClassName",
+						"sWidth": "10%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{ 
+						"mDataProp": "targetRegister",
+						"sWidth": "10%",
+						"bSearchable": false,
+						"bSortable": false
+					},
+					{ 	
+						"mDataProp": "proposalType",
+						"sWidth": "10%",
+					 	"bSortable": false
+					},
+					{ 
+						"mDataProp": "proposalStatus",
+						"sWidth": "15%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "disposition",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{ 
+						"sWidth": "10%",
+						"bSortable": false
+					},
+				],
+				"aoColumnDefs": [
+					{ "aTargets": [7],
+					  "mData": null,
+					  "mRender": function (data, type, full) {
+						  var actions = "";
+						  var dropdownActions = [];
+						  dropdownActions.push(detailsButton(full.proposalUuid));
+						  if (full.notSubmitted) {
+							  if (full.group) {
+								  dropdownActions.push(dissolveGroupButton(full));
+								  actions += dissolveGroupPopup(full);
+							  }
+							  else {
+								  dropdownActions.push(addToGroupButton(full));
+								  actions += addToGroupPopup(full);
+							  }
+						  }
+						  if (full.underReview) {
+							  dropdownActions.push(reviewButton(full));
+						  }
+						  if (full.technicalProposalStatus === "QUEUED") {
+							  dropdownActions.push(startDiscussionButton(full));
+							  actions += startDiscussionPopup(full);
+						  }
+						  if (full.technicalProposalStatus === "IN_DISCUSSION") {
+							  dropdownActions.push(discussionButton(full));
+							  dropdownActions.push(endDiscussionButton(full));
+							  actions += endDiscussionPopup(full);
+						  }
+						  if (full.technicalProposalStatus === "UNDER_RR_REVIEW") {
+							  dropdownActions.push(startBallotButton(full));
+							  actions += startBallotPopup(full);
+						  }
+						  if (full.technicalProposalStatus === "BALLOTING") {
+							  dropdownActions.push(ballotButton(full));
+							  dropdownActions.push(endBallotButton(full));
+							  actions += endBallotPopup(full);
+						  }
+						  if (full.technicalProposalStatus === "APPEALABLE") {
+							  dropdownActions.push(endAppealButton(full));
+							  actions += endAppealPopup(full);
+						  }
+						  
+						  dropdownActions.push(deleteButton(full));
+						  actions += deletePopup(full);
+
+						  actions += dropdownMenu(full.proposalUuid, dropdownActions);
+						  
+						  return actions;
+																			
+					  }
+					}
+				]
+			});
+
+			$('.datatable').each(function(){
+				var datatable = $(this);
+				// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+				var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+				search_input.attr('placeholder', '[[#{datatable.searchPlaceholder.title}]]');
+				search_input.addClass('form-control input-sm');
+				// LENGTH - Inline-Form control
+				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+				length_sel.addClass('form-control input-sm');
+			});
+			
+			$('#creategroup').click(function() {
+			    $(this).button('loading');
+				var data = { 'groupName' : $('#groupName').val() };
+				postForm('[[@{__${basePath}__/management/submitter/creategroup}]]', data, function(success, response) {
+					if (success) {
+						location.href = '[[@{__${basePath}__/proposals/}]]' + response;
+					}
+					else {
+						showError(response, '[[@{__${basePath}__}]]');
+					}
+				});
+			});
+	
+			$('body').on('click', '.button-dissolvegroup', function() {
+			    $(this).button('loading');
+				var uuid = $(this).data('uuid');
+				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/dissolve', null, function(success, errorThrown) {
+					if (success) {
+						location.reload();
+					}
+					else {
+						showError(errorThrown, '[[@{__${basePath}__}]]');					
+					}
+				});
+			});
+	
+			$('body').on('click', '.button-addtogroup', function() {
+			    $(this).button('loading');
+				var uuid = $(this).data('uuid');
+				initGroupSelect(uuid);
+			});
+
+			$('#file').change(function() {
+				$('#submitUpload').removeAttr('disabled');
+			});
+			
+			$('#submitUpload').click(function() {
+				$('body').addClass('loading');				
+				$('#uploadForm').submit();
+			});
+
+		});
+		
+		
+	/* ]]> */
+	</script>
+	
+</body>
+</html>

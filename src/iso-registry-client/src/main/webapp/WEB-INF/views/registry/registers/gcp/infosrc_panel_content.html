@@ -1,0 +1,167 @@
+<div th:fragment="informationSourcePanelContent(index)">
+	<div th:if="${isProposal}">
+<!-- 		<div th:replace="globals :: formLabel('informationSource', #{form.label.editInformationSource})"/> -->
+		<div th:unless="true" id="selectInformationSourceGroup">
+			<input type="hidden" id="selectInformationSource" style="width: 100%" />
+			<script type="text/javascript" charset="utf-8" th:inline="text">
+			/* <![CDATA[ */
+				$(function() {
+					$('#selectInformationSource').select2({
+						placeholder: "[[#{form.placeholder.selectInformationSource}]]",
+					    allowClear: true,
+						multiple: false,
+						dropdownCssClass: "bigdrop",
+						ajax: {
+							url: "[[@{__${basePath}__/}]]entities/citations",
+							dataType: "json",
+							data: function(term, page) {
+								return {
+									orderBy: 'description',
+									q: term
+								};
+							},
+							results: function (data) {
+								return { 
+									results : $.map(data, function (item) { 
+										return { 
+											id: item[0], 
+											text: item[1], 
+										} 
+									}) 
+								};
+							}
+			            },
+			            initSelection: function(element, callback) {
+		               		var result = [];
+		               		// Collect AJAX requests needed to resolve initially
+		               		// selected items
+		                	$.when($.ajax("[[@{__${basePath}__/}]]entities/citations", {
+		                		uuid: $(element).val(),
+// 								description: $(element).val(),
+		                    	dataType: "json"
+		                	}))
+		                	.done(function(data) {
+		                		item = data[0];
+		                		result.push({
+		                			id: item[0],
+									text: item[1], 
+		                		});
+				                callback(result[0]); 
+		                	});
+			            }						            
+			        });
+					
+					if ([[${proposal.isClarification()}]]) {
+						$('#selectInformationSource').select2("readonly", true);
+					}
+				});
+			
+			/* ]]> */
+			</script>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12" th:with="property='title',inputType='text',label=#{form.label.title},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.title},isRequired='true'">
+			<div th:replace="globals :: textArea"/>
+		</div>
+	</div>
+	<div th:class="'alternate-title-row-' + ${index}" th:attr="data-count=${objectPath} ? '0' : *{alternateTitle.size()}"/>
+	<div th:unless="${objectPath}" th:each="altTitle,rowStat : *{alternateTitle}" th:id="'altTitleRow-' + ${rowStat.index}" class="row alternate-title-row">
+		<div class="form-group col-md-12">
+			<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
+			<div class="input-group">
+				<input th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
+				<span class="input-group-btn" th:if="${isProposal}">
+					<button type="button" class="btn btn-default button-delete-alt-title" th:id="'delete-alt-title-' + ${rowStat.index}"><span class="glyphicon glyphicon-remove"/></button>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div th:if="${isProposal}" th:unless="${isReadOnly}" class="row">
+		<div class="form-group col-md-4">
+			<button th:id="'addAlternateTitle-' + ${index}" type="button" th:attr="data-index=${index}" class="btn btn-default button-add-alternate-title" th:text="#{button.addAlternateTitle}"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" th:with="property='author',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.author},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.author},isRequired='true'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" th:with="property='publisher',modifier='informationSource',inputType='text',label=#{form.label.publisher},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.publisher},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6" th:with="property='publicationDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.publicationDate},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.publicationDate},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+		<div class="col-md-6" th:with="property='revisionDate',modifier='informationSource-' + ${index},inputType='text',label=#{form.label.revisionDate},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.revisionDate},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6" th:with="property='edition',modifier='informationSource',inputType='text',label=#{form.label.edition},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.edition},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+		<div class="col-md-6" th:with="property='editionDate',modifier='informationSource',inputType='text',label=#{form.label.editionDate},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.editionDate},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" th:with="property='series.name',modifier='informationSource',inputType='text',label=#{form.label.seriesName},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesName},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6" th:with="property='series.issueIdentification',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+		<div class="col-md-6" th:with="property='series.page',modifier='informationSource',inputType='text',label=#{form.label.seriesPage},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesPage},isRequired='false'">
+			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.otherCitationDetails},isRequired='false'">
+			<div th:replace="globals :: textArea"/>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+		$(document).ready(function() {
+// 			$('#alternateTitle').select2({
+// 				tags: [],
+// 				multiple: true,
+// 				formatNoMatches: "Please enter an alternate title. You may enter multiple titles by entering ~.",
+// 				separator: '~',
+// 				tokenSeparators: ['~'],
+// 				initSelection : function (element, callback) {
+// 					var data = [];
+// 		        	$(element.val().split('~')).each(function () {
+// 				        data.push({
+// 			            	id: this, 
+// 			            	text: this
+// 			            });
+// 			        });
+// 			        callback(data);
+// 			    }
+// 			});
+
+			$('body').on('click', '.button-add-alternate-title', function() {
+				var idx = $(this).data('index');
+				var count = $('.alternate-title-row-' + idx).data('count');
+				$('.alternate-title-row-' + idx).last().after("<div class='row alternate-title-row'><div class='form-group col-md-12'><div class='control-label' for='alternateTitle'><label class='control-label' for='alternateTitle'><span>[[#{form.label.alternateTitle}]]</span></label></div><div class='input-group'><input class='form-control' name='informationSource[" + idx + "].alternateTitle[" + count + "]' value=''/><span class='input-group-btn'><button type='button' class='btn btn-default button-delete-alt-title' id='delete-alt-title-" + count + "'><span class='glyphicon glyphicon-remove'/></button></span></div></div></div>");
+				$('.alternate-title-row-' + idx).data('count', ++count);
+			});
+			
+			$('body').on('click', '.button-delete-alt-title', function(e) {
+				$(this).closest('.alternate-title-row').remove();
+			});
+		});				
+	/* ]]> */		
+	</script>
+</div>		
+	
+	
