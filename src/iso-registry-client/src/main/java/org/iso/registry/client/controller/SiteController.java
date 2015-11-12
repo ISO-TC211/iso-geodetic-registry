@@ -2,7 +2,9 @@ package org.iso.registry.client.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,22 +13,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.GeodeticCoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
-import org.iso.registry.core.model.UnitOfMeasureItem;
-import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
-import org.iso.registry.core.model.cs.CoordinateSystemItem;
-import org.iso.registry.core.model.datum.EllipsoidItem;
-import org.iso.registry.core.model.datum.GeodeticDatumItem;
-import org.iso.registry.core.model.datum.PrimeMeridianItem;
-import org.iso.registry.core.model.iso19103.MeasureType;
-import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
 import org.isotc211.iso19135.RE_SubmittingOrganization_PropertyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,7 +216,37 @@ public class SiteController extends AbstractController
 		return "acls";
 	}
 
-
+	/**
+	 * Displays the application error view.
+	 * 
+	 * May be used e.g. by unsuccessful AJAX calls to display the server-side exception to the user
+	 *  
+	 * @param model View model (injected)
+	 * @param details POST parameter "errorDetails" to hold the server-side error message
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/error", method = RequestMethod.POST) 
+	public String handleError(final Model model, @RequestParam("errorDetails") String details) throws UnsupportedEncodingException {
+		// Log the error
+		if (!StringUtils.isEmpty(details)) {
+			logger.error(details);
+			try {
+				details = URLDecoder.decode(details, "UTF-8"); 
+			}
+			catch (Throwable t) {
+				details = "Please check the server log for details.";
+			}
+			
+			model.addAttribute("errorDetails", details);
+		}
+		else {
+			model.addAttribute("errorDetails", "No error details available");			
+		}
+		
+		return "error";
+	}
+	
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String registerUser(WebRequest request, @ModelAttribute("user") final SignupFormBean userData,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) {
