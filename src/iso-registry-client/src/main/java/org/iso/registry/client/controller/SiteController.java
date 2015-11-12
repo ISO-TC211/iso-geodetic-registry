@@ -103,7 +103,7 @@ import de.geoinfoffm.registry.persistence.ItemClassRepository;
  * 
  */
 @Controller
-@ComponentScan(basePackages = { "org.iso.registry", "de.geoinfoffm.registry" })
+@ComponentScan(basePackages = { "org.iso.registry", "de.bespire.registry", "de.geoinfoffm.registry" })
 public class SiteController extends AbstractController
 {
 	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);

@@ -18,7 +18,7 @@ import de.geoinfoffm.registry.client.web.AbstractWebMvcConfigurerAdapter;
  * @author Florian Esser
  * 
  */
-@ComponentScan(basePackages = { "org.iso.registry", "de.geoinfoffm.registry" })
+@ComponentScan(basePackages = { "org.iso.registry", "de.bespire.registry", "de.geoinfoffm.registry" })
 @EnableWebMvc
 @EnableTransactionManagement
 @EnableAsync
