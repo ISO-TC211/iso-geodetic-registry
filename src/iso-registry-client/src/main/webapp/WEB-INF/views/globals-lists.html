@@ -8,10 +8,10 @@
 		return itemActionButton('clarify', itemUuid, 'primary', '[[#{button.clarification}]]');
 	}
 	
-	var retireButton = function(itemUuid) {
-		return itemActionButton('retire', itemUuid, 'danger', '[[#{button.retirement}]]');
-	}
-             
+	var supersedeButton = function(itemUuid) {
+		return itemActionButton('supersede', itemUuid, 'warning', '[[#{button.supersession}]]');
+	};
+
 	var detailsButton = function(itemUuid, additionalClasses) {
 		var classes;
 		if (typeof additionalClasses === 'undefined') {
@@ -215,22 +215,6 @@
 		result = result.replace('\{0\}', itemTitle);
 		
 		return result;		
-	};
-	
-	var retirePopupBody = function(itemUuid) {
-		return '<form id="retirepopupform-' + itemUuid + '">' +
-				'<p>[[#{popup.retire.justification}]]</p>' +
-				'<div class="form-group">' +
-					'<div class="controls">' +
-						'<textarea id="justification-' + itemUuid + '" name="justification" rows="3" cols="40" class="form-control" required="required" type="text"></textarea>' +
-					'</div>' +
-				'</div>' +
-			'</form>';			
-	};
-	
-	var retirePopup = function(itemUuid) {
-		var body = retirePopupBody(itemUuid);
-		return itemPopup(itemUuid, '', 'retire', '[[#{popup.retire.header}]]', body, '[[#{button.retirement}]]', 'danger');
 	};
 	
 	var submitPopup = function(item) {
