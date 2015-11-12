@@ -150,6 +150,7 @@
 	<entry key="button.clarification">Clarify</entry>
 	<entry key="button.supersession">Supersede</entry>
 	<entry key="button.retirement">Retire</entry>
+	<entry key="button.invalidation">Invalidate</entry>
 	<entry key="button.newUser">New user</entry>
 	<entry key="button.delete">Delete</entry>
 	<entry key="button.yes">Yes</entry>
@@ -208,6 +209,7 @@
 	<entry key="CLARIFICATION">Clarification</entry>
 	<entry key="SUPERSESSION">Supersession</entry>
 	<entry key="RETIREMENT">Retirement</entry>
+	<entry key="INVALIDATION">Invalidation</entry>
 	<entry key="GROUP">Proposal Group</entry>
 	
 	<entry key="NOT_SUBMITTED">not yet submitted</entry>
@@ -239,6 +241,7 @@
 	<entry key="de.geoinfoffm.registry.core.model.SupersessionPart">Supersession</entry>
 	<entry key="de.geoinfoffm.registry.core.model.Retirement">Retirement</entry>
 	<entry key="de.geoinfoffm.registry.core.model.ProposalGroup">Proposal Group</entry>
+	<entry key="de.bespire.registry.core.model.Invalidation">Invalidation</entry>
 
 	<entry key="alert.loginFailed">Login failed. Please check your login credentials.</entry>
 	<entry key="alert.userCreated">The user was created successfully.</entry>
@@ -267,6 +270,10 @@
 	<entry key="popup.retire.justification">Please provide a justification for the retirement:</entry>
 	<entry key="popup.retire.registerManagerNotes">Notes for the register manager:</entry>
 	<entry key="popup.retire.controlBodyNotes">Notes for the control body:</entry>
+	<entry key="popup.invalidate.header">Invalidate item</entry>
+	<entry key="popup.invalidate.justification">Please provide a justification for the invalidation:</entry>
+	<entry key="popup.invalidate.registerManagerNotes">Notes for the register manager:</entry>
+	<entry key="popup.invalidate.controlBodyNotes">Notes for the control body:</entry>
 	<entry key="popup.acceptProposal.header">Accept proposal</entry>
 	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Please describe the event where the decision to accept the proposal was made:</entry>
 	<entry key="popup.rejectProposal.header">Reject proposal</entry>
