@@ -282,6 +282,32 @@ public class RegisterItemController
 		return new BasePathRedirectView("/management/submitter");
 	}
 
+	@RequestMapping(value = "/{uuid}/invalidate", method = RequestMethod.GET)
+	@Transactional
+	public View proposeItemInvalidation(@PathVariable("uuid") UUID itemUuid,
+									    @RequestParam(value = "justification", required = true) String justification,
+									    @RequestParam(value = "registerManagerNotes", required = false) String registerManagerNotes,
+									    @RequestParam(value = "controlBodyNotes", required = false) String controlBodyNotes) throws IllegalOperationException, ItemNotFoundException {
+		if (StringUtils.isEmpty(justification)) {
+			throw new IllegalOperationException("Cannot accept empty justification.");
+		}
+		
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		if (item == null) {
+			throw new ItemNotFoundException(itemUuid);
+		}
+		
+		if (!item.isValid()) {
+			throw new IllegalOperationException(String.format("Cannot retire item with status %s", item.getStatus().name()));
+		}
+		
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
+
+		proposalService.createInvalidation(item, justification, registerManagerNotes, controlBodyNotes, suborg);
+
+		return new BasePathRedirectView("/management/submitter");
+	}
+
 	@RequestMapping(value = "/{uuid}/supersede", method = RequestMethod.GET)
 	@Transactional
 	public String createSupersessionProposal(final WebRequest request, 
@@ -579,6 +605,8 @@ public class RegisterItemController
 						return ProposalType.SUPERSESSION;
 					case RETIREMENT:
 						return ProposalType.RETIREMENT;
+					case INVALIDATION:
+						return ProposalType.INVALIDATION;
 					default:
 						return null;
 				}
