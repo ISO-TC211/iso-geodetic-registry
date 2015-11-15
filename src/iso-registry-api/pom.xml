@@ -14,6 +14,7 @@
 		<org.springframework-version>4.0.2.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
+		<org.apache.sis-version>0.6</org.apache.sis-version>
 		<registry-base-version>2.0.2-SNAPSHOT</registry-base-version>
 	</properties>
 	<repositories>
@@ -22,7 +23,7 @@
 			<url>http://repo1.maven.org/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
- 			</snapshots>
+			</snapshots>
 		</repository>	
 		<repository>
 			<id>apache.snapshots</id>
@@ -156,6 +157,11 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity3</artifactId>
 			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.sis.core</groupId>
+			<artifactId>sis-referencing</artifactId>
+			<version>${org.apache.sis-version}</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>
