@@ -40,7 +40,7 @@
 <!-- 							<a th:unless="${isProposal}" th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name} + ' [' + ${axis.code} + ']'"></a> -->
 <!-- 						</td>							 -->
 						<td th:text="${axis.identifier}"/>
-						<td th:text="${axis.name}"/>
+						<td><a th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name}"/></td>
 						<td th:text="${axis.axisAbbreviation}"/>
 						<td th:text="${axis.axisUnit.name}"/>
 						<td th:text="${axis.axisDirection.code}"/>

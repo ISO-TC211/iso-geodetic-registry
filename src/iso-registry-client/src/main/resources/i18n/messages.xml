@@ -199,6 +199,7 @@
 	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 	<entry key="button.addAlternateTitle">Add alternate title</entry>
 	<entry key="button.pdf">Download</entry>
+	<entry key="button.wkt">Show WKT</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
