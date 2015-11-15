@@ -21,6 +21,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -40,6 +41,10 @@ import org.apache.fop.apps.MimeConstants;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
+import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.VerticalCoordinateReferenceSystemItem;
+import org.iso.registry.core.model.cs.CoordinateSystemItem;
+import org.iso.registry.persistence.io.wkt.WktExporter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -255,6 +260,33 @@ public class RegisterItemController
 		response.flushBuffer();
 	}
 
+	@RequestMapping(value = "/{uuid}/wkt", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public void viewItemAsWkt(@PathVariable("uuid") UUID itemUuid, final Model model, HttpServletResponse response) throws ItemNotFoundException, IOException, JAXBException {
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		RegisterItemViewBean vb = viewBeanFactory.getViewBean(item);
+		
+		model.addAttribute("item", vb);
+		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+
+		StringWriter sw = new StringWriter();
+		ServletOutputStream out = response.getOutputStream();
+
+		if (item instanceof CoordinateReferenceSystemItem) {
+			WktExporter.exportCrs((CoordinateReferenceSystemItem)item, sw);
+		}
+		else if (item instanceof CoordinateSystemItem) {
+			WktExporter.exportCs((CoordinateSystemItem)item, sw);
+		}
+		else {
+			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as WKT", item.getClass().getName()));
+		}
+
+		out.print(sw.toString());
+		out.flush();
+		out.close();
+		response.flushBuffer();
+	}
 
 	@RequestMapping(value = "/{uuid}/retire", method = RequestMethod.GET)
 	@Transactional
