@@ -109,14 +109,8 @@ public class WktExporter
 	private WktExporter() { }
 	
 	public static void exportCrs(CoordinateReferenceSystemItem crsItem, Writer target) throws IOException, JAXBException {
-//		WKTFormat wkt = new WKTFormat(Locale.ENGLISH, TimeZone.getTimeZone("UTC")); 
-//		CRS.fromWKT("GEODCRS[\"NAD83\",DATUM[\"North American Datum 1983\",ELLIPSOID[\"GRS 1980\",6378137,298.257222101,LENGTHUNIT[\"metre\",1.0]]],CS[ellipsoidal,2],AXIS[\"latitude\",north,ORDER[1]],AXIS[\"longitude\",east,ORDER[2]],ANGLEUNIT[\"degree\",0.01745329252],ID[\"EPSG\",4269]]");
-//		wkt.format(crs(crsItem), target);
-		
-		MarshallerPool pool = new MarshallerPool(singletonMap("flo", ""));
-//		JAXBContext ctx = JAXBContext.newInstance(AbstractIdentifiedObject.class, AbstractCRS.class, AbstractCS.class, DefaultInternationalString.class, Unit.class);
-//		ctx.createMarshaller().marshal(crs(crsItem), target);
-		pool.acquireMarshaller().marshal(crs(crsItem), target);
+		WKTFormat wkt = new WKTFormat(Locale.ENGLISH, TimeZone.getTimeZone("UTC")); 
+		wkt.format(crs(crsItem), target);
 	}
 
 	public static void exportCs(CoordinateSystemItem csItem, Appendable target) throws IOException {
