@@ -17,13 +17,21 @@
 		<registry-base-version>2.0.2-SNAPSHOT</registry-base-version>
 	</properties>
 	<repositories>
-<!-- 	<repository>
-			<id>tango-snapshots</id>
-				<url>http://localhost:8083/artifactory/libs-snapshot-local</url>
+		<repository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2</url>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
  			</snapshots>
- 		</repository>-->
+		</repository>	
+		<repository>
+			<id>apache.snapshots</id>
+			<name>Apache Snapshot Repository</name>
+			<url>http://repository.apache.org/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>		
  	</repositories>
 	<build>
 		<directory>target</directory>
