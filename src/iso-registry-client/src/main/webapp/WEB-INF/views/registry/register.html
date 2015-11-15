@@ -300,7 +300,7 @@
 				{ "aTargets": [4],
 				  "mData": null,
 				  "mRender": function (data, type, full) {
-					  var actions = detailsButton(full);
+					  var actions = detailsButton(full.uuid);
 					  
 					  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]] && full.status === 'valid') {
 						  var dropdownActions = []; 
