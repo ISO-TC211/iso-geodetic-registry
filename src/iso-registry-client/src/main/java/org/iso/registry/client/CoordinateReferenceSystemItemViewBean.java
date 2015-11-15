@@ -28,7 +28,7 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 	private CoordinateReferenceSystemItemViewBean horizontalCrs;
 	private CoordinateReferenceSystemItemViewBean verticalCrs;
 	private CoordinateReferenceSystemItemViewBean baseCrs;
-	private SingleOperationItemViewBean conversion;
+	private SingleOperationItemViewBean operation;
 
 	public CoordinateReferenceSystemItemViewBean(Appeal appeal) {
 		super(appeal);
@@ -40,6 +40,10 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 
 	public CoordinateReferenceSystemItemViewBean(RE_RegisterItem item) {
 		super(item);
+	}
+
+	public CoordinateReferenceSystemItemViewBean(RE_RegisterItem item, boolean loadDetails) {
+		super(item, loadDetails);
 	}
 
 	public CoordinateReferenceSystemItemViewBean(SimpleProposal proposal) {
@@ -91,7 +95,7 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 				this.setBaseCrs(new CoordinateReferenceSystemItemViewBean(derivedCrs.getBaseCrs()));
 			}
 			if (derivedCrs.getOperation() != null) {
-				this.setConversion(new SingleOperationItemViewBean(derivedCrs.getOperation()));
+				this.setOperation(new SingleOperationItemViewBean(derivedCrs.getOperation()));
 			}
 		}
 		
@@ -171,11 +175,11 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 		this.baseCrs = baseCrs;
 	}
 
-	public SingleOperationItemViewBean getConversion() {
-		return conversion;
+	public SingleOperationItemViewBean getOperation() {
+		return operation;
 	}
 
-	public void setConversion(SingleOperationItemViewBean conversion) {
-		this.conversion = conversion;
+	public void setOperation(SingleOperationItemViewBean operation) {
+		this.operation = operation;
 	}
 }
