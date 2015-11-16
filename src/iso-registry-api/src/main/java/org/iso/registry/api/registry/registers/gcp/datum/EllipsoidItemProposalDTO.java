@@ -62,8 +62,8 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	public EllipsoidItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public EllipsoidItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public EllipsoidItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

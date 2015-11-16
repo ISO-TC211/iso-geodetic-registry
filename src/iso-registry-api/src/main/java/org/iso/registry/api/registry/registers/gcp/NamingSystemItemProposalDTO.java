@@ -23,8 +23,8 @@ public class NamingSystemItemProposalDTO extends IdentifiedItemProposalDTO
 		super(proposal, sponsor);
 	}
 
-	public NamingSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public NamingSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public NamingSystemItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

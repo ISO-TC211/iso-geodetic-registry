@@ -50,8 +50,8 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 	
-	public DatumItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public DatumItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public DatumType getType() {

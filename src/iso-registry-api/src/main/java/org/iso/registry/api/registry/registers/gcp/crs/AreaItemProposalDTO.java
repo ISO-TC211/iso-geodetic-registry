@@ -35,8 +35,8 @@ public class AreaItemProposalDTO extends IdentifiedItemProposalDTO
 		super(proposal, sponsor);
 	}
 
-	public AreaItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public AreaItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public AreaItemProposalDTO(AreaItem area) {
