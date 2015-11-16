@@ -36,7 +36,8 @@ public class IsoExcelConfiguration
 			throw new IllegalStateException(String.format("Could not load resource path %s", pathToTemplate));
 		}
 
-		JAXBContext ctx = com.sun.xml.internal.bind.v2.ContextFactory.createContext(new Class[] { ExcelConfiguration.class, SheetConfiguration.class, ColumnConfiguration.class }, null);
+//		JAXBContext ctx = com.sun.xml.internal.bind.v2.ContextFactory.createContext(new Class[] { ExcelConfiguration.class, SheetConfiguration.class, ColumnConfiguration.class }, null);
+		JAXBContext ctx = JAXBContext.newInstance(new Class[] { ExcelConfiguration.class, SheetConfiguration.class, ColumnConfiguration.class }, null);
 		Path path;
 		try {
 			path = Paths.get(url.toURI());
