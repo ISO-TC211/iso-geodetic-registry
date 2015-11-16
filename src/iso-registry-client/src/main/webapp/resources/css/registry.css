@@ -35,4 +35,12 @@
   overflow: auto;
   padding-bottom: 150px; this needs to be bigger than footer height
 }
-  
+ 
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .loading-modal {
+    display: block;
+}
+ 
