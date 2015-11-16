@@ -42,7 +42,7 @@
 				<includes>
 					<include>*.xml</include>
 				</includes>
-				<targetPath></targetPath>
+				<targetPath>.</targetPath>
 				<filtering>true</filtering>
 			</resource>
 			<resource>
