@@ -1,5 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
@@ -15,6 +17,7 @@ import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
@@ -178,5 +181,9 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 			this.setSphere(el.isSphere());
 		}
 	}
-	
+
+	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		return super.findDependentProposals(this.getSemiMajorAxisUom(), this.getSemiMinorAxisUom(), this.getInverseFlatteningUom());
+	}
 }

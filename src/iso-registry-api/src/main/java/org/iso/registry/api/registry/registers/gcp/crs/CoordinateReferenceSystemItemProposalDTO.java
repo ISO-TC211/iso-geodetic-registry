@@ -147,7 +147,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 
 	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
-		return super.findDependentProposals(this.getDatum());
+		return super.findDependentProposals(this.getDatum(), this.getCoordinateSystem(), this.getBaseCrs(), this.getHorizontalCrs(), this.getVerticalCrs());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -292,6 +292,5 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 			}
 		}
 	}
-
 
 }

@@ -1,5 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp.cs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
@@ -15,6 +18,7 @@ import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalDTO
@@ -177,6 +181,24 @@ public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalD
 			this.setMinimumValue(axis.getMinimumValue());
 			this.setRangeMeaning(axis.getRangeMeaning());
 		}
+	}
+
+	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
+		result.addAll(super.getAggregateDependencies());
+
+		result.add(this.getAxisUnit());
+
+		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
+	}
+
+	@Override
+	public List<RegisterItemProposalDTO> getCompositeDependencies() {
+		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
+		result.addAll(super.getCompositeDependencies());
+		
+		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
 	}
 
 }
