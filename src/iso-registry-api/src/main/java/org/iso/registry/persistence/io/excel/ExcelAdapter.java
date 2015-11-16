@@ -122,9 +122,6 @@ public class ExcelAdapter
 	private GlobalIdentifiedItemRepository identifiedItemRepository;
 	
 	@Autowired
-	private ViewBeanFactory viewBeanFactory;
-	
-	@Autowired
 	private ConversionService conversionService;
 	
 	@Autowired
@@ -159,43 +156,6 @@ public class ExcelAdapter
 	}
 	
 	public <E extends Entity> void exportEntities(Collection<E> entities, Workbook workbook) throws IOException {
-		ExcelConfiguration xlConfig = null;
-		JAXBContext ctx;
-		try {
-			ctx = com.sun.xml.internal.bind.v2.ContextFactory.createContext(new Class[] { ExcelConfiguration.class, SheetConfiguration.class, ColumnConfiguration.class }, null);
-			File config = new File("D:/Projekte/ISO/xlConfig.xml");
-			StreamSource source = new StreamSource(config);
-			xlConfig = ctx.createUnmarshaller().unmarshal(source, ExcelConfiguration.class).getValue();
-		}
-		catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		this.configuration = xlConfig;
-
-//		Sheet mainSheet = workbook.getSheetAt(0);
-//		
-//		Map<String, List<Entity>> subsheetEntities = new HashMap<String, List<Entity>>();
-//		for (int i = 1; i < workbook.getNumberOfSheets(); i++) {
-//			subsheetEntities.put(workbook.getSheetAt(i).getSheetName(), new ArrayList<Entity>());
-//		}
-//
-//		Row headerRow = mainSheet.getRow(0);
-//		int rowNum = 1;
-//		for (Entity entity : entities) {
-//			exportEntity(entity, workbook, mainSheet, rowNum, headerRow, subsheetEntities);
-//			rowNum++;
-//		}
-//		
-//		for (String subsheetName : subsheetEntities.keySet()) {
-//			Sheet subSheet = workbook.getSheet(subsheetName);
-//			Row subHeaderRow = subSheet.getRow(0);
-//			int subRowNum = 1;
-//			for (Entity subEntity : subsheetEntities.get(subsheetName)) {
-//				exportEntity(subEntity, workbook, subSheet, subRowNum, subHeaderRow, subsheetEntities);
-//				subRowNum++;
-//			}
-//		}
-		
 		Map<UUID, String> visitedEntities = new HashMap<>();
 		Map<String, Integer> rows = new HashMap<>();
 		for (SheetConfiguration config : configuration.getSheet()) {

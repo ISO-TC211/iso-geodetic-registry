@@ -6,17 +6,14 @@ package org.iso.registry.client.controller.registry;
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,23 +35,19 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
+import org.iso.registry.persistence.IsoExcelConfiguration;
 import org.iso.registry.persistence.io.excel.ExcelAdapter;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -81,7 +74,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -97,9 +89,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import de.bespire.io.excel.ColumnConfiguration;
 import de.bespire.io.excel.ExcelConfiguration;
-import de.bespire.io.excel.SheetConfiguration;
 import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
@@ -883,22 +873,6 @@ public class RegisterController
 		return proposal;
 	}	
 	
-	private ExcelConfiguration getExcelConfiguration() {
-		ExcelConfiguration xlConfig = null;
-		JAXBContext ctx;
-		try {
-			ctx = com.sun.xml.internal.bind.v2.ContextFactory.createContext(new Class[] { ExcelConfiguration.class, SheetConfiguration.class, ColumnConfiguration.class }, null);
-			File config = new File("D:/Projekte/ISO/xlConfig.xml");
-			StreamSource source = new StreamSource(config);
-			xlConfig = ctx.createUnmarshaller().unmarshal(source, ExcelConfiguration.class).getValue();
-		}
-		catch (JAXBException e) {
-			e.printStackTrace();
-		}
-
-		return xlConfig;
-	}
-
 	@RequestMapping(value = "/{register}/proposal/upload", method = RequestMethod.POST)
 	public String handleProposalUpload(@PathVariable("register") String registerName,
 									   @RequestParam("file") CommonsMultipartFile file,
@@ -924,7 +898,7 @@ public class RegisterController
 						wb = new XSSFWorkbook(bis);
 					}
 
-					ExcelConfiguration excelConfig = getExcelConfiguration();
+					ExcelConfiguration excelConfig = IsoExcelConfiguration.reload();
 					excelAdapter.setConfiguration(excelConfig);
 					
 					final Sheet s = wb.getSheet("UoM");
@@ -1009,6 +983,9 @@ public class RegisterController
 //				else if (fileName.endsWith("skos") || fileName.endsWith("rdf")) {
 //					codeListImporter.importSkos(bis, ClientConfiguration.getMailBaseUrl(), userOrg.getSubmittingOrganization(), register);
 //				}
+			}
+			catch (JAXBException e) {
+				throw new RuntimeException(e.getMessage(), e);
 			}
 			finally {
 				IOUtils.closeQuietly(bis);
