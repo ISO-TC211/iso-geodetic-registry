@@ -16,7 +16,7 @@
 		<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg-import</hibernate.connection.url>
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 		<client.basepath></client.basepath>
-		<basePackages>de.geoinfoffm.registry,de.bespire.registry.iso,org.iso.registry</basePackages>
+		<basePackages>de.geoinfoffm.registry,de.bespire.registry,org.iso.registry</basePackages>
 	</properties>
 	<build>
 		<resources>
@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.iso.registry</groupId>
 			<artifactId>iso-registry-api</artifactId>
-			<version>1.4.2-SNAPSHOT</version>
+			<version>1.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.healthmarketscience.jackcess</groupId>
@@ -173,7 +173,7 @@
 				<hibernate.connection.password>isoreg</hibernate.connection.password>
 				<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg-import</hibernate.connection.url>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
-				<flyway.migrate>true</flyway.migrate>
+				<flyway.migration>true</flyway.migration>
 				<client.basepath></client.basepath>
 				<mail.enabled>true</mail.enabled>
 				<mail.from.name>Registry</mail.from.name>

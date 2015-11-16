@@ -60,7 +60,7 @@ public class EpsgImporter
 			Authentication authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			context = new AnnotationConfigApplicationContext("de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry");
+			context = new AnnotationConfigApplicationContext("de.geoinfoffm.registry", "org.iso.registry");
 			
 //			NamingSystemsImporter namingSystemsImporter = context.getBean(NamingSystemsImporter.class);
 //			namingSystemsImporter.setGenerateIdentifiers(generateIdentifiers);
