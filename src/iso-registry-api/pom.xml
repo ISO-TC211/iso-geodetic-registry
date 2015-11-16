@@ -63,8 +63,7 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-
-<!-- 			<plugin>
+			<plugin>
 			    <groupId>org.apache.cxf</groupId>
 			    <artifactId>cxf-xjc-plugin</artifactId>
 			    <version>2.7.0</version>
@@ -85,15 +84,13 @@
 			                <xsdOptions>
 			                    <xsdOption>
 			                    	<extension>true</extension>
-			                        <xsd>/src/main/resources/schema/gdide-userservice.xsd</xsd>
-			                        <bindingFile>/src/main/resources/schema/bindings.xjb</bindingFile>
+			                        <xsd>/src/main/resources/schema/excelAdapterConfiguration.xsd</xsd>
 			                    </xsdOption>
 			                </xsdOptions>
 			            </configuration>
 			        </execution>
 			    </executions>
-			</plugin>	-->		
-
+			</plugin>		
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>

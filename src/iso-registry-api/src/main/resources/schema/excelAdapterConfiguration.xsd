@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:bxl="http://www.bespire.de/io/excel" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.bespire.de/io/excel">
+	<xs:complexType name="ExcelConfiguration">
+		<xs:sequence>
+			<xs:element name="sheet" type="bxl:SheetConfiguration" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ExcelConfiguration" type="bxl:ExcelConfiguration"/>
+	<!-- .................... -->
+	<xs:complexType name="SheetConfiguration">
+		<xs:sequence>
+			<xs:element name="importType" type="xs:string"/>
+			<xs:element name="exportType" type="xs:string"/>
+			<xs:element name="itemClassName" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="column" type="bxl:ColumnConfiguration" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="sheetName" type="xs:string" use="required"/>
+		<xs:attribute name="idColumn" type="xs:string" use="required"/>
+		<xs:attribute name="idPrefix" type="xs:string" use="required"/>
+		<xs:attribute name="headerRow" type="xs:int" use="optional" default="1"/>
+		<xs:attribute name="firstDataRow" type="xs:int" use="optional" default="2"/>
+		<xs:attribute name="firstDataColumn" type="xs:string" use="optional" default="B"/>
+	</xs:complexType>
+	<xs:element name="SheetConfiguration" type="bxl:SheetConfiguration"/>
+	<!-- .................... -->
+	<xs:complexType name="ColumnConfiguration">
+		<xs:sequence>
+			<xs:element name="javaProperty" type="xs:string"/>
+			<xs:element name="javaPropertyExport" type="xs:string" minOccurs="0"/>
+			<xs:element name="multiple" type="xs:boolean" default="false"/>
+			<xs:element name="references" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="columnName" type="xs:string" use="required"/>
+		<xs:attribute name="separatorChar" type="xs:string" use="optional" default=";"/>
+	</xs:complexType>
+	<xs:element name="ColumnConfiguration" type="bxl:ColumnConfiguration"/>
+</xs:schema>
