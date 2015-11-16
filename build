@@ -25,6 +25,6 @@ git pull origin
 git submodule update --recursive
 
 # compile
-mvn -Dmaven.test.skip=true ${PROFILESARG} clean compile package
+mvn -Dmaven.test.skip=true -Dproject.build.sourceEncoding=UTF-8 ${PROFILESARG} clean compile package
 cp iso-registry-client/target/*.war dist
 
