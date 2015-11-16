@@ -38,6 +38,14 @@
 		<directory>target</directory>
 		<resources>
 			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*.xml</include>
+				</includes>
+				<targetPath></targetPath>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
 				<directory>src/main/resources/META-INF</directory>
 				<includes>
 					<include>persistence.xml</include>
