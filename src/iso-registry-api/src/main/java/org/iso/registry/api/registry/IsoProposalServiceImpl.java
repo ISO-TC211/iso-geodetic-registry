@@ -19,6 +19,7 @@ import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalGroup;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.Supersession;
@@ -68,9 +69,9 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 			Addition addition = (Addition)proposal;
 			assignItemIdentifier(addition);
 		}
-		else if (proposal instanceof Supersession) {
-			Supersession supersession = (Supersession)proposal;
-			for (Proposal subproposal : supersession.getProposals()) {
+		else if (proposal instanceof ProposalGroup) {
+			ProposalGroup group = (ProposalGroup)proposal;
+			for (Proposal subproposal : group.getProposals()) {
 				if (subproposal instanceof Addition) {
 					Addition addition = (Addition)subproposal;
 					assignItemIdentifier(addition);
