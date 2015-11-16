@@ -35,8 +35,8 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	public UnitOfMeasureItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public UnitOfMeasureItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public UnitOfMeasureItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

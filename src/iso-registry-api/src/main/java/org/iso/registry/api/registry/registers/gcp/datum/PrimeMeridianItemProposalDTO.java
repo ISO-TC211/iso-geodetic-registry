@@ -49,8 +49,8 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
-	public PrimeMeridianItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public PrimeMeridianItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public PrimeMeridianItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

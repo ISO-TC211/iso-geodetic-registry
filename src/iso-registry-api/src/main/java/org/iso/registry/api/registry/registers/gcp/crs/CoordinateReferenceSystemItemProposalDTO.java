@@ -69,8 +69,8 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		super(proposal, sponsor);
 	}
 
-	public CoordinateReferenceSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public CoordinateReferenceSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 	
 	public CoordinateReferenceSystemType getType() {

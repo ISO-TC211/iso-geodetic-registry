@@ -29,8 +29,8 @@ public abstract class ReferenceSystemItemProposalDTO extends IdentifiedItemPropo
 		super(proposal, sponsor);
 	}
 
-	public ReferenceSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public ReferenceSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public ReferenceSystemItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

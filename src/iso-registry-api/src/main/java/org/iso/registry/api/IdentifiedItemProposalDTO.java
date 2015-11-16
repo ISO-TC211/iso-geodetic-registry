@@ -53,8 +53,8 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		super(proposal, sponsor);
 	}
 	
-	public IdentifiedItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public IdentifiedItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public IdentifiedItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

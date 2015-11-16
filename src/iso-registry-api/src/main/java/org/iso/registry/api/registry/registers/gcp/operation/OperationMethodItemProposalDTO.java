@@ -55,8 +55,8 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
-	public OperationMethodItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public OperationMethodItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public OperationMethodItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

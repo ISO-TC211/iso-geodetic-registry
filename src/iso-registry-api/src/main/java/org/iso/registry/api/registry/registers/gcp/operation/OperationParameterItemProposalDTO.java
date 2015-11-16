@@ -30,8 +30,8 @@ public class OperationParameterItemProposalDTO extends GeneralOperationParameter
 		// TODO Auto-generated constructor stub
 	}
 
-	public OperationParameterItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public OperationParameterItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public OperationParameterItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

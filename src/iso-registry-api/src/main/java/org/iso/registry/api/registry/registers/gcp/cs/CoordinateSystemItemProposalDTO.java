@@ -69,8 +69,8 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
-	public CoordinateSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public CoordinateSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public CoordinateSystemItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

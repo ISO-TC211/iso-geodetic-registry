@@ -52,8 +52,8 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 		// TODO Auto-generated constructor stub
 	}
 
-	public SingleOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public SingleOperationItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public SingleOperationItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

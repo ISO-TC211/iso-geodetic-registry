@@ -31,9 +31,8 @@ public class PassThroughOperationItemProposalDTO extends CoordinateOperationItem
 		// TODO Auto-generated constructor stub
 	}
 
-	public PassThroughOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
-		// TODO Auto-generated constructor stub
+	public PassThroughOperationItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public PassThroughOperationItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
