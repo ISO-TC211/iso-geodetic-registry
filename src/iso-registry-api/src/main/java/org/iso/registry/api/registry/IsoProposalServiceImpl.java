@@ -11,9 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.ProposalNote;
 import org.iso.registry.core.model.ProposalNoteRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import de.bespire.LoggerFactory;
 import de.geoinfoffm.registry.api.ProposalServiceImpl;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
@@ -36,6 +38,8 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 {
 	public static final String STATUS_RETURNED_BY_MANAGER = "RETURNED_BY_MANAGER";
 	public static final String STATUS_RETURNED_BY_CONTROLBODY = "RETURNED_BY_CONTROLBODY";
+	
+	private static final Logger logger = LoggerFactory.make();
 	
 	@Autowired
 	private ProposalNoteRepository noteRepository;
@@ -61,6 +65,7 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	}
 
 	@Override
+	@Transactional
 	public Proposal acceptProposal(Proposal proposal, String controlBodyDecisionEvent) throws InvalidProposalException,
 			IllegalOperationException, UnauthorizedException {
 		
@@ -75,6 +80,11 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 				if (subproposal instanceof Addition) {
 					Addition addition = (Addition)subproposal;
 					assignItemIdentifier(addition);
+					for (Proposal dependentProposal : subproposal.getDependentProposals()) {
+						if (dependentProposal instanceof Addition) {
+							assignItemIdentifier((Addition)dependentProposal);
+						}
+					}
 				}
 			}
 		}
@@ -88,6 +98,7 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 			Integer identifier = this.findNextAvailableIdentifier();
 			((IdentifiedItem)proposedItem).setIdentifier(identifier);
 			proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
+			logger.debug(">>> Assigned identifier {} to item '{}'", identifier, proposedItem.getName());
 		}
 	}
 
