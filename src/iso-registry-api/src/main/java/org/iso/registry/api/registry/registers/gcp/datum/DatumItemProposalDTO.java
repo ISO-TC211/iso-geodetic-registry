@@ -137,23 +137,14 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 				datum.setDomainOfValidity(extent);
 			}
 			
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Date realizationEpoch = null;
-			Date coordinateReferenceEpoch = null;
-			try {
-				 if (!StringUtils.isEmpty(this.getRealizationEpoch())) {
-					realizationEpoch = df.parse(this.getRealizationEpoch());
-				 }
-				datum.setRealizationEpoch(realizationEpoch);
-				
-				if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
-					coordinateReferenceEpoch = df.parse(this.getCoordinateReferenceEpoch());
-				}
-				datum.setCoordinateReferenceEpoch(coordinateReferenceEpoch);
+			if (!StringUtils.isEmpty(this.getRealizationEpoch())) {
+				datum.setRealizationEpoch(this.getRealizationEpoch());
 			}
-			catch (ParseException e) {
-				// Ignore
+
+			if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
+				datum.setCoordinateReferenceEpoch(this.getCoordinateReferenceEpoch());
 			}
+
 			datum.setScope(this.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {
