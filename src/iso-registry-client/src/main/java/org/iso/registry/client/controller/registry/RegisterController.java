@@ -9,6 +9,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +48,7 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
+import org.iso.registry.api.registry.IsoProposalService;
 import org.iso.registry.persistence.IsoExcelConfiguration;
 import org.iso.registry.persistence.io.excel.ExcelAdapter;
 import org.joda.time.format.DateTimeFormatter;
@@ -89,7 +91,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import de.bespire.io.excel.ExcelConfiguration;
+import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
@@ -876,7 +878,7 @@ public class RegisterController
 	@RequestMapping(value = "/{register}/proposal/upload", method = RequestMethod.POST)
 	public String handleProposalUpload(@PathVariable("register") String registerName,
 									   @RequestParam("file") CommonsMultipartFile file,
-									   final RedirectAttributes redirectAttributes) throws InvalidProposalException, UnauthorizedException, IOException {
+									   final RedirectAttributes redirectAttributes) throws InvalidProposalException, UnauthorizedException, IOException, URISyntaxException {
 		security.assertIsLoggedIn();
 		security.assertHasAnyRoleWith(RegistrySecurity.SUBMITTER_ROLE_PREFIX);
 
@@ -900,19 +902,25 @@ public class RegisterController
 
 					ExcelConfiguration excelConfig = IsoExcelConfiguration.reload();
 					excelAdapter.setConfiguration(excelConfig);
-					
-					final Sheet s = wb.getSheet("UoM");
 
-					final Collection<? extends RegisterItemProposalDTO> proposals = excelAdapter.extractProposals(s, register, userOrg);
-					final List<Proposal> proposalList = new ArrayList<>(); new Object();
+					final Collection<RegisterItemProposalDTO> proposals = new ArrayList<>();
+					final Map<String, RegisterItemProposalDTO> proposalsCache = new HashMap<>();
+					for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+						Sheet sheet = wb.getSheetAt(i);
+						proposals.addAll(excelAdapter.extractProposals(sheet, register, userOrg, proposalsCache));
+					}
+					final List<Proposal> proposalList = new ArrayList<>(); 
 
 					final RE_SubmittingOrganization submittingOrganization = userOrg.getSubmittingOrganization();
 //					final String justification = "Excel import (" + file.getFileItem().getName() + ") by " + security.getCurrentUser().getName() + " (" + userOrg.getName() + ")";
 //					final String registerManagerNotes = "";
 //					final String controBodyNotes = "";
 					
+					Map<RegisterItemProposalDTO, Proposal> proposalsCreated = new HashMap<>();
+					
 					int count = 0;
 					for (RegisterItemProposalDTO proposal : proposals) {
+						logger.debug("Processing proposal '{}' [uuid={}]", proposal.getName(), proposal.getUuid());
 						count++;
 //						proposal.setJustification("Excel-Import");
 						RE_RegisterItem referencedItem = null;
@@ -928,7 +936,7 @@ public class RegisterController
 						}
 						// addition
 						else if (referencedItem == null) {
-							final Addition addition = proposalService.createAdditionProposal(proposal);
+							final Addition addition = ((IsoProposalService)proposalService).createAdditionProposal(proposal, proposalsCreated);
 							proposalList.add(addition);
 						}
 						else if (referencedItem != null) {
@@ -1038,6 +1046,7 @@ public class RegisterController
 //			}
 //		}
 		exportees.addAll(itemRepository.findAll());
+//		exportees.addAll(entityManager.createQuery("SELECT o FROM SingleOperationItem o").getResultList());
 		
 		final String path = "excelTemplate.xlsx";
 		try {
