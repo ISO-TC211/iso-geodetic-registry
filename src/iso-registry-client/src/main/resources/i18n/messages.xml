@@ -200,6 +200,7 @@
 	<entry key="button.addAlternateTitle">Add alternate title</entry>
 	<entry key="button.pdf">Download PDF</entry>
 	<entry key="button.wkt">Show WKT</entry>
+	<entry key="button.gml">Show GML</entry>
 	<entry key="button.uploadProposals">Upload proposals</entry>
 	<entry key="button.downloadExcel">Excel export</entry>
 

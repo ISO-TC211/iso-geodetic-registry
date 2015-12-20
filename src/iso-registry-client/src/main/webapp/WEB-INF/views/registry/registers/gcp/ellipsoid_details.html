@@ -8,8 +8,8 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label class="control-label" th:for="sphere" th:text="#{form.label.shape}"></label>
-						<input id="shape-ellipsoid" type="radio" th:field="*{sphere}" value="false">Ellipsoid</input>
-						<input id="shape-sphere" type="radio" th:field="*{sphere}" value="true">Sphere</input>
+						<input id="shape-ellipsoid" type="radio" th:field="*{sphere}" value="false" th:disabled="!${isProposal}">Ellipsoid</input>
+						<input id="shape-sphere" type="radio" th:field="*{sphere}" value="true" th:disabled="!${isProposal}">Sphere</input>
 					</div>
 				</div>
 			</div>
