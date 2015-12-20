@@ -29,7 +29,9 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 	private Double scaleToStandardUnitDenominator;
 
 	
-	public UnitOfMeasureItemProposalDTO() { }
+	public UnitOfMeasureItemProposalDTO() { 
+		super("UnitOfMeasure");
+	}
 
 	public UnitOfMeasureItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
@@ -113,6 +115,9 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 				UnitOfMeasureItem standardUnit = entityManager.find(UnitOfMeasureItem.class, this.getStandardUnit().getReferencedItemUuid());
 				uom.setStandardUnit(standardUnit);				
 			}
+			else if (this.getStandardUnit() == this) {
+				uom.setStandardUnit(uom);
+			}
 			
 			uom.setOffsetToStandardUnit(this.getOffsetToStandardUnit());
 			uom.setScaleToStandardUnitNumerator(this.getScaleToStandardUnitNumerator());
@@ -137,17 +142,19 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 			this.setScaleToStandardUnitDenominator(uom.getScaleToStandardUnitDenominator());
 		}
 	}
-
+	
 	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
 		result.addAll(super.getAggregateDependencies());
-
-		result.add(this.getStandardUnit());
+		if (this.getStandardUnit() != null && this.getStandardUnit() != this) {
+			result.add(this.getStandardUnit());
+		}
 
 		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
 	}
 
+	
 	@Override
 	public List<RegisterItemProposalDTO> getCompositeDependencies() {
 		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();

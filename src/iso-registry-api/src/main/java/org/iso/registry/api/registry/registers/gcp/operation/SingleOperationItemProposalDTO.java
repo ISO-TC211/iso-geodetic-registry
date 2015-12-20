@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.operation.GeneralParameterValue;
 import org.iso.registry.core.model.operation.Measure;
@@ -18,18 +19,15 @@ import org.isotc211.iso19135.RE_RegisterItem_Type;
 import org.springframework.util.StringUtils;
 
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class SingleOperationItemProposalDTO extends CoordinateOperationItemProposalDTO
 {
-	public static enum SingleOperationType {
-		CONVERSION,
-		TRANSFORMATION
-	}
-	
 	private SingleOperationType operationType;
 	private OperationMethodItemProposalDTO method;
 	private List<ParameterValueDTO> parameterValues;
@@ -62,6 +60,28 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 	}
 	
 	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
+		result.addAll(super.getAggregateDependencies());
+
+		result.add(this.getMethod());
+		for (ParameterValueDTO value : this.getParameterValues()) {
+			result.add(value.getParameterUnit());
+			result.add(value.getParameter());
+		}
+		
+		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
+	}
+
+	@Override
+	public List<RegisterItemProposalDTO> getCompositeDependencies() {
+		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
+		result.addAll(super.getCompositeDependencies());
+
+		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
+	}
+
+	@Override
 	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
 		super.setAdditionalValues(registerItem, entityManager);
 
@@ -72,6 +92,9 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 				OperationMethodItem method = entityManager.find(OperationMethodItem.class, this.getMethod().getReferencedItemUuid());
 				item.setMethod(method);
 			}
+			else {
+				throw new RuntimeException(new InvalidProposalException("Operation method must not be empty"));
+			}
 
 			if (this.getParameterValues() != null) {
 				if (item.getParameterValue() != null) {
@@ -80,13 +103,13 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 					}
 				}
 				for (ParameterValueDTO parameterValue : this.getParameterValues()) {
-					OperationParameterItem parameter = entityManager.find(OperationParameterItem.class, parameterValue.getParameterUuid());
+					OperationParameterItem parameter = entityManager.find(OperationParameterItem.class, parameterValue.getParameter().getReferencedItemUuid());
 					
 					String paramValue = parameterValue.getValue();
 					
 					UnitOfMeasureItem uom = null;
-					if (parameterValue.getUomUuid() != null) {
-						uom = entityManager.find(UnitOfMeasureItem.class, parameterValue.getUomUuid());
+					if (parameterValue.getParameterUnit() != null) {
+						uom = entityManager.find(UnitOfMeasureItem.class, parameterValue.getParameterUnit().getReferencedItemUuid());
 					}
 					
 					OperationParameterValue value;
@@ -121,9 +144,9 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 				this.setMethod(new OperationMethodItemProposalDTO(item.getMethod()));
 				if (item.getParameterValue() != null) {
 					this.parameterValues = new ArrayList<>();
-					for (GeneralParameterValue<?> parameterValue : item.getParameterValue()) {
-						this.addParameterValue(parameterValue);
-					}
+//					for (GeneralParameterValue<?> parameterValue : item.getParameterValue()) {
+//						this.addParameterValue(parameterValue);
+//					}
 				}
 			}
 		}
@@ -149,6 +172,10 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 	 * @return the parameterValues
 	 */
 	public List<ParameterValueDTO> getParameterValues() {
+		if (parameterValues == null) {
+			this.parameterValues = new ArrayList<>();
+		}
+		
 		return parameterValues;
 	}
 
@@ -178,10 +205,12 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 			}
 			ParameterValueDTO value;
 			if (uom == null) {
-				value = new ParameterValueDTO(parameterValue.getParameter().getUuid(), parameterValue.getParameter().getName(), ((OperationParameterValue)parameterValue).getParameterType(), paramValue.toString());
+				OperationParameterItemProposalDTO a = new OperationParameterItemProposalDTO(opv.getParameter());
+				value = new ParameterValueDTO(a, opv.getParameterType(), paramValue.toString());
 			}
 			else {
-				value = new ParameterValueDTO(parameterValue.getParameter().getUuid(), parameterValue.getParameter().getName(), paramValue.toString(), uom.getUuid());
+				OperationParameterItemProposalDTO a = new OperationParameterItemProposalDTO(opv.getParameter());
+				value = new ParameterValueDTO(a, paramValue.toString(), new UnitOfMeasureItemProposalDTO(uom));
 			}
 	
 			this.parameterValues.add(value);
