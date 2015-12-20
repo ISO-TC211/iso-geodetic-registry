@@ -1,16 +1,11 @@
 package org.iso.registry.api;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URISyntaxException;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.transform.stream.StreamSource;
 
 import org.iso.registry.api.registry.IsoProposalServiceImpl;
-import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.persistence.IsoExcelConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,9 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.bespire.io.excel.ColumnConfiguration;
-import de.bespire.io.excel.ExcelConfiguration;
-import de.bespire.io.excel.SheetConfiguration;
+import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.ApiConfiguration;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategy;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategyImpl;
@@ -107,7 +100,7 @@ public class IsoApiConfiguration
 	}
 	
 	@Bean
-	public ExcelConfiguration excelConfiguration() throws IOException, JAXBException {
+	public ExcelConfiguration excelConfiguration() throws IOException, JAXBException, URISyntaxException {
 		return IsoExcelConfiguration.reload();
 	}
 }
