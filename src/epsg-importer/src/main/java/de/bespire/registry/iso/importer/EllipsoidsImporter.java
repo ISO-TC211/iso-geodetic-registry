@@ -1,10 +1,8 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
-import java.math.BigInteger;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
@@ -62,7 +60,7 @@ public class EllipsoidsImporter extends AbstractImporter
 		proposal.setSemiMajorAxis((Double)row.get(SEMI_MAJOR_AXIS));
 
 		Integer uomCode = (Integer)row.get(UOM_CODE);
-		UnitOfMeasureItem uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
+		UnitOfMeasureItem uom = findMappedEntity("UnitOfMeasure", uomCode, UnitOfMeasureItem.class);
 		proposal.setSemiMajorAxisUom(new UnitOfMeasureItemProposalDTO(uom));
 		
 		if ((Double)row.get(SEMI_MINOR_AXIS) != null) {

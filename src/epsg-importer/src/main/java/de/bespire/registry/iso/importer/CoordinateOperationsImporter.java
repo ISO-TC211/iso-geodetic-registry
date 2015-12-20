@@ -15,9 +15,10 @@ import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystem
 import org.iso.registry.api.registry.registers.gcp.operation.ConcatenatedOperationItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.CoordinateOperationItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.OperationParameterItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.ParameterValueDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO.SingleOperationType;
-import org.iso.registry.api.registry.registers.gcp.operation.TransformationAccuracy;
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationType;
 import org.iso.registry.core.model.EpsgIsoMappingRepository;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
@@ -25,7 +26,7 @@ import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.crs.AreaItemRepository;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItemRepository;
-import org.iso.registry.core.model.iso19115.dataquality.DQ_AbsoluteExternalPositionalAccuracy;
+import org.iso.registry.core.model.operation.ConcatenatedOperationItem;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.iso.registry.core.model.operation.CoordinateOperationItemRepository;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
@@ -196,7 +197,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		
 		Integer sourceCrsCode = (Integer)row.get(SOURCE_CRS_CODE);
 		if (sourceCrsCode != null) {
-			CoordinateReferenceSystemItem sourceCrs = crsRepository.findOne(findMappedCode(sourceCrsCode));
+			CoordinateReferenceSystemItem sourceCrs = findMappedEntity("*CRS", sourceCrsCode, CoordinateReferenceSystemItem.class);
 			if (sourceCrs != null) {
 				proposal.setSourceCrs(new CoordinateReferenceSystemItemProposalDTO(sourceCrs));
 			}
@@ -207,7 +208,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 
 		Integer targetCrsCode = (Integer)row.get(TARGET_CRS_CODE);
 		if (targetCrsCode != null) {
-			CoordinateReferenceSystemItem targetCrs = crsRepository.findOne(findMappedCode(targetCrsCode));
+			CoordinateReferenceSystemItem targetCrs = findMappedEntity("*CRS", targetCrsCode, CoordinateReferenceSystemItem.class);
 			if (targetCrs != null) {
 				proposal.setTargetCrs(new CoordinateReferenceSystemItemProposalDTO(targetCrs));
 			}
@@ -221,12 +222,15 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 		if (areaCode != null) {
-			AreaItem area = areaRepository.findByIdentifier(areaCode);
+			AreaItem area = findMappedEntity("Area", areaCode, AreaItem.class);
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
 				extent.setDescription(area.getName());
 				proposal.setDomainOfValidity(extent);
+			}
+			else {
+				logger.error("!!! Did not find referenced area with code {}", areaCode.toString());			
 			}
 		}
 		
@@ -255,7 +259,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		Integer operationCode = (Integer)row.get(COORD_OP_CODE);
 
 		Integer methodCode = (Integer)row.get(COORD_OP_METHOD_CODE);
-		OperationMethodItem method = methodRepository.findOne(findMappedCode("OperationMethod", methodCode));
+		OperationMethodItem method = findMappedEntity("OperationMethod", methodCode, OperationMethodItem.class);
 		if (method != null) {
 			proposal.setMethod(new OperationMethodItemProposalDTO(method));
 		}
@@ -395,10 +399,10 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		else {
 			Double paramValue = (Double)valueRow.get(PARAMETER_VALUE);
 			String fileRef = (String)valueRow.get(PARAM_VALUE_FILE_REF);
-			OperationParameterItem parameter = paramRepository.findOne(findMappedCode("OperationParameter", paramCode));
+			OperationParameterItem parameter = findMappedEntity("OperationParameter", paramCode, OperationParameterItem.class);
 			if (paramValue != null && fileRef == null) {
 				Integer uomCode = (Integer)valueRow.get(UOM_CODE);
-				UnitOfMeasureItem uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
+				UnitOfMeasureItem uom = findMappedEntity("UnitOfMeasure", uomCode, UnitOfMeasureItem.class);
 				Measure measure = new Measure(paramValue, uom);
 				return new OperationParameterValue(parameter, measure);
 			}
@@ -443,7 +447,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		}			
 		
 		for (int i = 1; i <= orderedOps.size(); i++) {
-			CoordinateOperationItem param = opsRepository.findOne(findMappedCode("CoordinateOperation", orderedOps.get(i)));
+			CoordinateOperationItem param = findMappedEntity("CoordinateOperation", orderedOps.get(i), ConcatenatedOperationItem.class);
 			if (param != null && param instanceof SingleOperationItem) {
 				result.add((SingleOperationItem)param);
 			}

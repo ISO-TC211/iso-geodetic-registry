@@ -2,6 +2,8 @@ package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +30,7 @@ import com.healthmarketscience.jackcess.Row;
 
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemService;
+import de.geoinfoffm.registry.core.Entity;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
@@ -79,6 +82,8 @@ public abstract class AbstractImporter
 	private LinkedHashSet<String> limitToCodes;
 	private boolean generateIdentifiers;
 	
+	private Map<String, Set<Integer>> missingCodes = new LinkedHashMap<String, Set<Integer>>();
+	
 	protected AbstractImporter() {
 		this.generateIdentifiers = true;
 	}
@@ -118,31 +123,49 @@ public abstract class AbstractImporter
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void importRows(Cursor cursor, long count, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
 		if (this.limitToCodes != null && !this.limitToCodes.isEmpty()) {
-			for (String code : this.limitToCodes) {
-				Map<String, Object> rowPattern = new HashMap<String, Object>();
-				rowPattern.put(codeProperty(), Integer.parseInt(code));
-				Row row = CursorBuilder.findRow(cursor.getTable(), rowPattern);
-				if (row == null) {
-					logger.error("!!!! Did not find object with {}='{}' in table '{}' !!!!", new Object[] { codeProperty(), code, cursor.getTable().getName() });
-					continue;
-				}
-				RE_ItemClass itemClass = this.getOrCreateItemClass(register, row);
-				try {
-					this.importRow(row, itemClass, sponsor, register);
-				}
-				catch (Throwable t) {
-					logger.error(t.getMessage(), t);
-					if (this.codeProperty() != null) {
-						Integer codeInt = (Integer)row.get(codeProperty());
-						logger.error("!!!! Failed to import object #{} from table '{}' !!!!", codeInt, cursor.getTable().getName());
+			Set<String> todo = new LinkedHashSet<>();
+			todo.addAll(this.limitToCodes);
+			int maxIterations = 10;
+			do {
+				for (String code : this.limitToCodes) {
+					if (!todo.contains(code)) continue;
+					Map<String, Object> rowPattern = new HashMap<String, Object>();
+					rowPattern.put(codeProperty(), Integer.parseInt(code));
+					Row row = CursorBuilder.findRow(cursor.getTable(), rowPattern);
+					if (row == null) {
+						logger.error("!!!! Did not find object with {}='{}' in table '{}' !!!!", new Object[] { codeProperty(), code, cursor.getTable().getName() });
+						continue;
 					}
-					else {
-						logger.error("!!!! Failed to import object from table '{}' !!!!", cursor.getTable().getName());
-						for (String key : row.keySet()) {
-							logger.error("[{}] {}", key, row.get(key));
+					RE_ItemClass itemClass = this.getOrCreateItemClass(register, row);
+					try {
+						this.importRow(row, itemClass, sponsor, register);
+						todo.remove(code);
+					}
+					catch (Throwable t) {
+						logger.error(t.getMessage(), t);
+						if (this.codeProperty() != null) {
+							Integer codeInt = (Integer)row.get(codeProperty());
+							logger.error("!!!! Failed to import object #{} from table '{}' !!!!", codeInt, cursor.getTable().getName());
+						}
+						else {
+							logger.error("!!!! Failed to import object from table '{}' !!!!", cursor.getTable().getName());
+							for (String key : row.keySet()) {
+								logger.error("[{}] {}", key, row.get(key));
+							}
 						}
 					}
 				}
+			} while (--maxIterations > 0 && !todo.isEmpty());
+			
+			if (!todo.isEmpty()) {
+				StringBuilder failedCodes = new StringBuilder();
+				for (String failedCode : todo) {
+					if (failedCodes.length() > 0) {
+						failedCodes.append(", ");
+					}
+					failedCodes.append(failedCode);
+				}
+				throw new RuntimeException(String.format("Failed to import the following codes from table %s: %s", cursor.getTable().getName(), failedCodes.toString()));
 			}
 		}
 		else {
@@ -239,6 +262,10 @@ public abstract class AbstractImporter
 	public void setGenerateIdentifiers(boolean generateIdentifiers) {
 		this.generateIdentifiers = generateIdentifiers;
 	}
+	
+	public Map<String, Set<Integer>> getMissingCodes() {
+		return this.missingCodes;
+	}
 
 	protected EpsgIsoMapping addMapping(String itemClass, Integer epsgCode, UUID isoUuid) {
 		logger.info(">> Added mapping {} -> {}", epsgCode, isoUuid.toString());
@@ -284,21 +311,48 @@ public abstract class AbstractImporter
 		return result;		
 	}
 	
-	protected UUID findMappedCode(Integer epsgCode) {
-		UUID result = mapRepository.findByEpsgCode(epsgCode);
-		if (result == null) {
-			logger.error("Could not find mapping for EPSG code {}", epsgCode);
+//	protected UUID findMappedCode(Integer epsgCode) {
+//		UUID result = mapRepository.findByEpsgCode(epsgCode);
+//		if (result == null) {
+//			logger.error("Could not find mapping for EPSG code {}", epsgCode);
+//		}
+//		
+//		return result;		
+//	}
+	
+	protected <E extends Entity> E findMappedEntity(String itemClass, Integer epsgCode, Class<E> entityClass) {
+		UUID mappedCode = findMappedCode(itemClass, epsgCode);
+		if (mappedCode != null) {
+			return em.find(entityClass, mappedCode);
 		}
-		
-		return result;		
+		else {
+			return null;
+		}
 	}
 	
-	protected UUID findMappedCode(String itemClass, Integer epsgCode) { 
-		UUID result = mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
+	private UUID findMappedCode(String itemClass, Integer epsgCode) {
+		UUID result = null;
+		if (itemClass.startsWith("*")) {
+			String contains = itemClass.substring(1);
+			for (EpsgIsoMapping mapping : mapRepository.findAll()) {
+				if (mapping.getEpsgCode().equals(epsgCode) && mapping.getItemClass().contains(contains)) {
+					result = mapping.getIsoUuid();
+					break;
+				}
+			}
+		}
+		else {
+			result = mapRepository.findByItemClassAndEpsgCode(itemClass, epsgCode);
+		}
+
 		if (result == null) {
+			if (missingCodes.get(itemClass) == null) {
+				missingCodes.put(itemClass, new HashSet<Integer>());
+			}
+			missingCodes.get(itemClass).add(epsgCode);
 			logger.error("Could not find mapping for EPSG code {} in item class {}", epsgCode, itemClass);
 		}
-		
+
 		return result;
 	}
 
@@ -307,8 +361,12 @@ public abstract class AbstractImporter
 	}
 
 	protected void addInformationSource(IdentifiedItemProposalDTO proposal, String text) {
+		if (StringUtils.isEmpty(text)) {
+			return;
+		}
+		
 		CitationDTO citation = new CitationDTO();
-		citation.setPublisher(text);
+		citation.setTitle(text);
 		
 		proposal.getInformationSource().add(citation);
 	}
