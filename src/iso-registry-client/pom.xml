@@ -203,6 +203,11 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>de.bespire.io.wkt</groupId>
+			<artifactId>de.bespire.io.wkt</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
     <build>
     	<directory>target</directory>
