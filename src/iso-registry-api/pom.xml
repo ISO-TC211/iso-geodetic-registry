@@ -178,6 +178,11 @@
 		<artifactId>poi-ooxml</artifactId>
 		<version>3.10.1</version>
 	</dependency>
+		<dependency>
+			<groupId>de.bespire.io.wkt</groupId>
+			<artifactId>de.bespire.io.wkt</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<distributionManagement>
 		<repository>
