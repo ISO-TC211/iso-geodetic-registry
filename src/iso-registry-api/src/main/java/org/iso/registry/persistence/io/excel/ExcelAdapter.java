@@ -34,26 +34,16 @@
  */
 package org.iso.registry.persistence.io.excel;
 
-import java.beans.PropertyDescriptor;
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.util.CellReference;
@@ -61,10 +51,17 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
+import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.ParameterValueDTO;
 import org.iso.registry.core.model.GlobalIdentifiedItemRepository;
 import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.core.model.crs.AreaItem;
+import org.iso.registry.core.model.iso19115.extent.EX_Extent;
+import org.iso.registry.core.model.iso19136.CodeType;
+import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -78,15 +75,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import de.bespire.io.excel.ColumnConfiguration;
-import de.bespire.io.excel.ExcelConfiguration;
-import de.bespire.io.excel.SheetConfiguration;
+import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ColumnConfiguration;
+import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ExcelConfiguration;
+import de.bespire.registry.io.excel.ExcelAdapterConfiguration.SheetConfiguration;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
 import de.geoinfoffm.registry.core.Entity;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.ProposalType;
+import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
@@ -125,6 +124,9 @@ public class ExcelAdapter
 	private ConversionService conversionService;
 	
 	@Autowired
+	private ViewBeanFactory viewBeanFactory;
+	
+	@Autowired
 	public ExcelAdapter(ExcelConfiguration configuration) {
 		this.configuration = configuration;
 	}
@@ -141,7 +143,7 @@ public class ExcelAdapter
 				return DateTimeFormat.forPattern("yyyy-MM-dd").print(dateValue.getTime());
 			}
 			else {
-				return Integer.toString(Double.valueOf(cell.getNumericCellValue()).intValue());
+				return Double.valueOf(cell.getNumericCellValue()).toString();
 			}
 		}
 		else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
@@ -157,18 +159,23 @@ public class ExcelAdapter
 	
 	public <E extends Entity> void exportEntities(Collection<E> entities, Workbook workbook) throws IOException {
 		Map<UUID, String> visitedEntities = new HashMap<>();
+		Map<String, String> knownExtents = new HashMap<>();
+		Map<String, String> knownCitations = new HashMap<>();
 		Map<String, Integer> rows = new HashMap<>();
 		for (SheetConfiguration config : configuration.getSheet()) {
 			rows.put(config.getSheetName(), config.getFirstDataRow() - 1);
 		}
 		
+		logger.debug("Beginning export of {} {}", entities.size(), entities.size() == 1 ? "entity" : "entities");
+		
 		for (Entity entity : entities) {
-			if (entity instanceof CoordinateReferenceSystemItem) {
-				new Object();
-			}
-			
+			if (entity instanceof AreaItem) continue;
 			if (!visitedEntities.containsKey(entity.getUuid())) {
-				exportEntity(entity, workbook, rows, visitedEntities);
+				logger.debug("Exporting entity {} ['{}']", entity.getUuid(), entity.toString());
+				exportEntity(entity, workbook, rows, visitedEntities, knownExtents, knownCitations);
+			}
+			else {
+				logger.debug("Skipping previously exported entity {} ['']", entity.getUuid(), entity.toString());
 			}
 		}
 	}
@@ -188,22 +195,35 @@ public class ExcelAdapter
 		}
 	}
 	
-	private Cell exportEntity(Object entity, Workbook workbook, Map<String, Integer> rows, Map<UUID, String> visitedEntities) {
+	private Cell exportEntity(Object entity, Workbook workbook, Map<String, Integer> rows, Map<UUID, String> visitedEntities, Map<String, String> knownExtents, Map<String, String> knownCitations) {
+		if (entity instanceof RE_RegisterItem && ((RE_RegisterItem)entity).getName().equals("sexagesimal DMS")) {
+			new Object();
+		}
+
 		SheetConfiguration sheetConfiguration = findSheetConfiguration(entity.getClass());
 		if (sheetConfiguration == null) {
-//			if (entity instanceof RE_RegisterItem) {
-//				RegisterItemViewBean viewBean = viewBeanFactory.getViewBean((RE_RegisterItem)entity);
-//				sheetConfiguration = findSheetConfiguration(viewBean.getClass());
-//				if (sheetConfiguration == null) {
-//					return null;
-//				}
-//				else {
-//					entity = viewBean;
-//				}
-//			}
-//			else {
+			if (entity instanceof RE_RegisterItem) {
+				RegisterItemViewBean viewBean = viewBeanFactory.getViewBean((RE_RegisterItem)entity);
+				sheetConfiguration = findSheetConfiguration(viewBean.getClass());
+				if (sheetConfiguration == null) {
+					return null;
+				}
+				else {
+					entity = viewBean;
+				}
+			}
+			else if (entity instanceof CitationDTO) {
+				sheetConfiguration = findSheetConfiguration(CI_Citation.class);
+			}
+			else if (entity instanceof ExtentDTO) {
+				sheetConfiguration = findSheetConfiguration(EX_Extent.class);
+			}
+			else if (entity instanceof RegisterItemViewBean) {
+				sheetConfiguration = findSheetConfiguration(((RegisterItemViewBean)entity).getItemClass());
+			}
+			else {
 				return null;
-//			}
+			}
 		}
 		
 		Sheet sheet = workbook.getSheet(sheetConfiguration.getSheetName());
@@ -226,8 +246,13 @@ public class ExcelAdapter
 			StringBuilder idBuilder = new StringBuilder(sheetConfiguration.getIdPrefix());
 			idBuilder.append(Integer.toString(rowNum - (sheetConfiguration.getFirstDataRow() - 1) + 1));
 			idCell.setCellValue(idBuilder.toString());
-			if (entity instanceof Entity) {
-				visitedEntities.put(((Entity)entity).getUuid(), idBuilder.toString());
+			logger.debug(">>> Assigned ID '{}'", idBuilder.toString());
+			try {
+				logger.debug(">>> UUID = {}", bw.getPropertyValue("uuid"));
+				visitedEntities.put((UUID)bw.getPropertyValue("uuid"), idBuilder.toString());
+			}
+			catch (Exception e) {
+				// Ignore
 			}
 //		}
 		for (ColumnConfiguration columnConfiguration : sheetConfiguration.getColumn()) {
@@ -236,7 +261,7 @@ public class ExcelAdapter
 				javaProperty = columnConfiguration.getJavaProperty(); 
 			}
 			
-			if (javaProperty.equals("datum")) {
+			if (javaProperty.equals("unitOfMeasure")) {
 				new Object();
 			}
 			
@@ -291,23 +316,37 @@ public class ExcelAdapter
 					
 						if (propertyValue instanceof String) {
 							valueCell.setCellValue((String)propertyValue);
+							logger.debug(">>> {} = '{}' (String)", javaProperty, (String)propertyValue); 
+						}
+						else if (propertyValue instanceof Enum) {
+							valueCell.setCellValue(((Enum)propertyValue).name());
+							logger.debug(">>> {} = '{}' (Enum)", javaProperty, ((Enum)propertyValue).name()); 
+						}
+						else if (propertyValue instanceof CodeType) {
+							valueCell.setCellValue(((CodeType)propertyValue).getCode());
+							logger.debug(">>> {} = '{}' (Code)", javaProperty, ((CodeType)propertyValue).getCode()); 
 						}
 						else if (propertyValue instanceof Number) {
 							valueCell.setCellValue(Double.valueOf(propertyValue.toString()));
+							logger.debug(">>> {} = '{}' (Double)", javaProperty, Double.valueOf(propertyValue.toString())); 
 						}
 //						else if (propertyValue instanceof IdentifiedItem) {
 //							valueCell.setCellValue(((IdentifiedItem)propertyValue).getIdentifier().toString());
 //						}
 						else if (propertyValue instanceof UUID) {
 							valueCell.setCellValue(((UUID)propertyValue).toString());
+							logger.debug(">>> {} = '{}' (UUID)", javaProperty, ((UUID)propertyValue).toString()); 
 						}
 						else if (propertyValue instanceof Boolean) {
 							valueCell.setCellValue((Boolean)propertyValue);
+							logger.debug(">>> {} = '{}' (Boolean)", javaProperty, (Boolean)propertyValue); 
 						}
 						else if (propertyValue instanceof Date) {
 							valueCell.setCellValue((Date)propertyValue);
+							logger.debug(">>> {} = '{}' (Date)", javaProperty, DateTimeFormat.fullDateTime().print(((Date)propertyValue).getTime())); 
 						}
 						else if (propertyValue instanceof Collection) {
+							logger.debug(">>> {} (Collection)", javaProperty); 
 							Collection<Object> propertyCollection = (Collection<Object>)propertyValue;
 							if (propertyCollection.isEmpty()) continue;
 							
@@ -318,42 +357,85 @@ public class ExcelAdapter
 								}
 								if (value instanceof Entity) {
 									Entity subEntity = (Entity)value;
-									if (visitedEntities.containsKey(subEntity.getUuid())) {
-										valueBuilder.append(visitedEntities.get(subEntity.getUuid()));
+									if (subEntity instanceof EX_Extent || subEntity instanceof CI_Citation) {
+										handleSpecialSubEntity(subEntity, valueBuilder, workbook, rows, visitedEntities, knownExtents, knownCitations);										
 									}
 									else {
-										Cell targetId = exportEntity(subEntity, workbook, rows, visitedEntities);
-										valueBuilder.append(getString(targetId));
+										if (visitedEntities.containsKey(subEntity.getUuid())) {
+											valueBuilder.append(visitedEntities.get(subEntity.getUuid()));
+										}
+										else {
+											Cell targetId = exportEntity(subEntity, workbook, rows, visitedEntities, knownExtents, knownCitations);
+											valueBuilder.append(getString(targetId));
+										}
 									}
 								}
-								else {
+								else if (value instanceof CitationDTO || value instanceof ExtentDTO || value instanceof ParameterValueDTO) {
+									handleSpecialSubEntity(value, valueBuilder, workbook, rows, visitedEntities, knownExtents, knownCitations);
+								}
+								else if (BeanUtils.isSimpleValueType(value.getClass())) {
 									valueBuilder.append(value.toString());
 								}
+								else {
+									handleSpecialSubEntity(value, valueBuilder, workbook, rows, visitedEntities, knownExtents, knownCitations);
+								}
 							}
+							valueCell.setCellValue(valueBuilder.toString());
+							logger.debug(">>>>> = {}", valueBuilder.toString());
+						}
+						else if (propertyValue instanceof ExtentDTO || propertyValue instanceof CitationDTO || propertyValue instanceof ParameterValueDTO) {
+							StringBuilder valueBuilder = new StringBuilder();
+							handleSpecialSubEntity(propertyValue, valueBuilder, workbook, rows, visitedEntities, knownExtents, knownCitations);							
 							valueCell.setCellValue(valueBuilder.toString());
 						}
 						else if (propertyValue instanceof Entity) {
 							StringBuilder valueBuilder = new StringBuilder();
 							
 							Entity subEntity = (Entity)propertyValue;
-							if (visitedEntities.containsKey(subEntity.getUuid())) {
-								valueCell.setCellValue(visitedEntities.get(subEntity.getUuid()));
+							if (subEntity instanceof EX_Extent || subEntity instanceof CI_Citation) {
+								handleSpecialSubEntity(subEntity, valueBuilder, workbook, rows, visitedEntities, knownExtents, knownCitations);
+							}
+							else {
+								if (visitedEntities.containsKey(subEntity.getUuid())) {
+									valueBuilder.append(visitedEntities.get(subEntity.getUuid()));
+								}
+								else {
+									Cell targetId;
+									if (subEntity == entity) {
+										// self reference
+										targetId = idCell;
+									}
+									else {
+										targetId = exportEntity(subEntity, workbook, rows, visitedEntities, knownExtents, knownCitations);
+									}
+									valueBuilder.append(getString(targetId));
+								}
+							}
+							
+							logger.debug(">>> {} = {}", javaProperty, valueBuilder.toString());
+							valueCell.setCellValue(valueBuilder.toString());
+						}
+						else if (propertyValue instanceof RegisterItemViewBean) {
+							StringBuilder valueBuilder = new StringBuilder();
+
+							RegisterItemViewBean viewBean = (RegisterItemViewBean)propertyValue;
+							if (visitedEntities.containsKey(viewBean.getUuid())) {
+								valueBuilder.append(visitedEntities.get(viewBean.getUuid()));
 							}
 							else {
 								Cell targetId;
-								if (subEntity == entity) {
+								if (viewBean == entity) {
 									// self reference
 									targetId = idCell;
 								}
 								else {
-									targetId = exportEntity(subEntity, workbook, rows, visitedEntities);
-								}
-								if (valueBuilder.length() > 0) {
-									valueBuilder.append(columnConfiguration.getSeparatorChar());
+									targetId = exportEntity(viewBean, workbook, rows, visitedEntities, knownExtents, knownCitations);
 								}
 								valueBuilder.append(getString(targetId));
-								valueCell.setCellValue(valueBuilder.toString());
 							}
+
+							logger.debug(">>> {} = {}", javaProperty, valueBuilder.toString());
+							valueCell.setCellValue(valueBuilder.toString());
 						}
 					}
 				}
@@ -367,6 +449,52 @@ public class ExcelAdapter
 		}
 		
 		return idCell;
+	}
+	
+	private void handleSpecialSubEntity(Object subEntity, StringBuilder valueBuilder, Workbook workbook, Map<String, Integer> rows, Map<UUID, String> visitedEntities, Map<String, String> knownExtents, Map<String, String> knownCitations) {
+		Map<String, String> knownMap;
+		String entityKey;
+		if (subEntity instanceof EX_Extent) {
+			EX_Extent extent = (EX_Extent)subEntity;
+			knownMap = knownExtents;
+			entityKey = extent.getDescription();
+		}
+		else if (subEntity instanceof ExtentDTO) {
+			ExtentDTO extent = (ExtentDTO)subEntity;
+			knownMap = knownExtents;
+			entityKey = extent.getDescription();			
+		}
+		else if (subEntity instanceof CI_Citation) {
+			knownMap = knownCitations;
+			CI_Citation citation = (CI_Citation)subEntity;
+			entityKey = citation.getTitle();
+		}
+		else if (subEntity instanceof CitationDTO) {
+			knownMap = knownCitations;
+			CitationDTO citation = (CitationDTO)subEntity;
+			entityKey = citation.getTitle();
+		}
+		else if (subEntity instanceof ParameterValueDTO) {
+			knownMap = new HashMap<>();
+			ParameterValueDTO value = (ParameterValueDTO)subEntity;
+			entityKey = value.getParameter().getName() + "=" + value.getValue();
+		}
+		else {
+			knownMap = new HashMap<>();
+			entityKey = subEntity.toString();
+		}
+		
+		if (entityKey == null) {
+			return;
+		}
+		else if (knownMap.containsKey(entityKey)) { 
+			valueBuilder.append(knownMap.get(entityKey));
+		}
+		else {
+			Cell targetId = exportEntity(subEntity, workbook, rows, visitedEntities, knownExtents, knownCitations);
+			knownMap.put(entityKey, getString(targetId));
+			valueBuilder.append(getString(targetId));
+		}
 	}
 	
 	private <E extends Entity> void exportEntity(E entity, Workbook workbook, Sheet mainSheet, int rowNum, Row headerRow, Map<String, List<Entity>> subsheetEntities) {
@@ -455,15 +583,24 @@ public class ExcelAdapter
 	public Collection<RegisterItemProposalDTO> extractProposals(Sheet s, RE_Register targetRegister, Organization sponsor) {
 		return extractProposals(s, targetRegister, sponsor, new ArrayList<RegisterItemProposalDTO>(), new HashMap<String, RegisterItemProposalDTO>());
 	}
-		
+
+	public Collection<RegisterItemProposalDTO> extractProposals(Sheet s, RE_Register targetRegister, Organization sponsor, Map<String, RegisterItemProposalDTO> proposals) {
+		return extractProposals(s, targetRegister, sponsor, new ArrayList<RegisterItemProposalDTO>(), proposals);
+	}
+
 	protected Collection<RegisterItemProposalDTO> extractProposals(Sheet s, RE_Register targetRegister, Organization sponsor, List<RegisterItemProposalDTO> topLevelProposals, Map<String, RegisterItemProposalDTO> proposals) {
 		SheetConfiguration sheetConfig = sheetConfigurationForName(s.getSheetName());
+		if (sheetConfig == null) {
+			logger.debug("Configuration for sheet '{}' not available, skipping...", s.getSheetName());
+			return topLevelProposals;
+		}
+		if (s.getSheetName().equals("CoordSys")) {
+			new Object();
+		}
 		Row headingRow = s.getRow(sheetConfig.getHeaderRow() - 1);
 		
 		int row = sheetConfig.getFirstDataRow() - 1;
 		while (true) {
-			AtomicBoolean isSubProposal = new AtomicBoolean();
-			
 			Row r = s.getRow(row);
 			String rowId = null;
 			try {
@@ -489,8 +626,15 @@ public class ExcelAdapter
 			if (rowId == null) {
 				throw new RuntimeException(String.format("Empty ID column in non-empty row %d of sheet %s", row + 1, s.getSheetName()));
 			}
-
-			final RegisterItemProposalDTO proposal = extractProposal(r, headingRow, targetRegister, isSubProposal, proposals, sheetConfig);
+			
+			final RegisterItemProposalDTO proposal;
+			if (proposals.containsKey(rowId)) {
+				proposal = proposals.get(rowId);
+			}
+			else {
+				proposal = extractProposal(r, headingRow, targetRegister, proposals, sheetConfig);
+			}
+			
 			if (proposal == null) {
 				// proposal to be ignored
 				row++;
@@ -499,9 +643,7 @@ public class ExcelAdapter
 			
 			proposal.setSponsorUuid(sponsor.getSubmittingOrganization().getUuid());
 			proposals.put(rowId, proposal);
-			if (!isSubProposal.get()) {
-				topLevelProposals.add(proposal);
-			}
+			topLevelProposals.add(proposal);
 			
 			row++;
 		}
@@ -513,7 +655,7 @@ public class ExcelAdapter
 	private static final String ACTION_IGNORE = "I";
 	private static final String ACTION_RETIRE = "R";
 
-	protected RegisterItemProposalDTO extractProposal(Row r, Row headingRow, RE_Register targetRegister, AtomicBoolean isTopLevel, Map<String, RegisterItemProposalDTO> proposals, SheetConfiguration sheetConfiguration) {
+	protected RegisterItemProposalDTO extractProposal(Row r, Row headingRow, RE_Register targetRegister, Map<String, RegisterItemProposalDTO> proposals, SheetConfiguration sheetConfiguration) {
 		final Map<String, String> valueMap = extractData(r, headingRow, sheetConfiguration);
 
 		String proposalAction = null;
@@ -524,14 +666,22 @@ public class ExcelAdapter
 			return null;
 		}
 		
-		final String itemClassName;
+		String itemClassName = null;
 		if (sheetConfiguration.getItemClassName().isEmpty()) {
 			// no item class, cannot create proposal
 			return null;
 		}
 		if (sheetConfiguration.getItemClassName().size() > 1) {
-			// TODO
-			throw new RuntimeException("not yet implemented");
+			// Find #itemClassName column
+			for (ColumnConfiguration column : sheetConfiguration.getColumn()) {
+				if (column.getJavaProperty().equals("#itemClassName")) {
+					itemClassName = r.getCell(columnNameToIndex(column.getColumnName())).getStringCellValue();
+					break;
+				}
+			}
+			if (itemClassName == null) {
+				throw new RuntimeException(String.format("Multiple item classes configured for sheet %s but no '#itemClassName' property found", r.getSheet().getSheetName()));
+			}
 		}
 		else {
 			itemClassName = sheetConfiguration.getItemClassName().get(0);
@@ -546,7 +696,7 @@ public class ExcelAdapter
 			proposal.setProposalType(ProposalType.RETIREMENT);
 		}
 
-		proposal = mapData(valueMap, proposal, isTopLevel, r, proposals, sheetConfiguration);
+		proposal = mapData(valueMap, proposal, r, proposals, sheetConfiguration);
 		
 		return proposal;
 	}
@@ -592,7 +742,150 @@ public class ExcelAdapter
 		return result;
 	}
 	
-	public <T> T mapData(Map<String, String> data, T proposal, AtomicBoolean isSubProposal, Row row, Map<String, RegisterItemProposalDTO> proposals, SheetConfiguration currentSheetConfiguration) {
+	private <T> void mapReference(T proposal, String property, String value, Row row, ColumnConfiguration column, SheetConfiguration currentSheetConfiguration, Map<String, RegisterItemProposalDTO> proposals) {
+		BeanWrapper bw = new BeanWrapperImpl(proposal);
+
+		bw.getPropertyDescriptor(property); // Assert that property exists
+
+		// Value in cell is expected to be separated list of subsheet's row identifiers
+		String[] references = StringUtils.delimitedListToStringArray(value, column.getSeparatorChar());
+		
+		if ("parameterValues".equals(property)) {
+			new Object();
+		}
+		
+		for (String reference : references) {
+			reference = reference.trim();
+			
+			if (org.apache.commons.lang3.StringUtils.isNumeric(reference)) {
+				// Numeric reference is item identifier
+				Integer identifier = Integer.parseInt(reference);
+				IdentifiedItem referencedItem = identifiedItemRepository.findByIdentifier(identifier);
+				
+				RegisterItemProposalDTO refDto;
+				try {
+					refDto = dtoFactory.getProposalDto(referencedItem);
+				}
+				catch (ClassNotFoundException e) {
+					throw new RuntimeException(e.getMessage(), e);
+				}
+				
+				mapValue(bw, column.getJavaProperty(), refDto, column);
+			}
+			else {
+				// Inter-sheet reference
+				Sheet subSheet = null;
+				SheetConfiguration subSheetConfiguration = null;
+				for (SheetConfiguration otherSheetConfig : configuration.getSheet()) {
+					if (otherSheetConfig.getSheetName().equals(column.getReferences())) {
+						subSheet = row.getSheet().getWorkbook().getSheet(otherSheetConfig.getSheetName());
+						subSheetConfiguration = otherSheetConfig;
+						break;
+					}
+				}
+				if (subSheet == null) {
+					throw new RuntimeException(String.format("Sheet with values for property '%s' not found in workbook", column.getJavaProperty()));
+				}
+
+				Row headingRow = subSheet.getRow(subSheetConfiguration.getHeaderRow() - 1);
+				// Find row
+				String referencedRowIdx = null;
+				Row subRow = null;
+				int i = subSheetConfiguration.getFirstDataRow() - 1;
+				while (true) {
+					subRow = subSheet.getRow(i);
+					Cell idCell = subRow.getCell(columnNameToIndex(subSheetConfiguration.getIdColumn()));
+					if (idCell == null) {
+						subRow = null;
+						break;
+					}
+					if (idCell.getCellType() == Cell.CELL_TYPE_BLANK) {
+						break;
+					}
+					else if (idCell.getCellType() == Cell.CELL_TYPE_STRING || idCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+						if (idCell.getStringCellValue().equals(reference)) {
+							referencedRowIdx = idCell.getStringCellValue();
+							break;
+						}
+					}
+					else {
+						throw new RuntimeException(String.format("Cell type %d in ID column %s of row %d in sheet %s not supported", idCell.getCellType(), subSheetConfiguration.getIdColumn(), i, idCell.getSheet().getSheetName()));
+					}
+
+					i++;
+				}
+				
+				if (subRow == null) continue;
+
+				Cell idCell = row.getCell(columnNameToIndex(currentSheetConfiguration.getIdColumn()));
+
+				if (proposals.keySet().contains(referencedRowIdx)) {
+					RegisterItemProposalDTO dependentProposal = proposals.get(referencedRowIdx);
+					mapValue(bw, column.getJavaProperty(), dependentProposal, column);
+				}
+				else if (referencedRowIdx.equals(getString(idCell))) {
+					mapValue(bw, column.getJavaProperty(), proposal, column);
+				}
+				else {
+					Map<String, String> referencedData = extractData(subRow, headingRow, subSheetConfiguration);
+					if (Collection.class.isAssignableFrom(bw.getPropertyType(property))) {
+						Type t = ((ParameterizedType)ReflectionUtils.findField(proposal.getClass(), property).getGenericType()).getActualTypeArguments()[0];
+						Object referencedValue = BeanUtils.instantiate((Class)t);
+						referencedValue = mapData(referencedData, referencedValue, subRow, proposals, subSheetConfiguration);
+						mapValue(bw, property, referencedValue, column);
+
+						if (referencedValue instanceof RegisterItemProposalDTO) {
+							proposals.put(referencedRowIdx, (RegisterItemProposalDTO)referencedValue);
+						}
+					}
+					else {
+						Object referencedValue = BeanUtils.instantiate(bw.getPropertyType(property));
+						referencedValue = mapData(referencedData, referencedValue, subRow, proposals, subSheetConfiguration);
+						mapValue(bw, property, referencedValue, column);
+						
+						if (referencedValue instanceof RegisterItemProposalDTO) {
+							proposals.put(referencedRowIdx, (RegisterItemProposalDTO)referencedValue);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public <T> T mapData(Map<String, String> data, T proposal, Row row, Map<String, RegisterItemProposalDTO> proposals, SheetConfiguration currentSheetConfiguration) {
+		BeanWrapper bw = new BeanWrapperImpl(proposal); 
+		bw.setAutoGrowNestedPaths(true);
+		
+		for (String property : data.keySet()) {
+			if (property.equals("axes")) {
+				new Object();
+			}
+			try {
+				String value = data.get(property);
+				if (value == null) continue;
+					
+				ColumnConfiguration column = getColumnConfiguration(currentSheetConfiguration, property);
+
+				if (property.startsWith("#")) {
+					String specialProperty = property.substring(1);
+					// check if special property exists in target object and set value if found
+					if (bw.isWritableProperty(specialProperty)) {
+						mapValue(bw, specialProperty, value, column);
+					}
+				}
+				else if (!StringUtils.isEmpty(column.getReferences())) {
+					mapReference(proposal, property, value, row, column, currentSheetConfiguration, proposals);
+				}
+				else {
+					mapValue(bw, property, value, column);
+				}
+			}
+			finally { 
+				
+			}
+		}
+
+/*		
 		for (String property : data.keySet()) {
 			try {
 				Object current = proposal;
@@ -607,7 +900,7 @@ public class ExcelAdapter
 				if (column == null) {
 					throw new RuntimeException(String.format("No column configuration for property %s", property));
 				}
-	
+				
 				String[] pathParts = StringUtils.split(property, ".");
 				ArrayDeque<String> parts = new ArrayDeque<>();
 				if (pathParts != null) {
@@ -626,10 +919,6 @@ public class ExcelAdapter
 					}
 
 					if (data.get(property) == null) continue;
-
-					if (property.equals("informationSource")) {
-						new Object();
-					}
 
 					if (pd.getName().equals("uuid") && proposal instanceof RegisterItemProposalDTO) {
 						UUID uuid = UUID.fromString(data.get(property));
@@ -665,7 +954,7 @@ public class ExcelAdapter
 					else if (!StringUtils.isEmpty(column.getReferences())) { 
 						Object subBean = pd.getReadMethod().invoke(current);
 						
-						// Value in cell is expected to be comma-separated list of subsheet's row identifiers (first column)
+						// Value in cell is expected to be separated list of subsheet's row identifiers
 						String[] references = StringUtils.delimitedListToStringArray(data.get(property), column.getSeparatorChar());
 						
 						for (String reference : references) {
@@ -717,14 +1006,14 @@ public class ExcelAdapter
 									if (idCell.getCellType() == Cell.CELL_TYPE_BLANK) {
 										break;
 									}
-									else if (idCell.getCellType() == Cell.CELL_TYPE_STRING) {
+									else if (idCell.getCellType() == Cell.CELL_TYPE_STRING || idCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 										if (idCell.getStringCellValue().equals(reference)) {
 											referencedRowIdx = idCell.getStringCellValue();
 											break;
 										}
 									}
 									else {
-										throw new RuntimeException(String.format("Cell type %d in ID column %s of row %d not supported", idCell.getCellType(), subSheetConfiguration.getIdColumn(), i));
+										throw new RuntimeException(String.format("Cell type %d in ID column %s of row %d in sheet %s not supported", idCell.getCellType(), subSheetConfiguration.getIdColumn(), i, idCell.getSheet().getSheetName()));
 									}
 
 									i++;
@@ -734,13 +1023,22 @@ public class ExcelAdapter
 
 								Cell idCell = row.getCell(columnNameToIndex(currentSheetConfiguration.getIdColumn()));
 
+								if (referencedRowIdx.equals("UM1")) {
+									new Object();
+								}
 								if (proposals.keySet().contains(referencedRowIdx)) {
 									RegisterItemProposalDTO dependentProposal = proposals.get(referencedRowIdx);
 									if (subBean instanceof Collection) {
 										((Collection)subBean).add(dependentProposal);
 									}
 									else {
-										pd.getWriteMethod().invoke(current, dependentProposal);
+										try {
+											pd.getWriteMethod().invoke(current, dependentProposal);
+										}
+										catch (IllegalArgumentException e) {
+											logger.error("Cannot set property {} in class {}: Class cast exception", pd.getName(), current.getClass().getCanonicalName());
+											throw e;
+										}
 									}
 								}
 								else if (referencedRowIdx.equals(getString(idCell))) {
@@ -753,14 +1051,22 @@ public class ExcelAdapter
 										Object subBeanElement = BeanUtils.instantiate((Class)t);
 										subBeanElement = mapData(subData, subBeanElement, isSubProposal, subRow, proposals, subSheetConfiguration);
 										((Collection)subBean).add(subBeanElement);
+
+										if (subBean instanceof RegisterItemProposalDTO) {
+											proposals.put(referencedRowIdx, (RegisterItemProposalDTO)subBean);
+										}
 									}
 									else {
 										if (subBean == null) { 
-											Class<?> propertyType = pd.getPropertyType();
+											Class<?> propertyType = pd.getPropertyType(); 
 											subBean = BeanUtils.instantiate(propertyType);
 										}
 										subBean = mapData(subData, subBean, isSubProposal, subRow, proposals, subSheetConfiguration);
 										pd.getWriteMethod().invoke(current, subBean);
+										
+										if (subBean instanceof RegisterItemProposalDTO) {
+											proposals.put(referencedRowIdx, (RegisterItemProposalDTO)subBean);
+										}
 									}
 								}
 							}
@@ -768,9 +1074,19 @@ public class ExcelAdapter
 					}
 					else {
 						if (column.isMultiple()) {
-							String[] values = StringUtils.delimitedListToStringArray(data.get(property), column.getSeparatorChar());
-							for (String value : values) {
-								((Collection)pd.getReadMethod().invoke(current)).add(value);
+							Type t = ((ParameterizedType)ReflectionUtils.findField(proposal.getClass(), pd.getName()).getGenericType()).getActualTypeArguments()[0];
+							if (data.get(property).getClass().isAssignableFrom((Class)t)) {
+								String[] values = StringUtils.delimitedListToStringArray(data.get(property), column.getSeparatorChar());
+								for (String value : values) {
+									if (((Collection)pd.getReadMethod().invoke(current)) == null) {
+										new Object(); 
+									}
+									((Collection)pd.getReadMethod().invoke(current)).add(value);
+								}
+							}
+							else {
+								Object subBean = pd.getReadMethod().invoke(current);
+								current = subBean;
 							}
 						}
 						else {
@@ -786,8 +1102,46 @@ public class ExcelAdapter
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
-		
+		*/
 		return proposal;
+	}
+
+	private ColumnConfiguration getColumnConfiguration(SheetConfiguration sheetConfiguration, String property) {
+		ColumnConfiguration column = null;
+		for (ColumnConfiguration columnConfiguration : sheetConfiguration.getColumn()) {
+			if (columnConfiguration.getJavaProperty().equals(property)) {
+				column = columnConfiguration;
+				break;
+			}
+		}
+		if (column == null) {
+			throw new RuntimeException(String.format("No column configuration for property %s", property));
+		}
+		return column;
+	}
+
+	private void mapValue(BeanWrapper bw, String property, Object value, ColumnConfiguration column) {
+		if (column.isMultiple()) {
+			Object[] values;
+			if (value instanceof String) {
+				values = StringUtils.delimitedListToStringArray((String)value, column.getSeparatorChar());
+			}
+			else if (value instanceof Collection<?>) {
+				values = ((Collection<?>)value).toArray();
+			}
+			else {
+				values = new Object[] { value };
+			}
+			
+			int i = ((Collection)bw.getPropertyValue(property)).size();
+			for (Object listValue : values) {
+				bw.setPropertyValue(String.format("%s[%d]", property, i), listValue);
+				i++;
+			}
+		}
+		else {
+			bw.setPropertyValue(property, value);
+		}
 	}
 	
 	private int columnNameToIndex(String columnName) {
