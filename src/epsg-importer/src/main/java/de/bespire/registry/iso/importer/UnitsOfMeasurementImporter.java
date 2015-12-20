@@ -1,16 +1,8 @@
 package de.bespire.registry.iso.importer;
 
-import java.math.BigInteger;
-
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.AreaItemProposalDTO;
-import org.iso.registry.core.model.IdentifiedItemRepository;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
-import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
-import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
-import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
-import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.iso19103.MeasureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,9 +117,9 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 
 		Integer targetUomCode = (Integer)row.get(TARGET_UOM_CODE);
 		if (targetUomCode != null) {
-			uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
+			uom = findMappedEntity("UnitOfMeasure", uomCode, UnitOfMeasureItem.class);
 			
-			UnitOfMeasureItem targetUom = uomRepository.findOne(findMappedCode("UnitOfMeasure", targetUomCode));
+			UnitOfMeasureItem targetUom = findMappedEntity("UnitOfMeasure", targetUomCode, UnitOfMeasureItem.class);
 			if (targetUom != null) {
 				uom.setStandardUnit(targetUom);
 			}

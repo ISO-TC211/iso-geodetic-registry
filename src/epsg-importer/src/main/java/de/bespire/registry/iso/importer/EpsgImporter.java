@@ -34,6 +34,21 @@ public class EpsgImporter
 	public static final String GCP_REGISTER_NAME = "Geodetic Codes & Parameters";
 	
 	private static final Logger logger = LoggerFactory.getLogger(EpsgImporter.class);
+	
+	private static AnnotationConfigApplicationContext context;
+	private static Database db;
+	
+	public static AnnotationConfigApplicationContext getContext() {
+		return context;
+	}
+	
+	public static <T> T getBean(Class<T> beanType) {
+		return context.getBean(beanType);
+	}
+	
+	public static Database getDatabase() {
+		return db;
+	}
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
@@ -53,8 +68,7 @@ public class EpsgImporter
 			generateIdentifiers = false;
 		}
 
-		Database db = DatabaseBuilder.open(source);
-		AnnotationConfigApplicationContext context = null;
+		db = DatabaseBuilder.open(source);
 		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 		try {
 			Authentication authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
@@ -189,7 +203,7 @@ public class EpsgImporter
 			}				
 
 			RE_ItemClass icArea = areasImporter.getOrCreateItemClass(register, null);
-			if (argList.contains("all") || argList.contains("7") || argList.contains("-area")) {
+			if (argList.contains("all") || argList.contains("7") || argList.contains("-area") || argList.contains("-allareas")) {
 				if (argList.contains("-area")) {
 					areasImporter.setLimitToCodes(argList.get(argList.indexOf("-area") + 1));
 				}
@@ -363,6 +377,17 @@ public class EpsgImporter
 		}
 		
 		fixReferences(importer, register, sponsor, table);
+		
+		for (String itemClass : importer.getMissingCodes().keySet()) {
+			StringBuilder listBuilder = new StringBuilder();
+			for (Integer code : importer.getMissingCodes().get(itemClass)) {
+				if (listBuilder.length() > 0) {
+					listBuilder.append(",");
+				}
+				listBuilder.append(code);
+			}
+			logger.info("!!! Missing codes of item class {}: {}", itemClass, listBuilder.toString());
+		}
 	
 //		for (int i = 0; i < table.getRowCount(); i++) {
 //			Row row = table.getNextRow();

@@ -77,8 +77,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		
 		Integer uomEpsgCode = (Integer)row.get(UOM_CODE);
 //		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasure", uomEpsgCode);
-		UUID uomCode = findMappedCode("UnitOfMeasure", uomEpsgCode);
-		UnitOfMeasureItem uom = uomRepository.findOne(uomCode);
+		UnitOfMeasureItem uom = findMappedEntity("UnitOfMeasure", uomEpsgCode, UnitOfMeasureItem.class);
 		if (uom == null) {
 			logger.error("!!! Missing UoM #{}", uomEpsgCode.toString());
 			return;

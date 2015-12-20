@@ -73,12 +73,12 @@ public class CoordinateSystemsImporter extends AbstractImporter
 			do {
 				Row axisRow = cursor.getCurrentRow();
 				Integer axisCode = (Integer)axisRow.get(CoordinateSystemAxesImporter.COORD_AXIS_CODE);
-				CoordinateSystemAxisItem axis = axisRepository.findOne(findMappedCode("CoordinateSystemAxis", axisCode));
+				CoordinateSystemAxisItem axis = findMappedEntity("CoordinateSystemAxis", axisCode, CoordinateSystemAxisItem.class);
 				if (axis == null) {
 					logger.error("!!! Missing axis #{}", axisCode.toString());
 				}
 				
-				proposal.addAxis(new AxisDTO(axis));
+				proposal.getAxes().add(new CoordinateSystemAxisItemProposalDTO(axis));
 			} while (cursor.findNextRow(m));
 		}
 		
