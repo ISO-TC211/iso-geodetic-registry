@@ -109,6 +109,9 @@ public class UnitOfMeasureItem extends IdentifiedItem implements UnitOfMeasure
 
 	@Override
 	public Double getScaleToStandardUnit() {
+		if (this.scaleToStandardUnitDenominator == null || this.scaleToStandardUnitNumerator == null) {
+			return null;
+		}
 		return this.scaleToStandardUnitNumerator / this.scaleToStandardUnitDenominator;
 	}
 
