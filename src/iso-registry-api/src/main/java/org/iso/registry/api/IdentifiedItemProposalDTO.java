@@ -30,7 +30,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 
 public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 {
-	private Set<String> aliases;
+	private List<String> aliases;
 	private String remarks;
 	private List<CitationDTO> informationSource;
 	private String dataSource;
@@ -66,24 +66,17 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 //		this.getInformationSource().add(new CitationDTO());
 	}
 
-	public Set<String> getAliases() {
+	public List<String> getAliases() {
 		if (aliases == null) {
-			this.aliases = new HashSet<>();
+			this.aliases = new ArrayList<>();
 		}
 		return aliases;
 	}
 
-	public void setAliases(Set<String> aliases) {
+	protected void setAliases(List<String> aliases) {
 		this.aliases = aliases;
 	}
 	
-	public void addAlias(String alias) {
-		if (this.aliases == null) {
-			this.aliases = new HashSet<String>();
-		}
-		this.aliases.add(alias);
-	}
-
 	public String getRemarks() {
 		return remarks;
 	}
@@ -191,11 +184,9 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		if (registerItem instanceof IdentifiedItem) {
 			IdentifiedItem item = (IdentifiedItem)registerItem;
 
-			if (item.getAliases() != null) {
-				for (String alias : item.getAliases()) {
-					if (!StringUtils.isEmpty(alias)) {
-						this.addAlias(alias);
-					}
+			for (String alias : item.getAliases()) {
+				if (!StringUtils.isEmpty(alias)) {
+					this.getAliases().add(alias);
 				}
 			}
 			

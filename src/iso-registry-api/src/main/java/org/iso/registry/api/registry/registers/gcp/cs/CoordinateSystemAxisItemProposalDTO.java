@@ -67,7 +67,9 @@ public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalD
 	 */
 	private CS_RangeMeaning rangeMeaning;
 	
-	public CoordinateSystemAxisItemProposalDTO() { }
+	public CoordinateSystemAxisItemProposalDTO() { 
+		super("CoordinateSystemAxis");
+	}
 	
 	public CoordinateSystemAxisItemProposalDTO(CoordinateSystemAxisItem item) {
 		super(item);

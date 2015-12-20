@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
 import org.iso.registry.core.model.IdentifiedItem;
+import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CartesianCoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
@@ -43,7 +44,7 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 	}
 	
 	private CoordinateSystemType type;
-	private List<AxisDTO> axes = new ArrayList<AxisDTO>();
+	private List<CoordinateSystemAxisItemProposalDTO> axes = new ArrayList<CoordinateSystemAxisItemProposalDTO>();
 	private String axisUuids;
 	
 	public CoordinateSystemItemProposalDTO() { }
@@ -52,13 +53,13 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 	
-	public CoordinateSystemItemProposalDTO(CoordinateSystemType type, AxisDTO firstAxis, AxisDTO... otherAxes) {
-		this.type = type;
-		this.axes.add(firstAxis);
-		for (AxisDTO axis : otherAxes) {
-			this.axes.add(axis);
-		}
-	}
+//	public CoordinateSystemItemProposalDTO(CoordinateSystemType type, AxisDTO firstAxis, AxisDTO... otherAxes) {
+//		this.type = type;
+//		this.axes.add(firstAxis);
+//		for (AxisDTO axis : otherAxes) {
+//			this.axes.add(axis);
+//		}
+//	}
 	
 	public CoordinateSystemItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
@@ -92,13 +93,13 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 		this.type = type;
 	}
 	
-	public List<AxisDTO> getAxes() {
+	public List<CoordinateSystemAxisItemProposalDTO> getAxes() {
 		return this.axes;
 	}
 	
-	public void addAxis(AxisDTO axis) {
+	public void addAxis(CoordinateSystemAxisItemProposalDTO axis) {
 		if (this.axes == null) {
-			this.axes = new ArrayList<AxisDTO>();
+			this.axes = new ArrayList<CoordinateSystemAxisItemProposalDTO>();
 		}
 		this.axes.add(axis);
 	}
@@ -126,9 +127,16 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 				}
 			}
 			else if (this.getAxes() != null) {
-				for (AxisDTO axisDto : this.getAxes()) {
-					CoordinateSystemAxisItem axis = entityManager.find(CoordinateSystemAxisItem.class, axisDto.getAxisUuid());
-					cs.addAxis(axis);
+//				for (AxisDTO axisDto : this.getAxes()) {
+//					CoordinateSystemAxisItem axis = entityManager.find(CoordinateSystemAxisItem.class, axisDto.getAxisUuid());
+//					cs.addAxis(axis);
+//				}
+				for (CoordinateSystemAxisItemProposalDTO axisDto : this.getAxes()) {
+					if (axisDto.getReferencedItemUuid() == null) {
+						new Object();
+					}
+					CoordinateSystemAxisItem axisItem = entityManager.find(CoordinateSystemAxisItem.class, axisDto.getReferencedItemUuid());
+					cs.getAxes().add(axisItem);
 				}
 			}
 		}
@@ -156,7 +164,8 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 			if (cs.getAxes() != null) {
 				List<String> axisUuidList = new ArrayList<>();
 				for (CoordinateSystemAxisItem axis : cs.getAxes()) {
-					this.addAxis(new AxisDTO(axis.getUuid(), axis.getName()));
+//					this.addAxis(new AxisDTO(axis.getUuid(), axis.getName()));
+					this.addAxis(new CoordinateSystemAxisItemProposalDTO(axis));
 					axisUuidList.add(axis.getUuid().toString());
 				}
 				this.axisUuids = StringUtils.collectionToCommaDelimitedString(axisUuidList);
@@ -168,6 +177,7 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
 		result.addAll(super.getAggregateDependencies());
+		result.addAll(this.getAxes());
 
 		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
 	}

@@ -17,5 +17,9 @@ public class GeneralParameterValueViewBean
 	public String getParameterName() {
 		return parameter.getName();
 	}
+	
+	public IdentifiedItemViewBean getParameter() {
+		return this.parameter;
+	}
 
 }
