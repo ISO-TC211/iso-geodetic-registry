@@ -44,6 +44,7 @@ import org.iso.registry.client.controller.registry.RegisterController.Supersessi
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.VerticalCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
+import org.iso.registry.persistence.io.gml.GmlExporter;
 import org.iso.registry.persistence.io.wkt.WktExporter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -273,16 +274,42 @@ public class RegisterItemController
 		ServletOutputStream out = response.getOutputStream();
 
 		if (item instanceof CoordinateReferenceSystemItem) {
-			WktExporter.exportCrs((CoordinateReferenceSystemItem)item, sw);
+			WktExporter.exportCrs((CoordinateReferenceSystemItem)item, out);
 		}
-		else if (item instanceof CoordinateSystemItem) {
-			WktExporter.exportCs((CoordinateSystemItem)item, sw);
-		}
+//		else if (item instanceof CoordinateSystemItem) {
+//			WktExporter.exportCs((CoordinateSystemItem)item, out);
+//		}
 		else {
 			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as WKT", item.getClass().getName()));
 		}
 
-		out.print(sw.toString());
+		out.flush();
+		out.close();
+		response.flushBuffer();
+	}
+
+	@RequestMapping(value = "/{uuid}/gml", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public void viewItemAsGml(@PathVariable("uuid") UUID itemUuid, final Model model, HttpServletResponse response) throws ItemNotFoundException, IOException, JAXBException {
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		RegisterItemViewBean vb = viewBeanFactory.getViewBean(item);
+		
+		model.addAttribute("item", vb);
+		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+
+		ServletOutputStream out = response.getOutputStream();
+
+		if (item instanceof CoordinateReferenceSystemItem) {
+//			WktExporter.exportCrs((CoordinateReferenceSystemItem)item, sw);
+			GmlExporter.exportCrs((CoordinateReferenceSystemItem)item, out);
+		}
+//		else if (item instanceof CoordinateSystemItem) {
+//			WktExporter.exportCs((CoordinateSystemItem)item, sw);
+//		}
+		else {
+			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as WKT", item.getClass().getName()));
+		}
+
 		out.flush();
 		out.close();
 		response.flushBuffer();
