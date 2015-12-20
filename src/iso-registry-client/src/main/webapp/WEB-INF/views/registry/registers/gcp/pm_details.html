@@ -5,7 +5,7 @@
 			<div class="row" th:include="globals :: registerItemDefinition"/>
 			<div class="row" th:include="globals :: aliasesTable('pm')" />
 			<div class="row">
-				<div class="col-md-6" th:with="property='greenwichLongitude',inputType='text',label=#{form.label.greenwichLongitude},placeholder=#{form.placeholder.greenwichLongitude},isRequired='true'">
+				<div class="col-md-6" th:with="property='greenwichLongitude',inputType='number',step='any',label=#{form.label.greenwichLongitude},placeholder=#{form.placeholder.greenwichLongitude},isRequired='true'">
 					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 				<div class="col-md-6" th:with="property='greenwichLongitudeUom',label=#{form.label.greenwichLongitudeUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
