@@ -49,7 +49,7 @@
 								<button th:unless="${itemClass}" id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''" th:text="#{button.addition}">Item registrieren</button>
 								<button th:if="${itemClass}" id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition?itemClass=' + ${itemClass.uuid}} + '\''" th:text="#{button.addition}">Item registrieren</button>
 <!-- 								<button id="supersession" class="btn btn-warning" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/supersession'} + '\''" th:text="#{button.supersession}">Item ersetzen</button> -->
-								<a th:href="@{__${basePath}__/register/__${register.uuid}__/export}" id="excelexport" class="btn btn-default pull-right" style="margin-left: 10px;"><span class="fa fa-file-code-o"></span>&nbsp;&nbsp;<span th:text="#{button.downloadExcel}"></span></a>
+<!-- 								<a th:href="@{__${basePath}__/register/__${register.uuid}__/export}" id="excelexport" class="btn btn-default pull-right" style="margin-left: 10px;"><span class="fa fa-file-code-o"></span>&nbsp;&nbsp;<span th:text="#{button.downloadExcel}"></span></a> -->
 								<form th:action="@{__${basePath}__/register/__${register.uuid}__/proposal/upload}" id="uploadForm" class="pull-right" role="form" method="post" enctype="multipart/form-data">
 									<div class="form-inline">
 										<div class="form-group">
