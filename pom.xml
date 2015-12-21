@@ -9,6 +9,7 @@
 		<maven.test.skip>true</maven.test.skip>
 	</properties>	
 	<modules>
+		<module>src/iso-tc211-xml/src/iso-tc211-xml</module>
 		<module>src/registry-base/src/registry-core</module>
 		<module>src/registry-base/src/registry-api</module>
 		<module>src/registry-base/src/registry-persistence</module>

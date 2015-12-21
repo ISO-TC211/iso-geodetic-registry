@@ -2,3 +2,7 @@
 	path = src/registry-base
 	url = git@git.bespire.de:bespire/registry-base.git
 	branch = dev
+[submodule "src/iso-tc211-xml"]
+	path = src/iso-tc211-xml
+	url = git@git.bespire.de:bespire/iso-tc211-xml.git
+	branch = dev
