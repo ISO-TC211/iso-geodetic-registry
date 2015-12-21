@@ -71,34 +71,34 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
-			    <groupId>org.apache.cxf</groupId>
-			    <artifactId>cxf-xjc-plugin</artifactId>
-			    <version>2.7.0</version>
-			    <configuration>
-			        <extensions>
-			            <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:2.7.0</extension>
-			        </extensions>
-			    </configuration>
-			    <executions>
-			        <execution>
-			            <id>generate-sources</id>
-			            <phase>generate-sources</phase>
-			            <goals>
-			                <goal>xsdtojava</goal>
-			            </goals>
-			            <configuration>
-			                <sourceRoot>${basedir}/target/generated/src/main/java</sourceRoot>
-			                <xsdOptions>
-			                    <xsdOption>
-			                    	<extension>true</extension>
-			                        <xsd>/src/main/resources/schema/excelAdapterConfiguration.xsd</xsd>
-			                    </xsdOption>
-			                </xsdOptions>
-			            </configuration>
-			        </execution>
-			    </executions>
-			</plugin>		
+<!-- 			<plugin> -->
+<!-- 			    <groupId>org.apache.cxf</groupId> -->
+<!-- 			    <artifactId>cxf-xjc-plugin</artifactId> -->
+<!-- 			    <version>2.7.0</version> -->
+<!-- 			    <configuration> -->
+<!-- 			        <extensions> -->
+<!-- 			            <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:2.7.0</extension> -->
+<!-- 			        </extensions> -->
+<!-- 			    </configuration> -->
+<!-- 			    <executions> -->
+<!-- 			        <execution> -->
+<!-- 			            <id>generate-sources</id> -->
+<!-- 			            <phase>generate-sources</phase> -->
+<!-- 			            <goals> -->
+<!-- 			                <goal>xsdtojava</goal> -->
+<!-- 			            </goals> -->
+<!-- 			            <configuration> -->
+<!-- 			                <sourceRoot>${basedir}/target/generated/src/main/java</sourceRoot> -->
+<!-- 			                <xsdOptions> -->
+<!-- 			                    <xsdOption> -->
+<!-- 			                    	<extension>true</extension> -->
+<!-- 			                        <xsd>/src/main/resources/schema/excelAdapterConfiguration.xsd</xsd> -->
+<!-- 			                    </xsdOption> -->
+<!-- 			                </xsdOptions> -->
+<!-- 			            </configuration> -->
+<!-- 			        </execution> -->
+<!-- 			    </executions> -->
+<!-- 			</plugin>		 -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -173,11 +173,16 @@
 			<artifactId>poi</artifactId>
 			<version>3.10.1</version>
 		</dependency>
-	<dependency>
-		<groupId>org.apache.poi</groupId>
-		<artifactId>poi-ooxml</artifactId>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
 		<version>3.10.1</version>
 	</dependency>
+		<dependency>
+			<groupId>de.bespire.io.xml.isotc211</groupId>
+			<artifactId>iso-tc211-xml</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>de.bespire.io.wkt</groupId>
 			<artifactId>de.bespire.io.wkt</artifactId>
