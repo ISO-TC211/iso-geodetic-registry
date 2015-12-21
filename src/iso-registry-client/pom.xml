@@ -450,12 +450,12 @@
 				<mail.from.address>registry@bespire.eu</mail.from.address>
 				<mail.smtp.auth>true</mail.smtp.auth>
 				<mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
-				<mail.smtp.host>mx.bespire.eu</mail.smtp.host>
+				<mail.smtp.host>mx.bespire.de</mail.smtp.host>
 				<mail.smtp.port>587</mail.smtp.port>
-				<mail.smtp.user>registrymail</mail.smtp.user>
+				<mail.smtp.user>registry@bespire.eu</mail.smtp.user>
 				<mail.smtp.password>phiePhie3eeNgieniTaegauheiPaitu6</mail.smtp.password>
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
-				<client.signup.confirmationUrl>http://registry.bespire.de/gcp/signup/confirmation</client.signup.confirmationUrl>
+				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/gcp/signup/confirmation</client.signup.confirmationUrl>
 			</properties>
 		</profile>
 		<profile>
@@ -475,12 +475,12 @@
 				<mail.from.address>registry@bespire.eu</mail.from.address>
 				<mail.smtp.auth>true</mail.smtp.auth>
 				<mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
-				<mail.smtp.host>mx.bespire.eu</mail.smtp.host>
+				<mail.smtp.host>mx.bespire.de</mail.smtp.host>
 				<mail.smtp.port>587</mail.smtp.port>
-				<mail.smtp.user>registrymail</mail.smtp.user>
+				<mail.smtp.user>registry@bespire.eu</mail.smtp.user>
 				<mail.smtp.password>phiePhie3eeNgieniTaegauheiPaitu6</mail.smtp.password>
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
-				<client.signup.confirmationUrl>http://registry.bespire.de/gcpdemo/signup/confirmation</client.signup.confirmationUrl>
+				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/gcpdemo/signup/confirmation</client.signup.confirmationUrl>
 			</properties>
 		</profile>
 	</profiles>
