@@ -31,6 +31,8 @@
 		<mail.smtp.port></mail.smtp.port>
 		<mail.smtp.user></mail.smtp.user>
 		<mail.smtp.password></mail.smtp.password>
+		<gml.identifier.baseurl></gml.identifier.baseurl>		
+		<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -431,6 +433,8 @@
 				<mail.smtp.port>25</mail.smtp.port>
 				<client.signup.sendConfirmationMails>false</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>http://localhost:8080/signup/confirmation</client.signup.confirmationUrl>
+				<gml.identifier.baseurl>http://localhost:8080</gml.identifier.baseurl>		
+				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
 		<profile>
@@ -454,8 +458,11 @@
 				<mail.smtp.port>587</mail.smtp.port>
 				<mail.smtp.user>registry@bespire.eu</mail.smtp.user>
 				<mail.smtp.password>phiePhie3eeNgieniTaegauheiPaitu6</mail.smtp.password>
+				<mail.baseUrl>https://iso.registry.bespire.eu/gcp</mail.baseUrl>
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/gcp/signup/confirmation</client.signup.confirmationUrl>
+				<gml.identifier.baseurl>https://iso.registry.bespire.eu/gcp</gml.identifier.baseurl>		
+				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
 		<profile>
@@ -479,8 +486,11 @@
 				<mail.smtp.port>587</mail.smtp.port>
 				<mail.smtp.user>registry@bespire.eu</mail.smtp.user>
 				<mail.smtp.password>phiePhie3eeNgieniTaegauheiPaitu6</mail.smtp.password>
+				<mail.baseUrl>https://iso.registry.bespire.eu/gcpdemo</mail.baseUrl>
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/gcpdemo/signup/confirmation</client.signup.confirmationUrl>
+				<gml.identifier.baseurl>https://iso.registry.bespire.eu/gcpdemo</gml.identifier.baseurl>		
+				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
 	</profiles>
