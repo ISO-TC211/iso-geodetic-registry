@@ -74,6 +74,7 @@ import org.isotc211.iso19139.gmd.impl.EXGeographicExtentPropertyTypeImpl;
 import org.w3.xlink.TypeType;
 
 import de.geoinfoffm.registry.api.iso.IsoXmlFactory;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Series;
 import net.opengis.gml32.AbstractCRSType;
@@ -204,7 +205,7 @@ public class GmlExporter
 	
 	private static void setAbstractGmlAttributes(IdentifiedItem item, AbstractGMLType gml, String idPrefix) {
 		gml.setId(idPrefix + item.getIdentifier().toString());
-		gml.setIdentifier(codeWithAuthority("ISO-TC211", item.getIdentifier().toString()));
+		gml.setIdentifier(urlIdentifier(item.getIdentifier()));
 		gml.setDescription(stringOrRef(item.getDescription()));
 		gml.getName().add(code(null, item.getName()));
 	}
@@ -774,5 +775,12 @@ public class GmlExporter
 		result.setDate(IsoXmlFactory.xmlGregorianCalendar(date));
 		
 		return result;
+	}
+	
+	private static CodeWithAuthorityType urlIdentifier(Integer itemIdentifier) {
+		String baseUrl = RegistryConfiguration.getInstance().getGmlIdentifierBaseUrl();
+		String path = String.format(RegistryConfiguration.getInstance().getGmlIdentifierPathPattern(), itemIdentifier);
+		
+		return codeWithAuthority("urn:ietf:rfc:1738", baseUrl + path);
 	}
 }
