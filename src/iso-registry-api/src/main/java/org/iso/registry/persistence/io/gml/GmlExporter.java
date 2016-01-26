@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -237,7 +238,7 @@ public class GmlExporter
 		datum.getScope().add(item.getScope());
 		
 		datum.setAnchorDefinition(code(null, item.getAnchorDefinition()));
-		if (item.getRealizationEpoch() != null) {
+		if (!StringUtils.isEmpty(item.getRealizationEpoch())) {
 			datum.setRealizationEpoch(IsoXmlFactory.xmlGregorianCalendar(item.getRealizationEpoch()));
 		}
 	}
