@@ -289,6 +289,7 @@
 	/* <![CDATA[ */
 		$('body').on('click', '.button-acceptproposal', function() {
 		    $(this).button('loading');
+		    $('body').addClass('loading');
 			var uuid = $(this).data('uuid');
 			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/accept', $('form#decisionEventForm').serialize(), function(success, errorThrown) {
 				if (success) {
