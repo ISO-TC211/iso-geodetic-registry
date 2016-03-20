@@ -1,5 +1,6 @@
 <div th:fragment="details">
-	<a id="downloadWkt" class="btn btn-sm btn-default pull-right" target="_blank" th:href="@{__${basePath}__/item/__*{uuid}__/wkt}" style="margin-top: 0px"><span th:text="#{button.wkt}"></span>&nbsp;&nbsp;<span class="fa fa-file-text-o"></span></a>												
+	<a id="downloadWkt" class="btn btn-sm pull-right" target="_blank" th:href="@{__${basePath}__/item/__*{uuid}__/wkt}" style="margin-top: 0px"><span th:text="#{button.wkt}"></span>&nbsp;&nbsp;<span class="fa fa-file-text-o"></span></a>												
+	<a id="downloadGml" class="btn btn-sm pull-right" target="_blank" th:href="@{__${basePath}__/item/__*{uuid}__/gml}" style="margin-top: 0px"><span th:text="#{button.gml}"></span>&nbsp;&nbsp;<span class="fa fa-file-text-o"></span></a>												
 	<div class="row">
 
 		<div class="col-md-6">
@@ -25,16 +26,16 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div th:unless="${itemClassName} eq 'ProjectedCRS'" class="row">
 				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',noAddNew='true'">
 					<div th:switch="${itemClassName}">
 <!-- 						<div th:case="all" th:with="ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}"> -->
 						<div th:case="'GeodeticCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}">
 							<div th:replace="globals :: selectIdentifiedItem"/>
 						</div>
-						<div th:case="'ProjectedCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}">
-							<div th:replace="globals :: selectIdentifiedItem"/>
-						</div>
+<!-- 						<div th:case="'ProjectedCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}"> -->
+<!-- 							<div th:replace="globals :: selectIdentifiedItem"/> -->
+<!-- 						</div> -->
 						<div th:case="'VerticalCRS'" th:with="ajaxPaths=${#strings.arraySplit('VerticalDatumItem',',')}">
 							<div th:replace="globals :: selectIdentifiedItem"/>
 						</div> 

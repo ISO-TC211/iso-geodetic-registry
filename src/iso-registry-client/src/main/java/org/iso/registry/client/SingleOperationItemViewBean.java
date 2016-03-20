@@ -3,9 +3,12 @@ package org.iso.registry.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationType;
+import org.iso.registry.core.model.operation.ConversionItem;
 import org.iso.registry.core.model.operation.GeneralParameterValue;
 import org.iso.registry.core.model.operation.OperationParameterValue;
 import org.iso.registry.core.model.operation.SingleOperationItem;
+import org.iso.registry.core.model.operation.TransformationItem;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -17,6 +20,7 @@ public class SingleOperationItemViewBean extends CoordinateOperationItemViewBean
 {
 	private OperationMethodItemViewBean method;
 	private List<GeneralParameterValueViewBean> parameterValues;
+	private SingleOperationType operationType;
 
 	public SingleOperationItemViewBean(RE_RegisterItem item) {
 		super(item);
@@ -64,12 +68,19 @@ public class SingleOperationItemViewBean extends CoordinateOperationItemViewBean
 		if (item.getParameterValue() != null) {
 			for (GeneralParameterValue<?> parameterValue : item.getParameterValue()) {
 				if (parameterValue instanceof OperationParameterValue) {
-					this.addParameterValue(new OperationParameterValueViewBean((OperationParameterValue)parameterValue));
+					this.getParameterValues().add(new OperationParameterValueViewBean((OperationParameterValue)parameterValue));
 				}
 				else {
-					this.addParameterValue(new GeneralParameterValueViewBean(parameterValue));
+					this.getParameterValues().add(new GeneralParameterValueViewBean(parameterValue));
 				}
 			}
+		}
+		
+		if (item instanceof TransformationItem) {
+			this.setOperationType(SingleOperationType.TRANSFORMATION);
+		}
+		else if (item instanceof ConversionItem) {
+			this.setOperationType(SingleOperationType.CONVERSION);
 		}
 	}
 
@@ -82,6 +93,10 @@ public class SingleOperationItemViewBean extends CoordinateOperationItemViewBean
 	}
 
 	public List<GeneralParameterValueViewBean> getParameterValues() {
+		if (this.parameterValues == null) {
+			this.parameterValues = new ArrayList<>();
+		}
+
 		return parameterValues;
 	}
 
@@ -89,11 +104,12 @@ public class SingleOperationItemViewBean extends CoordinateOperationItemViewBean
 		this.parameterValues = parameterValues;
 	}
 	
-	public void addParameterValue(GeneralParameterValueViewBean parameterValue) {
-		if (this.parameterValues == null) {
-			this.parameterValues = new ArrayList<>();
-		}
-		this.parameterValues.add(parameterValue);
+	public SingleOperationType getOperationType() {
+		return operationType;
+	}
+
+	public void setOperationType(SingleOperationType operationType) {
+		this.operationType = operationType;
 	}
 
 }

@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO.SingleOperationType;
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationType;
 import org.iso.registry.core.model.crs.CompoundCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.GeneralDerivedCoordinateReferenceSystemItem;
@@ -21,7 +21,6 @@ import org.iso.registry.core.model.operation.SingleOperationItem;
 import org.iso.registry.core.model.operation.TransformationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -69,8 +68,8 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		super(proposal, sponsor);
 	}
 
-	public CoordinateReferenceSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public CoordinateReferenceSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 	
 	public CoordinateReferenceSystemType getType() {
@@ -147,7 +146,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 
 	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
-		return super.findDependentProposals(this.getDatum());
+		return super.findDependentProposals(this.getDatum(), this.getCoordinateSystem(), this.getBaseCrs(), this.getHorizontalCrs(), this.getVerticalCrs(), this.getOperation());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -292,6 +291,5 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 			}
 		}
 	}
-
 
 }

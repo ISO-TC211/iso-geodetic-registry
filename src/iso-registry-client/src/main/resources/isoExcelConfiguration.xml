@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExcelConfiguration xmlns="http://www.bespire.de/io/excel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.bespire.de/io/excel file:///D:/src/git/iso-registry/src/iso-registry-api/src/main/resources/schema/excelAdapterConfiguration.xsd">
+	<sheet sheetName="Source_Citation(CI#)" idColumn="A" idPrefix="CI" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.CitationDTO</importType>
+		<exportType>de.geoinfoffm.registry.core.model.iso19115.CI_Citation</exportType>
+		<column columnName="B">
+			<javaProperty>title</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>alternateTitle</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>author</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>publisher</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>publicationDate</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>revisionDate</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="H">
+			<javaProperty>edition</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>editionDate</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>series.name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="K">
+			<javaProperty>series.issueIdentification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>series.page</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>otherCitationDetails</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="UoM(UM#)" idColumn="A" idPrefix="UM" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.UnitOfMeasureItem</exportType>
+		<itemClassName>UnitOfMeasure</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>standardUnit</javaProperty>
+			<multiple>false</multiple>
+			<references>UoM(UM#)</references>
+		</column>
+		<column columnName="F">
+			<javaProperty>scaleToStandardUnitNumerator</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>scaleToStandardUnitDenominator</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="H">
+			<javaProperty>measureType</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>symbol</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="K">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="Pr_Meridian(PM#)" idColumn="A" idPrefix="PM" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.PrimeMeridianItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.datum.PrimeMeridianItem</exportType>
+		<itemClassName>PrimeMeridian</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>greenwichLongitude</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>greenwichLongitudeUom</javaProperty>
+			<multiple>false</multiple>
+			<references>UoM(UM#)</references>
+		</column>
+		<column columnName="G">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="Ellips(EL#)" idColumn="A" idPrefix="EL" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.EllipsoidItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.datum.EllipsoidItem</exportType>
+		<itemClassName>Ellipsoid</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>semiMajorAxis</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>semiMajorAxisUom</javaProperty>
+			<multiple>false</multiple>
+			<references>UoM(UM#)</references>
+		</column>
+		<column columnName="G">
+			<javaProperty>sphere</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="H">
+			<javaProperty>inverseFlattening</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>semiMinorAxis</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="K">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="CSAxis(CA#)" idColumn="A" idPrefix="CA" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.cs.CoordinateSystemAxisItem</exportType>
+		<itemClassName>CoordinateSystemAxis</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>axisAbbreviation</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>axisDirection.code</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>axisUnit</javaProperty>
+			<multiple>false</multiple>
+			<references>UoM(UM#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>minimumValue</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>maximumValue</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>rangeMeaning</javaProperty>
+		</column>
+		<column columnName="K">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="L">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="N">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="CoordSys(CS#)" idColumn="A" idPrefix="CS" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.cs.CoordinateSystemItem</exportType>
+		<itemClassName>VerticalCS</itemClassName>
+		<itemClassName>SphericalCS</itemClassName>
+		<itemClassName>EllipsoidalCS</itemClassName>
+		<itemClassName>CartesianCS</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>#itemClassName</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.ItemClassNameMapper</valueMapper>
+		</column>
+		<column columnName="E">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>axes</javaProperty>
+			<multiple>true</multiple>
+			<references>CSAxis(CA#)</references>
+		</column>
+		<column columnName="G">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="Geo_Extent(GE#)" idColumn="A" idPrefix="GE" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.ExtentDTO</importType>
+		<exportType>org.iso.registry.api.registry.registers.gcp.ExtentDTO</exportType>
+<!-- 		<exportType>org.iso.registry.core.model.iso19115.extent.EX_Extent</exportType> -->
+		<column columnName="B">
+			<javaProperty>description</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>geographicBoundingBoxes[0].southBoundLatitude</javaProperty>
+<!-- 			<javaPropertyExport>geographicElement[0].southBoundLatitude</javaPropertyExport> -->
+		</column>
+		<column columnName="D">
+			<javaProperty>geographicBoundingBoxes[0].westBoundLongitude</javaProperty>
+<!-- 			<javaPropertyExport>geographicElement[0].westBoundLongitude</javaPropertyExport> -->
+		</column>
+		<column columnName="E">
+			<javaProperty>geographicBoundingBoxes[0].northBoundLatitude</javaProperty>
+<!-- 			<javaPropertyExport>geographicElement[0].northBoundLatitude</javaPropertyExport> -->
+		</column>
+		<column columnName="F">
+			<javaProperty>geographicBoundingBoxes[0].eastBoundLongitude</javaProperty>
+<!-- 			<javaPropertyExport>geographicElement[0].eastBoundLongitude</javaPropertyExport> -->
+		</column>
+	</sheet>
+	<sheet sheetName="Datum(CD#)" idColumn="A" idPrefix="CD" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.datum.DatumItem</exportType>
+		<itemClassName>VerticalDatum</itemClassName>
+		<itemClassName>GeodeticDatum</itemClassName>
+		<itemClassName>EngineeringDatum</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>#itemClassName</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.ItemClassNameMapper</valueMapper>
+		</column>
+		<column columnName="E">
+			<javaProperty>scope</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>anchorDefinition</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="H">
+			<javaProperty>ellipsoid</javaProperty>
+			<multiple>false</multiple>
+			<references>Ellips(EL#)</references>
+		</column>
+		<column columnName="I">
+			<javaProperty>primeMeridian</javaProperty>
+			<multiple>false</multiple>
+			<references>Pr_Meridian(PM#)</references>
+		</column>
+		<column columnName="J">
+			<javaProperty>realizationEpoch</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="K">
+			<javaProperty>coordinateReferenceEpoch</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>domainOfValidity</javaProperty>
+			<multiple>false</multiple>
+			<references>Geo_Extent(GE#)</references>
+		</column>
+		<column columnName="M">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="N">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="O">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="P">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="CRS(CR#)" idColumn="A" idPrefix="CR" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO</importType>
+<!-- 		<exportType>org.iso.registry.client.CoordinateReferenceSystemItemViewBean</exportType> -->
+		<exportType>org.iso.registry.core.model.crs.CoordinateReferenceSystemItem</exportType>
+		<itemClassName>GeodeticCRS</itemClassName>
+		<itemClassName>VerticalCRS</itemClassName>
+		<itemClassName>EngineeringCRS</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>scope</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>#itemClassName</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.ItemClassNameMapper</valueMapper>
+		</column>
+		<column columnName="G">
+			<javaProperty>datum</javaProperty>
+			<multiple>false</multiple>
+			<references>Datum(CD#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>coordinateSystem</javaProperty>
+			<multiple>false</multiple>
+			<references>CoordSys(CS#)</references>
+		</column>
+		<column columnName="I">
+			<javaProperty>baseCrs</javaProperty>
+			<multiple>false</multiple>
+			<references>CRS(CR#)</references>
+		</column>
+		<column columnName="J">
+			<javaProperty>operation</javaProperty>
+			<multiple>false</multiple>
+			<references>Coord_Conv(CC#)</references>
+			<references>Coord_Trans(CT#)</references>
+		</column>
+		<column columnName="K">
+			<javaProperty>domainOfValidity</javaProperty>
+			<multiple>false</multiple>
+			<references>Geo_Extent(GE#)</references>
+		</column>
+		<column columnName="L">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="M">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="N">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="O">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="OpParam(OP#)" idColumn="A" idPrefix="OP" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.operation.OperationParameterItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.operation.OperationParameterItem</exportType>
+		<itemClassName>OperationParameter</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>minimumOccurs</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="G">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="H">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="OpMethod(OM#)" idColumn="A" idPrefix="OM" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO</importType>
+		<exportType>org.iso.registry.core.model.operation.OperationMethodItem</exportType>
+		<itemClassName>OperationMethod</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>parameter</javaProperty>
+			<multiple>true</multiple>
+			<references>ParamVal(PV#)</references>
+		</column>
+		<column columnName="F">
+			<javaProperty>formula</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>formulaCitation</javaProperty>
+			<multiple>false</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>sourceDimensions</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>targetDimensions</javaProperty>
+			<multiple>false</multiple>
+		</column>
+<!-- 		<column columnName="I"> -->
+<!-- 			<javaProperty>informationSource</javaProperty> -->
+<!-- 			<multiple>true</multiple> -->
+<!-- 			<references>Source_Citation(CI#)</references> -->
+<!-- 		</column> -->
+		<column columnName="J">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="K">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="Coord_Conv(CC#)" idColumn="A" idPrefix="CC" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO</importType>
+		<exportType>org.iso.registry.client.SingleOperationItemViewBean</exportType>
+		<itemClassName>Conversion</itemClassName>
+		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
+			<javaProperty>operationType</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.operation.OperationTypeMapper</valueMapper>
+		</column>
+		<column columnName="D">
+			<javaProperty>#itemClassName</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.ItemClassNameMapper</valueMapper>
+		</column>
+		<column columnName="E">
+			<javaProperty>scope</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>method</javaProperty>
+			<multiple>false</multiple>
+			<references>OpMethod(OM#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>domainOfValidity</javaProperty>
+			<multiple>false</multiple>
+			<references>Geo_Extent(GE#)</references>
+		</column>
+		<column columnName="I">
+			<javaProperty>parameterValues</javaProperty>
+			<multiple>true</multiple>
+			<references>ParamVal(PV#)</references>
+		</column>
+		<column columnName="J">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source Citation</references>
+		</column>
+		<column columnName="K">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="Coord_Trans(CT#)" idColumn="A" idPrefix="CT" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO</importType>
+		<exportType>org.iso.registry.client.SingleOperationItemViewBean</exportType>
+		<itemClassName>Transformation</itemClassName>
+		<column columnName="B">
+			<javaProperty>sourceCrs</javaProperty>
+			<multiple>false</multiple>
+			<references>CRS(CR#)</references>
+		</column>
+		<column columnName="C">
+			<javaProperty>targetCrs</javaProperty>
+			<multiple>false</multiple>
+			<references>CRS(CR#)</references>
+		</column>
+		<column columnName="D">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="E">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>operationType</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.operation.OperationTypeMapper</valueMapper>
+		</column>
+		<column columnName="F">
+			<javaProperty>#itemClassName</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.ItemClassNameMapper</valueMapper>
+		</column>
+		<column columnName="G">
+			<javaProperty>scope</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="H">
+			<javaProperty>remarks</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="I">
+			<javaProperty>method</javaProperty>
+			<multiple>false</multiple>
+			<references>OpMethod(OM#)</references>
+		</column>
+		<column columnName="J">
+			<javaProperty>domainOfValidity</javaProperty>
+			<multiple>false</multiple>
+			<references>Geo_Extent(GE#)</references>
+		</column>
+		<column columnName="K">
+			<javaProperty>parameterValues</javaProperty>
+			<multiple>true</multiple>
+			<references>ParamVal(PV#)</references>
+		</column>
+		<column columnName="L">
+			<javaProperty>operationVersion</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>accuracy</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="N">
+			<javaProperty>informationSource</javaProperty>
+			<multiple>true</multiple>
+			<references>Source_Citation(CI#)</references>
+		</column>
+		<column columnName="O">
+			<javaProperty>justification</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="P">
+			<javaProperty>registerManagerNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="Q">
+			<javaProperty>controlBodyNotes</javaProperty>
+			<multiple>false</multiple>
+		</column>
+	</sheet>
+	<sheet sheetName="ParamVal(PV#)" idColumn="A" idPrefix="PV" headerRow="2" firstDataRow="4" firstDataColumn="B">
+		<importType>org.iso.registry.api.registry.registers.gcp.operation.ParameterValueDTO</importType>	
+		<exportType>org.iso.registry.client.OperationParameterValueViewBean</exportType>
+		<column columnName="B">
+			<javaProperty>parameter</javaProperty>
+			<multiple>false</multiple>
+			<references>OpParam(OP#)</references>
+		</column>
+		<column columnName="D">
+			<javaProperty>parameterType</javaProperty>
+			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.operation.ParameterValueTypeMapper</valueMapper>
+		</column>
+		<column columnName="E">
+			<javaProperty>value</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="F">
+			<javaProperty>value</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="G">
+			<javaProperty>parameterUnit</javaProperty>
+			<multiple>false</multiple>
+			<references>UoM(UM#)</references>
+		</column>
+		<column columnName="H">
+			<javaProperty>parameterUnit</javaProperty>
+			<javaPropertyExport>unitOfMeasure</javaPropertyExport>
+			<multiple>false</multiple>
+			<references>UoM(UM#)</references>
+		</column>
+		<column columnName="I">
+			<javaProperty>value</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="J">
+			<javaProperty>value</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="K">
+			<javaProperty>value</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="L">
+			<javaProperty>value</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="M">
+			<javaProperty>value</javaProperty>
+			<multiple>false</multiple>
+		</column>
+<!-- 		<column columnName="N"> -->
+<!-- 			<javaProperty>valueFileCitation</javaProperty> -->
+<!-- 			<multiple>false</multiple> -->
+<!-- 		</column> -->
+	</sheet>
+</ExcelConfiguration>

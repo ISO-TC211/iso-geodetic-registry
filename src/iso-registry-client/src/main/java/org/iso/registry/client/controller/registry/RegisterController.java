@@ -5,22 +5,54 @@ package org.iso.registry.client.controller.registry;
 
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
+import org.iso.registry.api.registry.IsoProposalService;
+import org.iso.registry.persistence.IsoExcelConfiguration;
+import org.iso.registry.persistence.io.excel.ExcelAdapter;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -29,17 +61,21 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -50,10 +86,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
@@ -64,15 +102,21 @@ import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.DatatablesResult;
+import de.geoinfoffm.registry.client.web.RegisterItemListItem;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
+import de.geoinfoffm.registry.core.NonExistentRevisionException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Addition;
+import de.geoinfoffm.registry.core.model.Organization;
+import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalGroup;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
+import de.geoinfoffm.registry.core.model.Retirement;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
@@ -155,7 +199,13 @@ public class RegisterController
 	private MessageSource messageSource;
 	
 	@Autowired
+	private ExcelAdapter excelAdapter;
+	
+	@Autowired
 	private ProposalWorkflowManager workflowManager;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	private Map<String, RE_ItemClass> itemClassCache = new HashMap<>();
 	
@@ -259,7 +309,7 @@ public class RegisterController
 		Page<RE_RegisterItem> items;
 		if (itemClasses.isEmpty()) { 
 			if (!StringUtils.isEmpty(sSearch)) {
-				items = itemRepository.findByRegisterAndStatusInFiltered(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+				items = itemRepository.findByRegisterAndStatusIn(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
 			}
 			else {
 				items = itemRepository.findByRegisterAndStatusIn(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);
@@ -380,6 +430,43 @@ public class RegisterController
 				// Ignore
 			}
 		}
+		return register;
+	}
+
+	private RE_Register findRegister(String registerName, Date revisionDate, Model model) {
+		RE_Register register = registerRepository.findByName(registerName);
+
+		if (register == null) {
+			try {
+				register = registerRepository.findOne(UUID.fromString(registerName));
+			}
+			catch (IllegalArgumentException e) {
+				// Ignore
+			}
+		}
+
+		if (revisionDate != null) {
+			final Date now = Calendar.getInstance().getTime();
+			if (model != null && now.before(revisionDate)) {
+				model.addAttribute("noRevisionAtGivenDate", "true");
+			}
+			else {
+				try {
+					register = registerRepository.findOne(register.getUuid(), revisionDate);
+
+					if (model != null) {
+						final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+						model.addAttribute("revisionDate", df.format(revisionDate));
+					}
+				}
+				catch (final NonExistentRevisionException e) {
+					if (model != null) {
+						model.addAttribute("noRevisionAtGivenDate", "true");
+					}
+				}
+			}
+		}
+
 		return register;
 	}
 
@@ -787,8 +874,408 @@ public class RegisterController
 		}
 		return proposal;
 	}	
-
 	
+	@RequestMapping(value = "/{register}/proposal/upload", method = RequestMethod.POST)
+	public String handleProposalUpload(@PathVariable("register") String registerName,
+									   @RequestParam("file") CommonsMultipartFile file,
+									   final RedirectAttributes redirectAttributes) throws InvalidProposalException, UnauthorizedException, IOException, URISyntaxException {
+		security.assertIsLoggedIn();
+		security.assertHasAnyRoleWith(RegistrySecurity.SUBMITTER_ROLE_PREFIX);
+
+		final RE_Register register = findRegister(registerName);
+
+		final Organization userOrg = security.getCurrentUser().getOrganization();
+
+		final String fileName = file.getFileItem().getName().toLowerCase();
+		if (!file.isEmpty()) {
+			InputStream bis = null;
+			try {
+				bis = new BufferedInputStream(file.getInputStream());
+				if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
+					final Workbook wb;
+					if (fileName.endsWith("xls")) {
+						wb = new HSSFWorkbook(bis);
+					}
+					else {
+						wb = new XSSFWorkbook(bis);
+					}
+
+					ExcelConfiguration excelConfig = IsoExcelConfiguration.reload();
+					excelAdapter.setConfiguration(excelConfig);
+
+					final Collection<RegisterItemProposalDTO> proposals = new ArrayList<>();
+					final Map<String, RegisterItemProposalDTO> proposalsCache = new HashMap<>();
+					for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+						Sheet sheet = wb.getSheetAt(i);
+						logger.debug("Parsing sheet '{}'", sheet.getSheetName());
+						proposals.addAll(excelAdapter.extractProposals(sheet, register, userOrg, proposalsCache));
+					}
+					final List<Proposal> proposalList = new ArrayList<>(); 
+
+					final RE_SubmittingOrganization submittingOrganization = userOrg.getSubmittingOrganization();
+//					final String justification = "Excel import (" + file.getFileItem().getName() + ") by " + security.getCurrentUser().getName() + " (" + userOrg.getName() + ")";
+//					final String registerManagerNotes = "";
+//					final String controBodyNotes = "";
+					
+					Map<RegisterItemProposalDTO, Proposal> proposalsCreated = new HashMap<>();
+					
+					int count = 0;
+					for (RegisterItemProposalDTO proposal : proposals) {
+						logger.debug("Processing proposal '{}' [uuid={}]", proposal.getName(), proposal.getUuid());
+						count++;
+//						proposal.setJustification("Excel-Import");
+						RE_RegisterItem referencedItem = null;
+						if (proposal.getReferencedItemUuid() != null) {
+							final UUID referencedItemUuid = proposal.getReferencedItemUuid();
+							referencedItem = itemRepository.findOne(referencedItemUuid);
+						}
+						// retirement
+						if (proposal.getProposalType() == ProposalType.RETIREMENT) {
+							Assert.notNull(referencedItem, String.format("missing item reference for proposal #%d ",count));
+							final Retirement retirement = proposalService.createRetirement(referencedItem, proposal.getJustification(), proposal.getRegisterManagerNotes(), proposal.getControlBodyNotes(), submittingOrganization);
+							proposalList.add(retirement);
+						}
+						// addition
+						else if (referencedItem == null) {
+							final Addition addition = ((IsoProposalService)proposalService).createAdditionProposal(proposal, proposalsCreated);
+							proposalList.add(addition);
+						}
+						else if (referencedItem != null) {
+							// check for differences
+							// no differences -> skip
+							// differences on name, shortname -> clarification
+							// other differences -> supersession
+//							final ProposalType proposalType = calculateProposalTypeForSync((RE_RegisterItem)referencedItem, (RegisterItemProposalDTO)proposal);
+//							if (proposalType != null) {
+//								switch (proposalType) {
+//									case CLARIFICATION:
+//										final Clarification clarification = proposalService.createClarification(referencedItem,proposal.calculateProposedChanges(referencedItem), justification, registerManagerNotes, controBodyNotes, submittingOrganization);
+//										proposalList.add(clarification);
+//										break;
+//									case SUPERSESSION:
+//										final Set<RE_RegisterItem> supersededItems = new HashSet<RE_RegisterItem>();
+//										supersededItems.add(referencedItem);
+//										
+//										final Set<RegisterItemProposalDTO> successors = new HashSet<RegisterItemProposalDTO>();
+//										successors.add(proposal);
+//
+//										final Supersession supersession = proposalService.createSupersession(supersededItems, successors,
+//												justification, registerManagerNotes, controBodyNotes, submittingOrganization);
+//										proposalList.add(supersession);
+//										break;
+//									default:
+//										// should never be reached
+//										Assert.isTrue(true, String.format("error on handle proposal #%d ", count));
+//										break;
+//								}
+//							}
+						}
+					}
+
+					if (!proposalList.isEmpty()) {
+						final DateTimeFormatter fmt = ISODateTimeFormat.basicDateTimeNoMillis();
+						String groupName = "Excel-Import '" + fileName + "' (" + security.getCurrentUser().getName() + ", " + fmt.print(Calendar.getInstance().getTimeInMillis()) + ")";
+						ProposalGroup group = proposalService.createProposalGroup(groupName, proposalList, userOrg.getSubmittingOrganization());
+						redirectAttributes.addFlashAttribute("uploadProposalGroupCreated", groupName);
+						redirectAttributes.addFlashAttribute("uploadProposalGroupCreatedUuid", group.getUuid().toString());
+					}
+					else {
+						redirectAttributes.addFlashAttribute("uploadNothingProcessed", "true");
+					}
+				}
+//				else if (fileName.endsWith("gml")) {
+//					codeListImporter.importGml(bis, userOrg.getSubmittingOrganization(), register);
+//				}
+//				else if (fileName.endsWith("genericode")) {
+//					codeListImporter.importGeneriCode(bis, userOrg.getSubmittingOrganization(), register);
+//				}
+//				else if (fileName.endsWith("skos") || fileName.endsWith("rdf")) {
+//					codeListImporter.importSkos(bis, ClientConfiguration.getMailBaseUrl(), userOrg.getSubmittingOrganization(), register);
+//				}
+			}
+			catch (JAXBException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+			finally {
+				IOUtils.closeQuietly(bis);
+				file.getFileItem().delete();
+			}
+		}
+		else {
+		}
+
+		return "redirect:/management/submitter";
+	}
+
+	@RequestMapping(value = "/{register}/export", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String selectItemsForExport(final @PathVariable("register") String registerName,
+								       final Model model,
+								       final RedirectAttributes redirectAttributes) throws UnauthorizedException {
+		
+		final RE_Register register = findRegister(registerName);
+		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, register);
+
+		model.addAttribute("register", register);
+		
+		return "registry/export";
+	}
+
+	@RequestMapping(value = "/{register}/export", method = RequestMethod.POST)
+	@Transactional(readOnly = true)
+	public void exportExcelData(final HttpServletRequest request,
+								final @PathVariable("register") String registerName,
+								final Model model,
+								final @RequestParam Map<String, String> parameters,
+								final RedirectAttributes redirectAttributes,
+								final HttpServletResponse response) throws IOException, UnauthorizedException {
+
+		final RE_Register register = findRegister(registerName);
+		security.assertHasEntityRelatedRole(SUBMITTER_ROLE_PREFIX, register);
+		
+		final List<RE_RegisterItem> exportees = new ArrayList<>();
+		
+//		if (parameters.containsKey("exportees")) {
+//			String[] exporteeUuids = StringUtils.delimitedListToStringArray(parameters.get("exportees"), ";");
+//			if (exporteeUuids != null) {
+//				for (String exporteeUuid : exporteeUuids) {
+//					RE_RegisterItem exportee = itemRepository.findOne(UUID.fromString(exporteeUuid));
+//					if (exportee != null && exportee.isContainedIn(register) && !exportees.contains(exportee)) {
+//						exportees.add(exportee);
+//					}				
+//				}
+//			}
+//		}
+		exportees.addAll(itemRepository.findAll());
+//		exportees.addAll(entityManager.createQuery("SELECT o FROM SingleOperationItem o").getResultList());
+		
+		final String path = "excelTemplate.xlsx";
+		try {
+			final URL url = getClass().getClassLoader().getResource(path);
+			if (url == null) {
+				response.sendRedirect("notfound");
+			}
+			final Path source = Paths.get(url.toURI());
+			logger.trace("Loading file " + path + "(" + source.toFile().getAbsolutePath() + ")");
+			String nowInMillis = Long.toString(Calendar.getInstance().getTimeInMillis());
+			Path target = Files.createTempFile("export", ".xlsx"); 
+			try {
+				Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+				
+				OPCPackage pkg = OPCPackage.open(target.toFile());
+				XSSFWorkbook workbook = new XSSFWorkbook(pkg);
+				excelAdapter.exportEntities(exportees, workbook);
+//				OutputStream os = Files.newOutputStream(target, StandardOpenOption.WRITE);
+//				workbook.write(os);
+//				os.close();
+				response.setContentType("application/vnd.ms-excel");
+//				response.setContentLength(new Long(target.toFile().length()).intValue());
+				response.setHeader("Content-Disposition", "attachment; filename=gcp-export-" + nowInMillis + ".xlsx");
+				workbook.write(response.getOutputStream());
+//				Files.copy(target, response.getOutputStream());
+//				FileCopyUtils.copy(Files.newInputStream(target, StandardOpenOption.READ), response.getOutputStream());
+				pkg.close();				
+			}
+			finally {
+//				Files.delete(target);
+			}
+		}
+		catch (final Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+	}
+
+	@RequestMapping(value = "/{register}/{itemClass}/items", method = RequestMethod.GET)
+	public @ResponseBody DatatablesResult getContainedItems(@PathVariable("register") String registerName,
+			@PathVariable("itemClass") String itemClassName,
+			@RequestParam(value = "revisionDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date revisionDate,
+			@RequestParam(value = "timestamp", required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date timestamp,
+			@RequestParam(value = "status", required = false) RE_ItemStatus status,
+			@RequestParam Map<String, String> parameters,
+			final Model model) throws UnauthorizedException {
+
+		if (timestamp != null) {
+			revisionDate = timestamp;
+		}
+
+		final RE_Register register = findRegister(registerName, revisionDate, model);
+
+		if ("*".equals(itemClassName)) {
+			itemClassName = "";
+		}
+
+		final String sEcho = parameters.get("sEcho");
+		final String iDisplayStart = parameters.get("iDisplayStart");
+		final String iDisplayLength = parameters.get("iDisplayLength");
+		final String iColumns = parameters.get("iColumns");
+		final String iSortingsCols = parameters.get("iSortingCols");
+		final String sSearch = parameters.get("sSearch");
+
+		final Map<Integer, String> columns = new HashMap<Integer, String>();
+		if (iColumns != null) {
+			final int columnCount = Integer.parseInt(iColumns);
+			for (int i = 0; i < columnCount; i++) {
+				columns.put(i, parameters.get("mDataProp_" + Integer.toString(i)));
+			}
+		}
+
+		final Map<String, String> sortingColumns = new HashMap<String, String>();
+		if (iSortingsCols != null) {
+			final int sortingCols = Integer.parseInt(iSortingsCols);
+			for (int i = 0; i < sortingCols; i++) {
+				final String sortingCol = parameters.get("iSortCol_" + Integer.toString(i));
+				final String direction = parameters.get("sSortDir_" + Integer.toString(i));
+				sortingColumns.put(columns.get(Integer.parseInt(sortingCol)), direction);
+			}
+		}
+
+		int startAt = 0;
+		Pageable pageable;
+		if (iDisplayStart != null && iDisplayLength != null) {
+			startAt = Integer.parseInt(iDisplayStart);
+			final int length = Integer.parseInt(iDisplayLength);
+			final int pageNo = startAt / length;
+
+			Sort sort;
+			if (!sortingColumns.isEmpty()) {
+				final List<Order> orders = new ArrayList<Order>();
+				for (final String property : sortingColumns.keySet()) {
+					final String sortCol = property;
+					final Order order = new Order(Direction.fromString(sortingColumns.get(property).toString().toUpperCase()), sortCol);
+					orders.add(order);
+				}
+				sort = new Sort(orders);
+			}
+			else {
+				sort = new Sort(new Order("name"));
+			}
+
+			pageable = new PageRequest(pageNo, length, sort);
+		}
+		else {
+			pageable = new PageRequest(0, 10);
+		}
+
+		final AuditReader auditReader = AuditReaderFactory.get(entityManager);
+		Number revision = null;
+		if (revisionDate != null) {
+			revision = auditReader.getRevisionNumberForDate(revisionDate);
+		}
+
+		List<RE_ItemStatus> acceptedStatus;
+		if (status == null) {
+			acceptedStatus = Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED);
+		}
+		else {
+			acceptedStatus = Arrays.asList(status);
+		}
+		
+		Page<RE_RegisterItem> items;
+		if (revision == null) {
+			if (!StringUtils.isEmpty(sSearch)) {
+				if (!StringUtils.isEmpty(itemClassName)) {
+					items = itemRepository.findByRegisterAndItemClassNameAndStatusIn(register, itemClassName,
+							acceptedStatus, "%" + sSearch + "%",
+							pageable);
+				}
+				else {
+					items = itemRepository.findByRegisterAndStatusIn(register,
+							acceptedStatus, "%" + sSearch + "%",
+							pageable);
+				}
+			}
+			else {
+				if (!StringUtils.isEmpty(itemClassName)) {
+					items = itemRepository.findByRegisterAndItemClassNameAndStatusIn(register, itemClassName,
+							acceptedStatus, pageable);
+				}
+				else {
+					items = itemRepository.findByRegisterAndStatusIn(register,
+							acceptedStatus, pageable);
+				}
+			}
+		}
+		else {
+			AuditQuery aq = auditReader
+					.createQuery()
+					.forEntitiesAtRevision(RE_RegisterItem.class, revision)
+					.add(AuditEntity.property("register").eq(register))
+					.add(AuditEntity.property("status")
+							.in(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED)));
+
+			if (!StringUtils.isEmpty(sSearch)) {
+				aq = aq.add(AuditEntity.or(AuditEntity.property("name").ilike("%" + sSearch + "%"),
+						AuditEntity.property("definition").ilike("%" + sSearch + "%")));
+			}
+			if (!StringUtils.isEmpty(itemClassName)) {
+				final RE_ItemClass ic = itemClassRepository.findByName(itemClassName);
+				if (ic != null) {
+					aq = aq.add(AuditEntity.relatedId("itemClass").eq(ic.getUuid()));
+				}
+			}
+
+			List<RE_RegisterItem> auditResult;
+			final int resultSize = aq.getResultList().size();
+			if (resultSize > 0) {
+				aq = aq.setMaxResults(pageable.getPageSize()).setFirstResult(startAt);
+				auditResult = aq.getResultList();
+			}
+			else {
+				auditResult = new ArrayList<RE_RegisterItem>();
+			}
+
+			items = new PageImpl<RE_RegisterItem>(auditResult, pageable, resultSize);
+		}
+
+		final Locale locale = LocaleContextHolder.getLocale();
+
+		final List<RegisterItemListItem> listItems = new ArrayList<>();
+		for (final RE_RegisterItem item : items) {
+			listItems.add(new RegisterItemListItem(item, messageSource, locale, entityManager));
+		}
+
+		final DatatablesResult result = new DatatablesResult(items.getTotalElements(), items.getTotalElements(), sEcho, listItems);
+
+		return result;
+	}
+
+//	private ProposalType calculateProposalTypeForSync(RE_RegisterItem referencedItem, RegisterItemProposalDTO proposal) {
+//		// 1. different item class shall result in a supersession
+//		if (!referencedItem.getItemClass().getName().equalsIgnoreCase(proposal.getItemClassName())) {
+//			return ProposalType.SUPERSESSION;
+//		}
+//
+//		// 2. check for supersessions, a difference in details should result in a supersession
+//		if (!proposal.deepEquals(referencedItem)) {
+//			return ProposalType.SUPERSESSION;
+//		}
+//
+//		// 3. check for clarifications - name, shortname, definition and description  shall result in clarification 
+//		if (!EqualsHelper.equals(referencedItem.getDescription(), proposal.getDescription())) {
+//			return ProposalType.CLARIFICATION;
+//		}
+//
+//		if (!EqualsHelper.equals(referencedItem.getDefinition(), proposal.getDefinition())) {
+//			return ProposalType.CLARIFICATION;
+//		}
+//
+//		if (!EqualsHelper.equals(referencedItem.getName(), proposal.getName())) {
+//			return ProposalType.CLARIFICATION;
+//		}
+//
+//		if (referencedItem instanceof GDI_RegisterItem && proposal instanceof GdiRegisterItemProposalDTO) {
+//			GDI_RegisterItem gdiItem = (GDI_RegisterItem)referencedItem;
+//			GdiRegisterItemProposalDTO gdiProposal = (GdiRegisterItemProposalDTO)proposal;
+//			if (!EqualsHelper.equals(gdiItem.getShortName(), gdiProposal.getShortName())) {
+//				return ProposalType.CLARIFICATION;
+//			}
+//		}
+//		
+//		// return null to indicate 'nothing to do - item is up-to-date'  
+//		return null;
+//	}
+
 	public static class SupersessionState {
 		private ProposalWorkflowManager workflowManager;
 

@@ -1,5 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
@@ -8,11 +11,12 @@ import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.iso19103.MeasureType;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -25,7 +29,9 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 	private Double scaleToStandardUnitDenominator;
 
 	
-	public UnitOfMeasureItemProposalDTO() { }
+	public UnitOfMeasureItemProposalDTO() { 
+		super("UnitOfMeasure");
+	}
 
 	public UnitOfMeasureItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
@@ -35,8 +41,8 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	public UnitOfMeasureItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public UnitOfMeasureItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public UnitOfMeasureItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
@@ -109,6 +115,9 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 				UnitOfMeasureItem standardUnit = entityManager.find(UnitOfMeasureItem.class, this.getStandardUnit().getReferencedItemUuid());
 				uom.setStandardUnit(standardUnit);				
 			}
+			else if (this.getStandardUnit() == this) {
+				uom.setStandardUnit(uom);
+			}
 			
 			uom.setOffsetToStandardUnit(this.getOffsetToStandardUnit());
 			uom.setScaleToStandardUnitNumerator(this.getScaleToStandardUnitNumerator());
@@ -133,6 +142,25 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 			this.setScaleToStandardUnitDenominator(uom.getScaleToStandardUnitDenominator());
 		}
 	}
+	
+	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
+		result.addAll(super.getAggregateDependencies());
+		if (this.getStandardUnit() != null && this.getStandardUnit() != this) {
+			result.add(this.getStandardUnit());
+		}
 
+		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
+	}
+
+	
+	@Override
+	public List<RegisterItemProposalDTO> getCompositeDependencies() {
+		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();
+		result.addAll(super.getCompositeDependencies());
+		
+		return super.findDependentProposals((RegisterItemProposalDTO[])result.toArray(new RegisterItemProposalDTO[result.size()]));
+	}
 	
 }

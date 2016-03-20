@@ -9,11 +9,13 @@
 		<maven.test.skip>true</maven.test.skip>
 	</properties>	
 	<modules>
-		<module>registry-base/src/registry-core</module>
-		<module>registry-base/src/registry-api</module>
-		<module>registry-base/src/registry-persistence</module>
-		<module>registry-base/src/registry-client-base</module>
-		<module>iso-registry-api</module>
-		<module>iso-registry-client</module>
+		<module>src/iso-tc211-xml/src/iso-tc211-xml</module>
+		<module>src/wkt/src/de.bespire.io.wkt</module>
+		<module>src/registry-base/src/registry-core</module>
+		<module>src/registry-base/src/registry-api</module>
+		<module>src/registry-base/src/registry-persistence</module>
+		<module>src/registry-base/src/registry-client-base</module>
+		<module>src/iso-registry-api</module>
+		<module>src/iso-registry-client</module>
 	</modules>
 </project>

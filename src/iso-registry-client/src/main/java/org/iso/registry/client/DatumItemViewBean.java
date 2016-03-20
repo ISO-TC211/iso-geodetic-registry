@@ -16,9 +16,9 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 {
 	private String anchorDefinition;
 	private ExtentDTO domainOfValidity;
-	private Date realizationEpoch;
+	private String realizationEpoch;
 	private String scope;
-	private Date coordinateReferenceEpoch;
+	private String coordinateReferenceEpoch;
 	private EllipsoidItemViewBean ellipsoid;
 	private PrimeMeridianItemViewBean primeMeridian;
 	
@@ -91,11 +91,11 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 		this.domainOfValidity = domainOfValidity;
 	}
 
-	public Date getRealizationEpoch() {
+	public String getRealizationEpoch() {
 		return realizationEpoch;
 	}
 
-	public void setRealizationEpoch(Date realizationEpoch) {
+	public void setRealizationEpoch(String realizationEpoch) {
 		this.realizationEpoch = realizationEpoch;
 	}
 
@@ -107,11 +107,11 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 		this.scope = scope;
 	}
 
-	public Date getCoordinateReferenceEpoch() {
+	public String getCoordinateReferenceEpoch() {
 		return coordinateReferenceEpoch;
 	}
 
-	public void setCoordinateReferenceEpoch(Date coordinateReferenceEpoch) {
+	public void setCoordinateReferenceEpoch(String coordinateReferenceEpoch) {
 		this.coordinateReferenceEpoch = coordinateReferenceEpoch;
 	}
 

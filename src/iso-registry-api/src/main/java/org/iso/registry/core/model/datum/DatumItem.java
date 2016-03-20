@@ -58,9 +58,8 @@ public abstract class DatumItem extends IdentifiedItem
 	 * datum, in which case the realization epoch for the new datum defines the
 	 * upper limit for the validity of the replaced datum.
 	 */
-	@Temporal(TemporalType.DATE)
 	@Column(name = "REALIZATION_EPOCH")
-	private Date realizationEpoch;
+	private String realizationEpoch;
 	/**
 	 * Description of usage, or limitations of usage, for which this datum is
 	 * valid. If unknown, enter "not known".
@@ -72,8 +71,7 @@ public abstract class DatumItem extends IdentifiedItem
 	 * Non-standard attribute to differentiate between the date of publication (realizationEpoch)
 	 * and the reference date of this datum.
 	 */
-	@Temporal(TemporalType.DATE)
-	private Date coordinateReferenceEpoch;
+	private String coordinateReferenceEpoch;
 
 	public String getAnchorDefinition() {
 		return anchorDefinition;
@@ -83,7 +81,7 @@ public abstract class DatumItem extends IdentifiedItem
 		return domainOfValidity;
 	}
 
-	public Date getRealizationEpoch() {
+	public String getRealizationEpoch() {
 		return realizationEpoch;
 	}
 
@@ -111,7 +109,7 @@ public abstract class DatumItem extends IdentifiedItem
 	 * 
 	 * @param newVal
 	 */
-	public void setRealizationEpoch(Date newVal) {
+	public void setRealizationEpoch(String newVal) {
 		realizationEpoch = newVal;
 	}
 
@@ -123,11 +121,11 @@ public abstract class DatumItem extends IdentifiedItem
 		scope = newVal;
 	}
 
-	public Date getCoordinateReferenceEpoch() {
+	public String getCoordinateReferenceEpoch() {
 		return coordinateReferenceEpoch;
 	}
 
-	public void setCoordinateReferenceEpoch(Date coordinateReferenceEpoch) {
+	public void setCoordinateReferenceEpoch(String coordinateReferenceEpoch) {
 		this.coordinateReferenceEpoch = coordinateReferenceEpoch;
 	}
 

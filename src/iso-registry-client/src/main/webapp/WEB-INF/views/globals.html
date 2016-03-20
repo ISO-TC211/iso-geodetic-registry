@@ -30,15 +30,17 @@
 
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
-	<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
-	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="{isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+	<input th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
+	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
-	<textarea th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+	<textarea th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
 	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
 	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
@@ -128,10 +130,10 @@
 	<div th:unless="${isProposal}">
 		<!-- form-backing bean: RegisterItemViewBean -->
 		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
-			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.identifier} + '] ' + *{__${property}__.name}"></a>
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:title="*{__${property}__.name} + ' [' + *{__${property}__.identifier} + ']'"><big th:text="*{__${property}__.name}"/></a>
 		</div>
 		<div th:unless="*{__${property}__}">
-			[<span th:text="#{undefined}"></span>]
+			<big>[<span th:text="#{undefined}"></span>]</big>
 		</div>		
 	</div>
 	
@@ -360,10 +362,10 @@
 	<div th:unless="${isProposal}">
 		<!-- form-backing bean: RegisterItemViewBean -->
 		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
-			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{__${property}__.identifier} + '] ' + *{__${property}__.name}"></a>
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:title="*{__${property}__.name} + ' [' + *{__${property}__.identifier} + ']'"><big th:text="*{__${property}__.name}"/></a>
 		</div>
 		<div th:unless="*{__${property}__}">
-			[<span th:text="#{undefined}"></span>]
+			<big>[<span th:text="#{undefined}"></span>]</big>
 		</div>		
 	</div>
 </div>
@@ -376,7 +378,7 @@
 		</select>
 	</div>
 	<div th:unless="${isProposal}">
-		<span th:text="*{__${property}__}"></span>
+		<big th:text="*{__${property}__}"/>
 	</div>
 </div>
 
@@ -389,7 +391,9 @@
 		<p th:text="#{form.label.autoAssigned}"/>
 	</div>
 	<div th:unless="${isProposal} or *{identifier} lt 0" class="col-md-4" th:with="property='identifier',inputType='number',label=#{form.label.identifier},placeholder=#{form.placeholder.identifier},help=#{form.help.identifier},isRequired='true',isReadOnly='true'">
-		<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+<!-- 		<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/> -->
+		<div th:replace="globals :: formLabel('identifier', #{form.label.identifier})"/>
+		<p><big th:text="*{__${property}__}"/></p>
 	</div>
 </div>
 

@@ -31,24 +31,20 @@ public class ProposalCreatedEventListener implements ApplicationListener<Proposa
 	public void onApplicationEvent(ProposalCreatedEvent event) {
 		if (event.isAnnotated(this.getClass())) return;
 		
-		Proposal proposal = event.getSource();
-//		Organization org = orgRepository.findBySubmittingOrganization(proposal.getSponsor());
-		
-//		Sid orgSid = new PrincipalSid(org.getUuid().toString());
-//		proposalRepository.appendAces(proposal, Arrays.asList(ADMINISTRATION, READ, WRITE, DELETE), orgSid, true);
-		for (RE_Register register : proposal.getAffectedRegisters()) {
-			Sid submitterSid = new GrantedAuthoritySid(registerService.getSubmitterRole(register).getName());
-			Sid ownerSid = new GrantedAuthoritySid(registerService.getOwnerRole(register).getName());
-			Sid managerSid = new GrantedAuthoritySid(registerService.getManagerRole(register).getName());
-			Sid controlBodySid = new GrantedAuthoritySid(registerService.getControlBodyRole(register).getName());
-
-			// TODO Change to READ-only!
-			proposalRepository.appendAces(proposal, Arrays.asList(READ, WRITE), submitterSid, true);
-			
-			proposalRepository.appendAces(proposal, Arrays.asList(READ), ownerSid, true);
-			proposalRepository.appendAces(proposal, Arrays.asList(READ, WRITE), managerSid, true);
-			proposalRepository.appendAces(proposal, Arrays.asList(READ), controlBodySid, true);
-		}
+//		Proposal proposal = event.getSource();
+//		for (RE_Register register : proposal.getAffectedRegisters()) {
+//			Sid submitterSid = new GrantedAuthoritySid(registerService.getSubmitterRole(register).getName());
+//			Sid ownerSid = new GrantedAuthoritySid(registerService.getOwnerRole(register).getName());
+//			Sid managerSid = new GrantedAuthoritySid(registerService.getManagerRole(register).getName());
+//			Sid controlBodySid = new GrantedAuthoritySid(registerService.getControlBodyRole(register).getName());
+//
+//			// TODO Change to READ-only!
+//			proposalRepository.appendAces(proposal, Arrays.asList(READ, WRITE), submitterSid, true);
+//			
+//			proposalRepository.appendAces(proposal, Arrays.asList(READ), ownerSid, true);
+//			proposalRepository.appendAces(proposal, Arrays.asList(READ, WRITE), managerSid, true);
+//			proposalRepository.appendAces(proposal, Arrays.asList(READ), controlBodySid, true);
+//		}
 		
 		event.annotate(this.getClass());
 	}

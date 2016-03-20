@@ -38,6 +38,14 @@
 		<directory>target</directory>
 		<resources>
 			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*.xml</include>
+				</includes>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
 				<directory>src/main/resources/META-INF</directory>
 				<includes>
 					<include>persistence.xml</include>
@@ -56,44 +64,43 @@
 		</resources>
 		<plugins>
 			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-
-<!-- 			<plugin>
-			    <groupId>org.apache.cxf</groupId>
-			    <artifactId>cxf-xjc-plugin</artifactId>
-			    <version>2.7.0</version>
-			    <configuration>
-			        <extensions>
-			            <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:2.7.0</extension>
-			        </extensions>
-			    </configuration>
-			    <executions>
-			        <execution>
-			            <id>generate-sources</id>
-			            <phase>generate-sources</phase>
-			            <goals>
-			                <goal>xsdtojava</goal>
-			            </goals>
-			            <configuration>
-			                <sourceRoot>${basedir}/target/generated/src/main/java</sourceRoot>
-			                <xsdOptions>
-			                    <xsdOption>
-			                    	<extension>true</extension>
-			                        <xsd>/src/main/resources/schema/gdide-userservice.xsd</xsd>
-			                        <bindingFile>/src/main/resources/schema/bindings.xjb</bindingFile>
-			                    </xsdOption>
-			                </xsdOptions>
-			            </configuration>
-			        </execution>
-			    </executions>
-			</plugin>	-->		
-
+<!-- 			<plugin> -->
+<!-- 			    <groupId>org.apache.cxf</groupId> -->
+<!-- 			    <artifactId>cxf-xjc-plugin</artifactId> -->
+<!-- 			    <version>2.7.0</version> -->
+<!-- 			    <configuration> -->
+<!-- 			        <extensions> -->
+<!-- 			            <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:2.7.0</extension> -->
+<!-- 			        </extensions> -->
+<!-- 			    </configuration> -->
+<!-- 			    <executions> -->
+<!-- 			        <execution> -->
+<!-- 			            <id>generate-sources</id> -->
+<!-- 			            <phase>generate-sources</phase> -->
+<!-- 			            <goals> -->
+<!-- 			                <goal>xsdtojava</goal> -->
+<!-- 			            </goals> -->
+<!-- 			            <configuration> -->
+<!-- 			                <sourceRoot>${basedir}/target/generated/src/main/java</sourceRoot> -->
+<!-- 			                <xsdOptions> -->
+<!-- 			                    <xsdOption> -->
+<!-- 			                    	<extension>true</extension> -->
+<!-- 			                        <xsd>/src/main/resources/schema/excelAdapterConfiguration.xsd</xsd> -->
+<!-- 			                    </xsdOption> -->
+<!-- 			                </xsdOptions> -->
+<!-- 			            </configuration> -->
+<!-- 			        </execution> -->
+<!-- 			    </executions> -->
+<!-- 			</plugin>		 -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -162,6 +169,26 @@
 			<groupId>org.apache.sis.core</groupId>
 			<artifactId>sis-referencing</artifactId>
 			<version>${org.apache.sis-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.10.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+		<version>3.10.1</version>
+	</dependency>
+		<dependency>
+			<groupId>de.bespire.io.xml.isotc211</groupId>
+			<artifactId>iso-tc211-xml</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.bespire.io.wkt</groupId>
+			<artifactId>de.bespire.io.wkt</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>
