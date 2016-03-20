@@ -3,7 +3,10 @@
  */
 package org.iso.registry.client.controller;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.CONTROLBODY_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.POINTOFCONTACT_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +48,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import de.bespire.LoggerFactory;
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.ProposalListItem;
+import de.geoinfoffm.registry.api.ProposalListItemImpl;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.ProposalTaskManager;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
@@ -164,7 +168,7 @@ public class ManagementController
 		List<ProposalListItem> appealListItems = new ArrayList<ProposalListItem>();
 		for (Appeal appeal : appeals) {
 			if (appeal.isPending()) {
-				appealListItems.add(new ProposalListItem(appeal, messageSource, locale, workflowManager));
+				appealListItems.add(new ProposalListItemImpl(appeal, messageSource, locale, workflowManager, pcrRepository));
 			}
 		}
 
@@ -241,19 +245,13 @@ public class ManagementController
 		if (!uuids.isEmpty()) {
 			filteredProposals = proposalRepository.findByUuids(uuids, pageable);
 			for (Proposal proposal : filteredProposals) {
-				ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
+				ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 
 				if (proposalTaskManager.hasActiveTask(proposal)) {
 					rvb.overrideProposalStatus(ProposalWorkflowManager.STATUS_PROCESSING);
 				}
 				
-				Collection<ProposalChangeRequest> pcrs = pcrRepository.findByProposalAndReviewedIsFalse(proposal);
-				if (!pcrs.isEmpty()) {
-					rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
-				}
-				
 				proposalViewBeans.add(rvb);
-
 			}
 
 			result = new DatatablesResult(filteredProposals.getTotalElements(), filteredProposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);
@@ -314,13 +312,7 @@ public class ManagementController
 		Locale locale = LocaleContextHolder.getLocale();
 
 		for (Proposal proposal : proposals) {
-			ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
-
-			Collection<ProposalChangeRequest> pcrs = pcrRepository.findByProposalAndReviewedIsFalse(proposal);
-			if (!pcrs.isEmpty()) {
-				rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
-			}
-
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 			proposalViewBeans.add(rvb);
 		}
 		DatatablesResult result = new DatatablesResult(proposals.getTotalElements(), proposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);
@@ -363,13 +355,7 @@ public class ManagementController
 		List<ProposalListItem> proposalViewBeans = new ArrayList<>();
 
 		for (Proposal proposal : proposals) {
-			ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
-
-			Collection<ProposalChangeRequest> pcrs = pcrRepository.findByProposalAndReviewedIsFalse(proposal);
-			if (!pcrs.isEmpty()) {
-				rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
-			}
-
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 			rvb.setSubmitter(security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters()));
 			proposalViewBeans.add(rvb);
 		}
@@ -475,7 +461,7 @@ public class ManagementController
 		List<ProposalListItem> proposalViewBeans = new ArrayList<>();
 
 		for (Proposal proposal : proposals) {
-			ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 			proposalViewBeans.add(rvb);
 		}
 
