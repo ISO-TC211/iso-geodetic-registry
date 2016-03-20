@@ -89,8 +89,8 @@ public class CoordinateReferenceSystemItemViewBean extends IdentifiedItemViewBea
 			}
 		}
 		
-		if (crsItem instanceof GeneralDerivedCoordinateReferenceSystemItem) {
-			GeneralDerivedCoordinateReferenceSystemItem<?> derivedCrs = (GeneralDerivedCoordinateReferenceSystemItem<?>)crsItem;
+		if (crsItem instanceof SingleCoordinateReferenceSystemItem) {
+			SingleCoordinateReferenceSystemItem<?> derivedCrs = (SingleCoordinateReferenceSystemItem<?>)crsItem;
 			if (derivedCrs.getBaseCrs() != null) {
 				this.setBaseCrs(new CoordinateReferenceSystemItemViewBean(derivedCrs.getBaseCrs()));
 			}
