@@ -6,6 +6,8 @@ import org.isotc211.iso19135.RE_SubmittingOrganization_PropertyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +23,7 @@ import de.geoinfoffm.registry.api.UserRegistrationException;
 import de.geoinfoffm.registry.api.soap.CreateOrganizationRequest;
 import de.geoinfoffm.registry.api.soap.CreateRegistryUserRequest;
 import de.geoinfoffm.registry.core.ParameterizedRunnable;
+import de.geoinfoffm.registry.core.RegistersChangedEvent;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.RegistryUser;
@@ -37,7 +40,7 @@ import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationReposito
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 
 @Component
-public class RegistryInitializer
+public class RegistryInitializer implements ApplicationEventPublisherAware
 {
 	private static final Logger logger = LoggerFactory.getLogger(RegistryInitializer.class);
 	
@@ -64,6 +67,8 @@ public class RegistryInitializer
 	
 	@Autowired
 	private RegisterService registerService;
+	
+	private ApplicationEventPublisher eventPublisher;
 	
 	@Transactional
 	public void initializeRegistry() {
@@ -109,7 +114,7 @@ public class RegistryInitializer
 						}
 				);
 
-//				eventPublisher().publishEvent(new RegistersChangedEvent(this));
+				eventPublisher.publishEvent(new RegistersChangedEvent(this));
 
 				logger.info(">>> '{}' (owner = {}; manager = {})", new Object[] { r.getName(), r.getOwner().getName(), r.getManager().getName() });
 			}
@@ -201,6 +206,11 @@ public class RegistryInitializer
 		}
 		
 		return ic;
+	}
+
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.eventPublisher = applicationEventPublisher;
 	}
 
 }
