@@ -34,7 +34,9 @@
  */
 package org.iso.registry.persistence.io.excel;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -54,14 +56,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
 import org.iso.registry.api.registry.registers.gcp.operation.ParameterValueDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.ParameterValueTypeMapper;
 import org.iso.registry.core.model.GlobalIdentifiedItemRepository;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.crs.AreaItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.iso19136.CodeType;
-import org.iso.registry.core.model.operation.CoordinateOperationItem;
+import org.iso.registry.core.model.operation.OperationParameterValue.OperationParameterValueType;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -75,14 +77,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ColumnConfiguration;
-import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ExcelConfiguration;
-import de.bespire.registry.io.excel.ExcelAdapterConfiguration.SheetConfiguration;
+import de.bespire.registry.io.excel.ValueMapper;
+import de.bespire.registry.io.excel.configuration.ColumnConfiguration;
+import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
+import de.bespire.registry.io.excel.configuration.SheetConfiguration;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
 import de.geoinfoffm.registry.core.Entity;
+import de.geoinfoffm.registry.core.ItemClass;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.ProposalType;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
@@ -181,9 +185,18 @@ public class ExcelAdapter
 	}
 	
 	private SheetConfiguration findSheetConfiguration(Class<?> entityClass) {
+		return findSheetConfiguration(entityClass, null);
+	}
+	
+	private SheetConfiguration findSheetConfiguration(Class<?> entityClass, String itemClassName) {
 		for (SheetConfiguration config : configuration.getSheet()) {
 			if (config.getExportType().equals(entityClass.getCanonicalName())) {
-				return config;
+				if (!StringUtils.isEmpty(itemClassName) && !config.getItemClassName().contains(itemClassName)) {
+					continue;
+				}
+				else {
+					return config;
+				}
 			}
 		}
 		
@@ -196,15 +209,33 @@ public class ExcelAdapter
 	}
 	
 	private Cell exportEntity(Object entity, Workbook workbook, Map<String, Integer> rows, Map<UUID, String> visitedEntities, Map<String, String> knownExtents, Map<String, String> knownCitations) {
-		if (entity instanceof RE_RegisterItem && ((RE_RegisterItem)entity).getName().equals("sexagesimal DMS")) {
-			new Object();
+		if (entity instanceof EX_Extent) {
+			entity = new ExtentDTO((EX_Extent)entity);
 		}
 
-		SheetConfiguration sheetConfiguration = findSheetConfiguration(entity.getClass());
+		SheetConfiguration sheetConfiguration;
+		if (entity instanceof RE_RegisterItem) {
+			ItemClass itemClassAnnotation = entity.getClass().getAnnotation(ItemClass.class);
+			if (itemClassAnnotation != null) {
+				sheetConfiguration = findSheetConfiguration(entity.getClass(), itemClassAnnotation.value());
+			}
+			else {
+				sheetConfiguration = findSheetConfiguration(entity.getClass());
+			}
+		}
+		else {
+			sheetConfiguration = findSheetConfiguration(entity.getClass());
+		}
 		if (sheetConfiguration == null) {
 			if (entity instanceof RE_RegisterItem) {
+				ItemClass itemClassAnnotation = entity.getClass().getAnnotation(ItemClass.class);
 				RegisterItemViewBean viewBean = viewBeanFactory.getViewBean((RE_RegisterItem)entity);
-				sheetConfiguration = findSheetConfiguration(viewBean.getClass());
+				if (itemClassAnnotation != null) {
+					sheetConfiguration = findSheetConfiguration(viewBean.getClass(), itemClassAnnotation.value());
+				}
+				else {
+					sheetConfiguration = findSheetConfiguration(viewBean.getClass());
+				}
 				if (sheetConfiguration == null) {
 					return null;
 				}
@@ -247,6 +278,7 @@ public class ExcelAdapter
 			idBuilder.append(Integer.toString(rowNum - (sheetConfiguration.getFirstDataRow() - 1) + 1));
 			idCell.setCellValue(idBuilder.toString());
 			logger.debug(">>> Assigned ID '{}'", idBuilder.toString());
+			
 			try {
 				logger.debug(">>> UUID = {}", bw.getPropertyValue("uuid"));
 				visitedEntities.put((UUID)bw.getPropertyValue("uuid"), idBuilder.toString());
@@ -261,13 +293,63 @@ public class ExcelAdapter
 				javaProperty = columnConfiguration.getJavaProperty(); 
 			}
 			
-			if (javaProperty.equals("unitOfMeasure")) {
+			if ("justification".equals(javaProperty)) {
 				new Object();
 			}
 			
+			String typeRestriction = "";
+			if (javaProperty.startsWith("(")) {
+				typeRestriction = javaProperty.substring(1, javaProperty.indexOf(")"));
+				javaProperty = javaProperty.substring(javaProperty.indexOf(")" + 1));
+			}
+			
 			Cell valueCell = valueRow.getCell(columnNameToIndex(columnConfiguration.getColumnName()), Row.CREATE_NULL_AS_BLANK);
-			if (javaProperty.equals("#itemClassName") && entity instanceof RE_RegisterItem) {
-				valueCell.setCellValue(((RE_RegisterItem)entity).getItemClass().getName());
+			if (javaProperty.equals("#itemClassName") && (entity instanceof RE_RegisterItem || entity instanceof RegisterItemViewBean)) {
+				String itemClassName;
+				if (entity instanceof RE_RegisterItem) {
+					itemClassName = ((RE_RegisterItem)entity).getItemClass().getName();
+				}
+				else {
+					itemClassName = ((RegisterItemViewBean)entity).getItemClassName();					
+				}
+				
+				if (!StringUtils.isEmpty(columnConfiguration.getValueMapper())) {
+					try {
+						@SuppressWarnings({ "unchecked", "rawtypes" })
+						Class<ValueMapper> valueMapperClass = (Class<ValueMapper>)Class.forName(columnConfiguration.getValueMapper());
+						Method mapMethod = valueMapperClass.getMethod("mapInverse", String.class);
+						ValueMapper valueMapper = BeanUtils.instantiate(valueMapperClass);
+						itemClassName = (String)mapMethod.invoke(valueMapper, itemClassName);
+					}
+					catch (Throwable t) {
+						logger.debug(">>> Unable to invoke ValueMapper {}: {}", columnConfiguration.getValueMapper(), t.getMessage());
+					}
+				}
+				valueCell.setCellValue(itemClassName);
+			}
+			else if (javaProperty.equals("justification")) {
+				if (entity instanceof RegisterItemViewBean) {
+					valueCell.setCellValue(((RegisterItemViewBean)entity).getJustification());
+				}
+				else if (entity instanceof RE_RegisterItem) {
+					RegisterItemViewBean viewBean = viewBeanFactory.getViewBean((RE_RegisterItem)entity);
+					valueCell.setCellValue(viewBean.getJustification());
+				}
+				else {
+					valueCell.setCellValue("Import from EPSG Geodetic Parameter Data Set v8.9");					
+				}
+			}
+			else if (javaProperty.equals("controlBodyNotes")) {
+				if (entity instanceof RegisterItemViewBean) {
+					valueCell.setCellValue(((RegisterItemViewBean)entity).getControlBodyNotes());
+				}
+				else if (entity instanceof RE_RegisterItem) {
+					RegisterItemViewBean viewBean = viewBeanFactory.getViewBean((RE_RegisterItem)entity);
+					valueCell.setCellValue(viewBean.getControlBodyNotes());
+				}
+				else {
+					valueCell.setCellValue("Import from EPSG Geodetic Parameter Data Set v8.9");					
+				}
 			}
 			else {
 				try { 
@@ -313,10 +395,27 @@ public class ExcelAdapter
 						catch (NullValueInNestedPathException e) {
 							// Ignore
 						}
+						
+						if (propertyValue != null && !StringUtils.isEmpty(columnConfiguration.getValueMapper())) {
+							try {
+								@SuppressWarnings({ "unchecked", "rawtypes" })
+								Class<ValueMapper> valueMapperClass = (Class<ValueMapper>)Class.forName(columnConfiguration.getValueMapper());
+								Method mapMethod = valueMapperClass.getMethod("mapInverse", propertyValue.getClass());
+								ValueMapper valueMapper = BeanUtils.instantiate(valueMapperClass);
+								propertyValue = mapMethod.invoke(valueMapper, propertyValue);
+							}
+							catch (Throwable t) {
+								logger.debug(">>> Unable to invoke ValueMapper {}: {}", columnConfiguration.getValueMapper(), t.getMessage());
+							}
+						}
 					
 						if (propertyValue instanceof String) {
 							valueCell.setCellValue((String)propertyValue);
 							logger.debug(">>> {} = '{}' (String)", javaProperty, (String)propertyValue); 
+						}
+						else if (propertyValue instanceof File) {
+							valueCell.setCellValue(((File)propertyValue).getName());
+							logger.debug(">>> {} = '{}' (File)", javaProperty, ((File)propertyValue).getName()); 							
 						}
 						else if (propertyValue instanceof Enum) {
 							valueCell.setCellValue(((Enum)propertyValue).name());
@@ -368,6 +467,16 @@ public class ExcelAdapter
 											Cell targetId = exportEntity(subEntity, workbook, rows, visitedEntities, knownExtents, knownCitations);
 											valueBuilder.append(getString(targetId));
 										}
+									}
+								}
+								else if (value instanceof RegisterItemViewBean) {
+									RegisterItemViewBean subEntity = (RegisterItemViewBean)value;
+									if (visitedEntities.containsKey(subEntity.getUuid())) {
+										valueBuilder.append(visitedEntities.get(subEntity.getUuid()));
+									}
+									else {
+										Cell targetId = exportEntity(subEntity, workbook, rows, visitedEntities, knownExtents, knownCitations);
+										valueBuilder.append(getString(targetId));
 									}
 								}
 								else if (value instanceof CitationDTO || value instanceof ExtentDTO || value instanceof ParameterValueDTO) {
@@ -436,6 +545,12 @@ public class ExcelAdapter
 
 							logger.debug(">>> {} = {}", javaProperty, valueBuilder.toString());
 							valueCell.setCellValue(valueBuilder.toString());
+						}
+						else if (propertyValue != null) {
+							logger.debug(">>> Value of type {} was not handled by exportEntity", propertyValue.getClass().getCanonicalName());
+						}
+						else {
+							logger.debug(">>> {} = null", javaProperty);
 						}
 					}
 				}
@@ -594,7 +709,7 @@ public class ExcelAdapter
 			logger.debug("Configuration for sheet '{}' not available, skipping...", s.getSheetName());
 			return topLevelProposals;
 		}
-		if (s.getSheetName().equals("CoordSys")) {
+		if (sheetConfig.getSheetName().equals("OpMethod(OM#)")) {
 			new Object();
 		}
 		Row headingRow = s.getRow(sheetConfig.getHeaderRow() - 1);
@@ -632,6 +747,7 @@ public class ExcelAdapter
 				proposal = proposals.get(rowId);
 			}
 			else {
+				logger.debug(">>> Extracting data from row {}...", row + 1);
 				proposal = extractProposal(r, headingRow, targetRegister, proposals, sheetConfig);
 			}
 			
@@ -676,6 +792,20 @@ public class ExcelAdapter
 			for (ColumnConfiguration column : sheetConfiguration.getColumn()) {
 				if (column.getJavaProperty().equals("#itemClassName")) {
 					itemClassName = r.getCell(columnNameToIndex(column.getColumnName())).getStringCellValue();
+
+					if (!StringUtils.isEmpty(column.getValueMapper())) {
+						try {
+							@SuppressWarnings({ "unchecked", "rawtypes" })
+							Class<ValueMapper> valueMapperClass = (Class<ValueMapper>)Class.forName(column.getValueMapper());
+							Method mapMethod = valueMapperClass.getMethod("map", String.class);
+							ValueMapper valueMapper = BeanUtils.instantiate(valueMapperClass);
+							itemClassName = (String)mapMethod.invoke(valueMapper, itemClassName);
+						}
+						catch (Throwable t) {
+							logger.debug(">>> Unable to invoke ValueMapper {}: {}", column.getValueMapper(), t.getMessage());
+						}
+					}
+
 					break;
 				}
 			}
@@ -687,7 +817,10 @@ public class ExcelAdapter
 			itemClassName = sheetConfiguration.getItemClassName().get(0);
 		}
 		final RE_ItemClass itemClass = itemClassRepository.findByName(itemClassName);
-
+		if (itemClass == null) {
+			throw new RuntimeException(String.format("Item class '%s' does not exist", itemClassName));
+		}
+		
 		RegisterItemProposalDTO proposal = dtoFactory.getProposalDto(itemClass);
 		proposal.setItemClassName(itemClassName);
 		proposal.setTargetRegisterUuid(targetRegister.getUuid());
@@ -729,7 +862,7 @@ public class ExcelAdapter
 			String fieldName = column.getJavaProperty();
 			String value = getString(valueCell);
 			
-			if (!StringUtils.isEmpty(column.getReferences()) && !StringUtils.isEmpty(value)) {
+			if (!column.getReferences().isEmpty() && !StringUtils.isEmpty(value)) {
 				if (value.indexOf(" ") > -1) {
 					value = value.substring(0, value.indexOf(" "));
 				}
@@ -776,8 +909,10 @@ public class ExcelAdapter
 				// Inter-sheet reference
 				Sheet subSheet = null;
 				SheetConfiguration subSheetConfiguration = null;
+				
+				String idPrefix = reference.substring(0, 2);
 				for (SheetConfiguration otherSheetConfig : configuration.getSheet()) {
-					if (otherSheetConfig.getSheetName().equals(column.getReferences())) {
+					if (otherSheetConfig.getIdPrefix().equalsIgnoreCase(idPrefix)) {
 						subSheet = row.getSheet().getWorkbook().getSheet(otherSheetConfig.getSheetName());
 						subSheetConfiguration = otherSheetConfig;
 						break;
@@ -873,8 +1008,23 @@ public class ExcelAdapter
 						mapValue(bw, specialProperty, value, column);
 					}
 				}
-				else if (!StringUtils.isEmpty(column.getReferences())) {
+				else if (!column.getReferences().isEmpty()) {
 					mapReference(proposal, property, value, row, column, currentSheetConfiguration, proposals);
+				}
+				else if (!StringUtils.isEmpty(column.getValueMapper())) {
+					try {
+						@SuppressWarnings({ "unchecked", "rawtypes" })
+						Class<ValueMapper> valueMapperClass = (Class<ValueMapper>)Class.forName(column.getValueMapper());
+						Method mapMethod = valueMapperClass.getMethod("map", String.class);
+						ValueMapper valueMapper = BeanUtils.instantiate(valueMapperClass);
+						Object mappedValue = mapMethod.invoke(valueMapper, value);
+						value = mappedValue.toString();
+					}
+					catch (Throwable t) {
+						logger.debug(">>> Unable to invoke ValueMapper {}: {}", column.getValueMapper(), t.getMessage());
+					}
+
+					mapValue(bw, property, value, column);
 				}
 				else {
 					mapValue(bw, property, value, column);
@@ -1122,6 +1272,10 @@ public class ExcelAdapter
 
 	private void mapValue(BeanWrapper bw, String property, Object value, ColumnConfiguration column) {
 		if (column.isMultiple()) {
+			if (value == null) {
+				return;
+			}
+			
 			Object[] values;
 			if (value instanceof String) {
 				values = StringUtils.delimitedListToStringArray((String)value, column.getSeparatorChar());
@@ -1133,7 +1287,10 @@ public class ExcelAdapter
 				values = new Object[] { value };
 			}
 			
-			int i = ((Collection)bw.getPropertyValue(property)).size();
+			int i = 0;
+			if (bw.getPropertyValue(property) instanceof Collection && bw.getPropertyValue(property) != null) {
+				i = ((Collection)bw.getPropertyValue(property)).size();
+			}
 			for (Object listValue : values) {
 				bw.setPropertyValue(String.format("%s[%d]", property, i), listValue);
 				i++;

@@ -19,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ExcelConfiguration;
+import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.ApiConfiguration;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategy;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategyImpl;

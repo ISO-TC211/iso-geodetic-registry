@@ -91,7 +91,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import de.bespire.registry.io.excel.ExcelAdapterConfiguration.ExcelConfiguration;
+import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
@@ -907,6 +907,7 @@ public class RegisterController
 					final Map<String, RegisterItemProposalDTO> proposalsCache = new HashMap<>();
 					for (int i = 0; i < wb.getNumberOfSheets(); i++) {
 						Sheet sheet = wb.getSheetAt(i);
+						logger.debug("Parsing sheet '{}'", sheet.getSheetName());
 						proposals.addAll(excelAdapter.extractProposals(sheet, register, userOrg, proposalsCache));
 					}
 					final List<Proposal> proposalList = new ArrayList<>(); 
