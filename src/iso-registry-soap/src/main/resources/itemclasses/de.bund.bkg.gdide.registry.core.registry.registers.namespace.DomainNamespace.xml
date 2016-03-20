@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="DomainNamespace">
+	<dtoClass>de.bund.bkg.gdide.registry.api.registry.registers.namespace.DomainNamespaceProposalDTO</dtoClass>
+	<viewBeanClass>de.bund.bkg.gdide.registry.api.DomainNamespaceViewBean</viewBeanClass>
+	<viewItemTemplate>registry/registers/namespace/namespace_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/namespace/namespace_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/namespace/namespace_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/namespace/namespace_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment/>
+	<entry key="basePackages">${basePackages}</entry> <!-- Java packages to scan for components (e.g. item classes) -->
+	<entry key="mail.enabled">${mail.enabled}</entry> <!-- main switch to enable/disable mail support -->
+	<entry key="mail.from.name">${mail.from.name}</entry> <!-- Name used in from address -->
+	<entry key="mail.from.address">${mail.from.address}</entry> <!-- E-Mail address used as from address -->
+	<entry key="mail.smtp.auth">${mail.smtp.auth}</entry> <!-- Switch to activate SMTP authentication (true, false) -->
+	<entry key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</entry><!-- Switch to activate STARTTLS SMTP authentication (true, false) -->
+	<entry key="mail.smtp.host">${mail.smtp.host}</entry> <!-- Host name or IP address of SMTP server -->
+	<entry key="mail.smtp.port">${mail.smtp.port}</entry> <!-- Port number of SMTP server (TLS: 587, plain: 25) -->
+	<entry key="mail.smtp.user">${mail.smtp.user}</entry> <!-- User name used for SMTP authentication -->
+	<entry key="mail.smtp.password">${mail.smtp.password}</entry> <!-- Password used for SMTP authentication (plain text) -->
+	<entry key="monitoring.keyfile">${monitoring.keyfile}</entry> <!-- Path to preshared secret for registry single sign-on -->
+	<entry key="autosubmitter.registers">${autosubmitter.registers}</entry> <!-- Comma-separated list of register names for which new organizations will automatically be assigned the submitter role -->
+</properties>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="CodeList">
+	<dtoClass>de.bund.bkg.gdide.registry.api.registry.registers.codelist.CodeListProposalDTO</dtoClass>
+	<viewBeanClass>de.bund.bkg.gdide.registry.api.CodeListViewBean</viewBeanClass>
+	<viewItemTemplate>registry/registers/codelist/codelist_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/codelist/codelist_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/codelist/codelist_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/codelist/codelist_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>
