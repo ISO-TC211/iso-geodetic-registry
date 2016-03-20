@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.iso.registry.core.model.operation.OperationParameterItem;
@@ -29,6 +30,7 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 	}
 	
 	private String formula;
+	private CitationDTO formulaCitation;
 	private FormulaType formulaType = FormulaType.FORMULA;
 	private Integer sourceDimensions;
 	private Integer targetDimensions;
@@ -76,9 +78,7 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 					item.setFormula(this.getFormula());
 					break;
 				case REFERENCE:
-					CI_Citation ref = new CI_Citation();
-					ref.setTitle(this.getFormula());
-					item.setFormulaCitation(ref);
+					item.setFormulaCitation(this.getFormulaCitation().toCitation());
 					break;
 			}
 			
@@ -91,13 +91,14 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 					}
 				}
 			}
-
-			if (item.getParameter() != null) {
-				while (!item.getParameter().isEmpty()) {
-					item.removeParameter(0);
-				}
-			}
+			
 //			if (!StringUtils.isEmpty(this.getParameters())) {
+//				if (item.getParameter() != null) {
+//					while (!item.getParameter().isEmpty()) {
+//						item.removeParameter(0);
+//					}
+//				}
+
 //				for (String uuidText : StringUtils.delimitedListToStringArray(this.parameters, ","," ")) {
 //					UUID uuid = UUID.fromString(uuidText);
 //					GeneralOperationParameterItem parameter = entityManager.find(GeneralOperationParameterItem.class, uuid);
@@ -227,6 +228,17 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 
 	public void setReversible(Boolean reversible) {
 		this.reversible = reversible;
+	}
+
+	public CitationDTO getFormulaCitation() {
+		return formulaCitation;
+	}
+
+	public void setFormulaCitation(CitationDTO formulaCitation) {
+		this.formulaCitation = formulaCitation;
+		if (formulaCitation != null) {
+			this.setFormulaType(FormulaType.REFERENCE);
+		}
 	}
 
 }

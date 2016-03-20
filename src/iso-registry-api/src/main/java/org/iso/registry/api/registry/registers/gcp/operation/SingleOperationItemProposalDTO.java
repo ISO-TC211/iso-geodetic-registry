@@ -116,13 +116,18 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 					if (uom == null) {
 						value = new OperationParameterValue(parameter, parameterValue.getParameterType(), paramValue);
 					}
-					else {
+					else if (!StringUtils.isEmpty(paramValue)) {
 						Number numValue = Double.parseDouble(paramValue);
 						Measure measure = new Measure(numValue, uom);
 						value = new OperationParameterValue(parameter, measure);
 					}
+					else {
+						value = null;
+					}
 
-					item.addParameterValue(value);
+					if (value != null) {
+						item.addParameterValue(value);
+					}
 				}
 			}
 //			if (this.getParameterValue() != null) {
