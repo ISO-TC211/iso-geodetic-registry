@@ -1,0 +1,6 @@
+.settings
+.externalToolBuilders
+.classpath
+target
+bin
+**/git.properties

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sws="http://www.springframework.org/schema/web-services"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+		http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <sws:annotation-driven marshaller="entityMarshaller" unmarshaller="entityMarshaller" />
+
+ 	<context:component-scan base-package="de.geoinfoffm.registry"/>
+ 	<context:component-scan base-package="de.bespire.registry"/>
+ 	<context:component-scan base-package="org.iso.registry"/>
+ 	
+<!-- 	<sws:static-wsdl id="orders" location="/WEB-INF/wsdl/test11.wsdl"/> -->
+	<sws:dynamic-wsdl id="register"
+	    portTypeName="RegisterServicePort"
+	    locationUri="${soap.baselocation}/register">
+	  <sws:xsd location="classpath:schema/registerservice.xsd"/>
+	</sws:dynamic-wsdl>
+
+	<sws:dynamic-wsdl id="proposal"
+	    portTypeName="ProposalServicePort"
+	    locationUri="${soap.baselocation}/proposal">
+	  <sws:xsd location="classpath:schema/proposalservice.xsd"/>
+	</sws:dynamic-wsdl>
+
+	<sws:dynamic-wsdl id="user"
+	    portTypeName="RegistryUserServicePort"
+	    locationUri="${soap.baselocation}/user">
+	  <sws:xsd location="classpath:schema/userservice.xsd"/>
+	</sws:dynamic-wsdl>
+
+	<bean id="hibernateConfiguration" class="de.geoinfoffm.registry.persistence.jpa.HibernateConfigurationImpl">
+	</bean>
+
+	<bean id="registerservice" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    	<property name="xsd" value="classpath:/schema/registerservice.xsd" />
+	</bean>
+
+	<bean id="proposalservice" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    	<property name="xsd" value="classpath:/schema/proposalservice.xsd" />
+	</bean>
+
+	<bean id="userservice" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    	<property name="xsd" value="classpath:/schema/userservice.xsd" />
+	</bean>
+	
+	<bean id="registry" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    	<property name="xsd" value="classpath:/schema/registry.xsd" />
+	</bean>
+	
+	<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+	    <property name="validationActions" value="UsernameToken" />
+	    <property name="validationCallbackHandler" ref="callbackHandler" />
+		<property name="wssConfig" ref="registryWssConfig"/>
+	</bean>	
+	
+    <bean id="callbackHandler" class="org.springframework.ws.soap.security.wss4j.callback.SpringSecurityPasswordValidationCallbackHandler">
+        <property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
+    
+    <bean id="userDetailsService" class="de.geoinfoffm.registry.api.security.RegistryUserDetailsManager">
+    	<aop:scoped-proxy/>
+    </bean>
+    
+    <bean id="proposalWorkflowManager" class="de.geoinfoffm.registry.core.workflow.Iso19135ProposalWorkflowManager">
+    </bean>
+
+    <bean id="registrySecurity" class="de.geoinfoffm.registry.api.RegistrySecurityImpl">
+    </bean>
+    
+    <sws:interceptors>
+    	<ref local="wsSecurityInterceptor"/>
+    </sws:interceptors>
+	
+<!-- 	<bean id="schemaCollection" class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection"> -->
+<!-- 	    <description> -->
+<!-- 	        This bean wraps all XSDs and inlines them as a one. -->
+<!-- 	    </description> -->
+<!-- 	    <property name="xsds"> -->
+<!-- 	        <list> -->
+<!-- 	            <value>/schema/registerservice.xsd</value> -->
+<!-- 	            <value>/soap/WEB-INF/schema/iso/19135/register.xsd</value> -->
+<!-- 	        </list> -->
+<!-- 	    </property> -->
+<!-- 	    <property name="inline" value="false"/> -->
+<!-- 	</bean> -->
+		
+	<bean id="entityMarshaller" class="de.geoinfoffm.registry.soap.EntityMarshaller"/>
+	
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+<!-- 	<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory"> -->
+<!-- 	    <property name="payloadCaching" value="true"/> -->
+<!-- 	</bean>     -->
+
+    <bean class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter">
+        <property name="messageFactory" ref="messageFactory"/>
+    </bean>
+	
+	<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+        <property name="order" value="0"/>
+<!-- 		<property name="interceptors"> -->
+<!-- 			<list> -->
+<!-- 				<ref local="wsSecurityInterceptor" /> -->
+<!-- 			</list> -->
+<!--     	</property>         -->
+    </bean>
+    <bean class="org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping">
+        <property name="order" value="1"/>
+<!-- 		<property name="interceptors"> -->
+<!-- 			<list> -->
+<!-- 				<ref local="wsSecurityInterceptor" /> -->
+<!-- 			</list> -->
+<!--     	</property>         -->
+    </bean>
+    <bean class="org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping">
+        <property name="order" value="2"/>
+<!-- 		<property name="interceptors"> -->
+<!-- 			<list> -->
+<!-- 				<ref local="wsSecurityInterceptor" /> -->
+<!-- 			</list> -->
+<!--     	</property>         -->
+    </bean>
+
+    <bean class="org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter">
+        <property name="methodArgumentResolvers" ref="methodArgumentResolvers"/>
+        <property name="methodReturnValueHandlers" ref="methodReturnValueHandlers"/>
+    </bean>
+    <util:list id="methodArgumentResolvers">
+        <ref bean="marshallingPayloadMethodProcessor"/>
+        <ref bean="xmlRootElementPayloadMethodProcessor"/>
+        <ref bean="jaxbElementPayloadMethodProcessor"/>
+    </util:list>
+    <util:list id="methodReturnValueHandlers">
+        <ref bean="marshallingPayloadMethodProcessor"/>
+        <ref bean="xmlRootElementPayloadMethodProcessor"/>
+        <ref bean="jaxbElementPayloadMethodProcessor"/>
+    </util:list>
+
+    <bean class="org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor" id="marshallingPayloadMethodProcessor">
+		<constructor-arg ref="entityMarshaller" />
+    	<constructor-arg ref="entityMarshaller" />        
+    </bean>
+    
+    <bean class="org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElementPayloadMethodProcessor" id="xmlRootElementPayloadMethodProcessor"/>
+    <bean class="org.springframework.ws.server.endpoint.adapter.method.jaxb.JaxbElementPayloadMethodProcessor" id="jaxbElementPayloadMethodProcessor"/>
+
+
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+
+	<bean class="org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter">
+        <property name="messageFactory" ref="messageFactory"/>
+   	</bean>
+
+   	<bean class="org.springframework.ws.transport.http.WsdlDefinitionHandlerAdapter"/>
+</beans>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="Subregister">
+	<dtoClass>de.geoinfoffm.registry.api.SubregisterDescriptionProposalDTO</dtoClass>
+	<viewBeanClass>de.bund.bkg.gdide.registry.client.RegisterItemViewBean</viewBeanClass>
+</reg:ItemClassConfiguration>
