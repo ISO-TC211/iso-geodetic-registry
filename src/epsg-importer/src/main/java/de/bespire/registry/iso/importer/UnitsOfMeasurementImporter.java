@@ -43,8 +43,8 @@ public class UnitsOfMeasurementImporter extends AbstractImporter
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
-
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		
+		fillProposalRelatedFields(proposal, row, codeProperty());
 
 		Integer epsgCode = (Integer)row.get(UOM_CODE);
 //		Integer identifier = determineIdentifier("UnitOfMeasure", epsgCode);

@@ -35,7 +35,7 @@ public class OperationParametersImporter extends AbstractImporter
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		if (row == null) {
 			new Object();

@@ -51,7 +51,7 @@ public class EllipsoidsImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		Integer epsgCode = (Integer)row.get(ELLIPSOID_CODE);
 //		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));

@@ -171,6 +171,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	@Transactional
 	protected void importConversion(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException {
 		SingleOperationItemProposalDTO proposal = createSingleOperationProposal(row, icConversion, sponsor, register);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		proposal.setOperationType(SingleOperationType.CONVERSION);
 		Addition ai = processProposal(proposal);
 		addMapping(ai.getItem().getItemClass().getName(), (Integer)row.get(codeProperty()), ai.getItem().getUuid());
@@ -179,6 +180,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	@Transactional
 	protected void importTransformation(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException, UnauthorizedException, InvalidProposalException {
 		SingleOperationItemProposalDTO proposal = createSingleOperationProposal(row, icTransformation, sponsor, register);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		proposal.setOperationType(SingleOperationType.TRANSFORMATION);
 		Addition ai = processProposal(proposal);
 		addMapping(ai.getItem().getItemClass().getName(), (Integer)row.get(codeProperty()), ai.getItem().getUuid());
@@ -226,7 +228,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
-				extent.setDescription(area.getName());
+				extent.setDescription(area.getDescription());
 				proposal.setDomainOfValidity(extent);
 			}
 			else {
@@ -288,6 +290,7 @@ public class CoordinateOperationsImporter extends AbstractImporter
 	@Transactional
 	protected void importConcatenated(Row row, RE_ItemClass itemClass, RE_SubmittingOrganization sponsor, RE_Register register) throws IOException {
 		ConcatenatedOperationItemProposalDTO proposal = new ConcatenatedOperationItemProposalDTO();
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		this.setOperationItemValues(proposal, row, icConcatOp, sponsor, register);
 
 		// TODO fix
@@ -398,6 +401,10 @@ public class CoordinateOperationsImporter extends AbstractImporter
 		}
 		else {
 			Double paramValue = (Double)valueRow.get(PARAMETER_VALUE);
+			if (paramValue == null) {
+				new Object();
+			}
+			
 			String fileRef = (String)valueRow.get(PARAM_VALUE_FILE_REF);
 			OperationParameterItem parameter = findMappedEntity("OperationParameter", paramCode, OperationParameterItem.class);
 			if (paramValue != null && fileRef == null) {

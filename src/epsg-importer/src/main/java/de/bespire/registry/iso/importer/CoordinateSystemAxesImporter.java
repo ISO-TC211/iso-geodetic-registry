@@ -59,9 +59,10 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
-
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
+		// Don't call fillProposalRelatedFields() here! Reference to EPSG code makes no sense for axes
+		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put(COORD_AXIS_NAME_CODE, (Integer)row.get(COORD_AXIS_NAME_CODE));
 		if (!namesTable.getDefaultCursor().findFirstRow(m)) {
