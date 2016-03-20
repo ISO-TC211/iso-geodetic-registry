@@ -99,7 +99,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		Integer crsCode = (Integer)row.get(COORD_REF_SYS_CODE);
 		
@@ -167,7 +167,7 @@ public class CoordinateReferenceSystemsImporter extends AbstractImporter
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
-				extent.setDescription(area.getName());
+				extent.setDescription(area.getDescription());
 				proposal.setDomainOfValidity(extent);
 			}
 			else {

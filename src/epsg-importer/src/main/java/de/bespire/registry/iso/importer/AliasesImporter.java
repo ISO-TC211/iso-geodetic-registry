@@ -162,8 +162,8 @@ public class AliasesImporter extends AbstractImporter
 
 	@Override
 	protected String codeProperty() {
-		return ALIAS_CODE;
-//		return OBJECT_CODE;
+//		return ALIAS_CODE;
+		return OBJECT_CODE;
 	}
 
 }

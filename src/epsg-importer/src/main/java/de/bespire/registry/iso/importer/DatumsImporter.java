@@ -69,14 +69,15 @@ public class DatumsImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		Integer epsgCode = (Integer)row.get(DATUM_CODE);
 //		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
 		proposal.setScope((String)row.get(DATUM_SCOPE));
-		proposal.setRealizationEpoch((String)row.get(REALIZATION_EPOCH));
+//		proposal.setRealizationEpoch((String)row.get(REALIZATION_EPOCH));
+		proposal.setCoordinateReferenceEpoch((String)row.get(REALIZATION_EPOCH));
 		
 		Integer elCode = (Integer)row.get(ELLIPSOID_CODE);
 		Integer pmCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
@@ -97,7 +98,7 @@ public class DatumsImporter extends AbstractImporter
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
-				extent.setDescription(area.getName());
+				extent.setDescription(area.getDescription());
 				proposal.setDomainOfValidity(extent);
 			}
 		}

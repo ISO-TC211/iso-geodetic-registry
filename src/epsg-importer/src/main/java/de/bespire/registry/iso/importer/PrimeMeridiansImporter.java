@@ -48,7 +48,7 @@ public class PrimeMeridiansImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		Integer epsgCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
 //		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));

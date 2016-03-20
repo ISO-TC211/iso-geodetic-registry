@@ -29,6 +29,7 @@ import com.healthmarketscience.jackcess.CursorBuilder;
 import com.healthmarketscience.jackcess.Row;
 
 import de.geoinfoffm.registry.api.ProposalService;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.core.Entity;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -53,7 +54,7 @@ public abstract class AbstractImporter
 	public static final String CHANGE_ID = "CHANGE_ID";
 	public static final String DEPRECATED = "DEPRECATED";
 	
-	public static final String IMPORT_SOURCE = "Import from EPSG Geodetic Parameter Data Set v8.7";
+	public static final String IMPORT_SOURCE = "Import from EPSG Geodetic Parameter Data Set v8.9";
 	
 	@PersistenceContext
 	protected EntityManager em;
@@ -369,5 +370,17 @@ public abstract class AbstractImporter
 		citation.setTitle(text);
 		
 		proposal.getInformationSource().add(citation);
+	}
+	
+	protected void fillProposalRelatedFields(RegisterItemProposalDTO proposal, Row row, String codeProperty) {
+		proposal.setJustification(IMPORT_SOURCE);
+		
+		Integer code = (Integer)row.get(codeProperty);
+		if (code != null) {
+			proposal.setControlBodyNotes(String.format("EPSG::%s", code.toString()));
+		}
+		else {
+			logger.debug("!!! Unable to put EPSG code in control body notes");
+		}
 	}
 }

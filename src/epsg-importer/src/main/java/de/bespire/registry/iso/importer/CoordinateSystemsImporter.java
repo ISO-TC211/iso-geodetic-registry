@@ -60,7 +60,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 
 		// Add axes
 		Integer epsgCode = (Integer)row.get(COORD_SYS_CODE);
