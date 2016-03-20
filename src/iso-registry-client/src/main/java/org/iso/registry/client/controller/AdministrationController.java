@@ -597,6 +597,10 @@ public class AdministrationController
 			return new ResponseEntity<String>("Must provide value for 'recipient'", HttpStatus.BAD_REQUEST);
 		}
 		
+		if (!registryConfiguration.isMailEnabled()) {
+			return new ResponseEntity<String>("Mail function is disabled in configuration", HttpStatus.SERVICE_UNAVAILABLE);
+		}
+		
 		final String subject = "Test mail";
 		final String body = "Test";
 		
