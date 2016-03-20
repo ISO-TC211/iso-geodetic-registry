@@ -157,6 +157,8 @@
 		<footer class="footer">
 			<p class="pull-right text-muted text-sm"><small><span th:text="#{application.version}"></span></small></p>
 		</footer>
+		
+		<div class="loading-modal" th:style="'background: rgba( 255, 255, 255, .8 ) url(' + @{__${basePath}__/resources/images/loader-lg.gif} + ') 50% 50% no-repeat;'"/>
 	</div>
 
 	<div th:fragment="navtree">

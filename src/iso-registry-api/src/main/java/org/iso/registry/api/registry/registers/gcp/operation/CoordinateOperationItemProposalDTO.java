@@ -56,9 +56,8 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		// TODO Auto-generated constructor stub
 	}
 
-	public CoordinateOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
-		// TODO Auto-generated constructor stub
+	public CoordinateOperationItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public CoordinateOperationItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

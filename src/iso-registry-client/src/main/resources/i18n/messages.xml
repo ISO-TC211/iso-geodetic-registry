@@ -214,8 +214,11 @@
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
 	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 	<entry key="button.addAlternateTitle">Add alternate title</entry>
-	<entry key="button.pdf">Download</entry>
+	<entry key="button.pdf">Download PDF</entry>
 	<entry key="button.wkt">Show WKT</entry>
+	<entry key="button.gml">Show GML</entry>
+	<entry key="button.uploadProposals">Upload proposals</entry>
+	<entry key="button.downloadExcel">Excel export</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -277,6 +280,8 @@
 	<entry key="alert.registerNotFound">Register "{0}" does not exist.</entry>
 	<entry key="alert.validationFailed">The action cannot be completed due to erroneous or missing form data. Please check the following input fields:</entry>
 	<entry key="alert.unauthorized">You are not authorized to access the requested resource.</entry>
+	<entry key="alert.nothingProcessed">The uploaded spreadsheet contained no processable data.</entry>
+	<entry key="alert.proposalGroupCreated">The following proposal group was created: </entry>
 
 	<entry key="popup.newOrganization.header">Details of your organization</entry>
 	<entry key="popup.deleteUser.header">Delete user</entry>

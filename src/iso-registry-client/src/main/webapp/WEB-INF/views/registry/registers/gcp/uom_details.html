@@ -2,20 +2,25 @@
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
 			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row">
+				<div class="col-md-12" th:with="property='symbol',inputType='text',label=#{form.label.symbol},placeholder=#{form.placeholder.symbol},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+			</div>
 			<div class="row" th:include="globals :: registerItemDefinition"/>
 			<div class="row" th:include="globals :: aliasesTable('uom')" />
-			<div class="row">
+			<div class="row" th:unless="${isProposal}">
 				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='false',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
 					<div th:replace="globals :: selectIdentifiedItem"/>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12" th:with="property='scaleToStandardUnitNumerator',inputType='number',label=#{form.label.factorB},placeholder=#{form.placeholder.factorB},isRequired='false'">
+				<div class="col-md-12" th:with="property='scaleToStandardUnitNumerator',inputType='number',step='any',label=#{form.label.factorB},placeholder=#{form.placeholder.factorB},isRequired='false'">
 					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12" th:with="property='scaleToStandardUnitDenominator',inputType='number',label=#{form.label.factorC},placeholder=#{form.placeholder.factorC},isRequired='false'">
+				<div class="col-md-12" th:with="property='scaleToStandardUnitDenominator',inputType='number',step='any',label=#{form.label.factorC},placeholder=#{form.placeholder.factorC},isRequired='false'">
 					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>

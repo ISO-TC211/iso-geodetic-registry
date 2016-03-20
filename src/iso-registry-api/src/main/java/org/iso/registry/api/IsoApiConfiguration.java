@@ -1,6 +1,12 @@
 package org.iso.registry.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.xml.bind.JAXBException;
+
 import org.iso.registry.api.registry.IsoProposalServiceImpl;
+import org.iso.registry.persistence.IsoExcelConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.ApiConfiguration;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategy;
 import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategyImpl;
@@ -90,5 +97,10 @@ public class IsoApiConfiguration
 		SimpleAsyncTaskExecutor result = new SimpleAsyncTaskExecutor();
 		
 		return new DelegatingSecurityContextAsyncTaskExecutor(result);
+	}
+	
+	@Bean
+	public ExcelConfiguration excelConfiguration() throws IOException, JAXBException, URISyntaxException {
+		return IsoExcelConfiguration.reload();
 	}
 }

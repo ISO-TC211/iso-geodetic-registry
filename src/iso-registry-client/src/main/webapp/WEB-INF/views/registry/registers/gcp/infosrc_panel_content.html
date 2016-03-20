@@ -110,15 +110,15 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12" th:with="property='series.name',modifier='informationSource',inputType='text',label=#{form.label.seriesName},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesName},isRequired='false'">
+		<div class="col-md-12" th:with="property='name',objectPath='series',modifier='informationSource',inputType='text',label=#{form.label.seriesName},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesName},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6" th:with="property='series.issueIdentification',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
+		<div class="col-md-6" th:with="property='issueIdentification',objectPath='series',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
-		<div class="col-md-6" th:with="property='series.page',modifier='informationSource',inputType='text',label=#{form.label.seriesPage},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesPage},isRequired='false'">
+		<div class="col-md-6" th:with="property='page',objectPath='series',modifier='informationSource',inputType='text',label=#{form.label.seriesPage},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesPage},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>

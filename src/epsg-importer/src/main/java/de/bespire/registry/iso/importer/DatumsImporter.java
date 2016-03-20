@@ -69,34 +69,36 @@ public class DatumsImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		Integer epsgCode = (Integer)row.get(DATUM_CODE);
 //		proposal.setIdentifier((Integer)row.get(DATUM_CODE));
 		proposal.setName((String)row.get(DATUM_NAME));
 		proposal.setAnchorDefinition((String)row.get(ORIGIN_DESCRIPTION));
 		proposal.setScope((String)row.get(DATUM_SCOPE));
-		proposal.setRealizationEpoch((String)row.get(REALIZATION_EPOCH));
+//		proposal.setRealizationEpoch((String)row.get(REALIZATION_EPOCH));
+		proposal.setCoordinateReferenceEpoch((String)row.get(REALIZATION_EPOCH));
 		
 		Integer elCode = (Integer)row.get(ELLIPSOID_CODE);
 		Integer pmCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
 		Integer areaCode = (Integer)row.get(AREA_OF_USE_CODE);
 
 		if (elCode != null) {
-			EllipsoidItem ellipsoid = ellipsoidRepository.findOne(findMappedCode("Ellipsoid", elCode));
+//			EllipsoidItem ellipsoid = ellipsoidRepository.findOne(findMappedCode("Ellipsoid", elCode));
+			EllipsoidItem ellipsoid = findMappedEntity("Ellipsoid", elCode, EllipsoidItem.class);
 			proposal.setEllipsoid(new EllipsoidItemProposalDTO(ellipsoid));
 		}
 		if (pmCode != null) {
-			PrimeMeridianItem primeMeridian = pmRepository.findOne(findMappedCode("PrimeMeridian", pmCode));
+			PrimeMeridianItem primeMeridian = findMappedEntity("PrimeMeridian", pmCode, PrimeMeridianItem.class);
 			proposal.setPrimeMeridian(new PrimeMeridianItemProposalDTO(primeMeridian));
 
 		}
 		if (areaCode != null) {
-			AreaItem area = areaRepository.findOne(findMappedCode("Area", areaCode));
+			AreaItem area = findMappedEntity("Area", areaCode, AreaItem.class);
 			if (area != null) {
 				ExtentDTO extent = new ExtentDTO();
 				extent.getGeographicBoundingBoxes().add(area.getBoundingBox());
-				extent.setDescription(area.getName());
+				extent.setDescription(area.getDescription());
 				proposal.setDomainOfValidity(extent);
 			}
 		}

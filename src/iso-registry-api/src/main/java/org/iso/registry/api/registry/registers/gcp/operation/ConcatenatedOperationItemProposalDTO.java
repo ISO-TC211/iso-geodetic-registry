@@ -43,8 +43,8 @@ public class ConcatenatedOperationItemProposalDTO extends CoordinateOperationIte
 		// TODO Auto-generated constructor stub
 	}
 
-	public ConcatenatedOperationItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public ConcatenatedOperationItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public ConcatenatedOperationItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

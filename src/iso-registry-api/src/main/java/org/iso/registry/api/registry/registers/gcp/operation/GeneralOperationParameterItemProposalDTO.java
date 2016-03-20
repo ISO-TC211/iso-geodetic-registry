@@ -40,8 +40,8 @@ public abstract class GeneralOperationParameterItemProposalDTO extends Identifie
 		// TODO Auto-generated constructor stub
 	}
 
-	public GeneralOperationParameterItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public GeneralOperationParameterItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public GeneralOperationParameterItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {

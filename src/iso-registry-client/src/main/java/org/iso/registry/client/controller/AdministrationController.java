@@ -3,6 +3,7 @@
  */
 package org.iso.registry.client.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
@@ -22,9 +25,15 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,6 +65,7 @@ import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.NonExistentRevisionException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Delegation;
 import de.geoinfoffm.registry.core.model.DelegationRepository;
@@ -125,6 +135,12 @@ public class AdministrationController
 	
 	@Autowired
 	private ProposalWorkflowManager workflowManager;
+	
+	@Autowired
+	private JavaMailSender mailSender;
+
+	@Autowired
+	private RegistryConfiguration registryConfiguration;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -573,5 +589,32 @@ public class AdministrationController
 		model.addAttribute("proposals", proposedItemViewBeans);
 
 		return "admin/proposals";
+	}
+	
+	@RequestMapping(value = "/testemail", method = RequestMethod.GET)
+	public ResponseEntity<String> testEmails(@RequestParam("recipient") final String recipient) {
+		if (StringUtils.isEmpty(recipient)) {
+			return new ResponseEntity<String>("Must provide value for 'recipient'", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (!registryConfiguration.isMailEnabled()) {
+			return new ResponseEntity<String>("Mail function is disabled in configuration", HttpStatus.SERVICE_UNAVAILABLE);
+		}
+		
+		final String subject = "Test mail";
+		final String body = "Test";
+		
+		logger.debug("{Registry Mail} Sending e-mail with subject {} to {}", recipient, subject);
+		mailSender.send(new MimeMessagePreparator() {
+			public void prepare(MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
+				MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				message.setFrom(registryConfiguration.getSenderAddress());
+				message.setTo(recipient);
+				message.setSubject(subject);
+	            message.setText(body, true);
+			}
+		});
+
+		return new ResponseEntity<String>("Ok.", HttpStatus.OK);
 	}
 }

@@ -1,5 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;
 
@@ -11,6 +13,7 @@ import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
@@ -49,8 +52,8 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
-	public PrimeMeridianItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public PrimeMeridianItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public PrimeMeridianItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
@@ -103,6 +106,11 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 				this.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO(pm.getGreenwichLongitudeUom()));
 			}
 		}
+	}
+
+	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		return super.findDependentProposals(this.getGreenwichLongitudeUom());
 	}
 
 }

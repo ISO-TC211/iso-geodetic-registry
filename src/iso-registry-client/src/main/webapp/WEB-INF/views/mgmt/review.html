@@ -5,293 +5,425 @@
 <body>
 	<div th:include="layout :: navbarFragment"></div>
 
-	<div th:if="${proposal.isProposalGroup()}" style="padding: 10px">
-		<div class="row">
-			<div class="col-md-3">
-				<ul class="nav nav-pills nav-stacked">
-					<li th:each="member : ${proposal.memberProposals}" class="proposal-pill">
-						<a th:href="'#' + ${member.uuid}" th:text="${member.name}" data-toggle="pill"></a>
-					</li> 
-				</ul>
-			</div>
+<!-- 	<div th:if="${proposal.isProposalGroup()}" style="padding: 10px"> -->
+<!-- 		<div class="row"> -->
+<!-- 			<div class="col-md-3"> -->
+<!-- 				<ul class="nav nav-pills nav-stacked"> -->
+<!-- 					<li th:each="member : ${proposal.memberProposals}" class="proposal-pill"> -->
+<!-- 						<a th:href="'#' + ${member.uuid}" th:text="${member.name}" data-toggle="pill"></a> -->
+<!-- 					</li>  -->
+<!-- 				</ul> -->
+<!-- 			</div> -->
 
-			<div class="col-md-9">
-				<div class="tab-content">
-					<div th:each="member : ${proposal.memberProposals}" th:id="${member.uuid}" class="tab-pane in proposal-pane" style="padding-top: 10px" th:with="current=${member}">
-						<div th:include=":: proposalDetails"/>
-					</div>
-				</div>
-			</div>		
+<!-- 			<div class="col-md-9"> -->
+<!-- 				<div class="tab-content"> -->
+<!-- 					<div th:each="member : ${proposal.memberProposals}" th:id="${member.uuid}" class="tab-pane in proposal-pane" style="padding-top: 10px" th:with="current=${member}"> -->
+<!-- 						<div th:include=":: proposalDetails"/> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div>		 -->
 
-		</div>
-	</div>
+<!-- 		</div> -->
+<!-- 	</div> -->
 
-	<div th:unless="${proposal.isProposalGroup()}" class="container" th:with="current=${proposal}">
-		<div class="row" th:with="current=${proposal}" th:fragment="proposalDetails">
-			<div class="col-md-6 column" th:object="${current}">
-				<div class="panel" th:classappend="${current.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${current.isSupersession()}">
-					<div class="panel-heading">
-						<h3 th:if="${current.isAddition()}" class="panel-title"><span th:text="#{header.proposedItem}">Proposed item</span></h3>
-						<h3 th:if="${current.isClarification()}" class="panel-title"><span th:text="#{header.clarifiedItem}">Clarified item</span></h3>
-						<h3 th:if="${current.isRetirement()}" class="panel-title" th:text="#{header.retiredItem}">Retired item</h3>
-					</div>
-					<table class="table table-striped">
-						<tbody>
-							<tr>
-								<td th:text="#{tableheader.itemClassName}"></td>
-								<td th:text="#{*{itemClassName}}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{itemIdentifier}"></td>
-								<td th:text="*{itemIdentifier}"></td>
-							</tr>
-							<tr th:if="${current.isAddition()}">
-								<td th:text="#{targetRegister}"></td>
-								<td th:text="*{registerName}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{name}"></td>
-								<td th:text="*{name}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{definition}"></td>
-								<td th:text="*{definition}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{description}"></td>
-								<td th:text="*{description}"></td>
-							</tr>
-							<tr th:each="entry : *{additionalProperties}">
-								<td th:text="#{${entry.key}}"></td>
-								<td th:text="${entry.value}"></td>
-							</tr>
-							<tr th:if="${current.isAddition()} or ${current.isClarification()}">
-								<td th:text="#{itemDetails}"></td>
-								<td><a th:text="#{button.details}" th:href="@{__${basePath}__/item/__${current.uuid}__}"></a></td>
-							</tr>
-							
-						</tbody>
-					</table>
-				</div>
-
-				<div class="panel panel-info" th:if="${current.isClarification()}">
-					<div class="panel-heading">
-						<h3 class="panel-title" th:text="#{header.proposedChanges}">Proposed changes</h3>
-					</div>
-					<table class="table table-striped">
-						<tbody>
-							<tr th:each="change : ${current.getProposedChange()}">
-								<td th:text="#{${change.key}}"></td>
-								<td th:text="${change.value}"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="column" th:classappend="${current.isSupersession()} ? 'col-md-12' : 'col-md-6'">
-				<div class="panel panel-default" th:object="${current}">
-					<div class="panel-heading">
-						<h3 class="panel-title" th:text="#{header.proposalData}">Proposal data</h3>
-					</div>
-					<table class="table table-striped">
-						<tbody>
-							<tr>
-								<td th:text="#{proposalType}"></td>
-								<td th:text="#{*{proposalType}}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{sponsor}"></td>
-								<td th:text="*{sponsorName}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{justification}"></td>
-								<td th:text="*{justification}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{registerManagerNotes}"></td>
-								<td th:text="*{registerManagerNotes}"></td>
-							</tr>
-							<tr>
-								<td th:text="#{controlBodyNotes}"></td>
-								<td th:text="*{controlBodyNotes}"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-		<div class="row" th:if="${current.isSupersession()}">
-			<div class="col-md-12 column">
-				<div class="panel panel-danger" th:if="${current.isSupersession()}">
-					<div class="panel-heading">
-						<h3 class="panel-title" th:text="#{header.supersededItems}">Superseded items</h3>
-					</div>
-					
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th th:text="#{tableheader.name}">Name</th>
-								<th th:text="#{tableheader.definition}">Klasse</th>
-								<th th:text="#{tableheader.description}">Klasse</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="item : ${current.supersededItems}">
-								<td th:text="${item.name}"></td>
-								<td th:text="${item.definition}"></td>
-								<td th:text="${item.description}"></td>
-								<td><a class="btn btn-sm btn-default" target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${item.uuid}__}"></a></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="panel panel-success" th:if="${current.isSupersession()}">
-					<div class="panel-heading">
-						<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3>
-					</div>
-					
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th th:text="#{tableheader.name}">Name</th>
-								<th th:text="#{tableheader.definition}">Klasse</th>
-								<th th:text="#{tableheader.description}">Klasse</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="item : ${current.supersedingItems}">
-								<td th:text="${item.name}"></td>
-								<td th:text="${item.definition}"></td>
-								<td th:text="${item.description}"></td>
-								<td><a class="btn btn-sm btn-default" target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${item.uuid}__}"></a></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
 	<div class="container">
-		<div class="row">
-			<div class="col-md-12 column">
-				<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
-				<div class="pull-right" th:if="${proposal.isUnderReview()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_MANAGER_', #vars.proposal.registerUuid)">
-					<button class="btn btn-success" th:text="#{button.review}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/review'} + '\', goback);'">Zur Entscheidung annehmen</button>
-					<button type="button" th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}"></button>
-				</div>
-				<div class="pull-right" th:if="${proposal.isPending()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_CONTROLBODY_', #vars.proposal.registerUuid)">
-					<button th:id="'accept-' + ${proposal.proposalUuid}" class="btn btn-success" th:href="'#confirmaccept-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.accept}">Akzeptieren</button>
-					<button th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}">Ablehnen</button>
-					<button th:id="'reject-' + ${proposal.proposalUuid}" class="btn btn-danger" th:href="'#confirmreject-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.reject}">Ablehnen</button>
-				</div>
-				
-				<div class="modal fade" th:id="'confirmaccept-' + ${proposal.proposalUuid}" role="dialog">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 th:text="#{popup.acceptProposal.header}">Vorschlag annehmen</h4>
-							</div>
-							<div class="modal-body">
-	<!-- 								<form th:action="@{__${basePath}__/proposals/__${proposal.proposalUuid}__/accept}" method="post"> -->
-								<form id="decisionEventForm">
-									<p th:text="#{popup.acceptProposal.controlBodyDecisionEvent}">
-										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
-									</p>
-									
-									<!-- Text input-->
-									<div class="form-group">
-										<div class="controls">
-											<textarea id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="true" type="text" /> 
-										</div>
-									</div>
-								</form>
-							</div>
-							<div class="modal-footer">
-								<button class="btn btn-success btn-accept" th:text="#{button.confirm}" th:attr="data-loading-text=#{button.saving}">Bestätigen</button>
-								<button id="cancelaccept" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
-							</div>
-	<!-- 							</form> -->
-						</div>
-					</div>
-				</div>
+		<div th:if="${proposal.isProposalGroup()}">
+			<div th:replace="registry/proposal/group_details :: proposalsTable"/>
+		</div>
 	
-				<div class="modal fade" th:id="'confirmreject-' + ${proposal.proposalUuid}" role="dialog">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 th:text="#{popup.rejectProposal.header}">Vorschlag annehmen</h4>
-							</div>
-							<div class="modal-body">
-								<form id="decisionEventForm">
-									<p th:if="${proposal.isPending()}" th:text="#{popup.rejectProposal.controlBodyDecisionEvent}">
-										Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
-									</p>
-									
-									<!-- Text input-->
-									<div class="form-group">
-										<div class="controls">
-											<textarea th:if="${proposal.isPending()}" id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="required" type="text" /> 
-										</div>
-									</div>
-								</form>								
-							</div>
-							<div class="modal-footer">
-								<button class="btn btn-warning btn-reject" th:text="#{button.confirmRejection}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/reject'} + '\', $(\'form#decisionEventForm\').serialize(), goback);'">Bestätigen</button>
-								<button id="cancelreject" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
-							</div>
+		<div th:unless="${proposal.isProposalGroup()}" class="container" th:with="current=${proposal}">
+			<div class="row" th:with="current=${proposal}" th:fragment="proposalDetails">
+				<div class="col-md-6 column" th:object="${current}">
+					<div class="panel" th:classappend="${current.isRetirement()} ? 'panel-danger' : 'panel-primary'" th:if="!${current.isSupersession()}">
+						<div class="panel-heading">
+							<h3 th:if="${current.isAddition()}" class="panel-title"><span th:text="#{header.proposedItem}">Proposed item</span></h3>
+							<h3 th:if="${current.isClarification()}" class="panel-title"><span th:text="#{header.clarifiedItem}">Clarified item</span></h3>
+							<h3 th:if="${current.isRetirement()}" class="panel-title" th:text="#{header.retiredItem}">Retired item</h3>
 						</div>
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td th:text="#{tableheader.itemClassName}"></td>
+									<td th:text="#{*{itemClassName}}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{itemIdentifier}"></td>
+									<td th:text="*{itemIdentifier}"></td>
+								</tr>
+								<tr th:if="${current.isAddition()}">
+									<td th:text="#{targetRegister}"></td>
+									<td th:text="*{registerName}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{name}"></td>
+									<td th:text="*{name}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{definition}"></td>
+									<td th:text="*{definition}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{description}"></td>
+									<td th:text="*{description}"></td>
+								</tr>
+								<tr th:each="entry : *{additionalProperties}">
+									<td th:text="#{${entry.key}}"></td>
+									<td th:text="${entry.value}"></td>
+								</tr>
+								<tr th:if="${current.isAddition()} or ${current.isClarification()}">
+									<td th:text="#{itemDetails}"></td>
+									<td><a th:text="#{button.details}" th:href="@{__${basePath}__/item/__${current.uuid}__}"></a></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+	
+					<div class="panel panel-info" th:if="${current.isClarification()}">
+						<div class="panel-heading">
+							<h3 class="panel-title" th:text="#{header.proposedChanges}">Proposed changes</h3>
+						</div>
+						<table class="table table-striped">
+							<tbody>
+								<tr th:each="change : ${current.getProposedChange()}">
+									<td th:text="#{${change.key}}"></td>
+									<td th:text="${change.value}"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
-
-				<div class="modal fade" th:id="'confirmreturn-' + ${proposal.proposalUuid}" role="dialog">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h4 th:text="#{popup.returnProposal.header}"></h4>
-							</div>
-							<div class="modal-body">
-								<form id="noteToSubmitterForm">
-									<p th:text="#{popup.returnProposal.noteToSubmitter}"></p>
-									
-									<!-- Text input-->
-									<div class="form-group">
-										<div class="controls">
-											<textarea id="noteToSubmitter" name="noteToSubmitter" rows="3" cols="40" class="form-control" required="required" type="text" /> 
-										</div>
-									</div>
-								</form>								
-							</div>
-							<div class="modal-footer">
-								<button class="btn btn-warning btn-return" th:text="#{button.confirmReturn}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/return'} + '\', $(\'form#noteToSubmitterForm\').serialize(), goback);'">Bestätigen</button>
-								<button id="cancelreturn" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
-							</div>
+				<div class="column" th:classappend="${current.isSupersession()} ? 'col-md-12' : 'col-md-6'">
+					<div class="panel panel-default" th:object="${current}">
+						<div class="panel-heading">
+							<h3 class="panel-title" th:text="#{header.proposalData}">Proposal data</h3>
 						</div>
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td th:text="#{proposalType}"></td>
+									<td th:text="#{*{proposalType}}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{sponsor}"></td>
+									<td th:text="*{sponsorName}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{justification}"></td>
+									<td th:text="*{justification}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{registerManagerNotes}"></td>
+									<td th:text="*{registerManagerNotes}"></td>
+								</tr>
+								<tr>
+									<td th:text="#{controlBodyNotes}"></td>
+									<td th:text="*{controlBodyNotes}"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
-				
+			</div>
+	
+			<div class="row" th:if="${current.isSupersession()}">
+				<div class="col-md-12 column">
+					<div class="panel panel-danger" th:if="${current.isSupersession()}">
+						<div class="panel-heading">
+							<h3 class="panel-title" th:text="#{header.supersededItems}">Superseded items</h3>
+						</div>
+						
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.name}">Name</th>
+									<th th:text="#{tableheader.definition}">Klasse</th>
+									<th th:text="#{tableheader.description}">Klasse</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${current.supersededItems}">
+									<td th:text="${item.name}"></td>
+									<td th:text="${item.definition}"></td>
+									<td th:text="${item.description}"></td>
+									<td><a class="btn btn-sm btn-default" target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${item.uuid}__}"></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+	
+					<div class="panel panel-success" th:if="${current.isSupersession()}">
+						<div class="panel-heading">
+							<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3>
+						</div>
+						
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.name}">Name</th>
+									<th th:text="#{tableheader.definition}">Klasse</th>
+									<th th:text="#{tableheader.description}">Klasse</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${current.supersedingItems}">
+									<td th:text="${item.name}"></td>
+									<td th:text="${item.definition}"></td>
+									<td th:text="${item.description}"></td>
+									<td><a class="btn btn-sm btn-default" target="_blank" th:text="#{button.details}" th:href="@{__${basePath}__/item/__${item.uuid}__}"></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 column">
+					<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
+					<div class="pull-right" th:if="${proposal.isUnderReview()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_MANAGER_', #vars.proposal.registerUuid)">
+						<button class="btn btn-success" th:text="#{button.review}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/review'} + '\', goback);'">Zur Entscheidung annehmen</button>
+						<button type="button" th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}"></button>
+					</div>
+					<div class="pull-right" th:if="${proposal.isPending()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_CONTROLBODY_', #vars.proposal.registerUuid)">
+						<button th:id="'accept-' + ${proposal.proposalUuid}" class="btn btn-success" th:href="'#confirmaccept-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.accept}">Akzeptieren</button>
+						<button th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}">Ablehnen</button>
+						<button th:id="'reject-' + ${proposal.proposalUuid}" class="btn btn-danger" th:href="'#confirmreject-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.reject}">Ablehnen</button>
+					</div>
+					
+					<div class="modal fade" th:id="'confirmaccept-' + ${proposal.proposalUuid}" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 th:text="#{popup.acceptProposal.header}">Vorschlag annehmen</h4>
+								</div>
+								<div class="modal-body">
+		<!-- 								<form th:action="@{__${basePath}__/proposals/__${proposal.proposalUuid}__/accept}" method="post"> -->
+									<form id="decisionEventForm">
+										<p th:text="#{popup.acceptProposal.controlBodyDecisionEvent}">
+											Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
+										</p>
+										
+										<!-- Text input-->
+										<div class="form-group">
+											<div class="controls">
+												<textarea id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-success button-acceptproposal" th:attr="data-uuid=${proposal.proposalUuid}" th:text="#{button.confirm}">Bestätigen</button>
+									<button id="cancelaccept" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+								</div>
+		<!-- 							</form> -->
+							</div>
+						</div>
+					</div>
+		
+					<div class="modal fade" th:id="'confirmreject-' + ${proposal.proposalUuid}" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 th:text="#{popup.rejectProposal.header}">Vorschlag annehmen</h4>
+								</div>
+								<div class="modal-body">
+									<form id="decisionEventForm">
+										<p th:if="${proposal.isPending()}" th:text="#{popup.rejectProposal.controlBodyDecisionEvent}">
+											Bitte geben an, wann und in welchem Rahmen die Entscheidung, den Vorschlag anzunehmen, gefällt wurde:
+										</p>
+										
+										<!-- Text input-->
+										<div class="form-group">
+											<div class="controls">
+												<textarea th:if="${proposal.isPending()}" id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="required" type="text" /> 
+											</div>
+										</div>
+									</form>								
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger button-rejectproposal" th:attr="data-uuid=${proposal.proposalUuid}" th:text="#{button.confirm}">Bestätigen</button>
+									<button id="cancelreject" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+								</div>
+							</div>
+						</div>
+					</div>
 	
+					<div class="modal fade" th:id="'confirmreturn-' + ${proposal.proposalUuid}" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 th:text="#{popup.returnProposal.header}"></h4>
+								</div>
+								<div class="modal-body">
+									<form id="noteToSubmitterForm">
+										<p th:text="#{popup.returnProposal.noteToSubmitter}"></p>
+										
+										<!-- Text input-->
+										<div class="form-group">
+											<div class="controls">
+												<textarea id="noteToSubmitter" name="noteToSubmitter" rows="3" cols="40" class="form-control" required="required" type="text" /> 
+											</div>
+										</div>
+									</form>								
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-warning btn-return" th:text="#{button.confirmReturn}" th:onclick="'postForm(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/return'} + '\', $(\'form#noteToSubmitterForm\').serialize(), goback);'">Bestätigen</button>
+									<button id="cancelreturn" class="btn btn-default btn-cancel" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+	</div>	
 	<div th:include="layout :: foot"></div>
+
+	<script type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+		$('body').on('click', '.button-acceptproposal', function() {
+		    $(this).button('loading');
+		    $('body').addClass('loading');
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/accept', $('form#decisionEventForm').serialize(), function(success, errorThrown) {
+				if (success) {
+					goback();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+		});
+
+		$('body').on('click', '.button-rejectproposal', function() {
+		    $(this).button('loading');
+			var uuid = $(this).data('uuid');
+			postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/reject', $('form#decisionEventForm').serialize(), function(success, errorThrown) {
+				if (success) {
+					goback();
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+		});
+
+		$('body').on('click', '.button-reviewproposal', function() {
+		    $(this).button('loading');
+			var uuid = $(this).data('uuid');
+			post('[[@{__${basePath}__/proposals/}]]' + uuid + '/review', function(success, errorThrown) {
+				if (success) {
+					goback();	
+				}
+				else {
+					showError(errorThrown, '[[@{__${basePath}__}]]');
+				}
+			});
+		});
+		
+		
+		$('#proposalsTable').on('click', '.button-details', function(e) {
+			var uuid = $(this).data('uuid');
+			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid;
+		});
+	/* ]]> */
+	</script>
+
+	<div th:replace="globals-lists :: js-lists"/>
+
+	<script th:if="${proposal.isProposalGroup()}" type="text/javascript" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			var table;
+			table = $('#proposalsTable').dataTable({
+				"sAjaxSource": "[[@{__${basePath}__/}]]proposals/by-group/[[${proposal.proposalUuid}]]",
+				"bProcessing": true,
+				"bServerSide": true,
+				"bStateSave": true,
+ 				"bInfo": true,
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 1, "asc" ]],
+				"aoColumns": [
+					{ 
+						"mDataProp": "proposalDate",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "title",
+						"sWidth": "30%",
+						"bSortable": true
+					},
+					{ 
+						"mDataProp": "itemClassName",
+						"sWidth": "15%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{ 
+						"mDataProp": "sponsorName",
+						"sWidth": "15%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{ 	
+						"mDataProp": "proposalType",
+						"sWidth": "10%",
+					 	"bSortable": false
+					},
+					{ 
+						"sWidth": "10%",
+						"bSortable": false
+					},
+				],
+				"aoColumnDefs": [
+					{ "aTargets": [3],
+							"mData": null,
+							"mRender": function (data, type, full) {
+								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
+								return $("<div/>").append($href).html();
+							}
+					},
+					{ "aTargets": [5],
+						  "mData": null,
+						  "mRender": function (data, type, full) {
+								var actions = "";
+							  	var dropdownActions = [];
+							  	dropdownActions.push(detailsButton(full.proposalUuid));
+							  
+							  	actions += dropdownMenu(full.proposalUuid, dropdownActions);
+
+								return actions;
+																				
+						  }
+						},
+				]
+			});
+		});
+	/* ]]> */
+	</script>
 	
 </body>
-<script type="text/javascript" th:inline="text">
-/* <![CDATA[ */
-	$(document).ready(function() {
-		$('.proposal-pill').first().addClass('active');
-		$('.proposal-pane').first().addClass('active');	
-		
-		$('.btn-accept').on('click', function(e) {
-			$(this).button('loading');
-			postForm('[[@{__${basePath}__/}]]proposals/[[${proposal.proposalUuid}]]/accept', $('form#decisionEventForm').serialize(), goback);
-// 			$(this).button('reset');
-		});
-	});
-	/* ]]> */
-</script>
 </html>

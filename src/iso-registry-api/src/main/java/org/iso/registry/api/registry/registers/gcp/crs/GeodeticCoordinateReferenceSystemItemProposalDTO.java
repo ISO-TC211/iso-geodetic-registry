@@ -24,8 +24,8 @@ public class GeodeticCoordinateReferenceSystemItemProposalDTO extends Coordinate
 		this.datum = datum;
 	}
 	
-	public GeodeticCoordinateReferenceSystemItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public GeodeticCoordinateReferenceSystemItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 //	@Override
