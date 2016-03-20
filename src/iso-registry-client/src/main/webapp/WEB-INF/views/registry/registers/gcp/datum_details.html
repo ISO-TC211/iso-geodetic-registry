@@ -42,7 +42,7 @@
 			</div>
 
 			<div class="row">
-				<div class="col-md-12" th:with="property='realizationEpoch',inputType='text',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='true'">
+				<div class="col-md-12" th:with="property='realizationEpoch',inputType='text',label=#{form.label.realizationEpoch},placeholder=#{form.placeholder.realizationEpoch},isRequired='false'">
 <!-- 					<div th:replace="globals :: dateTimePicker"/> -->
 					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
