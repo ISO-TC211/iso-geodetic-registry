@@ -424,7 +424,7 @@
 				<hibernate.connection.schema>public</hibernate.connection.schema>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<flyway.migration>true</flyway.migration>
-				<client.basepath></client.basepath>
+				<client.basepath>~/gcp</client.basepath>
 				<mail.enabled>true</mail.enabled>
 				<mail.from.name>Registry</mail.from.name>
 				<mail.from.address>registry@example.org</mail.from.address>
