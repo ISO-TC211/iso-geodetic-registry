@@ -125,9 +125,6 @@ public class ExcelAdapter
 	private GlobalIdentifiedItemRepository identifiedItemRepository;
 	
 	@Autowired
-	private ConversionService conversionService;
-	
-	@Autowired
 	private ViewBeanFactory viewBeanFactory;
 	
 	@Autowired
