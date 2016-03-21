@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="Service">
-	<dtoClass>de.bund.bkg.gdide.registry.api.registry.registers.monitoring.ServiceProposalDTO</dtoClass>
-	<viewBeanClass>de.bund.bkg.gdide.registry.api.ServiceViewBean</viewBeanClass>
-	<viewItemTemplate>registry/registers/monitoring/service_view_item</viewItemTemplate>
-	<viewProposalTemplate>registry/registers/monitoring/service_edit_addition</viewProposalTemplate>
-	<createProposalTemplate>registry/registers/monitoring/service_create_addition</createProposalTemplate>
-	<editProposalTemplate>registry/registers/namespace/service_edit_addition</editProposalTemplate>
-</reg:ItemClassConfiguration>
