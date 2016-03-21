@@ -14,14 +14,18 @@ import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_AbsoluteExternalPositionalAccuracy;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
-import org.iso.registry.core.model.iso19115.dataquality.DQ_Result;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.operation.CoordinateOperationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
-import org.isotc211.iso19139.common.UnitOfMeasure_PropertyType;
+import org.isotc211.iso19139.metadata.DQ_AbsoluteExternalPositionalAccuracy_PropertyType;
+import org.isotc211.iso19139.metadata.DQ_AbsoluteExternalPositionalAccuracy_Type;
+import org.isotc211.iso19139.metadata.DQ_QuantitativeResult_Type;
+import org.isotc211.iso19139.metadata.DQ_Result_PropertyType;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.soap.AbstractCoordinateOperationItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.CoordinateReferenceSystemItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -51,6 +55,10 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		// TODO Auto-generated constructor stub
 	}
 
+	public CoordinateOperationItemProposalDTO(AbstractCoordinateOperationItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+	
 	public CoordinateOperationItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 		// TODO Auto-generated constructor stub
@@ -65,6 +73,80 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractCoordinateOperationItemProposal_Type) {
+			AbstractCoordinateOperationItemProposal_Type xmlProposal = (AbstractCoordinateOperationItemProposal_Type) itemDetails;
+	
+			this.setOperationVersion(xmlProposal.getOperationVersion());	
+			this.getScope().addAll(xmlProposal.getScope());	
+			
+			final CoordinateReferenceSystemItemProposal_PropertyType sourceCrsProperty = xmlProposal.getSourceCrs();
+			if (sourceCrsProperty != null) {
+				final CoordinateReferenceSystemItemProposalDTO dto;
+				if (sourceCrsProperty.isSetAbstractCoordinateReferenceSystemItemProposal()) {
+					dto = new CoordinateReferenceSystemItemProposalDTO(sourceCrsProperty.getAbstractCoordinateReferenceSystemItemProposal());
+				}
+				else if (sourceCrsProperty.isSetUuidref()) {
+					dto = new CoordinateReferenceSystemItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(sourceCrsProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setSourceCrs(dto);
+			}
+			final CoordinateReferenceSystemItemProposal_PropertyType targetCrsProperty = xmlProposal.getTargetCrs();
+			if (targetCrsProperty != null) {
+				final CoordinateReferenceSystemItemProposalDTO dto;
+				if (targetCrsProperty.isSetAbstractCoordinateReferenceSystemItemProposal()) {
+					dto = new CoordinateReferenceSystemItemProposalDTO(targetCrsProperty.getAbstractCoordinateReferenceSystemItemProposal());
+				}
+				else if (targetCrsProperty.isSetUuidref()) {
+					dto = new CoordinateReferenceSystemItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(targetCrsProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setTargetCrs(dto);
+			}
+			
+			if (xmlProposal.getDomainOfValidity() != null) {
+				final ExtentDTO dto;
+				if (xmlProposal.isSetDomainOfValidity()) {
+					dto = new ExtentDTO(xmlProposal.getDomainOfValidity().getEX_Extent());
+					this.setDomainOfValidity(dto);
+				}
+			}
+			
+			if (xmlProposal.getCoordinateOperationAccuracy() != null) {
+				if (xmlProposal.isSetCoordinateOperationAccuracy() && !xmlProposal.getCoordinateOperationAccuracy().isEmpty()) {
+					DQ_AbsoluteExternalPositionalAccuracy_PropertyType accuracyProperty = xmlProposal.getCoordinateOperationAccuracy().get(0);
+					if (accuracyProperty.isSetDQ_AbsoluteExternalPositionalAccuracy()) {
+						DQ_AbsoluteExternalPositionalAccuracy_Type accuracy = accuracyProperty.getDQ_AbsoluteExternalPositionalAccuracy();
+						if (!accuracy.getResult().isEmpty()) {
+							DQ_Result_PropertyType resultProperty = accuracy.getResult().get(0);
+							if (resultProperty.isSetAbstractDQ_Result() && resultProperty.getAbstractDQ_Result().getValue() instanceof DQ_QuantitativeResult_Type) {
+								DQ_QuantitativeResult_Type quantResult = (DQ_QuantitativeResult_Type)resultProperty.getAbstractDQ_Result().getValue();
+								if (quantResult.getValueUnit().isSetUuidref()) {
+									UnitOfMeasureItemProposalDTO uom = new UnitOfMeasureItemProposalDTO();
+									uom.setReferencedItemUuid(UUID.fromString(quantResult.getValueUnit().getUuidref()));
+									this.setAccuracyUom(uom);
+									this.setAccuracy(Float.parseFloat(quantResult.getValue().get(0).getRecord().toString()));
+								}
+							}
+						}
+					}
+				}
+			}
+		}	
+	}
+
 	@Override
 	public void setAdditionalValues(RE_RegisterItem registerItem, EntityManager entityManager) {
 		super.setAdditionalValues(registerItem, entityManager);

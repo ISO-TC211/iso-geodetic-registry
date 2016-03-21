@@ -1,14 +1,16 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationType;
+import org.iso.registry.api.AbstractSingleOperationItem_Type;
+import org.iso.registry.api.OperationMethodItem_PropertyType;
 import org.iso.registry.core.model.operation.ConversionItem;
 import org.iso.registry.core.model.operation.GeneralParameterValue;
 import org.iso.registry.core.model.operation.OperationParameterValue;
 import org.iso.registry.core.model.operation.SingleOperationItem;
 import org.iso.registry.core.model.operation.TransformationItem;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -50,6 +52,20 @@ public class SingleOperationItemViewBean extends CoordinateOperationItemViewBean
 	public SingleOperationItemViewBean(Supersession supersession) {
 		super(supersession);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void setXmlValues(RE_RegisterItem_Type result) {
+		super.setXmlValues(result);
+		if (result instanceof AbstractSingleOperationItem_Type) {
+			final AbstractSingleOperationItem_Type xmlBean = (AbstractSingleOperationItem_Type)result;
+			final SingleOperationItemViewBean viewBean = this;
+			if (viewBean.getMethod() != null && viewBean.getMethod().getUuid() != null) {
+				final OperationMethodItem_PropertyType xmlBeanProp = new OperationMethodItem_PropertyType(); 
+				xmlBeanProp.setUuidref(viewBean.getMethod().getUuid().toString());
+				xmlBean.setMethod(xmlBeanProp);
+			}
+		}
 	}
 
 	@Override

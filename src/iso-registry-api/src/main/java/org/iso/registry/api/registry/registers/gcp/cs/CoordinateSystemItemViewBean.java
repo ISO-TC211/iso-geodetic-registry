@@ -1,10 +1,14 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.cs;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.iso.registry.api.AbstractCoordinateSystemItem_Type;
+import org.iso.registry.api.CoordinateSystemAxisItem_PropertyType;
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -38,6 +42,22 @@ public class CoordinateSystemItemViewBean extends IdentifiedItemViewBean
 
 	public CoordinateSystemItemViewBean(Supersession supersession) {
 		super(supersession);
+	}
+
+	@Override
+	public void setXmlValues(RE_RegisterItem_Type result) {
+		super.setXmlValues(result);
+		if (result instanceof AbstractCoordinateSystemItem_Type) {
+			final AbstractCoordinateSystemItem_Type xmlBean = (AbstractCoordinateSystemItem_Type)result;
+			final CoordinateSystemItemViewBean viewBean = this;
+			for (CoordinateSystemAxisItemViewBean viewBeanValue : viewBean.getAxes()) {
+				if (viewBeanValue != null && viewBeanValue.getUuid() != null) {
+					final CoordinateSystemAxisItem_PropertyType xmlBeanProp = new CoordinateSystemAxisItem_PropertyType(); 
+					xmlBeanProp.setUuidref(viewBeanValue.getUuid().toString());
+					xmlBean.getAxes().add(xmlBeanProp);
+				}	
+			}
+		}
 	}
 
 	@Override

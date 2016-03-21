@@ -1,8 +1,12 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.datum;
 
-import org.iso.registry.core.model.UnitOfMeasureItem;
+import org.iso.registry.api.EllipsoidItem_Type;
+import org.iso.registry.api.GcoConverter;
+import org.iso.registry.api.UnitOfMeasureItem_PropertyType;
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemViewBean;
 import org.iso.registry.core.model.datum.EllipsoidItem;
-import org.iso.registry.core.model.iso19103.MeasureType;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -61,6 +65,28 @@ public class EllipsoidItemViewBean extends IdentifiedItemViewBean
 
 	public EllipsoidItemViewBean(Supersession supersession) {
 		super(supersession);
+	}
+
+	@Override
+	public void setXmlValues(RE_RegisterItem_Type result) {
+		super.setXmlValues(result);
+		if (result instanceof EllipsoidItem_Type) {
+			final EllipsoidItem_Type xmlBean = (EllipsoidItem_Type)result;
+			final EllipsoidItemViewBean viewBean = this;
+			xmlBean.setSemiMajorAxis(GcoConverter.convertToGcoDouble(viewBean.getSemiMajorAxis()));
+			if (viewBean.getSemiMajorAxisUom() != null && viewBean.getSemiMajorAxisUom().getUuid() != null) {
+				final UnitOfMeasureItem_PropertyType xmlBeanProp= new UnitOfMeasureItem_PropertyType(); 
+				xmlBeanProp.setUuidref(viewBean.getSemiMajorAxisUom().getUuid().toString());
+				xmlBean.setSemiMajorAxisUom(xmlBeanProp);
+			}
+			xmlBean.setInverseFlattening(GcoConverter.convertToGcoDouble(viewBean.getInverseFlattening()));
+			if (viewBean.getInverseFlatteningUom() != null && viewBean.getInverseFlatteningUom().getUuid() != null) {
+				final UnitOfMeasureItem_PropertyType xmlBeanProp= new UnitOfMeasureItem_PropertyType(); 
+				xmlBeanProp.setUuidref(viewBean.getInverseFlatteningUom().getUuid().toString());
+				xmlBean.setInverseFlatteningUom(xmlBeanProp);
+			}
+			xmlBean.setIsSphere(GcoConverter.convertToGcoBoolean(viewBean.getSphere()));
+		}
 	}
 
 	@Override

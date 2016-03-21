@@ -2,9 +2,11 @@ package org.iso.registry.api.registry.registers.gcp.cs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -14,12 +16,14 @@ import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
 import org.iso.registry.core.model.iso19111.cs.CS_RangeMeaning;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.CoordinateSystemAxisItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.UnitOfMeasureItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -73,6 +77,10 @@ public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalD
 	
 	public CoordinateSystemAxisItemProposalDTO(CoordinateSystemAxisItem item) {
 		super(item);
+	}
+
+	public CoordinateSystemAxisItemProposalDTO(CoordinateSystemAxisItemProposal_Type itemDetails) {
+		super(itemDetails);
 	}
 
 	public CoordinateSystemAxisItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
@@ -145,6 +153,42 @@ public class CoordinateSystemAxisItemProposalDTO extends IdentifiedItemProposalD
 
 	public void setRangeMeaning(CS_RangeMeaning rangeMeaning) {
 		this.rangeMeaning = rangeMeaning;
+	}
+
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof CoordinateSystemAxisItemProposal_Type) {
+			CoordinateSystemAxisItemProposal_Type xmlProposal = (CoordinateSystemAxisItemProposal_Type) itemDetails;
+	
+			this.setAxisAbbreviation(xmlProposal.getAxisAbbreviation());
+			if (xmlProposal.getAxisDirection().isSetValue()) {
+				this.setAxisDirection(new CS_AxisDirection(xmlProposal.getAxisDirection().getValue(), xmlProposal.getAxisDirection().getCodeSpace()));
+			}
+			this.setMaximumValue(xmlProposal.getMaximumValue());	
+			this.setMinimumValue(xmlProposal.getMinimumValue());
+			if (xmlProposal.getRangeMeaning().isSetValue()) {
+				this.setRangeMeaning(CS_RangeMeaning.valueOf(xmlProposal.getRangeMeaning().getValue()));
+			}
+			
+			final UnitOfMeasureItemProposal_PropertyType axisUnitProperty = xmlProposal.getAxisUnit();
+			if (axisUnitProperty != null) {
+				final UnitOfMeasureItemProposalDTO dto;
+				if (axisUnitProperty.isSetUnitOfMeasureItemProposal()) {
+					dto = new UnitOfMeasureItemProposalDTO(axisUnitProperty.getUnitOfMeasureItemProposal());
+				}
+				else if (axisUnitProperty.isSetUuidref()) {
+					dto = new UnitOfMeasureItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(axisUnitProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setAxisUnit(dto);
+			}
+		}	
 	}
 
 	@Override

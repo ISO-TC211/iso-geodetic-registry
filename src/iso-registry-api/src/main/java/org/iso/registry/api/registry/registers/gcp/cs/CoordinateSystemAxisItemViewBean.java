@@ -1,5 +1,7 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.cs;
 
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemViewBean;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
 import org.iso.registry.core.model.iso19111.cs.CS_RangeMeaning;

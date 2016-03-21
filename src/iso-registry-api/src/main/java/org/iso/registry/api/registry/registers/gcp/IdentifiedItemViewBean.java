@@ -1,12 +1,18 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.iso.registry.api.AbstractIdentifiedItem_Type;
+import org.iso.registry.api.GcoConverter;
 import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.IdentifiedItem;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
+import org.isotc211.iso19139.metadata.CI_Citation_PropertyType;
+import org.isotc211.iso19139.metadata.CI_Citation_Type;
 
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
+import de.geoinfoffm.registry.api.iso.IsoXmlFactory;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.SimpleProposal;
@@ -44,6 +50,28 @@ public class IdentifiedItemViewBean extends RegisterItemViewBean
 
 	public IdentifiedItemViewBean(Supersession supersession) {
 		super(supersession);
+	}
+
+	@Override
+	public void setXmlValues(RE_RegisterItem_Type result) {
+		super.setXmlValues(result);
+		if (result instanceof AbstractIdentifiedItem_Type) {
+			final AbstractIdentifiedItem_Type xmlBean = (AbstractIdentifiedItem_Type)result;
+			final IdentifiedItemViewBean viewBean = this;
+			xmlBean.setIdentifier(GcoConverter.convertToGcoInteger(viewBean.getIdentifier()));
+			for (String aliases: viewBean.getAliases()) {
+				xmlBean.getAliases().add(GcoConverter.convertToGcoString(aliases));
+			}
+			xmlBean.setRemarks(GcoConverter.convertToGcoString(viewBean.getRemarks()));
+
+			for (CitationDTO viewBeanValue : viewBean.getInformationSource()) {
+				if (viewBeanValue != null) {
+					final CI_Citation_PropertyType xmlBeanProp = IsoXmlFactory.citation(viewBeanValue.toCitation()); 
+					xmlBean.getInformationSource().add(xmlBeanProp);
+				}	
+			}
+			xmlBean.setDataSource(GcoConverter.convertToGcoString(viewBean.getDataSource()));
+		}
 	}
 
 	@Override

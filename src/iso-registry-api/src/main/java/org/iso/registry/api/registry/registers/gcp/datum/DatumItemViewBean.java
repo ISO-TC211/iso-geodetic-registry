@@ -1,10 +1,13 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.datum;
 
-import java.util.Date;
-
+import org.iso.registry.api.AbstractDatumItem_Type;
+import org.iso.registry.api.GcoConverter;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean;
 import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.GeodeticDatumItem;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
+import org.isotc211.iso19139.metadata.EX_Extent_PropertyType;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -44,6 +47,24 @@ public class DatumItemViewBean extends IdentifiedItemViewBean
 
 	public DatumItemViewBean(Supersession supersession) {
 		super(supersession);
+	}
+
+	@Override
+	public void setXmlValues(RE_RegisterItem_Type result) {
+		super.setXmlValues(result);
+		if (result instanceof AbstractDatumItem_Type) {
+			final AbstractDatumItem_Type xmlBean = (AbstractDatumItem_Type)result;
+			final DatumItemViewBean viewBean = this;
+			xmlBean.setAnchorDefinition(GcoConverter.convertToGcoString(viewBean.getAnchorDefinition()));
+			if (viewBean.getDomainOfValidity() != null) {
+				final EX_Extent_PropertyType xmlBeanProp = new EX_Extent_PropertyType(); 
+				xmlBeanProp.setUuidref(viewBean.getUuid().toString());
+				xmlBean.setDomainOfValidity(xmlBeanProp);
+			}
+			xmlBean.setRealizationEpoch(GcoConverter.convertToGcoString(viewBean.getRealizationEpoch()));
+			xmlBean.setScope(GcoConverter.convertToGcoString(viewBean.getScope()));
+			xmlBean.setCoordinateReferenceEpoch(GcoConverter.convertToGcoString(viewBean.getCoordinateReferenceEpoch()));
+		}
 	}
 
 	@Override
