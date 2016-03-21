@@ -1,4 +1,4 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp;
 
 import org.iso.registry.core.model.Alias;
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="CivilServiceAgency">
-	<dtoClass>de.bund.bkg.gdide.registry.api.registry.registers.org.CivilServiceAgencyItemProposalDTO</dtoClass>
-	<viewBeanClass>de.bund.bkg.gdide.registry.api.CivilServiceAgencyItemViewBean</viewBeanClass>
-	<viewItemTemplate>registry/registers/org/org_view_item</viewItemTemplate>
-	<viewProposalTemplate>registry/registers/org/org_view_addition</viewProposalTemplate>
-	<createProposalTemplate>registry/registers/org/org_create_addition</createProposalTemplate>
-</reg:ItemClassConfiguration>
