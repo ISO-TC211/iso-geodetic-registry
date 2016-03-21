@@ -1,0 +1,838 @@
+<xs:schema xmlns:isoreg="http://registry.bespire.de/iso/gcp" xmlns:grg="http://www.isotc211.org/2005/grg" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:whttp="http://www.w3.org/ns/wsdl/http" xmlns:wsdl="http://www.w3.org/ns/wsdl" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://registry.bespire.de/iso/gcp" elementFormDefault="qualified">
+	<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="iso/19135/grg.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="iso/19139/gco/gco.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="iso/19139/gmd/gmd.xsd"/>
+	<!-- =====================================================================  
+	 Summary
+	
+     item classes (32):
+	 	- CartesianCoordinateSystemItem
+	 	- ConcatenatedOperationItem
+	 	- ConversionItem
+	 	- CoordinateOperationItem
+	 	- CoordinateReferenceSystemItem
+	 	- CoordinateSystemAxisItem
+	 	- CoordinateSystemItem
+	 	- DatumItem
+	 	- EllipsoidItem
+	 	- EllipsoidalCoordinateSystemItem
+	 	- EngineeringCoordinateReferenceSystemItem
+	 	- EngineeringDatumItem
+	 	- GeneralDerivedCoordinateReferenceSystemItem
+	 	- GeneralOperationParameterItem
+	 	- GeodeticCoordinateReferenceSystemItem
+	 	- GeodeticDatumItem
+	 	- IdentifiedItem
+	 	- OperationMethodItem
+	 	- OperationParameterGroupItem
+	 	- OperationParameterItem
+	 	- PassThroughOperationItem
+	 	- PrimeMeridianItem
+	 	- ProjectedCoordinateReferenceSystemItem
+	 	- ReferenceSystemItem
+	 	- SingleCoordinateReferenceSystemItem
+	 	- SingleOperationItem
+	 	- SphericalCoordinateSystemItem
+	 	- TransformationItem
+	 	- UnitOfMeasureItem
+	 	- VerticalCoordinateReferenceSystemItem
+	 	- VerticalCoordinateSystemItem
+	 	- VerticalDatumItem
+	 
+     classes contained by item classes (0):
+	
+     classes related to item classes (2):
+	 	- GeneralParameterValue
+	 	- OperationParameterValue
+	
+-->
+	<!-- =========================================================== -->
+	<!-- CartesianCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="CartesianCoordinateSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CartesianCoordinateSystemItem" type="isoreg:CartesianCoordinateSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CartesianCoordinateSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:CartesianCoordinateSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ConcatenatedOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ConcatenatedOperationItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateOperationItem_Type">
+				<xs:sequence>
+					<xs:element name="coordinateOperations" type="isoreg:SingleOperationItem_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ConcatenatedOperationItem" type="isoreg:ConcatenatedOperationItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ConcatenatedOperationItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:ConcatenatedOperationItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ConversionItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ConversionItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractSingleOperationItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ConversionItem" type="isoreg:ConversionItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ConversionItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:ConversionItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractCoordinateOperationItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="coordinateOperationAccuracy" type="gmd:DQ_AbsoluteExternalPositionalAccuracy_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="domainOfValidity" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+					<xs:element name="operationVersion" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="scope" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="sourceCrs" type="isoreg:CoordinateReferenceSystemItem_PropertyType" minOccurs="0"/>
+					<xs:element name="targetCrs" type="isoreg:CoordinateReferenceSystemItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractCoordinateOperationItem" type="isoreg:AbstractCoordinateOperationItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateOperationItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractCoordinateOperationItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractCoordinateReferenceSystemItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractReferenceSystemItem_Type">
+				<xs:sequence>
+					<xs:element name="scope" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractCoordinateReferenceSystemItem" type="isoreg:AbstractCoordinateReferenceSystemItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateSystemAxisItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="CoordinateSystemAxisItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="axisAbbreviation" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="axisDirection" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="axisUnit" type="isoreg:UnitOfMeasureItem_PropertyType" minOccurs="0"/>
+					<xs:element name="maximumValue" type="gco:Integer_PropertyType" minOccurs="0"/>
+					<xs:element name="minimumValue" type="gco:Integer_PropertyType" minOccurs="0"/>
+					<xs:element name="rangeMeaning" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CoordinateSystemAxisItem" type="isoreg:CoordinateSystemAxisItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateSystemAxisItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:CoordinateSystemAxisItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractCoordinateSystemItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="axes" type="isoreg:CoordinateSystemAxisItem_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractCoordinateSystemItem" type="isoreg:AbstractCoordinateSystemItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractCoordinateSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- DQ_AbsoluteExternalPositionalAccuracy_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="DQ_AbsoluteExternalPositionalAccuracy_Type"/>
+	<!-- ........................................................................ -->
+	<xs:element name="DQ_AbsoluteExternalPositionalAccuracy" type="gmd:DQ_AbsoluteExternalPositionalAccuracy_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="DQ_AbsoluteExternalPositionalAccuracy_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmd:DQ_AbsoluteExternalPositionalAccuracy" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- DatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractDatumItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="anchorDefinition" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="coordinateReferenceEpoch" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="domainOfValidity" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+					<xs:element name="realizationEpoch" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="scope" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractDatumItem" type="isoreg:AbstractDatumItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="DatumItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractDatumItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EX_Extent_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EX_Extent_Type"/>
+	<!-- ........................................................................ -->
+	<xs:element name="EX_Extent" type="gmd:EX_Extent_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EX_Extent_PropertyType">
+		<xs:sequence>
+			<xs:element ref="gmd:EX_Extent" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EllipsoidItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EllipsoidItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="inverseFlattening" type="gco:Real_PropertyType" minOccurs="0"/>
+					<xs:element name="inverseFlatteningUom" type="isoreg:UnitOfMeasureItem_PropertyType" minOccurs="0"/>
+					<xs:element name="isSphere" type="gco:Boolean_PropertyType" minOccurs="0"/>
+					<xs:element name="semiMajorAxis" type="gco:Real_PropertyType" minOccurs="0"/>
+					<xs:element name="semiMajorAxisUom" type="isoreg:UnitOfMeasureItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EllipsoidItem" type="isoreg:EllipsoidItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EllipsoidItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:EllipsoidItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EllipsoidalCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EllipsoidalCoordinateSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EllipsoidalCoordinateSystemItem" type="isoreg:EllipsoidalCoordinateSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EllipsoidalCoordinateSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:EllipsoidalCoordinateSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EngineeringCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EngineeringCoordinateReferenceSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractSingleCoordinateReferenceSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EngineeringCoordinateReferenceSystemItem" type="isoreg:EngineeringCoordinateReferenceSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EngineeringCoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:EngineeringCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EngineeringDatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EngineeringDatumItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractDatumItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EngineeringDatumItem" type="isoreg:EngineeringDatumItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EngineeringDatumItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:EngineeringDatumItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeneralDerivedCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractGeneralDerivedCoordinateReferenceSystemItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractSingleCoordinateReferenceSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractGeneralDerivedCoordinateReferenceSystemItem" type="isoreg:AbstractGeneralDerivedCoordinateReferenceSystemItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeneralDerivedCoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractGeneralDerivedCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeneralOperationParameterItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractGeneralOperationParameterItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="group" type="isoreg:OperationParameterGroupItem_PropertyType" minOccurs="0"/>
+					<xs:element name="minimumOccurs" type="gco:Integer_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractGeneralOperationParameterItem" type="isoreg:AbstractGeneralOperationParameterItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeneralOperationParameterItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractGeneralOperationParameterItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeneralParameterValue_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractGeneralParameterValue_Type" abstract="true">
+		<xs:sequence>
+			<xs:element name="parameter" type="isoreg:GeneralOperationParameterItem_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractGeneralParameterValue" type="isoreg:AbstractGeneralParameterValue_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeneralParameterValue_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractGeneralParameterValue" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeodeticCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="GeodeticCoordinateReferenceSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractSingleCoordinateReferenceSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GeodeticCoordinateReferenceSystemItem" type="isoreg:GeodeticCoordinateReferenceSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeodeticCoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:GeodeticCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeodeticDatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="GeodeticDatumItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractDatumItem_Type">
+				<xs:sequence>
+					<xs:element name="ellipsoid" type="isoreg:EllipsoidItem_PropertyType" minOccurs="0"/>
+					<xs:element name="primeMeridian" type="isoreg:PrimeMeridianItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GeodeticDatumItem" type="isoreg:GeodeticDatumItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeodeticDatumItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:GeodeticDatumItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- IdentifiedItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractIdentifiedItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="grg:RE_RegisterItem_Type">
+				<xs:sequence>
+					<xs:element name="aliases" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="dataSource" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<xs:element name="identifier" type="gco:Integer_PropertyType"/>
+					<xs:element name="informationSource" type="gmd:CI_Citation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="remarks" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractIdentifiedItem" type="isoreg:AbstractIdentifiedItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="IdentifiedItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractIdentifiedItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationMethodItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationMethodItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="formulaReference" type="isoreg:Formula_Type"/>
+					<xs:element name="parameter" type="isoreg:GeneralOperationParameterItem_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="reversible" type="gco:Boolean_PropertyType" minOccurs="0"/>
+					<xs:element name="sourceDimensions" type="gco:Integer_PropertyType" minOccurs="0"/>
+					<xs:element name="targetDimensions" type="gco:Integer_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationMethodItem" type="isoreg:OperationMethodItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationMethodItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:OperationMethodItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- Formula_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="Formula_Type">
+		<xs:choice>
+			<xs:element name="formula" type="gco:CharacterString_PropertyType"/>
+			<xs:element name="formulaCitation" type="gmd:CI_Citation_PropertyType"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationParameterGroupItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationParameterGroupItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractGeneralOperationParameterItem_Type">
+				<xs:sequence>
+					<xs:element name="maximumOccurs" type="gco:Integer_PropertyType" minOccurs="0"/>
+					<xs:element name="parameter" type="isoreg:GeneralOperationParameterItem_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationParameterGroupItem" type="isoreg:OperationParameterGroupItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationParameterGroupItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:OperationParameterGroupItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationParameterItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationParameterItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractGeneralOperationParameterItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationParameterItem" type="isoreg:OperationParameterItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationParameterItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:OperationParameterItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationParameterValue_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationParameterValue_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractGeneralParameterValue_Type">
+				<xs:sequence>
+					<xs:element name="parameterValue" type="isoreg:ParameterValue_Type"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationParameterValue" type="isoreg:OperationParameterValue_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationParameterValue_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:OperationParameterValue" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ParameterValue_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ParameterValue_Type">
+		<xs:choice>
+			<xs:element name="value" type="gco:Measure_PropertyType"/>
+			<xs:element name="stringValue" type="gco:CharacterString_PropertyType"/>
+			<xs:element name="integerValue" type="gco:Integer_PropertyType"/>
+			<xs:element name="booleanValue" type="gco:Boolean_PropertyType"/>
+			<xs:element name="valueList" type="gco:Measure_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="integerValueList" type="gco:Integer_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="valueFile" type="gco:CharacterString_PropertyType"/>
+			<xs:element name="valueFileCitation" type="gmd:CI_Citation_PropertyType"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- PassThroughOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="PassThroughOperationItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateOperationItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="PassThroughOperationItem" type="isoreg:PassThroughOperationItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="PassThroughOperationItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:PassThroughOperationItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- PrimeMeridianItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="PrimeMeridianItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="greenwichLongitude" type="gco:Real_PropertyType" minOccurs="0"/>
+					<xs:element name="greenwichLongitudeUom" type="isoreg:UnitOfMeasureItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="PrimeMeridianItem" type="isoreg:PrimeMeridianItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="PrimeMeridianItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:PrimeMeridianItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ProjectedCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ProjectedCoordinateReferenceSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractGeneralDerivedCoordinateReferenceSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ProjectedCoordinateReferenceSystemItem" type="isoreg:ProjectedCoordinateReferenceSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ProjectedCoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:ProjectedCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractReferenceSystemItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="domainOfValidity" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractReferenceSystemItem" type="isoreg:AbstractReferenceSystemItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- SingleCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractSingleCoordinateReferenceSystemItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateReferenceSystemItem_Type">
+				<xs:sequence>
+					<xs:element name="baseCrs" type="isoreg:SingleCoordinateReferenceSystemItem_PropertyType" minOccurs="0"/>
+					<xs:element name="coordinateSystem" type="isoreg:CoordinateSystemItem_PropertyType" minOccurs="0"/>
+					<xs:element name="datum" type="isoreg:DatumItem_PropertyType" minOccurs="0"/>
+					<xs:element name="operation" type="isoreg:SingleOperationItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractSingleCoordinateReferenceSystemItem" type="isoreg:AbstractSingleCoordinateReferenceSystemItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="SingleCoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractSingleCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- SingleOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractSingleOperationItem_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateOperationItem_Type">
+				<xs:sequence>
+					<xs:element name="method" type="isoreg:OperationMethodItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractSingleOperationItem" type="isoreg:AbstractSingleOperationItem_Type" abstract="true" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="SingleOperationItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:AbstractSingleOperationItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- SphericalCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="SphericalCoordinateSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="SphericalCoordinateSystemItem" type="isoreg:SphericalCoordinateSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="SphericalCoordinateSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:SphericalCoordinateSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- TransformationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="TransformationItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractSingleOperationItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="TransformationItem" type="isoreg:TransformationItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="TransformationItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:TransformationItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- UnitOfMeasureItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="UnitOfMeasureItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractIdentifiedItem_Type">
+				<xs:sequence>
+					<xs:element name="measureType" type="isoreg:MeasureType_Type" minOccurs="0"/>
+					<xs:element name="offsetToStandardUnit" type="gco:Real_PropertyType" minOccurs="0"/>
+					<xs:element name="scaleToStandardUnitDenominator" type="gco:Real_PropertyType" minOccurs="0"/>
+					<xs:element name="scaleToStandardUnitNumerator" type="gco:Real_PropertyType" minOccurs="0"/>
+					<xs:element name="standardUnit" type="isoreg:UnitOfMeasureItem_PropertyType" minOccurs="0"/>
+					<xs:element name="symbol" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="UnitOfMeasureItem" type="isoreg:UnitOfMeasureItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="UnitOfMeasureItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:UnitOfMeasureItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- VerticalCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="VerticalCoordinateReferenceSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractSingleCoordinateReferenceSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="VerticalCoordinateReferenceSystemItem" type="isoreg:VerticalCoordinateReferenceSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="VerticalCoordinateReferenceSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:VerticalCoordinateReferenceSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- VerticalCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="VerticalCoordinateSystemItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractCoordinateSystemItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="VerticalCoordinateSystemItem" type="isoreg:VerticalCoordinateSystemItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="VerticalCoordinateSystemItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:VerticalCoordinateSystemItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- VerticalDatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="VerticalDatumItem_Type">
+		<xs:complexContent>
+			<xs:extension base="isoreg:AbstractDatumItem_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="VerticalDatumItem" type="isoreg:VerticalDatumItem_Type" substitutionGroup="grg:RE_RegisterItem"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="VerticalDatumItem_PropertyType">
+		<xs:sequence>
+			<xs:element ref="isoreg:VerticalDatumItem" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- MeasureType_Type -->
+	<!-- =========================================================== -->
+	<xs:simpleType name="MeasureType_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="angle"/>
+			<xs:enumeration value="area"/>
+			<xs:enumeration value="length"/>
+			<xs:enumeration value="scale"/>
+			<xs:enumeration value="time"/>
+			<xs:enumeration value="velocity"/>
+			<xs:enumeration value="volume"/>
+			<xs:enumeration value="weight"/>
+		</xs:restriction>
+	</xs:simpleType>	
+</xs:schema>

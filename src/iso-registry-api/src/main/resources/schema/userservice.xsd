@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Florian Esser (Fachhochschule Frankfurt a.M.) bearbeitet --><xs:schema xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:grg="http://www.isotc211.org/2005/grg" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:reg="http://registry.geoinfoffm.de/api" xmlns:regsoap="http://www.geoinfoffm.de/registry/soap" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:whttp="http://www.w3.org/ns/wsdl/http" xmlns:wsdl="http://www.w3.org/ns/wsdl" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.geoinfoffm.de/registry/soap">
+	<xs:import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="xmlsoap/encoding.xsd"/>
+	<!--<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19135-2_Schemas/grg.xsd"/>-->
+	<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="iso/19135/grg.xsd"/>
+	<xs:import namespace="http://registry.geoinfoffm.de/api" schemaLocation="registry.xsd"/>
+	<!-- =========================================================== -->
+	<!-- GetOrganizationDescriptionsRequest -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="GetOrganizationDescriptionsRequest"/>
+	<!-- =========================================================== -->
+	<xs:element name="GetOrganizationDescriptionsRequest" type="regsoap:GetOrganizationDescriptionsRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="GetOrganizationDescriptionsResponse">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" ref="regsoap:OrganizationDescription"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="GetOrganizationDescriptionsResponse" type="regsoap:GetOrganizationDescriptionsResponse"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="OrganizationDescription">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="shortName" type="xs:string"/>
+			<xs:element name="submittingOrganizationUuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="OrganizationDescription" type="regsoap:OrganizationDescription"/>
+	<!-- =========================================================== -->
+	<!-- =========================================================== -->
+	<!-- GetOrganizationRequest -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="GetOrganizationRequest">
+		<xs:sequence>
+			<xs:element maxOccurs="1" name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="GetOrganizationRequest" type="regsoap:GetOrganizationRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="GetOrganizationResponse">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" ref="reg:Organization"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="GetOrganizationResponse" type="regsoap:GetOrganizationResponse"/>
+	<!-- =========================================================== -->
+	<xs:complexType name="CreateOrganizationRequest">
+		<xs:sequence>
+			<xs:element maxOccurs="1" name="name" type="xs:string"/>
+			<xs:element maxOccurs="1" name="shortName" type="xs:string"/>
+			<xs:element name="submittingOrganization" type="grg:RE_SubmittingOrganization_PropertyType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="role" type="xs:string"/>
+			<xs:element default="true" name="active" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<xs:element name="CreateOrganizationRequest" type="regsoap:CreateOrganizationRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="CreateOrganizationResponse">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="CreateOrganizationResponse" type="regsoap:CreateOrganizationResponse"/>
+	<!-- =========================================================== -->
+	<xs:complexType name="DelegateRoleRequest">
+		<xs:sequence>
+			<xs:element name="userUuid" type="xs:string"/>
+			<xs:element name="role" type="xs:string"/>
+			<xs:element name="organizationUuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<xs:element name="DelegateRoleRequest" type="regsoap:DelegateRoleRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="DelegateRoleResponse">
+		<xs:sequence>
+			<xs:element name="result" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="DelegateRoleResponse" type="regsoap:DelegateRoleResponse"/>
+	<!-- =========================================================== -->
+	<!-- CreateRegistryUserRequest -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="CreateRegistryUserRequest">
+		<xs:sequence>
+			<xs:element maxOccurs="1" name="name" type="xs:string"/>
+			<xs:element maxOccurs="1" name="emailAddress" type="xs:string"/>
+			<xs:element maxOccurs="1" name="password" type="xs:string"/>
+			<xs:element maxOccurs="1" name="organizationUuid" type="xs:string"/>
+			<xs:element maxOccurs="1" name="preferredLanguage" type="xs:string"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="role" type="xs:string"/>
+			<xs:element default="true" maxOccurs="1" name="active" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<xs:element name="CreateRegistryUserRequest" type="regsoap:CreateRegistryUserRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="CreateRegistryUserResponse">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="CreateRegistryUserResponse" type="regsoap:CreateRegistryUserResponse"/>
+	<!-- =========================================================== -->
+	<!-- UpdateRegistryUserRequest -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="UpdateRegistryUserRequest">
+		<xs:sequence>
+			<xs:element maxOccurs="1" name="userUuid" type="xs:string"/>
+			<xs:element maxOccurs="1" name="name" type="xs:string"/>
+			<xs:element maxOccurs="1" name="emailAddress" type="xs:string"/>
+			<xs:element maxOccurs="1" name="password" type="xs:string"/>
+			<xs:element maxOccurs="1" name="preferredLanguage" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="telephone" type="xs:string"/>
+			<xs:element maxOccurs="1" name="organizationUuid" type="xs:string"/>
+			<xs:element default="true" maxOccurs="1" name="active" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<xs:element name="UpdateRegistryUserRequest" type="regsoap:UpdateRegistryUserRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="UpdateRegistryUserResponse">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="UpdateRegistryUserResponse" type="regsoap:UpdateRegistryUserResponse"/>
+	<!-- =========================================================== -->
+	<!-- GetRegistryUserDescriptionRequest -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="GetRegistryUserDescriptionRequest">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="emailAddress" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<xs:element name="GetRegistryUserDescriptionRequest" type="regsoap:GetRegistryUserDescriptionRequest"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:complexType name="GetRegistryUserDescriptionResponse">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="emailAddress" type="xs:string"/>
+			<xs:element name="password" type="xs:string"/>
+			<xs:element name="preferredLanguage" type="xs:string"/>
+			<xs:element name="organizationUuid" type="xs:string"/>
+			<xs:element name="organizationName" type="xs:string"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="role" type="xs:string"/>
+			<xs:element default="true" name="active" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<xs:element name="GetRegistryUserDescriptionResponse" type="regsoap:GetRegistryUserDescriptionResponse"/>
+	<!-- =========================================================== -->
+</xs:schema>
