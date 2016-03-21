@@ -1,10 +1,13 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.iso.registry.api.ConcatenatedOperationItem_Type;
+import org.iso.registry.api.SingleOperationItem_PropertyType;
 import org.iso.registry.core.model.operation.ConcatenatedOperationItem;
 import org.iso.registry.core.model.operation.SingleOperationItem;
+import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -44,6 +47,22 @@ public class ConcatenatedOperationItemViewBean extends CoordinateOperationItemVi
 	public ConcatenatedOperationItemViewBean(Supersession supersession) {
 		super(supersession);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void setXmlValues(RE_RegisterItem_Type result) {
+		super.setXmlValues(result);
+		if (result instanceof ConcatenatedOperationItem_Type) {
+			final ConcatenatedOperationItem_Type xmlBean = (ConcatenatedOperationItem_Type)result;
+			final ConcatenatedOperationItemViewBean viewBean = this;
+			for (SingleOperationItemViewBean viewBeanValue: viewBean.getCoordinateOperations()) {
+				if (viewBeanValue != null && viewBeanValue.getUuid() != null) {
+					final SingleOperationItem_PropertyType xmlBeanProp= new SingleOperationItem_PropertyType(); 
+					xmlBeanProp.setUuidref(viewBeanValue.getUuid().toString());
+					xmlBean.getCoordinateOperations().add(xmlBeanProp);
+				}	
+			}
+		}
 	}
 
 	@Override

@@ -6,9 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.isotc211.iso19139.common.CharacterString_PropertyType;
+import org.isotc211.iso19139.common.CodeListValue_Type;
+import org.isotc211.iso19139.metadata.CI_Citation_Type;
+import org.isotc211.iso19139.metadata.CI_DateTypeCode_PropertyType;
+import org.isotc211.iso19139.metadata.CI_Date_PropertyType;
+import org.isotc211.iso19139.metadata.CI_Date_Type;
+import org.isotc211.iso19139.metadata.CI_ResponsibleParty_PropertyType;
+import org.isotc211.iso19139.metadata.CI_ResponsibleParty_Type;
+import org.isotc211.iso19139.metadata.CI_RoleCode_PropertyType;
+import org.isotc211.iso19139.metadata.CI_Series_PropertyType;
+import org.isotc211.iso19139.metadata.CI_Series_Type;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.geoinfoffm.registry.api.iso.IsoXmlFactory;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Date;
 import de.geoinfoffm.registry.core.model.iso19115.CI_DateTypeCode;
@@ -99,6 +111,59 @@ public class CitationDTO
 		}
 	}
 	
+	public CitationDTO(CI_Citation_Type citation) {
+		this.title = IsoXmlFactory.characterString(citation.getTitle());
+		if (citation.getAlternateTitle() != null) {
+			for (CharacterString_PropertyType alternateTitle : citation.getAlternateTitle()) {
+				if (alternateTitle.isSetCharacterString()) {
+					this.getAlternateTitle().add(IsoXmlFactory.characterString(alternateTitle));
+				}
+			}
+		}
+		
+		if (citation.getCitedResponsibleParty() != null) {
+			for (CI_ResponsibleParty_PropertyType partyProperty : citation.getCitedResponsibleParty()) {
+				if (partyProperty.isSetCI_ResponsibleParty()) {
+					CI_ResponsibleParty_Type party = partyProperty.getCI_ResponsibleParty();
+					if (CI_RoleCode.AUTHOR.getCodeListValue().equals(party.getRole().getCI_RoleCode().getCodeListValue())) {
+						this.author = IsoXmlFactory.characterString(party.getIndividualName());
+					}
+					else if (CI_RoleCode.PUBLISHER.getCodeListValue().equals(party.getRole().getCI_RoleCode().getCodeListValue())) {
+						this.publisher = IsoXmlFactory.characterString(party.getOrganisationName());
+					}
+				}
+			}
+		}
+		
+		if (citation.getDate() != null) {
+			for (CI_Date_PropertyType dateProperty : citation.getDate()) {
+				if (dateProperty.isSetCI_Date()) {
+					CI_Date_Type date = dateProperty.getCI_Date();
+					if (CI_DateTypeCode.PUBLICATION.getCodeListValue().equals(date.getDateType().getCI_DateTypeCode().getCodeListValue())) {
+						this.publicationDate = date.getDate().getDate();
+					}
+					else if (CI_DateTypeCode.REVISION.getCodeListValue().equals(date.getDateType().getCI_DateTypeCode().getCodeListValue())) {
+						this.revisionDate = date.getDate().getDate();
+					}
+				}
+			}
+		}
+		
+		this.edition = IsoXmlFactory.characterString(citation.getEdition());
+		if (citation.getEdition() != null) {
+			this.editionDate = citation.getEditionDate().getDate();
+		}
+		this.otherCitationDetails = IsoXmlFactory.characterString(citation.getOtherCitationDetails());
+		
+		if (citation.getSeries() != null && citation.getSeries().isSetCI_Series()) {
+			CI_Series_Type series = citation.getSeries().getCI_Series();
+			this.series = new CitationSeriesDTO();
+			this.series.name = IsoXmlFactory.characterString(series.getName());
+			this.series.issueIdentification = IsoXmlFactory.characterString(series.getIssueIdentification());
+			this.series.page = IsoXmlFactory.characterString(series.getPage());
+		}		
+	}
+	
 	public static CitationDTO fromJson(String json) {
 		if (StringUtils.isEmpty(json)) {
 			return null;
@@ -174,6 +239,74 @@ public class CitationDTO
 		return result;
 	}
 
+	public CI_Citation_Type toCitationType() {
+		CI_Citation_Type result = new CI_Citation_Type();
+		
+		result.setTitle(IsoXmlFactory.characterString(this.getTitle()));
+		for (String alternateTitle : this.getAlternateTitle()) {
+			result.getAlternateTitle().add(IsoXmlFactory.characterString(alternateTitle));
+		}
+		result.setEdition(IsoXmlFactory.characterString(this.getEdition()));
+		result.setEditionDate(IsoXmlFactory.date(this.getEditionDate()));
+		result.setOtherCitationDetails(IsoXmlFactory.characterString(this.getOtherCitationDetails()));
+
+		if (!StringUtils.isEmpty(this.getAuthor())) {
+			CI_ResponsibleParty_PropertyType partyProperty = new CI_ResponsibleParty_PropertyType();
+			CI_ResponsibleParty_Type rp = new CI_ResponsibleParty_Type();
+			CI_RoleCode_PropertyType roleProperty = new CI_RoleCode_PropertyType();
+			roleProperty.setCI_RoleCode(IsoXmlFactory.code(CI_RoleCode.AUTHOR));
+			rp.setRole(roleProperty);
+			rp.setIndividualName(IsoXmlFactory.characterString(this.getAuthor()));
+			partyProperty.setCI_ResponsibleParty(rp);
+			result.getCitedResponsibleParty().add(partyProperty);
+		}
+		if (!StringUtils.isEmpty(this.getPublisher())) {
+			CI_ResponsibleParty_PropertyType partyProperty = new CI_ResponsibleParty_PropertyType();
+			CI_ResponsibleParty_Type rp = new CI_ResponsibleParty_Type();
+			CI_RoleCode_PropertyType roleProperty = new CI_RoleCode_PropertyType();
+			roleProperty.setCI_RoleCode(IsoXmlFactory.code(CI_RoleCode.PUBLISHER));
+			rp.setRole(roleProperty);
+			rp.setIndividualName(IsoXmlFactory.characterString(this.getPublisher()));
+			partyProperty.setCI_ResponsibleParty(rp);
+			result.getCitedResponsibleParty().add(partyProperty);
+		}
+		
+		if (!StringUtils.isEmpty(this.getPublicationDate())) {
+			CI_Date_PropertyType dateProperty = new CI_Date_PropertyType();
+			CI_Date_Type publicationDate = new CI_Date_Type();
+			CI_DateTypeCode_PropertyType typeProperty = new CI_DateTypeCode_PropertyType();
+			typeProperty.setCI_DateTypeCode(IsoXmlFactory.code(CI_DateTypeCode.PUBLICATION));
+			publicationDate.setDateType(typeProperty);
+			publicationDate.setDate(IsoXmlFactory.date(this.getPublicationDate()));
+			dateProperty.setCI_Date(publicationDate);
+			result.getDate().add(dateProperty);
+		}
+		
+		if (!StringUtils.isEmpty(this.getRevisionDate())) {
+			CI_Date_PropertyType dateProperty = new CI_Date_PropertyType();
+			CI_Date_Type publicationDate = new CI_Date_Type();
+			CI_DateTypeCode_PropertyType typeProperty = new CI_DateTypeCode_PropertyType();
+			typeProperty.setCI_DateTypeCode(IsoXmlFactory.code(CI_DateTypeCode.REVISION));
+			publicationDate.setDateType(typeProperty);
+			publicationDate.setDate(IsoXmlFactory.date(this.getRevisionDate()));
+			dateProperty.setCI_Date(publicationDate);
+			result.getDate().add(dateProperty);
+		}
+		
+		if (this.getSeries() != null) {
+			CI_Series_PropertyType seriesProperty = new CI_Series_PropertyType();
+			CI_Series_Type series = new CI_Series_Type();
+			series.setIssueIdentification(IsoXmlFactory.characterString(this.getSeries().getIssueIdentification()));
+			series.setName(IsoXmlFactory.characterString(this.getSeries().getName()));
+			series.setPage(IsoXmlFactory.characterString(this.getSeries().getPage()));
+			
+			seriesProperty.setCI_Series(series);
+			result.setSeries(seriesProperty);
+		}
+		
+		return result;		
+	}
+	
 	public String getTitle() {
 		return title;
 	}

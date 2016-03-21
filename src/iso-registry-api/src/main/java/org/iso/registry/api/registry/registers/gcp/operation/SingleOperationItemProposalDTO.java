@@ -3,7 +3,7 @@ package org.iso.registry.api.registry.registers.gcp.operation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
@@ -18,13 +18,15 @@ import org.iso.registry.core.model.operation.SingleOperationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 import org.springframework.util.StringUtils;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractSingleOperationItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.OperationMethodItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class SingleOperationItemProposalDTO extends CoordinateOperationItemProposalDTO
 {
@@ -45,6 +47,10 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 		super(item);
 	}
 
+	public SingleOperationItemProposalDTO(AbstractSingleOperationItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+	
 	public SingleOperationItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 		// TODO Auto-generated constructor stub
@@ -59,6 +65,33 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractSingleOperationItemProposal_Type) {
+			AbstractSingleOperationItemProposal_Type xmlProposal = (AbstractSingleOperationItemProposal_Type) itemDetails;
+	
+			
+			final OperationMethodItemProposal_PropertyType methodProperty = xmlProposal.getMethod();
+			if (methodProperty != null) {
+				final OperationMethodItemProposalDTO dto;
+				if (methodProperty.isSetOperationMethodItemProposal()) {
+					dto = new OperationMethodItemProposalDTO(methodProperty.getOperationMethodItemProposal());
+				}
+				else if (methodProperty.isSetUuidref()) {
+					dto = new OperationMethodItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(methodProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setMethod(dto);
+			}
+		}	
+	}
+
 	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		final List<RegisterItemProposalDTO> result = new ArrayList<RegisterItemProposalDTO>();

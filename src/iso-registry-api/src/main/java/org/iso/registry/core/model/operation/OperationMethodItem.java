@@ -82,18 +82,14 @@ public class OperationMethodItem extends IdentifiedItem
 	}
 
 	public List<GeneralOperationParameterItem> getParameter() {
+		if (this.parameter == null) {
+			this.parameter = new ArrayList<>();
+		}
 		return parameter;
 	}
 
 	public void setParameter(List<GeneralOperationParameterItem> parameter) {
 		this.parameter = parameter;
-	}
-	
-	public void addParameter(GeneralOperationParameterItem parameter) {
-		if (this.parameter == null) {
-			this.parameter = new ArrayList<>();
-		}
-		this.parameter.add(parameter);
 	}
 	
 	public void removeParameter(int index) {

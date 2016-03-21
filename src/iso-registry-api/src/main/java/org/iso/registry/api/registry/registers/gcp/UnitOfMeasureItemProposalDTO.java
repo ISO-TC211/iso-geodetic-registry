@@ -2,18 +2,22 @@ package org.iso.registry.api.registry.registers.gcp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
+import org.iso.registry.api.registry.RegistryModelXmlConverter;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.iso19103.MeasureType;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.UnitOfMeasureItemProposal_PropertyType;
+import de.geoinfoffm.registry.api.soap.UnitOfMeasureItemProposal_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -31,6 +35,10 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	public UnitOfMeasureItemProposalDTO() { 
 		super("UnitOfMeasure");
+	}
+
+	public UnitOfMeasureItemProposalDTO(UnitOfMeasureItemProposal_Type itemDetails) {
+		super(itemDetails);
 	}
 
 	public UnitOfMeasureItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
@@ -99,6 +107,38 @@ public class UnitOfMeasureItemProposalDTO extends IdentifiedItemProposalDTO
 
 	public void setScaleToStandardUnitDenominator(Double scaleToStandardUnitDenominator) {
 		this.scaleToStandardUnitDenominator = scaleToStandardUnitDenominator;
+	}
+
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof UnitOfMeasureItemProposal_Type) {
+			UnitOfMeasureItemProposal_Type xmlProposal = (UnitOfMeasureItemProposal_Type) itemDetails;
+	
+			this.setMeasureType(RegistryModelXmlConverter.convertSoapXmlToModelMeasureType(xmlProposal.getMeasureType()));	
+			this.setOffsetToStandardUnit(xmlProposal.getOffsetToStandardUnit());	
+			this.setScaleToStandardUnitDenominator(xmlProposal.getScaleToStandardUnitDenominator());	
+			this.setScaleToStandardUnitNumerator(xmlProposal.getScaleToStandardUnitNumerator());	
+			this.setSymbol(xmlProposal.getSymbol());	
+			
+			final UnitOfMeasureItemProposal_PropertyType standardUnitProperty = xmlProposal.getStandardUnit();
+			if (standardUnitProperty != null) {
+				final UnitOfMeasureItemProposalDTO dto;
+				if (standardUnitProperty.isSetUnitOfMeasureItemProposal()) {
+					dto = new UnitOfMeasureItemProposalDTO(standardUnitProperty.getUnitOfMeasureItemProposal());
+				}
+				else if (standardUnitProperty.isSetUuidref()) {
+					dto = new UnitOfMeasureItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(standardUnitProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setStandardUnit(dto);
+			}
+		}	
 	}
 
 	@Override

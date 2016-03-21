@@ -1,4 +1,4 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp;
 
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;

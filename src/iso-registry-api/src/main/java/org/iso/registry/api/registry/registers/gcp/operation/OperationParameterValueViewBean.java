@@ -1,8 +1,8 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.Collection;
-import java.util.UUID;
 
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemViewBean;
 import org.iso.registry.core.model.operation.Measure;
 import org.iso.registry.core.model.operation.OperationParameterValue;
 import org.iso.registry.core.model.operation.OperationParameterValue.OperationParameterValueType;

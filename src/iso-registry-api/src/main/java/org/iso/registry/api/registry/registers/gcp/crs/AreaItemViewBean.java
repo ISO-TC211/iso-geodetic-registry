@@ -1,5 +1,6 @@
-package org.iso.registry.client;
+package org.iso.registry.api.registry.registers.gcp.crs;
 
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean;
 import org.iso.registry.core.model.crs.AreaItem;
 
 import de.geoinfoffm.registry.core.model.Appeal;
