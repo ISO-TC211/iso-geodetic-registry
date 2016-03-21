@@ -36,7 +36,8 @@ public class IsoExcelConfiguration
 		final String pathToTemplate = "isoExcelConfiguration.xml";
 		final URL url = IsoExcelConfiguration.class.getClassLoader().getResource(pathToTemplate);
 		if (url == null) {
-			throw new IllegalStateException(String.format("Could not load resource path %s", pathToTemplate));
+//			throw new IllegalStateException(String.format("Could not load resource path %s", pathToTemplate));
+			return null;
 		}
 
 		EPackage.Registry.INSTANCE.put(ExcelAdapterConfigurationPackage.eNS_URI, ExcelAdapterConfigurationPackage.eINSTANCE);
