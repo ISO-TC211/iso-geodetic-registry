@@ -91,7 +91,7 @@ import de.geoinfoffm.registry.soap.AbstractEndpoint;
 @Endpoint
 public class RegistryUserEndpoint extends AbstractEndpoint
 {
-	private static final String NAMESPACE_URI = "http://registry.gdi-de.org/api/soap";
+	private static final String NAMESPACE_URI = "http://www.geoinfoffm.de/registry/soap";
 
 	@Autowired
 	private RegistrySecurity security;
