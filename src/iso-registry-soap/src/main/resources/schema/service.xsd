@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:regsoap="http://www.geoinfoffm.de/registry/soap" targetNamespace="http://www.geoinfoffm.de/registry/soap" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://registry.bespire.de/iso/gcp" schemaLocation="isogcp-registry.xsd"/>
 	<xs:include schemaLocation="registerservice.xsd"/>
-	<xs:include schemaLocation="proposalservice.xsd"/>
+	<xs:include schemaLocation="isogcp-proposalservice.xsd"/>
 	<xs:include schemaLocation="userservice.xsd"/>
 </xs:schema>

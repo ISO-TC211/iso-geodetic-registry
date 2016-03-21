@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="GeodeticDatum">
+	<dtoClass>org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO</dtoClass>
+	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.datum.DatumItemViewBean</viewBeanClass>
+	<xmlType>org.iso.registry.api.GeodeticDatumItem_Type</xmlType>
+	<viewItemTemplate>registry/registers/gcp/datum_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/datum_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/datum_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/datum_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>
