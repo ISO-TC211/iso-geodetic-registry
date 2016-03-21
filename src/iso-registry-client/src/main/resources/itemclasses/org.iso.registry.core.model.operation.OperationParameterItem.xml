@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="OperationParameter">
 	<dtoClass>org.iso.registry.api.registry.registers.gcp.operation.OperationParameterItemProposalDTO</dtoClass>
-	<viewBeanClass>org.iso.registry.client.IdentifiedItemViewBean</viewBeanClass>
+	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.operation.GeneralOperationParameterItemViewBean</viewBeanClass>
+	<xmlType>org.iso.registry.api.OperationParameterItem_Type</xmlType>
 	<viewItemTemplate>registry/registers/gcp/param_view_item</viewItemTemplate>
 	<viewProposalTemplate>registry/registers/gcp/param_edit_addition</viewProposalTemplate>
 	<createProposalTemplate>registry/registers/gcp/param_create_addition</createProposalTemplate>

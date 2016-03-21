@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="NamingSystem">
 	<dtoClass>org.iso.registry.api.registry.registers.gcp.NamingSystemItemProposalDTO</dtoClass>
-	<viewBeanClass>org.iso.registry.client.IdentifiedItemViewBean</viewBeanClass>
+	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean</viewBeanClass>
 	<viewItemTemplate>registry/registers/gcp/namsys_view_item</viewItemTemplate>
 	<viewProposalTemplate>registry/registers/gcp/namsys_edit_addition</viewProposalTemplate>
 	<createProposalTemplate>registry/registers/gcp/namsys_create_addition</createProposalTemplate>
