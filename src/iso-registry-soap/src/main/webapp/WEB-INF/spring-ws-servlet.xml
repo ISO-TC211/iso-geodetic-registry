@@ -19,6 +19,8 @@
  	<context:component-scan base-package="de.bespire.registry"/>
  	<context:component-scan base-package="org.iso.registry"/>
  	
+ 	<bean class="org.iso.registry.core.IsoCoreConfiguration"/>
+ 	
 <!-- 	<sws:static-wsdl id="orders" location="/WEB-INF/wsdl/test11.wsdl"/> -->
 	<sws:dynamic-wsdl id="register"
 	    portTypeName="RegisterServicePort"
@@ -29,7 +31,7 @@
 	<sws:dynamic-wsdl id="proposal"
 	    portTypeName="ProposalServicePort"
 	    locationUri="${soap.baselocation}/proposal">
-	  <sws:xsd location="classpath:schema/proposalservice.xsd"/>
+	  <sws:xsd location="classpath:schema/isogcp-proposalservice.xsd"/>
 	</sws:dynamic-wsdl>
 
 	<sws:dynamic-wsdl id="user"
@@ -46,7 +48,7 @@
 	</bean>
 
 	<bean id="proposalservice" class="org.springframework.xml.xsd.SimpleXsdSchema">
-    	<property name="xsd" value="classpath:/schema/proposalservice.xsd" />
+    	<property name="xsd" value="classpath:/schema/isogcp-proposalservice.xsd" />
 	</bean>
 
 	<bean id="userservice" class="org.springframework.xml.xsd.SimpleXsdSchema">
@@ -54,7 +56,7 @@
 	</bean>
 	
 	<bean id="registry" class="org.springframework.xml.xsd.SimpleXsdSchema">
-    	<property name="xsd" value="classpath:/schema/registry.xsd" />
+    	<property name="xsd" value="classpath:/schema/isogcp-registry.xsd" />
 	</bean>
 	
 	<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
@@ -74,8 +76,11 @@
     <bean id="proposalWorkflowManager" class="de.geoinfoffm.registry.core.workflow.Iso19135ProposalWorkflowManager">
     </bean>
 
-    <bean id="registrySecurity" class="de.geoinfoffm.registry.api.RegistrySecurityImpl">
-    </bean>
+<!--     <bean id="organizationService" class="de.geoinfoffm.registry.api.OrganizationServiceImpl"> -->
+<!--     </bean> -->
+
+<!--     <bean id="registrySecurity" class="de.geoinfoffm.registry.api.RegistrySecurityImpl"> -->
+<!--     </bean> -->
     
     <sws:interceptors>
     	<ref local="wsSecurityInterceptor"/>
