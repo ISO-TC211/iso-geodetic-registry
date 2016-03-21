@@ -1,0 +1,846 @@
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Florian Esser (Fachhochschule Frankfurt a.M.) bearbeitet -->
+<xs:schema xmlns:regsoap="http://www.geoinfoffm.de/registry/soap" xmlns:grg="http://www.isotc211.org/2005/grg" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:whttp="http://www.w3.org/ns/wsdl/http" xmlns:wsdl="http://www.w3.org/ns/wsdl" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:isoreg="http://registry.bespire.de/iso/gcp" targetNamespace="http://www.geoinfoffm.de/registry/soap" elementFormDefault="qualified">
+	<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="../schema/iso/19135/grg.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../schema/iso/19139/gco/gco.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../schema/iso/19139/gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../schema/iso/19136/gml.xsd"/>
+	<xs:import namespace="http://registry.bespire.de/iso/gcp" schemaLocation="../schema/isogcp-registry.xsd"/>
+	<xs:include schemaLocation="../schema/proposalservice.xsd"/>
+	<!-- =====================================================================  
+	 Summary
+	
+     item classes (32):
+	 	- CartesianCoordinateSystemItem
+	 	- ConcatenatedOperationItem
+	 	- ConversionItem
+	 	- CoordinateOperationItem
+	 	- CoordinateReferenceSystemItem
+	 	- CoordinateSystemAxisItem
+	 	- CoordinateSystemItem
+	 	- DatumItem
+	 	- EllipsoidItem
+	 	- EllipsoidalCoordinateSystemItem
+	 	- EngineeringCoordinateReferenceSystemItem
+	 	- EngineeringDatumItem
+	 	- GeneralDerivedCoordinateReferenceSystemItem
+	 	- GeneralOperationParameterItem
+	 	- GeodeticCoordinateReferenceSystemItem
+	 	- GeodeticDatumItem
+	 	- IdentifiedItem
+	 	- OperationMethodItem
+	 	- OperationParameterGroupItem
+	 	- OperationParameterItem
+	 	- PassThroughOperationItem
+	 	- PrimeMeridianItem
+	 	- ProjectedCoordinateReferenceSystemItem
+	 	- ReferenceSystemItem
+	 	- SingleCoordinateReferenceSystemItem
+	 	- SingleOperationItem
+	 	- SphericalCoordinateSystemItem
+	 	- TransformationItem
+	 	- UnitOfMeasureItem
+	 	- VerticalCoordinateReferenceSystemItem
+	 	- VerticalCoordinateSystemItem
+	 	- VerticalDatumItem
+	 
+     classes contained by item classes (0):
+	
+     classes related to item classes (3):
+	 	- GeneralParameterValue
+	 	- OperationParameterValue
+	
+-->
+	<!-- =========================================================== -->
+	<!-- CartesianCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="CartesianCoordinateSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CartesianCoordinateSystemItemProposal" type="regsoap:CartesianCoordinateSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CartesianCoordinateSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:CartesianCoordinateSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ConcatenatedOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ConcatenatedOperationItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateOperationItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="coordinateOperations" type="regsoap:SingleOperationItemProposal_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ConcatenatedOperationItemProposal" type="regsoap:ConcatenatedOperationItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ConcatenatedOperationItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:ConcatenatedOperationItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ConversionItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ConversionItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractSingleOperationItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ConversionItemProposal" type="regsoap:ConversionItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ConversionItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:ConversionItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractCoordinateOperationItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="coordinateOperationAccuracy" type="gmd:DQ_AbsoluteExternalPositionalAccuracy_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="domainOfValidity" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+					<xs:element name="operationVersion" type="xs:string" minOccurs="0"/>
+					<xs:element name="scope" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="sourceCrs" type="regsoap:CoordinateReferenceSystemItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="targetCrs" type="regsoap:CoordinateReferenceSystemItemProposal_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractCoordinateOperationItemProposal" type="regsoap:AbstractCoordinateOperationItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateOperationItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractCoordinateOperationItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractCoordinateReferenceSystemItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractReferenceSystemItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="scope" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractCoordinateReferenceSystemItemProposal" type="regsoap:AbstractCoordinateReferenceSystemItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateSystemAxisItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="CoordinateSystemAxisItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="axisAbbreviation" type="xs:string" minOccurs="0"/>
+					<xs:element name="axisDirection" type="gml:CodeType" minOccurs="0"/>
+					<xs:element name="axisUnit" type="regsoap:UnitOfMeasureItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="maximumValue" type="xs:int" minOccurs="0"/>
+					<xs:element name="minimumValue" type="xs:int" minOccurs="0"/>
+					<xs:element name="rangeMeaning" type="gml:CodeType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CoordinateSystemAxisItemProposal" type="regsoap:CoordinateSystemAxisItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateSystemAxisItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:CoordinateSystemAxisItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- CoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractCoordinateSystemItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="axes" type="regsoap:CoordinateSystemAxisItemProposal_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractCoordinateSystemItemProposal" type="regsoap:AbstractCoordinateSystemItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CoordinateSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractCoordinateSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- DatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractDatumItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="anchorDefinition" type="xs:string" minOccurs="0"/>
+					<xs:element name="coordinateReferenceEpoch" type="xs:string" minOccurs="0"/>
+					<xs:element name="domainOfValidity" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+					<xs:element name="realizationEpoch" type="xs:string" minOccurs="0"/>
+					<xs:element name="scope" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractDatumItemProposal" type="regsoap:AbstractDatumItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="DatumItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractDatumItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EllipsoidItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EllipsoidItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="inverseFlattening" type="xs:double" minOccurs="0"/>
+					<xs:element name="inverseFlatteningUom" type="regsoap:UnitOfMeasureItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="isSphere" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="semiMajorAxis" type="xs:double" minOccurs="0"/>
+					<xs:element name="semiMajorAxisUom" type="regsoap:UnitOfMeasureItemProposal_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EllipsoidItemProposal" type="regsoap:EllipsoidItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EllipsoidItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:EllipsoidItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EllipsoidalCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EllipsoidalCoordinateSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EllipsoidalCoordinateSystemItemProposal" type="regsoap:EllipsoidalCoordinateSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EllipsoidalCoordinateSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:EllipsoidalCoordinateSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EngineeringCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EngineeringCoordinateReferenceSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractSingleCoordinateReferenceSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EngineeringCoordinateReferenceSystemItemProposal" type="regsoap:EngineeringCoordinateReferenceSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EngineeringCoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:EngineeringCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- EngineeringDatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="EngineeringDatumItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractDatumItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="EngineeringDatumItemProposal" type="regsoap:EngineeringDatumItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="EngineeringDatumItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:EngineeringDatumItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeneralDerivedCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractGeneralDerivedCoordinateReferenceSystemItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractSingleCoordinateReferenceSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractGeneralDerivedCoordinateReferenceSystemItemProposal" type="regsoap:AbstractGeneralDerivedCoordinateReferenceSystemItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeneralDerivedCoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractGeneralDerivedCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeneralOperationParameterItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractGeneralOperationParameterItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="group" type="regsoap:OperationParameterGroupItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="minimumOccurs" type="xs:int" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractGeneralOperationParameterItemProposal" type="regsoap:AbstractGeneralOperationParameterItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeneralOperationParameterItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractGeneralOperationParameterItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeodeticCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="GeodeticCoordinateReferenceSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractSingleCoordinateReferenceSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GeodeticCoordinateReferenceSystemItemProposal" type="regsoap:GeodeticCoordinateReferenceSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeodeticCoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:GeodeticCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- GeodeticDatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="GeodeticDatumItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractDatumItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="ellipsoid" type="regsoap:EllipsoidItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="primeMeridian" type="regsoap:PrimeMeridianItemProposal_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GeodeticDatumItemProposal" type="regsoap:GeodeticDatumItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GeodeticDatumItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:GeodeticDatumItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- IdentifiedItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractIdentifiedItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractRegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="aliases" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="dataSource" type="xs:string" minOccurs="0"/>
+					<xs:element name="informationSource" type="gmd:CI_Citation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="remarks" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractIdentifiedItemProposal" type="regsoap:AbstractIdentifiedItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="IdentifiedItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractIdentifiedItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationMethodItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationMethodItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="formula" type="xs:string" minOccurs="0"/>
+					<xs:element name="formulaCitation" type="xs:string" minOccurs="0"/>
+					<xs:element name="parameter" type="regsoap:GeneralOperationParameterItemProposal_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="reversible" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="sourceDimensions" type="xs:int" minOccurs="0"/>
+					<xs:element name="targetDimensions" type="xs:int" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationMethodItemProposal" type="regsoap:OperationMethodItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationMethodItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:OperationMethodItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationParameterGroupItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationParameterGroupItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractGeneralOperationParameterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="maximumOccurs" type="xs:int" minOccurs="0"/>
+					<xs:element name="parameter" type="regsoap:GeneralOperationParameterItemProposal_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationParameterGroupItemProposal" type="regsoap:OperationParameterGroupItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationParameterGroupItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:OperationParameterGroupItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- OperationParameterItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="OperationParameterItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractGeneralOperationParameterItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OperationParameterItemProposal" type="regsoap:OperationParameterItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OperationParameterItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:OperationParameterItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- PassThroughOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="PassThroughOperationItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateOperationItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="PassThroughOperationItemProposal" type="regsoap:PassThroughOperationItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="PassThroughOperationItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:PassThroughOperationItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- PrimeMeridianItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="PrimeMeridianItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="greenwichLongitude" type="xs:double" minOccurs="0"/>
+					<xs:element name="greenwichLongitudeUom" type="regsoap:UnitOfMeasureItemProposal_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="PrimeMeridianItemProposal" type="regsoap:PrimeMeridianItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="PrimeMeridianItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:PrimeMeridianItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ProjectedCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="ProjectedCoordinateReferenceSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractGeneralDerivedCoordinateReferenceSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ProjectedCoordinateReferenceSystemItemProposal" type="regsoap:ProjectedCoordinateReferenceSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ProjectedCoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:ProjectedCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- ReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractReferenceSystemItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="domainOfValidity" type="gmd:EX_Extent_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractReferenceSystemItemProposal" type="regsoap:AbstractReferenceSystemItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- SingleCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractSingleCoordinateReferenceSystemItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateReferenceSystemItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="baseCrs" type="regsoap:SingleCoordinateReferenceSystemItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="coordinateSystem" type="regsoap:CoordinateSystemItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="datum" type="regsoap:DatumItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="operation" type="regsoap:SingleOperationItemProposal_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractSingleCoordinateReferenceSystemItemProposal" type="regsoap:AbstractSingleCoordinateReferenceSystemItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="SingleCoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractSingleCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- SingleOperationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractSingleOperationItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateOperationItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="method" type="regsoap:OperationMethodItemProposal_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractSingleOperationItemProposal" type="regsoap:AbstractSingleOperationItemProposal_Type" abstract="true" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="SingleOperationItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:AbstractSingleOperationItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- SphericalCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="SphericalCoordinateSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="SphericalCoordinateSystemItemProposal" type="regsoap:SphericalCoordinateSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="SphericalCoordinateSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:SphericalCoordinateSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- TransformationItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="TransformationItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractSingleOperationItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="TransformationItemProposal" type="regsoap:TransformationItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="TransformationItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:TransformationItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- UnitOfMeasureItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="UnitOfMeasureItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractIdentifiedItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="measureType" type="regsoap:MeasureType_Type" minOccurs="0"/>
+					<xs:element name="offsetToStandardUnit" type="xs:double" minOccurs="0"/>
+					<xs:element name="scaleToStandardUnitDenominator" type="xs:double" minOccurs="0"/>
+					<xs:element name="scaleToStandardUnitNumerator" type="xs:double" minOccurs="0"/>
+					<xs:element name="standardUnit" type="regsoap:UnitOfMeasureItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="symbol" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="UnitOfMeasureItemProposal" type="regsoap:UnitOfMeasureItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="UnitOfMeasureItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:UnitOfMeasureItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- VerticalCoordinateReferenceSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="VerticalCoordinateReferenceSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractSingleCoordinateReferenceSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="VerticalCoordinateReferenceSystemItemProposal" type="regsoap:VerticalCoordinateReferenceSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="VerticalCoordinateReferenceSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:VerticalCoordinateReferenceSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- VerticalCoordinateSystemItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="VerticalCoordinateSystemItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractCoordinateSystemItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="VerticalCoordinateSystemItemProposal" type="regsoap:VerticalCoordinateSystemItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="VerticalCoordinateSystemItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:VerticalCoordinateSystemItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- VerticalDatumItem_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="VerticalDatumItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="regsoap:AbstractDatumItemProposal_Type"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="VerticalDatumItemProposal" type="regsoap:VerticalDatumItemProposal_Type" substitutionGroup="regsoap:AbstractRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="VerticalDatumItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:VerticalDatumItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- MeasureType_Type -->
+	<!-- =========================================================== -->
+	<xs:simpleType name="MeasureType_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="angle"/>
+			<xs:enumeration value="area"/>
+			<xs:enumeration value="length"/>
+			<xs:enumeration value="scale"/>
+			<xs:enumeration value="time"/>
+			<xs:enumeration value="velocity"/>
+			<xs:enumeration value="volume"/>
+			<xs:enumeration value="weight"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RegistryDescriptor_Type">
+		<xs:sequence>
+			<xs:element name="itemClass" type="regsoap:RegistryElementDescriptor_Type" maxOccurs="unbounded"/>
+			<xs:element name="register" type="regsoap:RegistryElementDescriptor_Type" maxOccurs="unbounded"/>
+			<xs:element name="organisation" type="regsoap:RegistryElementDescriptor_Type" maxOccurs="unbounded"/>
+			<xs:element name="submittingOrganisation" type="regsoap:RegistryElementDescriptor_Type" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RegistryElementDescriptor_Type">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ProposalDiscussion_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="discussedProposal" type="regsoap:Proposal_PropertyType"/>
+					<xs:element name="post" type="regsoap:Post_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ProposalDiscussion" type="regsoap:ProposalDiscussion_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ProposalDiscussion_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:ProposalDiscussion" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Post_Type">
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="dicussion" type="regsoap:ProposalDiscussion_PropertyType"/>
+					<xs:element name="author" type="xs:string"/>
+					<xs:element name="subject" type="xs:string"/>
+					<xs:element name="text" type="xs:string"/>
+					<xs:element name="timePosted" type="xs:date"/>
+					<xs:element name="timeEdited" type="xs:date" minOccurs="0"/>
+					<xs:element name="parentPost" type="regsoap:Post_PropertyType" minOccurs="0"/>
+					<xs:element name="reply" type="regsoap:Post_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Post" type="regsoap:Post_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Post_PropertyType">
+		<xs:sequence>
+			<xs:element ref="regsoap:Post" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="DeleteProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="DeleteProposalRequest" type="regsoap:DeleteProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="DeleteProposalResponse">
+		<!-- 
+		<xs:sequence>
+			<xs:element name="proposal" type="regsoap:Proposal_PropertyType"/>
+		</xs:sequence>
+	 -->
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="DeleteProposalResponse" type="regsoap:DeleteProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ReturnProposalToSubmitterRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="noteToSubmitter" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ReturnProposalToSubmitterRequest" type="regsoap:ReturnProposalToSubmitterRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ReturnProposalToSubmitterResponse"/>
+	<!-- ........................................................................ -->
+	<xs:element name="ReturnProposalToSubmitterResponse" type="regsoap:ReturnProposalToSubmitterResponse"/>
+	<!-- =========================================================================== -->
+</xs:schema>
