@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="VerticalCS">
 	<dtoClass>org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO</dtoClass>
-	<viewBeanClass>org.iso.registry.client.CoordinateSystemItemViewBean</viewBeanClass>
+	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemViewBean</viewBeanClass>
+	<xmlType>org.iso.registry.api.VerticalCoordinateSystemItem_Type</xmlType>
 	<viewItemTemplate>registry/registers/gcp/cs_view_item</viewItemTemplate>
 	<viewProposalTemplate>registry/registers/gcp/cs_edit_addition</viewProposalTemplate>
 	<createProposalTemplate>registry/registers/gcp/cs_create_addition</createProposalTemplate>
