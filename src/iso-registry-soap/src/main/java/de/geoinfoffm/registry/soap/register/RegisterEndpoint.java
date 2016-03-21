@@ -38,13 +38,10 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 
 import org.hibernate.SessionFactory;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
+import org.isotc211.iso19135.RE_Register_Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +64,7 @@ import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RoleService;
 import de.geoinfoffm.registry.api.SubregisterDescriptionProposalDTO;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
+import de.geoinfoffm.registry.api.iso.IsoXmlFactory;
 import de.geoinfoffm.registry.api.soap.AddItemClassToRegisterRequest;
 import de.geoinfoffm.registry.api.soap.AddItemClassToRegisterResponse;
 import de.geoinfoffm.registry.api.soap.CreateRegisterRequest;
@@ -75,6 +73,7 @@ import de.geoinfoffm.registry.api.soap.GetRegisterDescriptionsRequest;
 import de.geoinfoffm.registry.api.soap.GetRegisterDescriptionsResponse;
 import de.geoinfoffm.registry.api.soap.GetRegisterItemRequest;
 import de.geoinfoffm.registry.api.soap.GetRegisterRequest;
+import de.geoinfoffm.registry.api.soap.GetRegisterResponse;
 import de.geoinfoffm.registry.api.soap.ItemClassDescription;
 import de.geoinfoffm.registry.api.soap.ObjectFactory;
 import de.geoinfoffm.registry.api.soap.RegisterDescription;
@@ -89,7 +88,6 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
 import de.geoinfoffm.registry.persistence.RegisterRepository;
-import de.geoinfoffm.registry.persistence.xml.StaxXmlSerializer.EntityContainer;
 import de.geoinfoffm.registry.soap.AbstractEndpoint;
 
 /**
@@ -114,32 +112,9 @@ public class RegisterEndpoint extends AbstractEndpoint
 	
 	@Autowired
 	private ProposalDtoFactory proposalDtoFactory;
-	
-	/**
-	 * The class GetRegisterResponse.
-	 *
-	 * @author Florian Esser
-	 */
-	@XmlRootElement(name = "GetRegisterResponse", namespace = NAMESPACE_URI)
-	@XmlAccessorType(XmlAccessType.FIELD)
-	public static class GetRegisterResponse {
-		@XmlValue
-		private EntityContainer content;
-		
-		protected GetRegisterResponse() { }
-		
-		public GetRegisterResponse(EntityContainer content) {
-			this.content = content;
-		}
 
-		public Object getXml() {
-			return content;
-		}
-		
-		protected void setXml(EntityContainer content) {
-			this.content = content;
-		}
-	}
+	 @Autowired
+	 private IsoXmlFactory xmlFactory;
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -204,7 +179,7 @@ public class RegisterEndpoint extends AbstractEndpoint
 	@Transactional(readOnly = true)
 	@Namespace(prefix = "reg", uri = NAMESPACE_URI)
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetRegisterRequest")
-	public @ResponsePayload EntityContainer handleGetRegisterRequest(@RequestPayload GetRegisterRequest req) throws Exception {
+	public @ResponsePayload JAXBElement<GetRegisterResponse> handleGetRegisterRequest(@RequestPayload GetRegisterRequest req) throws Exception {
 		if (req == null || (req.isSetName() && req.isSetUuid())) { 
 			throw new IllegalArgumentException("Invalid request");
 		}
@@ -228,9 +203,11 @@ public class RegisterEndpoint extends AbstractEndpoint
 			throw new IllegalArgumentException("Invalid request");
 		}
 
-		GetRegisterResponse result = new GetRegisterResponse(new EntityContainer(register, sessionFactory));
-
-		return new EntityContainer(result, null);
+		RE_Register_Type resultRegister = xmlFactory.register(register, "http://localhost:8080/fad/%s");
+		de.geoinfoffm.registry.api.soap.ObjectFactory of = new de.geoinfoffm.registry.api.soap.ObjectFactory(); 
+		GetRegisterResponse result = new GetRegisterResponse();
+		result.setRE_Register(resultRegister);
+		return of.createGetRegisterResponse(result);
 	}
 
 	@Transactional(readOnly = true)
