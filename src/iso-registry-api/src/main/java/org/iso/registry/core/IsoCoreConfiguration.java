@@ -15,7 +15,7 @@ import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
  * @author Florian Esser
  *
  */
-@ComponentScan
+@ComponentScan(basePackages = { "de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" })
 @Configuration
 public class IsoCoreConfiguration
 {

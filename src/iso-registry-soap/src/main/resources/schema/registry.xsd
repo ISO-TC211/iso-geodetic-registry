@@ -1,0 +1,113 @@
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Florian Esser (Fachhochschule Frankfurt a.M.) bearbeitet -->
+<xs:schema xmlns:reg="http://registry.geoinfoffm.de/api" xmlns:grg="http://www.isotc211.org/2005/grg" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:whttp="http://www.w3.org/ns/wsdl/http" xmlns:wsdl="http://www.w3.org/ns/wsdl" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://registry.geoinfoffm.de/api" elementFormDefault="qualified">
+<!-- 	<xs:import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="encoding.xsd"/> -->
+	<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="iso/19135/grg.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="iso/19139/gco/gco.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="iso/19139/gmd/gmd.xsd"/>
+	<!--<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19135-2_Schemas/grg.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>-->
+	<!-- =========================================================== -->
+	<!-- RegistryRole_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="RegistryRole_Type">
+		<xs:sequence>
+			<xs:element name="roleName" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RegistryRole" type="reg:RegistryRole_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="RegistryRole_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:RegistryRole" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- Authorization_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="Authorization_Type">
+		<xs:sequence>
+			<xs:element name="actor" type="reg:Actor_PropertyType"/>
+			<xs:element name="role" type="reg:RegistryRole_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Authorization" type="reg:Authorization_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Authorization_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Authorization" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- Delegation_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="Delegation_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:Authorization_Type">
+				<xs:sequence>
+					<xs:element name="delegatingOrganization" type="reg:Organization_PropertyType"/>
+					<xs:element name="isApproved" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Delegation" type="reg:Delegation_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Delegation_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Delegation" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- Actor_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="AbstractActor_Type" abstract="true">
+		<xs:sequence>
+			<xs:element name="authorization" type="reg:Authorization_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractActor" type="reg:AbstractActor_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Actor_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:AbstractActor" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+	<!-- Organization_Type -->
+	<!-- =========================================================== -->
+	<xs:complexType name="Organization_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractActor_Type">
+				<xs:sequence>
+					<xs:element name="shortName" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="name" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="submittingOrganization" type="grg:RE_SubmittingOrganization_PropertyType"/>
+					<xs:element name="address" type="gmd:CI_Address_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Organization" type="reg:Organization_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Organization_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Organization" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================== -->
+</xs:schema>

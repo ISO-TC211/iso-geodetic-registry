@@ -17,5 +17,6 @@
 		<module>src/registry-base/src/registry-client-base</module>
 		<module>src/iso-registry-api</module>
 		<module>src/iso-registry-client</module>
+		<module>src/iso-registry-soap</module>
 	</modules>
 </project>

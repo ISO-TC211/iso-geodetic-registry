@@ -1,6 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.crs;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
@@ -22,7 +23,14 @@ import org.iso.registry.core.model.operation.TransformationItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractCoordinateReferenceSystemItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractSingleCoordinateReferenceSystemItemProposal_Type;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.CoordinateSystemItemProposal_PropertyType;
+import de.geoinfoffm.registry.api.soap.DatumItemProposal_PropertyType;
+import de.geoinfoffm.registry.api.soap.SingleCoordinateReferenceSystemItemProposal_PropertyType;
+import de.geoinfoffm.registry.api.soap.SingleOperationItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -64,6 +72,10 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 		super(item, sponsor);
 	}
 
+	public CoordinateReferenceSystemItemProposalDTO(AbstractCoordinateReferenceSystemItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+		
 	public CoordinateReferenceSystemItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 	}
@@ -147,6 +159,82 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		return super.findDependentProposals(this.getDatum(), this.getCoordinateSystem(), this.getBaseCrs(), this.getHorizontalCrs(), this.getVerticalCrs(), this.getOperation());
+	}
+
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractSingleCoordinateReferenceSystemItemProposal_Type) {
+			AbstractSingleCoordinateReferenceSystemItemProposal_Type xmlProposal = (AbstractSingleCoordinateReferenceSystemItemProposal_Type) itemDetails;
+	
+			this.setScope(xmlProposal.getScope());	
+			
+			final SingleCoordinateReferenceSystemItemProposal_PropertyType baseCrsProperty = xmlProposal.getBaseCrs();
+			if (baseCrsProperty != null) {
+				final CoordinateReferenceSystemItemProposalDTO dto;
+				if (baseCrsProperty.isSetAbstractSingleCoordinateReferenceSystemItemProposal()) {
+					dto = new CoordinateReferenceSystemItemProposalDTO(baseCrsProperty.getAbstractSingleCoordinateReferenceSystemItemProposal());
+				}
+				else if (baseCrsProperty.isSetUuidref()) {
+					dto = new CoordinateReferenceSystemItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(baseCrsProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setBaseCrs(dto);
+			}
+			final CoordinateSystemItemProposal_PropertyType coordinateSystemProperty = xmlProposal.getCoordinateSystem();
+			if (coordinateSystemProperty != null) {
+				final CoordinateSystemItemProposalDTO dto;
+				if (coordinateSystemProperty.isSetAbstractCoordinateSystemItemProposal()) {
+					dto = new CoordinateSystemItemProposalDTO(coordinateSystemProperty.getAbstractCoordinateSystemItemProposal());
+				}
+				else if (coordinateSystemProperty.isSetUuidref()) {
+					dto = new CoordinateSystemItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(coordinateSystemProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setCoordinateSystem(dto);
+			}
+			final DatumItemProposal_PropertyType datumProperty = xmlProposal.getDatum();
+			if (datumProperty != null) {
+				final DatumItemProposalDTO dto;
+				if (datumProperty.isSetAbstractDatumItemProposal()) {
+					dto = new DatumItemProposalDTO(datumProperty.getAbstractDatumItemProposal());
+				}
+				else if (datumProperty.isSetUuidref()) {
+					dto = new DatumItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(datumProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setDatum(dto);
+			}
+			final SingleOperationItemProposal_PropertyType operationProperty = xmlProposal.getOperation();
+			if (operationProperty != null) {
+				final SingleOperationItemProposalDTO dto;
+				if (operationProperty.isSetAbstractSingleOperationItemProposal()) {
+					dto = new SingleOperationItemProposalDTO(operationProperty.getAbstractSingleOperationItemProposal());
+				}
+				else if (operationProperty.isSetUuidref()) {
+					dto = new SingleOperationItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(operationProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setOperation(dto);
+			}
+		}	
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment />
+	<entry key="hibernate.show_sql">true</entry>
+	<entry key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</entry>
+	<entry key="hibernate.search.default.directory_provider">${hibernate.search.default.directory_provider}</entry>
+	<entry key="hibernate.search.default.indexBase">${hibernate.search.default.indexBase}/soap</entry>
+</properties>
