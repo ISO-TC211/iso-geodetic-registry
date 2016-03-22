@@ -2,10 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>org.iso.registry</groupId>
+        <artifactId>iso-registry-parent</artifactId>
+        <version>1.5</version>
+        <relativePath>..</relativePath>
+    </parent>	
     <groupId>org.iso.registry</groupId>
     <artifactId>iso-registry-soap</artifactId>
     <packaging>war</packaging>
-    <version>1.5-SNAPSHOT</version>
     <name>iso-registry-soap</name>
     <url>http://www.springframework.org/spring-ws</url>
 	<properties>
@@ -251,7 +256,6 @@
         <dependency>
         	<groupId>org.iso.registry</groupId>
         	<artifactId>iso-registry-api</artifactId>
-        	<version>1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.springframework</groupId>
@@ -341,7 +345,6 @@
 		<dependency>
 			<groupId>de.geoinfoffm.registry</groupId>
 			<artifactId>registry-client-base</artifactId>
-			<version>2.3-SNAPSHOT</version>
 		</dependency>
     </dependencies>
     
