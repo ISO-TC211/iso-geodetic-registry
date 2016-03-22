@@ -227,6 +227,9 @@ public class DataController
 				result.add(new Object[] { parameter.getUuid().toString(), parameter.getIdentifier(), parameter.getName() });
 			}
 		}
+		else {
+			result.add(new Object[] { "", "", String.format("Operation method %s does not exist", methodUuid) });
+		}
 	
 		return result;
 //		return new DatatablesResult(result.size(), result.size(), sEcho, method.getParameter());
