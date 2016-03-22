@@ -4,12 +4,12 @@
 		return '<button type="button" id="' + action + '-' + itemUuid + '" class="btn btn-' + bsclass + ' btn-xs button-' + action + ' action-' + itemUuid + '" data-uuid="' + itemUuid + '">' + text + '</button>';
 	};
 
-	var clarifyButton = function(itemUuid) {
-		return itemActionButton('clarify', itemUuid, 'primary', '[[#{button.clarification}]]');
+	var clarifyButton = function(item) {
+		return itemActionButton('clarify', item.uuid, 'primary', '[[#{button.clarification}]]');
 	}
 	
-	var supersedeButton = function(itemUuid) {
-		return itemActionButton('supersede', itemUuid, 'warning', '[[#{button.supersession}]]');
+	var supersedeButton = function(item) {
+		return itemActionButton('supersede', item.uuid, 'warning', '[[#{button.supersession}]]');
 	};
 
 	var detailsButton = function(itemUuid, additionalClasses) {
