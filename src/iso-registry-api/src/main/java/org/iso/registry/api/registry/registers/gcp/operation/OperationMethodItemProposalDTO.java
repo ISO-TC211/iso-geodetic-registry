@@ -13,14 +13,16 @@ import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.iso.registry.core.model.operation.OperationParameterItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
-import org.springframework.util.StringUtils;
+import org.isotc211.iso19139.metadata.CI_Citation_PropertyType;
 
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.GeneralOperationParameterItemProposal_PropertyType;
+import de.geoinfoffm.registry.api.soap.OperationMethodItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.OperationParameterItemProposal_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
-import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -52,6 +54,10 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
+	public OperationMethodItemProposalDTO(OperationMethodItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+
 	public OperationMethodItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 		// TODO Auto-generated constructor stub
@@ -64,6 +70,51 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 	public OperationMethodItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
 		super(item, sponsor);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof OperationMethodItemProposal_Type) {
+			OperationMethodItemProposal_Type xmlProposal = (OperationMethodItemProposal_Type) itemDetails;
+	
+			this.setFormula(xmlProposal.getFormula());	
+			this.setReversible(xmlProposal.isReversible());	
+			this.setSourceDimensions(xmlProposal.getSourceDimensions());	
+			this.setTargetDimensions(xmlProposal.getTargetDimensions());	
+			
+			for (GeneralOperationParameterItemProposal_PropertyType parameterProperty : xmlProposal.getParameter()) {
+				if (parameterProperty != null) {
+					final OperationParameterItemProposalDTO dto;
+					if (parameterProperty.isSetAbstractGeneralOperationParameterItemProposal()) {
+						if (parameterProperty.getAbstractGeneralOperationParameterItemProposal() instanceof OperationParameterItemProposal_Type) {
+							dto = new OperationParameterItemProposalDTO((OperationParameterItemProposal_Type)parameterProperty.getAbstractGeneralOperationParameterItemProposal());
+						}
+						else {
+							throw new RuntimeException(String.format("Unexpected parameter type: %s", parameterProperty.getAbstractGeneralOperationParameterItemProposal().getClass().getCanonicalName()));
+						}
+					}
+					else if (parameterProperty.isSetUuidref()) {
+						dto = new OperationParameterItemProposalDTO();
+						dto.setReferencedItemUuid(UUID.fromString(parameterProperty.getUuidref()));
+					}
+					else {
+						throw new RuntimeException("unexpected reference");
+					}
+					this.getParameter().add(dto);
+				}
+			}
+			
+			if (xmlProposal.getInformationSource() != null) {
+				for (CI_Citation_PropertyType citationProperty : xmlProposal.getInformationSource()) {
+					if (citationProperty.isSetCI_Citation()) {
+						CitationDTO citation = new CitationDTO(citationProperty.getCI_Citation());
+						this.getInformationSource().add(citation);
+					}
+				}
+			}
+		}	
 	}
 
 	@Override
@@ -87,7 +138,7 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 				for (GeneralOperationParameterItemProposalDTO paramDto : this.getParameter()) {
 					if (paramDto.getReferencedItemUuid() != null) {
 						GeneralOperationParameterItem parameter = entityManager.find(GeneralOperationParameterItem.class, paramDto.getReferencedItemUuid());
-						item.addParameter(parameter);
+						item.getParameter().add(parameter);
 					}
 				}
 			}

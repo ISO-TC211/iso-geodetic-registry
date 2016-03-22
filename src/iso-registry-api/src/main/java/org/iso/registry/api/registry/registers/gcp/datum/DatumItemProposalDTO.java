@@ -1,9 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,8 +15,9 @@ import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.springframework.util.StringUtils;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractDatumItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
@@ -48,6 +47,10 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	
 	public DatumItemProposalDTO(DatumItem item) {
 		super(item);
+	}
+	
+	public DatumItemProposalDTO(AbstractDatumItemProposal_Type itemDetails) {
+		super(itemDetails);
 	}
 	
 	public DatumItemProposalDTO(Proposal proposal) {
@@ -118,6 +121,28 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 		this.primeMeridian = primeMeridian;
 	}
 	
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractDatumItemProposal_Type) {
+			AbstractDatumItemProposal_Type xmlProposal = (AbstractDatumItemProposal_Type) itemDetails;
+	
+			this.setAnchorDefinition(xmlProposal.getAnchorDefinition());	
+			this.setCoordinateReferenceEpoch(xmlProposal.getCoordinateReferenceEpoch());	
+			this.setRealizationEpoch(xmlProposal.getRealizationEpoch());	
+			this.setScope(xmlProposal.getScope());	
+			
+			if (xmlProposal.getDomainOfValidity() != null) {
+				final ExtentDTO dto;
+				if (xmlProposal.isSetDomainOfValidity()) {
+					dto = new ExtentDTO(xmlProposal.getDomainOfValidity().getEX_Extent());
+					this.setDomainOfValidity(dto);
+				}
+			}
+		}	
+	}
+
 	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		return super.findDependentProposals(this.getEllipsoid(), this.getPrimeMeridian());

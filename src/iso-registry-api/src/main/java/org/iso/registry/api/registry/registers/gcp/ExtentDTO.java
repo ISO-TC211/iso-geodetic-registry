@@ -6,6 +6,11 @@ import java.util.List;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.iso19115.extent.EX_GeographicBoundingBox;
 import org.iso.registry.core.model.iso19115.extent.EX_GeographicExtent;
+import org.isotc211.iso19139.metadata.EX_Extent_Type;
+import org.isotc211.iso19139.metadata.EX_GeographicBoundingBox_Type;
+import org.isotc211.iso19139.metadata.EX_GeographicExtent_PropertyType;
+
+import de.geoinfoffm.registry.api.iso.IsoXmlFactory;
 
 public class ExtentDTO
 {
@@ -27,6 +32,26 @@ public class ExtentDTO
 			for (EX_GeographicExtent geographicExtent : extent.getGeographicElement()) {
 				if (geographicExtent instanceof EX_GeographicBoundingBox) {
 					this.getGeographicBoundingBoxes().add((EX_GeographicBoundingBox)geographicExtent);
+				}
+			}
+		}
+	}
+	
+	public ExtentDTO(EX_Extent_Type extent) {
+		if (extent == null) {
+			throw new NullPointerException("null extent");
+		}
+
+		this.description = IsoXmlFactory.characterString(extent.getDescription());
+
+		if (extent.getGeographicElement() != null && extent.isSetGeographicElement()) {
+			for (EX_GeographicExtent_PropertyType geographicExtent : extent.getGeographicElement()) {
+				if (geographicExtent.isSetAbstractEX_GeographicExtent() && geographicExtent.getAbstractEX_GeographicExtent().getValue() instanceof EX_GeographicBoundingBox_Type) {
+					EX_GeographicBoundingBox_Type bbox = (EX_GeographicBoundingBox_Type)geographicExtent.getAbstractEX_GeographicExtent().getValue();
+					this.getGeographicBoundingBoxes().add(new EX_GeographicBoundingBox(bbox.getEastBoundLongitude().getDecimal(), 
+																				       bbox.getNorthBoundLatitude().getDecimal(),
+																				       bbox.getWestBoundLongitude().getDecimal(),
+																				       bbox.getSouthBoundLatitude().getDecimal()));
 				}
 			}
 		}

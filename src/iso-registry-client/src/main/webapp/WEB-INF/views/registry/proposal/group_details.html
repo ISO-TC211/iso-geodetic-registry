@@ -23,7 +23,6 @@
 					<table id="proposalsTable" class="datatable table table-striped" th:fragment="proposalsTable">
 						<thead>
 							<tr>
-								<th th:text="#{tableheader.date}">Datum</th>
 								<th th:text="#{tableheader.name}">Name</th>
 								<th th:text="#{tableheader.itemClass}">Klasse</th>
 								<th th:text="#{tableheader.submitter}">Submitter</th>
@@ -71,7 +70,6 @@
 			<table id="ungroupedProposalsTable" class="datatable table table-striped">
 				<thead>
 					<tr>
-						<th th:text="#{tableheader.date}">Datum</th>
 						<th th:text="#{tableheader.name}">Name</th>
 						<th th:text="#{tableheader.itemClass}">Klasse</th>
 						<th th:text="#{tableheader.submitter}">Submitter</th>
@@ -199,13 +197,8 @@
 				 "aaSorting": [[ 1, "asc" ]],
 				"aoColumns": [
 					{ 
-						"mDataProp": "proposalDate",
-						"sWidth": "10%",
-						"bSortable": true
-					},
-					{ 
 						"mDataProp": "title",
-						"sWidth": "30%",
+						"sWidth": "40%",
 						"bSortable": true
 					},
 					{ 
@@ -231,14 +224,14 @@
 					},
 				],
 				"aoColumnDefs": [
-					{ "aTargets": [3],
+					{ "aTargets": [2],
 							"mData": null,
 							"mRender": function (data, type, full) {
 								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
 								return $("<div/>").append($href).html();
 							}
 					},
-					{ "aTargets": [5],
+					{ "aTargets": [4],
 						  "mData": null,
 						  "mRender": function (data, type, full) {
 								var actions = "";
@@ -315,13 +308,8 @@
 				 "aaSorting": [[ 1, "asc" ]],
 				"aoColumns": [
 					{ 
-						"mDataProp": "proposalDate",
-						"sWidth": "10%",
-						"bSortable": true
-					},
-					{ 
 						"mDataProp": "title",
-						"sWidth": "30%",
+						"sWidth": "40%",
 						"bSortable": true
 					},
 					{ 
@@ -347,14 +335,14 @@
 					},
 				],
 				"aoColumnDefs": [
-					{ "aTargets": [3],
+					{ "aTargets": [2],
 							"mData": null,
 							"mRender": function (data, type, full) {
 								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
 								return $("<div/>").append($href).html();
 							}
 					},
-					{ "aTargets": [5],
+					{ "aTargets": [4],
 						  "mData": null,
 						  "mRender": function (data, type, full) {
 							  	var actions = "";

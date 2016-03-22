@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -15,13 +13,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
+import org.isotc211.iso19139.metadata.CI_Citation_PropertyType;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractIdentifiedItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
@@ -49,6 +49,10 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		super(item);
 	}
 	
+	public IdentifiedItemProposalDTO(AbstractIdentifiedItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+
 	public IdentifiedItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 	}
@@ -114,6 +118,29 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractIdentifiedItemProposal_Type) {
+			AbstractIdentifiedItemProposal_Type xmlProposal = (AbstractIdentifiedItemProposal_Type) itemDetails;
+	
+			this.getAliases().addAll(xmlProposal.getAliases());	
+			this.setDataSource(xmlProposal.getDataSource());	
+//			this.setIdentifier(xmlProposal.getIdentifier());	
+			this.setRemarks(xmlProposal.getRemarks());	
+			
+			if (xmlProposal.getInformationSource() != null) {
+				for (CI_Citation_PropertyType citationProperty : xmlProposal.getInformationSource()) {
+					if (citationProperty.isSetCI_Citation()) {
+						CitationDTO citation = new CitationDTO(citationProperty.getCI_Citation());
+						this.getInformationSource().add(citation);
+					}
+				}
+			}
+		}	
 	}
 
 	@Override

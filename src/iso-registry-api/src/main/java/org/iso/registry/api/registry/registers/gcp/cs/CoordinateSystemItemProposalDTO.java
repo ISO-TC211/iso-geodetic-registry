@@ -1,31 +1,29 @@
 package org.iso.registry.api.registry.registers.gcp.cs;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
 import org.iso.registry.core.model.IdentifiedItem;
-import org.iso.registry.core.model.crs.SingleCoordinateReferenceSystemItem;
 import org.iso.registry.core.model.cs.CartesianCoordinateSystemItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.core.model.cs.EllipsoidalCoordinateSystemItem;
 import org.iso.registry.core.model.cs.SphericalCoordinateSystemItem;
-import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 import org.springframework.util.StringUtils;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractCoordinateSystemItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.CoordinateSystemAxisItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -60,7 +58,11 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 //			this.axes.add(axis);
 //		}
 //	}
-	
+
+	public CoordinateSystemItemProposalDTO(AbstractCoordinateSystemItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+
 	public CoordinateSystemItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 		// TODO Auto-generated constructor stub
@@ -110,6 +112,33 @@ public class CoordinateSystemItemProposalDTO extends IdentifiedItemProposalDTO
 
 	public void setAxisUuids(String axisUuids) {
 		this.axisUuids = axisUuids;
+	}
+
+	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractCoordinateSystemItemProposal_Type) {
+			AbstractCoordinateSystemItemProposal_Type xmlProposal = (AbstractCoordinateSystemItemProposal_Type) itemDetails;
+	
+			
+			for (CoordinateSystemAxisItemProposal_PropertyType axesProperty : xmlProposal.getAxes()) {
+				if (axesProperty != null) {
+					final CoordinateSystemAxisItemProposalDTO dto;
+					if (axesProperty.isSetCoordinateSystemAxisItemProposal()) {
+						dto = new CoordinateSystemAxisItemProposalDTO(axesProperty.getCoordinateSystemAxisItemProposal());
+					}
+					else if (axesProperty.isSetUuidref()) {
+						dto = new CoordinateSystemAxisItemProposalDTO();
+						dto.setReferencedItemUuid(UUID.fromString(axesProperty.getUuidref()));
+					}
+					else {
+						throw new RuntimeException("unexpected reference");
+					}
+					this.getAxes().add(dto);
+				}
+			}
+		}	
 	}
 
 	@Override

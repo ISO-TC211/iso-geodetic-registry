@@ -201,6 +201,21 @@
 		</jaxb:bindings>
 	</jaxb:bindings>
 
+	<jaxb:bindings schemaLocation="service.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="de.geoinfoffm.registry.api.soap"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="isogcp-registry.xsd" 
+		node="/xs:schema">
+		<jaxb:schemaBindings>
+			<jaxb:package name="org.iso.registry.api"/>
+		</jaxb:schemaBindings>
+	</jaxb:bindings>
+
+
 <!-- 	<jaxb:bindings schemaLocation="gdide-userservice.xsd"  -->
 <!-- 		node="/xs:schema"> -->
 <!-- 		<jaxb:schemaBindings> -->

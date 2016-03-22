@@ -62,12 +62,6 @@ public class IsoApiConfiguration
 		return new IsoProposalServiceImpl(repository);
 	}
 	
-	@Autowired
-	@Bean
-	public RegistrySecurity registrySecurity() {
-		return new RegistrySecurityImpl();
-	}
-	
 //	@Autowired
 //	@Bean
 //	public RegistryUserService registryUserService(RegistryUserRepository userRepository) {
