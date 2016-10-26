@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.operation.GeneralParameterValue;
@@ -156,6 +157,10 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 					}
 					else {
 						value = null;
+					}
+					
+					if (value != null && parameterValue.getValueFileCitation() != null) {
+						value.setReferenceFileCitation(parameterValue.getValueFileCitation().toCitation());						
 					}
 
 					if (value != null) {

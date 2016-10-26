@@ -1,9 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.operation;
 
-import java.util.UUID;
-
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.core.model.operation.OperationParameterItem;
 import org.iso.registry.core.model.operation.OperationParameterValue.OperationParameterValueType;
 
 public class ParameterValueDTO {
@@ -11,6 +9,7 @@ public class ParameterValueDTO {
 	private OperationParameterItemProposalDTO parameter;
 	private OperationParameterValueType parameterType;
 	private String value;
+	private CitationDTO valueFileCitation;
 	private UnitOfMeasureItemProposalDTO parameterUnit;
 	
 	public ParameterValueDTO() { }
@@ -62,6 +61,14 @@ public class ParameterValueDTO {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public CitationDTO getValueFileCitation() {
+		return valueFileCitation;
+	}
+
+	public void setValueFileCitation(CitationDTO valueFileCitation) {
+		this.valueFileCitation = valueFileCitation;
 	}
 
 	public UnitOfMeasureItemProposalDTO getParameterUnit() {

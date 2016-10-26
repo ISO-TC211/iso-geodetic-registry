@@ -7,12 +7,17 @@ import java.util.UUID;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
+
+import de.geoinfoffm.registry.core.model.iso19115.CI_Citation;
 
 @Access(AccessType.FIELD)
 @Audited @Entity
@@ -40,6 +45,8 @@ public class OperationParameterValue extends GeneralParameterValue<OperationPara
 	@ElementCollection
 	private List<String> parameterValueSimple;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private CI_Citation referenceFileCitation;
 
 	protected OperationParameterValue() {
 		super();
@@ -162,6 +169,14 @@ public class OperationParameterValue extends GeneralParameterValue<OperationPara
 			default:
 				return null;
 		}
+	}
+
+	public CI_Citation getReferenceFileCitation() {
+		return referenceFileCitation;
+	}
+
+	public void setReferenceFileCitation(CI_Citation referenceFileCitation) {
+		this.referenceFileCitation = referenceFileCitation;
 	}
 
 }
