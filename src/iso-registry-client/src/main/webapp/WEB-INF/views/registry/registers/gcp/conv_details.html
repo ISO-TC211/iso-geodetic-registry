@@ -106,6 +106,7 @@
 						<th th:text="#{tableheader.parameter}">Parameter</th>
 						<th th:text="#{tableheader.value}">Value</th>
 						<th th:text="#{tableheader.uom}">UoM</th>
+						<th th:text="#{tableheader.citation}">Citation</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -113,12 +114,18 @@
 						<td th:text="${parameterValue.parameterName}"></td>
 						<td>
 							<div class="form-group">
-								<input type="number" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
+								<input type="text" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
 							</div>
 						</td>
 						<td>
 							<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
 							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
+						</td>							
+						<td>
+							<div th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
+								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							</div>
 						</td>							
 					</tr>
 				</tbody>
@@ -197,7 +204,7 @@
             		$.each(data, function(idx, item) {
         				table.fnAddData([
         					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
-        					"<div class='form-group'><input type='number' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
+        					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
     						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
 						]);
         				uomSelect($('#parameterUom_' + idx));
