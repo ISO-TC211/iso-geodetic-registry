@@ -69,5 +69,13 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+                <repository>
+                        <id>jboss-third-party</id>
+                        <name>JBoss 3rd-party</name>
+                        <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+                        <snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+                </repository>
 	</repositories>	
 </project>
