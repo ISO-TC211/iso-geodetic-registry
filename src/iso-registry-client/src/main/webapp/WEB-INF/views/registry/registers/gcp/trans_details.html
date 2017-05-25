@@ -138,7 +138,7 @@
 							<span th:unless="${isProposal}" th:text="${parameterValue.value}"></span>
 						</td>
 						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
-							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
+							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.parameterUnit.uuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
 							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
 						</td>							
 					</tr>
