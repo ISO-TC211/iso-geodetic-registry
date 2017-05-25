@@ -187,9 +187,9 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 				this.setMethod(new OperationMethodItemProposalDTO(item.getMethod()));
 				if (item.getParameterValue() != null) {
 					this.parameterValues = new ArrayList<>();
-//					for (GeneralParameterValue<?> parameterValue : item.getParameterValue()) {
-//						this.addParameterValue(parameterValue);
-//					}
+					for (GeneralParameterValue<?> parameterValue : item.getParameterValue()) {
+						this.addParameterValue(parameterValue);
+					}
 				}
 			}
 		}
