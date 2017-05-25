@@ -2,8 +2,8 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.title">ISO Geodetic Registry</entry>
+	<entry key="application.header">Geodetic Registry</entry>
 	<entry key="application.welcome">Willkommen</entry>
 	
 	<entry key="navbar.setHistoricDate">Zeitpunkt setzen</entry>

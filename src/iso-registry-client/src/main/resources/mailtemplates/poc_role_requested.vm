@@ -13,10 +13,10 @@
 		    for the organization "$roleOrganization.name".
 		#end
  		</p>
- 		To accept or deny the request, please log in to the ISO Registry of Geodetic Codes and Parameters
+ 		To accept or deny the request, please log in to the ISO Geodetic Registry
  		and open the <a href="${baseUrl}management/poc">Point of Conatct</a> page.
  		</p>
         <br/><br/>
-        ISO Registry of Geodetic Codes and Parameters
+        ISO Geodetic Registry
     </body>
 </html>

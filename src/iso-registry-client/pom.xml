@@ -23,7 +23,7 @@
 		<client.basepath></client.basepath>
 		<basePackages>de.geoinfoffm.registry,de.bespire.registry,org.iso.registry</basePackages>
 		<mail.enabled>false</mail.enabled>
-		<mail.from.name></mail.from.name>
+		<mail.from.name>ISO Geodetic Registry</mail.from.name>
 		<mail.from.address></mail.from.address>
 		<mail.smtp.auth></mail.smtp.auth>
 		<mail.smtp.starttls.enable></mail.smtp.starttls.enable>
@@ -477,7 +477,7 @@
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<client.basepath>~/gcp</client.basepath>
 				<mail.enabled>true</mail.enabled>
-				<mail.from.name>ISO Registry</mail.from.name>
+				<mail.from.name>ISO Geodetic Registry</mail.from.name>
 				<mail.from.address>registry@bespire.eu</mail.from.address>
 				<mail.smtp.auth>true</mail.smtp.auth>
 				<mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
@@ -505,7 +505,7 @@
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<client.basepath>~/gcpdemo</client.basepath>
 				<mail.enabled>true</mail.enabled>
-				<mail.from.name>ISO Registry</mail.from.name>
+				<mail.from.name>ISO Geodetic Registry</mail.from.name>
 				<mail.from.address>registry@bespire.eu</mail.from.address>
 				<mail.smtp.auth>true</mail.smtp.auth>
 				<mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>

@@ -66,7 +66,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	}
 	
 	private void initializeEmpty() {
-		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
+		this.dataSource = "ISO Geodetic Registry";
 //		this.getInformationSource().add(new CitationDTO());
 	}
 

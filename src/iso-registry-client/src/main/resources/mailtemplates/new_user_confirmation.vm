@@ -4,11 +4,11 @@
     <body>
         Dear $user.name:<p/>
  
-        You have successfully created a user account for the ISO Registry of Geodetic Codes and Parameters. To activate your account, please open the following link in your web browser:<p/> 
+        You have successfully created a user account for the ISO Geodetic Registry. To activate your account, please open the following link in your web browser:<p/> 
         </p>
         <a href="$confirmationUrl">$confirmationUrl</a><p/>
  		</p>
         <br/><br/>
-        ISO Registry of Geodetic Codes and Parameters
+        ISO Geodetic Registry
     </body>
 </html>

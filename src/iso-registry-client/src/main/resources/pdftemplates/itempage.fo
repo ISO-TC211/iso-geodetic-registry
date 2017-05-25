@@ -5,7 +5,7 @@
 		</fo:block>
 	</fo:static-content>
     <fo:flow flow-name="xsl-region-body">
-		<fo:block font-size="18pt" font-family="sans-serif" line-height="24pt" space-after.optimum="15pt" background-color="blue" color="white" text-align="center" padding-top="3pt">ISO Registry of Geodetic Codes &amp; Parameters</fo:block>
+		<fo:block font-size="18pt" font-family="sans-serif" line-height="24pt" space-after.optimum="15pt" background-color="blue" color="white" text-align="center" padding-top="3pt">ISO Geodetic Registry</fo:block>
     	#parse("pdftemplates/itemdetails.fo")
 	    #if($itemafter && $itemafter != "")
 		    #parse($itemafter)
