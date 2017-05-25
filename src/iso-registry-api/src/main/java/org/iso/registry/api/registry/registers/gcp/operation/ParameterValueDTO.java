@@ -78,4 +78,8 @@ public class ParameterValueDTO {
 	public void setParameterUnit(UnitOfMeasureItemProposalDTO parameterUnit) {
 		this.parameterUnit = parameterUnit;
 	}
+	
+	public String getParameterName() {
+		return parameter.getName();
+	}
 }
