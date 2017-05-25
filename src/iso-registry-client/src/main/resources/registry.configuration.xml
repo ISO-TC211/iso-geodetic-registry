@@ -14,4 +14,5 @@
 	<entry key="mail.smtp.password">${mail.smtp.password}</entry> <!-- Password used for SMTP authentication (plain text) -->
 	<entry key="gml.identifier.baseurl">${gml.identifier.baseurl}</entry> <!-- Base URL used in GML identifiers -->
 	<entry key="gml.identifier.pathpattern">${gml.identifier.pathpattern}</entry> <!-- Pattern for referenced items -->
+	<entry key="register.aliases">${register.aliases}</entry> <!-- Aliases for registers in the form "alias1:name1;alias2:name2;..." -->
 </properties>

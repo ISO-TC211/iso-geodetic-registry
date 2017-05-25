@@ -10,13 +10,12 @@
 				<div th:include="layout :: navtree"></div>
 			</div>
 			<div class="col-md-9" role="main">
-				<div th:fragment="demo">
+				<div th:fragment="demo" th:if="${T(de.geoinfoffm.registry.client.web.ClientConfiguration).isDemoMode()}">
 					<div class="alert alert-danger">
 						<p class="text-center"><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p>
-						<p class="text-center">This registry is for demonstration purposes only. The current content of the registry is provided only to demonstrate the features and capabilities of the registry software.</p>
-						<p class="text-center">The registry content should NOT be used for any other purposes.</p>
+						<p class="text-center">This Registry is for demonstration purposes only. The current content of the Registry is provided only to demonstrate the features and capabilities of the Registry software.</p>
+						<p class="text-center">The Registry content should NOT be used for any other purposes.</p>
 						<p class="text-center"><strong>In no way should the content be considered valid data!</strong></p>
-			
 					</div>
 				</div>
 
@@ -42,33 +41,19 @@
 						</p>
 					</div>
 					
-<!-- 					<div class="container"> -->
 						<div class="jumbotron" th:if="${@registerRepository.findAll().isEmpty()}">
-<!-- 							<h1>Hello, world!</h1> -->
 							<p th:text="#{home.emptyRegistry}"></p>
 							<p>
 								<a th:href="@{__${basePath}__/init}" class="btn btn-primary btn-lg" role="button" th:text="#{home.initializeRegistry}">GDI-DE Registry initialisieren</a>
 							</p>
 						</div>
 						
-<!-- 						<div class="alert alert-danger" th:fragment="demo"> -->
-<!-- 							<p><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p> -->
-<!-- 							<p>This registry is for demonstration purposes only. The current content of the registry is provided only to demonstrate the features and capabilities of the registry software.</p> -->
-<!-- 							<p>The registry content should NOT be used for any other purposes. In no way should the content be considered valid data!</p> -->
-<!-- 						</div> -->
-
-						<p>The ISO Registry of Geodetic Codes and Parameters is a structured database of coordinate reference systems and transformations that is accessible through this on-line registry system. The register includes only systems and transformations of international application. It does not include all possible coordinate reference systems and transformations.</p>
-						<p>This registry is provided under the auspices of ISO Technical Committee 211 on geographic information/geomatics and conforms to ISO standards ISO 19111:2007 (Spatial referencing by coordinates), ISO/TS 19127:2005 (Geodetic codes and parameters), ISO 19135:2005 (Procedures for item registration) and its soon to be published revision ISO 19135-1 (Procedures for item registration - Part 1: Fundamentals), and ISO 19135-2:2012 (Procedures for item registration -- Part 2: XML schema implementation).</p>
-						<p>The registry may be used free of charge but its use is subject to acceptance of the Terms and Conditions of Use. Users of the registry may query and view data and generate reports via anonymous guest access. Users may also submit proposals for new additions or clarifications to the registry.</p>
-						<p>The registry also provides a web service interface, allowing geospatial software to query and retrieve information from the register. Information on using the web services is available in the <a th:href="@{~/static/gcp-userguide.pdf}" target="_blank" th:title="#{navbar.help.userguide}">registry user's guide.</a></p>						
-<!-- 						<p>The EPSG Geodetic Parameter Dataset is a structured dataset of Coordinate Reference Systems and Coordinate Transformations, accessible through this online registry or, as a downloadable zip files, through OGP's EPSG home page at <a href="http://www.epsg.org">www.epsg.org</a>. The geographic coverage of the data is worldwide, but it is stressed that the dataset does not and cannot record all possible geodetic parameters in use around the world. The EPSG Geodetic Parameter Dataset is maintained by the Geodesy Subcommittee of OGP's Geomatics Committee.</p> -->
-<!-- 						<p>The EPSG Geodetic Parameter Dataset, offered through OGP's web pages, may be used free of charge, but its use is subject to the acceptance of the Terms of Use.</p> -->
-<!-- 						<p>Registry users may query and view the data and generate printable reports. The Registry supports anonymous (guest) access, but also permits the user to register for additional services, such as the export of the entire dataset as GML 3.2 dictionaries.</p> -->
-<!-- 						<p>Additionally the Registry provides a web service interface, permitting geospatial software to query and retrieve geodetic parameters. Information on how to access the service is available in Guidance Note 7-3: EPSG Registry Developers Guide.</p> -->
-<!-- 						<p><small>(source: <a href="http://www.epsg-registry.org">www.epsg-registry.org</a>)</small></p> -->
+						<p>The ISO Geodetic Registry is a structured database of coordinate reference systems and transformations that is accessible through this on-line registry system. The Register includes only systems and transformations of international application. It does not include all possible coordinate reference systems and transformations.</p>
+						<p>This Registry is provided under the auspices of ISO Technical Committee 211 on geographic information/geomatics and conforms to ISO standards ISO 19111:2007 (Spatial referencing by coordinates), the soon to be published ISO/TS 19127 (Geodetic register), ISO 19135:2005 (Procedures for item registration) and its soon to be published revision ISO 19135-1 (Procedures for item registration - Part 1: Fundamentals), and ISO 19135-2:2012 (Procedures for item registration -- Part 2: XML schema implementation).</p>
+						<p>The Registry may be used free of charge but its use is subject to acceptance of the <a th:href="@{/terms}">Terms of Use</a>. Use of the Registry implies acceptance of these Terms of Use. Users of the Registry may query and view data and generate reports via anonymous guest access. Users may also submit proposals for new additions or clarifications to the registry.</p>
+						<p>The Registry also provides a web service interface, allowing geospatial software to query and retrieve information from the Register. Information on using the web services is available in the <a th:href="@{~/static/gcp-userguide.pdf}" target="_blank" th:title="#{navbar.help.userguide}">Registry user's guide.</a></p>						
 					</div>
 				</div>
-<!-- 			</div> -->
 		</div>
 	</div>
 	

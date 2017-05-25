@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+  
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+			  	<div th:replace="home :: demo"/>
+				<h3 th:text="#{header.terms}"/>
+				<div class="col-md-2"/>
+				<div class="col-md-8">
+					<div class="panel panel-default">
+						<div class="panel-heading">The data in the ISO Geodetic Registry may be used, copied and distributed subject to the following conditions:</div>
+						<div class="panel-body">
+							<p>
+								Whilst every effort has been made to ensure the accuracy of the information contained in the ISO Geodetic Registry facilities, neither the ISO/TC211 nor any of its members, past, present or future, warrants their accuracy or will, regardless of its or their negligence, assume liability for any foreseeable or unforeseeable use made thereof, which liability is hereby excluded. Consequently, such use is at the users' risk. The user is obliged to inform anyone to whom the ISO Geodetic Registry facilities are provided of these Terms of Use.
+							</p>
+							<p>
+								<strong>DATA AND INFORMATION PROVIDED IN THE ISO GEODETIC REGISTRY FACILITIES ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.</strong>
+							</p>
+							<p>
+								The data may be included in any commercial package provided that any commerciality is based on value added by the provider and not on a value ascribed to the ISO Geodetic Registry dataset, which is made available at no charge.
+							</p>
+							<p>
+								Ownership of the ISO Geodetic Registry dataset by ISO/TC 211 must be acknowledged in any publication or transmission (by whatever means) thereof (including permitted modifications).
+							</p>
+							<p>
+								Subsets of information may be extracted from the dataset.
+							</p>
+							<p>
+								Essential elements should preferably be reproduced as described in the dataset. Modification of parameter values is permitted to allow change to the content of the information provided that numeric equivalence is achieved. Numeric equivalence refers to the results of geodetic calculations in which the parameters are used.
+							</p>
+							<p>
+								No data that has been modified, other than as permitted in these Terms of Use, shall be attributed to the ISO Geodetic Registry dataset.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

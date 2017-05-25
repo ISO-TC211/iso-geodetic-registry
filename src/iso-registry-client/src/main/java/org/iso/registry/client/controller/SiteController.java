@@ -154,6 +154,11 @@ public class SiteController extends AbstractController
 		return "403";
 	}
 
+	@RequestMapping(value = "/terms", method = RequestMethod.GET)
+	public String termsHandler() {
+		return "terms";
+	}
+
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public String initialize(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
 		return "init";
