@@ -100,3 +100,22 @@
 		<p th:text="'[' + #{undefined} + ']'"/>
 	</div>	
 </div>
+
+<div th:fragment="citationPopup(index)" class="modal fade" th:id="'dialog-citation-' + ${index}" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 th:text="#{popup.informationSource.header}"></h4>
+			</div>
+			<div th:unless="${isProposal}" class="modal-body" th:object="${citation}">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div th:if="${isProposal}" class="modal-body" th:object="${citation}" th:with="isReadOnly='true'">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+			</div>
+		</div>
+	</div>							
+</div>
