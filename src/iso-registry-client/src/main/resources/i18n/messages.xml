@@ -419,6 +419,7 @@
 	<entry key="form.label.coordinateReferenceEpoch">Coordinate Reference Epoch</entry>
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
+	<entry key="form.label.symbol">Symbol</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
 	<entry key="form.label.factorB">Numerator (factor B)</entry>
 	<entry key="form.label.factorC">Denominator (factor C)</entry>
