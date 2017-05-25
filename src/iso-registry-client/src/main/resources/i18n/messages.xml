@@ -133,6 +133,7 @@
 	<entry key="header.containedProposals">Contained proposals</entry>
 	<entry key="header.ungroupedProposals">Ungrouped proposals that may be added</entry>
 	<entry key="header.groupProposal">Group proposal</entry>
+	<entry key="header.terms">Terms of Use</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>

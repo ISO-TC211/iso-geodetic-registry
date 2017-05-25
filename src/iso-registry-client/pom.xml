@@ -21,6 +21,7 @@
 		<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg</hibernate.connection.url>
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 		<client.basepath></client.basepath>
+		<client.demoMode>true</client.demoMode>
 		<basePackages>de.geoinfoffm.registry,de.bespire.registry,org.iso.registry</basePackages>
 		<mail.enabled>false</mail.enabled>
 		<mail.from.name>ISO Geodetic Registry</mail.from.name>
