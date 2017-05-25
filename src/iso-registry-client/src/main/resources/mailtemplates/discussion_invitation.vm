@@ -4,7 +4,7 @@
     <body>
         Dear $user.name:<p/>
  
- 		You have been invited to a discussion regarding a proposal in the ISO Registry of Geodetic Codes and Parameters: <p/>
+ 		You have been invited to a discussion regarding a proposal in the ISO Geodetic Registry: <p/>
         </p>
         Register: $register.name<p/>
         Proposal title: $proposal.name<p/>
@@ -13,6 +13,6 @@
         <a href="$discussionUrl">$discussionUrl</a><p/>
  		</p>
         <br/><br/>
-        ISO Registry of Geodetic Codes and Parameters
+        ISO Geodetic Registry
     </body>
 </html>

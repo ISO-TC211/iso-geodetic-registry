@@ -2,8 +2,8 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.title">ISO Geodetic Registry</entry>
+	<entry key="application.header">Geodetic Registry</entry>
 	<entry key="application.welcome">Welcome</entry>
 	<entry key="application.version">${git.commit.id.describe}-${git.commit.id.abbrev}</entry>
 	
@@ -592,10 +592,10 @@
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposed contents</entry>
 
-	<entry key="mail.subject.signup.confirmation">You have signed up for ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="mail.subject.delegation.requested">[ISO Registry] Permission requested by user</entry>
-	<entry key="mail.subject.discussion.invitation">[ISO Registry] Proposal discussion invitation</entry>
-	<entry key="mail.subject.proposal.submitted">[ISO Registry] New proposal</entry>
+	<entry key="mail.subject.signup.confirmation">You have signed up for the ISO Geodetic Registry</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Geodetic Registry] Permission requested by user</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Geodetic Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Geodetic Registry] New proposal</entry>
 			
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Target register</entry>
