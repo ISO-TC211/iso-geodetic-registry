@@ -168,8 +168,6 @@
 					<div id="demo1" class="demo" style="height: 100%;">
 						<ul>
 							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}" th:text="#{application.welcome}">Welcome</a></li>
-							<li id="nav_register"><a href="#">Register</a>
-								<ul>
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
 									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}" class="jstree-open">
 										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}" th:title="#{${register.value}}"></a>
@@ -216,7 +214,6 @@
 											</li>
 										</ul>
 									</li>
-								</ul></li>
 								<li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
 								<ul>
 									<li id="managementsubmitter" sec:authorize="@registrySecurity.hasRoleWith('ROLE_SUBMITTER_')"><a th:href="@{__${basePath}__/management/submitter}" th:text="#{navbar.submittingOrganizations}">Einreichende Organisationen</a></li>
