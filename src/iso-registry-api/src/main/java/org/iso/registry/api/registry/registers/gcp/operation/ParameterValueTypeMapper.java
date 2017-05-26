@@ -9,18 +9,18 @@ public class ParameterValueTypeMapper implements ValueMapper<String, OperationPa
 	@Override
 	public OperationParameterValueType map(String value) {
 		switch (value) {
-			case "Measure":
+			case "Value(s)":
 				return OperationParameterValueType.MEASURE;
-			case "Sequence<Measure>":
-				return OperationParameterValueType.MEASURE_LIST;
-			case "Integer":
-				return OperationParameterValueType.INTEGER;
-			case "Sequence<Integer>":
-				return OperationParameterValueType.INTEGER_LIST;
-			case "CharacterString":
-				return OperationParameterValueType.STRING;
-			case "Boolean":
-				return OperationParameterValueType.BOOLEAN;
+//			case "Sequence<Measure>":
+//				return OperationParameterValueType.MEASURE_LIST;
+//			case "Integer":
+//				return OperationParameterValueType.INTEGER;
+//			case "Sequence<Integer>":
+//				return OperationParameterValueType.INTEGER_LIST;
+//			case "CharacterString":
+//				return OperationParameterValueType.STRING;
+//			case "Boolean":
+//				return OperationParameterValueType.BOOLEAN;
 			case "Reference File":
 				return OperationParameterValueType.FILE;
 		}
@@ -37,17 +37,17 @@ public class ParameterValueTypeMapper implements ValueMapper<String, OperationPa
 	public String mapInverse(OperationParameterValueType value) {
 		switch (value) {
 			case MEASURE:
-				return "Measure";
-			case MEASURE_LIST:
-				return "Sequence<Measure>";
-			case INTEGER:
-				return "Integer";
-			case INTEGER_LIST:
-				return "Sequence<Integer>";
-			case STRING:
-				return "CharacterString";
-			case BOOLEAN:
-				return "Boolean";
+				return "Value(s)";
+//			case MEASURE_LIST:
+//				return "Sequence<Measure>";
+//			case INTEGER:
+//				return "Integer";
+//			case INTEGER_LIST:
+//				return "Sequence<Integer>";
+//			case STRING:
+//				return "CharacterString";
+//			case BOOLEAN:
+//				return "Boolean";
 			case FILE:
 				return "Reference File";
 			default:

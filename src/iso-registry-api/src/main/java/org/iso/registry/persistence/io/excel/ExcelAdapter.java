@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -865,7 +866,14 @@ public class ExcelAdapter
 				}
 			}
 			
+			if (result.get(fieldName) != null) {
+				if (!StringUtils.isEmpty(value)) {
+					throw new RuntimeException(String.format("Multiple values defined for field '%s' in sheet '%s'", fieldName, sheetConfig.getSheetName()));
+				}
+			}
+			else {
 			result.put(fieldName, value);
+			}
 			i++;
 		} while (headingCell.getCellType() != Cell.CELL_TYPE_BLANK);
 		
@@ -1002,6 +1010,20 @@ public class ExcelAdapter
 					String specialProperty = property.substring(1);
 					// check if special property exists in target object and set value if found
 					if (bw.isWritableProperty(specialProperty)) {
+						if (!StringUtils.isEmpty(column.getValueMapper())) {
+							try {
+								@SuppressWarnings({ "unchecked", "rawtypes" })
+								Class<ValueMapper> valueMapperClass = (Class<ValueMapper>)Class.forName(column.getValueMapper());
+								Method mapMethod = valueMapperClass.getMethod("map", String.class);
+								ValueMapper valueMapper = BeanUtils.instantiate(valueMapperClass);
+								Object mappedValue = mapMethod.invoke(valueMapper, value);
+								value = mappedValue.toString();
+							}
+							catch (Throwable t) {
+								logger.debug(">>> Unable to invoke ValueMapper {}: {}", column.getValueMapper(), t.getMessage());
+							}
+						}						
+						
 						mapValue(bw, specialProperty, value, column);
 					}
 				}
@@ -1294,7 +1316,16 @@ public class ExcelAdapter
 			}
 		}
 		else {
+			if (bw.getPropertyDescriptor(property).getPropertyType().equals(Integer.class) && value.toString().contains(".")) {
+				Double d = Double.valueOf(value.toString());
+				value = d.intValue();
+			}
+			try {
 			bw.setPropertyValue(property, value);
+		}
+			catch (Throwable t) {
+				logger.error(MessageFormat.format("Unable to map value {0} for property {1}: {2}", value, property, t.getMessage()), t);
+			}
 		}
 	}
 	
