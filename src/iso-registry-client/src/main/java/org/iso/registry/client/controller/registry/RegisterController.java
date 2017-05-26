@@ -9,6 +9,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -345,6 +346,26 @@ public class RegisterController
 				itemClasses.add(ic);
 			}
 		}
+	}
+
+	@RequestMapping(value = "/{register}/items/{itemIdentifier}", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String getItemById(@PathVariable("register") String registerName, 
+			   @PathVariable("itemIdentifier") BigInteger itemIdentifier,
+			   final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
+		RE_Register register = findRegister(registerName);
+		if (register == null) {
+			redirectAttributes.addFlashAttribute("registerName", registerName);
+			return "registry/register_notfound";
+		}
+		model.addAttribute("register", register);
+
+		List<RE_RegisterItem> items = itemRepository.findByRegisterAndItemIdentifierAndStatusIn(register, itemIdentifier, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED));
+		if (items.isEmpty()) {
+			throw new ItemNotFoundException(register, itemIdentifier);
+		}
+		
+		return String.format("redirect:/item/%s", items.get(0).getUuid().toString());
 	}
 
 	@RequestMapping(value = "/{register}/{itemClassText}", method = RequestMethod.GET)
