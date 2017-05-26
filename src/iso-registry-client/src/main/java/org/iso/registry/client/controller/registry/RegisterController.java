@@ -306,6 +306,14 @@ public class RegisterController
 				addItemClassToList("Conversion", itemClasses);
 				addItemClassToList("Transformation", itemClasses);
 			}
+			if (itemClassParam.equalsIgnoreCase("others")) {
+				addItemClassToList("CoordinateSystemAxis", itemClasses);
+				addItemClassToList("Ellipsoid", itemClasses);
+				addItemClassToList("OperationMethod", itemClasses);
+				addItemClassToList("OperationParameter", itemClasses);
+				addItemClassToList("PrimeMeridian", itemClasses);
+				addItemClassToList("UnitOfMeasure", itemClasses);
+			}
 		}
 		
 		Page<RE_RegisterItem> items;
