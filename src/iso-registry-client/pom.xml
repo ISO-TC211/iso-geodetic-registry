@@ -34,6 +34,7 @@
 		<mail.smtp.password></mail.smtp.password>
 		<gml.identifier.baseurl></gml.identifier.baseurl>		
 		<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
+		<register.aliases>gcp:ISO Geodetic Register</register.aliases>
 	</properties>
 	<dependencies>
 		<!-- Spring -->

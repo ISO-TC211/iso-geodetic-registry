@@ -109,6 +109,7 @@ import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
 import de.geoinfoffm.registry.core.NonExistentRevisionException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -451,6 +452,14 @@ public class RegisterController
 				// Ignore
 			}
 		}
+		
+		if (register == null) {
+			String resolvedName = RegistryConfiguration.getInstance().getRegisterNameByAlias(registerName);
+			if (!StringUtils.isEmpty(resolvedName)) {
+				register = registerRepository.findByName(resolvedName);
+			}
+		}
+		
 		return register;
 	}
 
