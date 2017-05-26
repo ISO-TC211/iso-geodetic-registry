@@ -207,7 +207,7 @@
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'other'" th:href="@{__${basePath}__/register/__${register.key}__}">Other</a>
+												<a th:id="'register' + ${register.key} + 'others'" th:href="@{__${basePath}__/register/__${register.key}__/others}">Other</a>
 												<ul>
 													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Concatenated')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
 														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
