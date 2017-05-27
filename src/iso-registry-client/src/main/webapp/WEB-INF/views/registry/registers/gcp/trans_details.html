@@ -122,6 +122,7 @@
 						<th th:text="#{tableheader.parameterType}">Parameter type</th>
 						<th th:text="#{tableheader.value}">Value</th>
 						<th th:text="#{tableheader.uom}">UoM</th>
+						<th th:text="#{tableheader.citation}">Citation</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -140,6 +141,12 @@
 						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
 							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.parameterUnit.uuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
 							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
+						</td>							
+						<td>
+							<div th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
+								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							</div>
 						</td>							
 					</tr>
 				</tbody>
