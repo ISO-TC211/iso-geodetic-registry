@@ -166,8 +166,7 @@
 				var uuid = $(this).data('uuid');
 				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/submit', null, function(success, errorThrown) {
 					if (success) {
-						showProcessing(uuid, 4);
-						clearCell(uuid, 5);
+						document.location.reload();
 					}
 					else {
 						showError(errorThrown, '[[@{__${basePath}__}]]');
@@ -195,8 +194,7 @@
 				var uuid = $(this).data('uuid');
 				postDelete('[[@{__${basePath}__/proposals/}]]' + uuid, function(success, errorThrown) {
 					if (success) {
-						showProcessing(uuid, 4);
-						clearCell(uuid, 5);
+						document.location.reload();
 					}
 					else {
 						alert(errorThrown);
