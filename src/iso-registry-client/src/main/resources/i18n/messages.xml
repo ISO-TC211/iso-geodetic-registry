@@ -82,6 +82,7 @@
 	<entry key="tableheader.axisAbbreviation">Axis abbreviation</entry>
 	<entry key="tableheader.axisUnit">Axis unit</entry>
 	<entry key="tableheader.axisDirection">Axis direction</entry>
+	<entry key="tableheader.citation">Citation</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
