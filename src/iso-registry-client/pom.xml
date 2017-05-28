@@ -20,6 +20,7 @@
 		<hibernate.connection.schema>public</hibernate.connection.schema>
 		<hibernate.connection.url>jdbc:postgresql://localhost:5432/isoreg</hibernate.connection.url>
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
+		<flyway.migration>true</flyway.migration>
 		<client.basepath></client.basepath>
 		<client.demoMode>true</client.demoMode>
 		<basePackages>de.geoinfoffm.registry,de.bespire.registry,org.iso.registry</basePackages>
@@ -474,7 +475,7 @@
 			<properties>
 				<hibernate.connection.username>isoreg</hibernate.connection.username>
 				<hibernate.connection.password>isoreg</hibernate.connection.password>
-				<hibernate.connection.url>jdbc:postgresql://10.199.1.203:5432/isoreg-current</hibernate.connection.url>
+				<hibernate.connection.url>jdbc:postgresql://10.199.2.203:5432/isoreg-current</hibernate.connection.url>
 				<hibernate.connection.schema>public</hibernate.connection.schema>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<client.basepath>~/gcp</client.basepath>
@@ -502,10 +503,10 @@
 			<properties>
 				<hibernate.connection.username>isoreg</hibernate.connection.username>
 				<hibernate.connection.password>isoreg</hibernate.connection.password>
-				<hibernate.connection.url>jdbc:postgresql://10.199.1.203:5432/isoreg-demo-current</hibernate.connection.url>
+				<hibernate.connection.url>jdbc:postgresql://10.199.2.203:5432/isoreg-demo-current</hibernate.connection.url>
 				<hibernate.connection.schema>public</hibernate.connection.schema>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
-				<client.basepath>~/gcpdemo</client.basepath>
+				<client.basepath>~/</client.basepath>
 				<mail.enabled>true</mail.enabled>
 				<mail.from.name>ISO Geodetic Registry</mail.from.name>
 				<mail.from.address>registry@bespire.eu</mail.from.address>
@@ -517,8 +518,8 @@
 				<mail.smtp.password>phiePhie3eeNgieniTaegauheiPaitu6</mail.smtp.password>
 				<mail.baseUrl>https://iso.registry.bespire.eu/gcpdemo</mail.baseUrl>
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
-				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/gcpdemo/signup/confirmation</client.signup.confirmationUrl>
-				<gml.identifier.baseurl>https://iso.registry.bespire.eu/gcpdemo</gml.identifier.baseurl>		
+				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/signup/confirmation</client.signup.confirmationUrl>
+				<gml.identifier.baseurl>https://iso.registry.bespire.eu/</gml.identifier.baseurl>		
 				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
