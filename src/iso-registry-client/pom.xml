@@ -506,7 +506,7 @@
 				<hibernate.connection.url>jdbc:postgresql://10.199.2.203:5432/isoreg-demo-current</hibernate.connection.url>
 				<hibernate.connection.schema>public</hibernate.connection.schema>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
-				<client.basepath>~/</client.basepath>
+				<client.basepath>~</client.basepath>
 				<mail.enabled>true</mail.enabled>
 				<mail.from.name>ISO Geodetic Registry</mail.from.name>
 				<mail.from.address>registry@bespire.eu</mail.from.address>
