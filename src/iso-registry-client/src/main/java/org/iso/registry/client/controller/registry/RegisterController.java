@@ -292,27 +292,30 @@ public class RegisterController
 				addItemClassToList("VerticalCRS", itemClasses);
 				addItemClassToList("ProjectedCRS", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("cs")) {
+			else if (itemClassParam.equalsIgnoreCase("cs")) {
 				addItemClassToList("CartesianCS", itemClasses);
 				addItemClassToList("EllipsoidalCS", itemClasses);
 				addItemClassToList("VerticalCS", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("datums")) {
+			else if (itemClassParam.equalsIgnoreCase("datums")) {
 				addItemClassToList("GeodeticDatum", itemClasses);
 				addItemClassToList("VerticalDatum", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("operations")) {
+			else if (itemClassParam.equalsIgnoreCase("operations")) {
 				addItemClassToList("ConcatenatedOperation", itemClasses);
 				addItemClassToList("Conversion", itemClasses);
 				addItemClassToList("Transformation", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("others")) {
+			else if (itemClassParam.equalsIgnoreCase("others")) {
 				addItemClassToList("CoordinateSystemAxis", itemClasses);
 				addItemClassToList("Ellipsoid", itemClasses);
 				addItemClassToList("OperationMethod", itemClasses);
 				addItemClassToList("OperationParameter", itemClasses);
 				addItemClassToList("PrimeMeridian", itemClasses);
 				addItemClassToList("UnitOfMeasure", itemClasses);
+			}
+			else {
+				addItemClassToList(itemClassParam, itemClasses);
 			}
 		}
 		
@@ -391,8 +394,14 @@ public class RegisterController
 		
 		RE_ItemClass itemClass = null;
 		if (itemClassFilter != null) {
-			if (itemClassFilter.contains("-")) {
-				UUID itemClassUuid = UUID.fromString(itemClassFilter);
+			UUID itemClassUuid = null; 
+			try {
+				itemClassUuid = UUID.fromString(itemClassFilter);
+			}
+			catch (Throwable t) {
+				// Ignore
+			}
+			if (itemClassUuid != null) {
 				itemClass = itemClassRepository.findOne(itemClassUuid);
 				model.addAttribute("itemClass", itemClass);
 				model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
@@ -400,7 +409,7 @@ public class RegisterController
 			else {
 				model.addAttribute("itemClassFilter", itemClassFilter);
 				if (itemClassFilter.equalsIgnoreCase("crs")) {
-					model.addAttribute("pageTitle", "CRS");
+					model.addAttribute("pageTitle", "Coordinate Reference Systems");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("cs")) {
 					model.addAttribute("pageTitle", "Coordinate Systems");
@@ -410,6 +419,14 @@ public class RegisterController
 				}
 				else if (itemClassFilter.equalsIgnoreCase("operations")) {
 					model.addAttribute("pageTitle", "Coordinate Operations");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("others")) {
+					model.addAttribute("pageTitle", "Other item classes");
+				}
+				else {
+					itemClass = itemClassRepository.findByName(itemClassFilter);
+					model.addAttribute("itemClass", itemClass);
+					model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
 				}
 			}
 		}
