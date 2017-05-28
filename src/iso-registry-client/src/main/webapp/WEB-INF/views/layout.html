@@ -170,46 +170,46 @@
 						<ul>
 							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}" th:text="#{application.welcome}">Welcome</a></li>
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
-									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}" class="jstree-open">
-										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}" th:title="#{${register.value}}"></a>
+									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:if="${register.key.isTopLevelRegister()}" th:id="'register' + ${register.key.alias}" class="jstree-open">
+										<a th:href="@{__${basePath}__/register/__${register.key.alias}__}" th:text="#{${register.key.name}}" th:title="#{${register.key.name}}"></a>
 										<ul>
 											<li>
-												<a th:id="'register' + ${register.key} + 'crs'" th:href="@{__${basePath}__/register/__${register.key}__/crs}">Coordinate Reference Systems</a>
+												<a th:id="'register' + ${register.key.alias} + 'crs'" th:href="@{__${basePath}__/register/__${register.key.alias}__/crs}">Coordinate Reference Systems</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CRS')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.endsWith(itemClass.value,'CRS')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'cs'" th:href="@{__${basePath}__/register/__${register.key}__/cs}">Coordinate Systems</a>
+												<a th:id="'register' + ${register.key.alias} + 'cs'" th:href="@{__${basePath}__/register/__${register.key.alias}__/cs}">Coordinate Systems</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CS')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.endsWith(itemClass.value,'CS')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'datums'" th:href="@{__${basePath}__/register/__${register.key}__/datums}">Datums</a>
+												<a th:id="'register' + ${register.key.alias} + 'datums'" th:href="@{__${basePath}__/register/__${register.key.alias}__/datums}">Datums</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'Datum')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.endsWith(itemClass.value,'Datum')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'operations'" th:href="@{__${basePath}__/register/__${register.key}__/operations}">Coordinate Operations</a>
+												<a th:id="'register' + ${register.key.alias} + 'operations'" th:href="@{__${basePath}__/register/__${register.key.alias}__/operations}">Coordinate Operations</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass.value,'Transformation')} or ${#strings.endsWith(itemClass.value,'Conversion')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'others'" th:href="@{__${basePath}__/register/__${register.key}__/others}">Other</a>
+												<a th:id="'register' + ${register.key.alias} + 'others'" th:href="@{__${basePath}__/register/__${register.key.alias}__/others}">Other</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Concatenated')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:unless="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass.value,'CRS')} or ${#strings.endsWith(itemClass.value,'CS')} or ${#strings.endsWith(itemClass.value,'Datum')} or ${#strings.endsWith(itemClass.value,'Transformation')} or ${#strings.endsWith(itemClass.value,'Conversion')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
