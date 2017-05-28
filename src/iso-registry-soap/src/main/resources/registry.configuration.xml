@@ -12,6 +12,4 @@
 	<entry key="mail.smtp.port">${mail.smtp.port}</entry> <!-- Port number of SMTP server (TLS: 587, plain: 25) -->
 	<entry key="mail.smtp.user">${mail.smtp.user}</entry> <!-- User name used for SMTP authentication -->
 	<entry key="mail.smtp.password">${mail.smtp.password}</entry> <!-- Password used for SMTP authentication (plain text) -->
-	<entry key="monitoring.keyfile">${monitoring.keyfile}</entry> <!-- Path to preshared secret for registry single sign-on -->
-	<entry key="autosubmitter.registers">${autosubmitter.registers}</entry> <!-- Comma-separated list of register names for which new organizations will automatically be assigned the submitter role -->
 </properties>
