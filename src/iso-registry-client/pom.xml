@@ -34,7 +34,7 @@
 		<mail.smtp.user></mail.smtp.user>
 		<mail.smtp.password></mail.smtp.password>
 		<gml.identifier.baseurl></gml.identifier.baseurl>		
-		<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
+		<gml.identifier.pathpattern>register/geodetic/items/%d</gml.identifier.pathpattern>
 		<register.aliases>geodetic:ISO Geodetic Register</register.aliases>
 	</properties>
 	<dependencies>
@@ -464,7 +464,6 @@
 				<client.signup.sendConfirmationMails>false</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>http://localhost:8080/signup/confirmation</client.signup.confirmationUrl>
 				<gml.identifier.baseurl>http://localhost:8080</gml.identifier.baseurl>		
-				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
 		<profile>
@@ -492,7 +491,6 @@
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/gcp/signup/confirmation</client.signup.confirmationUrl>
 				<gml.identifier.baseurl>https://iso.registry.bespire.eu/gcp</gml.identifier.baseurl>		
-				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
 		<profile>
@@ -520,7 +518,6 @@
 				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/signup/confirmation</client.signup.confirmationUrl>
 				<gml.identifier.baseurl>https://iso.registry.bespire.eu/</gml.identifier.baseurl>		
-				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
 			</properties>
 		</profile>
 	</profiles>
