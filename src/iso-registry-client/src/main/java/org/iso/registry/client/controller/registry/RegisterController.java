@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,6 +104,7 @@ import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.DatatablesResult;
+import de.geoinfoffm.registry.client.web.NotFoundException;
 import de.geoinfoffm.registry.client.web.RegisterItemListItem;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
@@ -403,6 +405,9 @@ public class RegisterController
 			}
 			if (itemClassUuid != null) {
 				itemClass = itemClassRepository.findOne(itemClassUuid);
+				if (itemClass == null) {
+					throw new NotFoundException(MessageFormat.format("Item class {0} does not exist", itemClassUuid));
+				}
 				model.addAttribute("itemClass", itemClass);
 				model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
 			}
@@ -425,6 +430,9 @@ public class RegisterController
 				}
 				else {
 					itemClass = itemClassRepository.findByName(itemClassFilter);
+					if (itemClass == null) {
+						throw new NotFoundException(MessageFormat.format("Item class {0} does not exist", itemClassFilter));
+					}
 					model.addAttribute("itemClass", itemClass);
 					model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
 				}
