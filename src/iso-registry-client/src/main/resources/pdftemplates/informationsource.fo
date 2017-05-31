@@ -13,7 +13,7 @@
 							<fo:block>Title</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>#if ($infosrc.title)$esc.html($infosrc.title)#end</fo:block>
+							<fo:block>#if ($infosrc.title)<![CDATA[$infosrc.title]]>#end</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#if ($infosrc.author)
@@ -22,7 +22,7 @@
 							<fo:block>Author</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.author)</fo:block>
+							<fo:block><![CDATA[$infosrc.author]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -32,7 +32,7 @@
 							<fo:block>Alternate title</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($altTitle)</fo:block>
+							<fo:block><![CDATA[$altTitle]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -42,7 +42,7 @@
 							<fo:block>Publisher</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.publisher)</fo:block>
+							<fo:block><![CDATA[$infosrc.publisher]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -52,7 +52,7 @@
 							<fo:block>Publication date</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.publicationDate)</fo:block>
+							<fo:block><![CDATA[$infosrc.publicationDate]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -62,7 +62,7 @@
 							<fo:block>Revision date</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.revisionDate)</fo:block>
+							<fo:block><![CDATA[$infosrc.revisionDate]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -72,7 +72,7 @@
 							<fo:block>Edition</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.edition)</fo:block>
+							<fo:block><![CDATA[$infosrc.edition]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -82,7 +82,7 @@
 							<fo:block>Edition date</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.editionDate)</fo:block>
+							<fo:block><![CDATA[$infosrc.editionDate]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end
@@ -93,7 +93,7 @@
 								<fo:block>Series/Journal name</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block>$esc.html($infosrc.series.name)</fo:block>
+								<fo:block><![CDATA[$infosrc.series.name]]></fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						#end
@@ -103,7 +103,7 @@
 									<fo:block>Issue identification</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-									<fo:block>$esc.html($infosrc.series.issueIdentification)</fo:block>
+									<fo:block><![CDATA[$infosrc.series.issueIdentification]]></fo:block>
 								</fo:table-cell>
 							</fo:table-row>
 						#end
@@ -113,7 +113,7 @@
 									<fo:block>Page</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-									<fo:block>$esc.html($infosrc.series.page)</fo:block>
+									<fo:block><![CDATA[$infosrc.series.page]]></fo:block>
 								</fo:table-cell>
 							</fo:table-row>
 						#end
@@ -124,7 +124,7 @@
 							<fo:block>Other citation details</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($infosrc.otherCitationDetails)</fo:block>
+							<fo:block><![CDATA[$infosrc.otherCitationDetails]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					#end

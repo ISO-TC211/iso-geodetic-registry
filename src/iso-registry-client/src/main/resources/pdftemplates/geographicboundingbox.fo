@@ -13,7 +13,7 @@
 							<fo:block>West-bound longitude</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($bbox.westBoundLongitude)</fo:block>
+							<fo:block><![CDATA[$bbox.westBoundLongitude]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -21,7 +21,7 @@
 							<fo:block>North-bound latitude</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($bbox.northBoundLatitude)</fo:block>
+							<fo:block><![CDATA[$bbox.northBoundLatitude]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -29,7 +29,7 @@
 							<fo:block>East-bound longitude</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($bbox.eastBoundLongitude)</fo:block>
+							<fo:block><![CDATA[$bbox.eastBoundLongitude]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -37,7 +37,7 @@
 							<fo:block>South-bound latitude</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block>$esc.html($bbox.southBoundLatitude)</fo:block>
+							<fo:block><![CDATA[$bbox.southBoundLatitude]]></fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 				</fo:table-body>

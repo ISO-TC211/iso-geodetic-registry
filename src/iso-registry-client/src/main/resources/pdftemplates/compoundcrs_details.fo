@@ -5,7 +5,7 @@
 		<fo:block>Horizontal component</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.horizontalCrs.name)</fo:block>
+		<fo:block><![CDATA[$item.horizontalCrs.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
@@ -15,7 +15,7 @@
 		<fo:block>Vertical component</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.verticalCrs.name)</fo:block>
+		<fo:block><![CDATA[$item.verticalCrs.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
