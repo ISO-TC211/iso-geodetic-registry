@@ -5,7 +5,7 @@
 		<fo:block>Datum</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.datum.name)</fo:block>
+		<fo:block><![CDATA[$item.datum.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
@@ -15,7 +15,7 @@
 		<fo:block>Coordinate System</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.coordinateSystem.name)</fo:block>
+		<fo:block><![CDATA[$item.coordinateSystem.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
@@ -25,7 +25,7 @@
 		<fo:block>Conversion</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.conversion.name)</fo:block>
+		<fo:block><![CDATA[$item.conversion.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
@@ -35,7 +35,7 @@
 		<fo:block>Base CRS</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.baseCrs.name)</fo:block>
+		<fo:block><![CDATA[$item.baseCrs.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end

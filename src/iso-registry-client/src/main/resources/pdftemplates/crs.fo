@@ -5,7 +5,7 @@
 		<fo:block>Scope</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.scope)</fo:block>
+		<fo:block><![CDATA[$item.scope]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end

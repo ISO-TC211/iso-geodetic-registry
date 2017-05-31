@@ -8,7 +8,7 @@
 					<fo:block>Description</fo:block>
 				</fo:table-cell>
 				<fo:table-cell font-weight="bold" font-size="14pt">
-					<fo:block>$esc.html($extent.description)</fo:block>
+					<fo:block><![CDATA[$extent.description]]></fo:block>
 				</fo:table-cell>
 			</fo:table-row>
 			#foreach($bbox in $extent.geographicBoundingBoxes)
