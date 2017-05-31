@@ -43,8 +43,8 @@
 								<td th:text="${user.emailAddress}"></td>
 								<td>
 									<form th:action="@{__${basePath}__/admin/user/} + ${user.uuid}" method="get">
-										<button th:id="'edit-' + ${user.uuid}" class="btn btn-xs btn-primary" type="submit" th:text="#{button.edit}">Bearbeiten</button>
-										<button type="button" td:id="'delete-' + ${user.uuid}" class="btn btn-xs btn-warning" th:href="'#confirmdelete-' + ${user.uuid}" data-toggle="modal" th:text="#{button.delete}">Löschen</button>
+										<button th:id="'edit-' + ${user.uuid}" class="btn btn-xs btn-default" type="submit" th:text="#{button.edit}">Bearbeiten</button>
+										<button type="button" td:id="'delete-' + ${user.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmdelete-' + ${user.uuid}" data-toggle="modal" th:text="#{button.delete}">Löschen</button>
 									</form>
 									<div class="modal fade" th:id="'confirmdelete-' + ${user.uuid}" role="dialog">
 										<div class="modal-dialog">
