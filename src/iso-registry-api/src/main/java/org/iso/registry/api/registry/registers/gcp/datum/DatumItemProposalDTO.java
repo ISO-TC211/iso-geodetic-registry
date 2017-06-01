@@ -201,13 +201,11 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 			}
 			
 			if (datum.getRealizationEpoch() != null) {
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				this.setRealizationEpoch(df.format(datum.getRealizationEpoch()));
+				this.setRealizationEpoch(datum.getRealizationEpoch());
 			}
 
 			if (datum.getCoordinateReferenceEpoch() != null) {
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				this.setCoordinateReferenceEpoch(df.format(datum.getCoordinateReferenceEpoch()));
+				this.setCoordinateReferenceEpoch(datum.getCoordinateReferenceEpoch());
 			}
 
 			this.setScope(datum.getScope());
