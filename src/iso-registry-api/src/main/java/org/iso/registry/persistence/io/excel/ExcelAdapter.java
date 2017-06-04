@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
@@ -895,9 +896,10 @@ public class ExcelAdapter
 		for (String reference : references) {
 			reference = reference.trim();
 			
-			if (org.apache.commons.lang3.StringUtils.isNumeric(reference)) {
-				// Numeric reference is item identifier
-				Integer identifier = Integer.parseInt(reference);
+			if (NumberUtils.isNumber(reference)) {
+				// Numeric reference is item identifier, is read as a Double from Excel
+				Double excelValue = Double.parseDouble(reference);
+				Integer identifier = excelValue.intValue();
 				IdentifiedItem referencedItem = identifiedItemRepository.findByIdentifier(identifier);
 				
 				RegisterItemProposalDTO refDto;
