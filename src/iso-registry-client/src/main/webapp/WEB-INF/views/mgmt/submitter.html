@@ -60,7 +60,7 @@
 													</div>
 												</div>
 												<div class="modal-footer">
-													<button type="button" id="addition" class="btn btn-success" th:text="#{button.addition}">Item registrieren</button>
+													<button type="button" id="addition" class="btn btn-success button-addition" th:text="#{button.addition}">Item registrieren</button>
 													<button type="button" name="cancel" data-dismiss="modal" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
 												</div>
 											</div>
@@ -394,6 +394,13 @@
 				initGroupSelect(uuid);
 			});
 
+			$('body').on('click', '.button-addition', function() {
+// 				location.href = '[[@{__${basePath}__/register/}]]' + $('#register').val() + '?itemClass= + ' $('#itemClass').val();
+				location.href = '[[@{__${basePath}__/register/}]]' + $('#register').val() + '/proposal/addition?itemClass=' + $('#itemClass').val();
+			});
+
+			
+// 			th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''"
 		});
 		
 	/* ]]> */
