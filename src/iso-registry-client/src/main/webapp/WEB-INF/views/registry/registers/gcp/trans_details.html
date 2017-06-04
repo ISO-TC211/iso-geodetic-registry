@@ -103,11 +103,7 @@
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row">
-				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
-					<div th:replace="globals :: textArea"/>
-				</div>
-			</div>
+			<div class="row" th:include="globals :: scopeTable('transformation')" />
 			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
