@@ -110,12 +110,12 @@
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:unless="!${isProposal} and !*{series}">
 		<div class="col-md-12" th:with="property='series.name',modifier='informationSource',inputType='text',label=#{form.label.seriesName},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesName},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:unless="!${isProposal} and !*{series}">
 		<div class="col-md-6" th:with="property='series.issueIdentification',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
@@ -123,7 +123,7 @@
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:unless="!${isProposal} and !*{series}">
 		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.otherCitationDetails},isRequired='false'">
 			<div th:replace="globals :: textArea"/>
 		</div>
