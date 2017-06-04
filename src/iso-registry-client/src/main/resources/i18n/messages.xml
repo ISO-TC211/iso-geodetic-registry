@@ -83,6 +83,7 @@
 	<entry key="tableheader.axisUnit">Axis unit</entry>
 	<entry key="tableheader.axisDirection">Axis direction</entry>
 	<entry key="tableheader.citation">Citation</entry>
+	<entry key="tableheader.scope">Scope</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -345,6 +346,8 @@
 	<entry key="tabs.geographicExtent">Geographic extent</entry>
 	<entry key="tabs.verticalExtent">Vertical extent</entry>
 	<entry key="tabs.temporalExtent">Temporal extent</entry>
+	<entry key="tabs.uomDetails">Unit of Measure details</entry>
+	<entry key="tabs.standardUnitDetails">Standard Unit</entry>
 		
 	<entry key="legend.create">Create new proposal</entry>
 	<entry key="legend.edit">Edit proposal</entry>
@@ -469,6 +472,8 @@
 	<entry key="form.label.accuracy">Accuracy</entry>
 	<entry key="form.label.accuracyUom">Accuracy unit</entry>
 	<entry key="form.label.coordinateOperations">Coordinate Operations</entry>
+	<entry key="form.label.selectUom">Select a unit</entry>
+	<entry key="form.label.orDefineNewUom">OR define a new unit</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
