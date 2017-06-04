@@ -7,8 +7,3 @@
 #set($item = $xfitem.method)
 #parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
 
-#set($item = $xfitem.sourceCrs)
-#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
-
-#set($item = $xfitem.targetCrs)
-#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
