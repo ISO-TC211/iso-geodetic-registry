@@ -728,57 +728,57 @@
 			}
 		});
 
-		if (!$('#identifier').val()) {
-			var jqxhr = $.get("[[@{__${basePath}__/entities/identifier/next-available}]]", function(data) {
-				$('#identifier').val(data);
-			});
-		}
+// 		if (!$('#identifier').val()) {
+// 			var jqxhr = $.get("[[@{__${basePath}__/entities/identifier/next-available}]]", function(data) {
+// 				$('#identifier').val(data);
+// 			});
+// 		}
 
-	    // validate signup form on keyup and submit
-		$('#identifier').popover({
-				"html": true,
-				"trigger": "manual",
-				"placement": "top",
-				"content": function() {
-					return "<b>Code is taken</b>";	
-				}
-			});
+// 	    // validate signup form on keyup and submit
+// 		$('#identifier').popover({
+// 				"html": true,
+// 				"trigger": "manual",
+// 				"placement": "top",
+// 				"content": function() {
+// 					return "<b>Code is taken</b>";	
+// 				}
+// 			});
 
-	    if ([[!${proposal.isClarification()}]]) { 
-		    $("#identifier").rules("add", {
-		   	    required: true,
-		   	    onkeyup: false,
-		   	    remote: {
-		   	        url: "[[@{__${basePath}__/entities/identifier/check-availability}]]",
-		   	        type: "GET",
-		   	        cache: false,
-		   	     	data: {
-						identifier: function() {
-							return $("#identifier").val();
-		             	},
-		             	itemUuid: function() {
-		             		return $("#itemUuid").val();
-		             	}
-		   	     	},
-		   	        dataFilter: function(response) {
-		   	        	if (response == 0) {
-		   	        		$('#identifier').popover("hide");
-		          	    	return true;
-		   	        	}
-		   	        	else {
-		   	        		$('#identifier').popover("show");
-		          	    	return false;
-		   	        	}
-		   	        }
-		   	    },
-		   	    messages: {
-		   	    	remote: $.format("The identifier {0} is already taken")
-		   	    },
-		    });
-	    }
-	    else {
-	    	$('#identifier').attr('readonly', 'readonly').attr('disabled', 'disabled');
-	    }
+// 	    if ([[!${proposal.isClarification()}]]) { 
+// 		    $("#identifier").rules("add", {
+// 		   	    required: true,
+// 		   	    onkeyup: false,
+// 		   	    remote: {
+// 		   	        url: "[[@{__${basePath}__/entities/identifier/check-availability}]]",
+// 		   	        type: "GET",
+// 		   	        cache: false,
+// 		   	     	data: {
+// 						identifier: function() {
+// 							return $("#identifier").val();
+// 		             	},
+// 		             	itemUuid: function() {
+// 		             		return $("#itemUuid").val();
+// 		             	}
+// 		   	     	},
+// 		   	        dataFilter: function(response) {
+// 		   	        	if (response == 0) {
+// 		   	        		$('#identifier').popover("hide");
+// 		          	    	return true;
+// 		   	        	}
+// 		   	        	else {
+// 		   	        		$('#identifier').popover("show");
+// 		          	    	return false;
+// 		   	        	}
+// 		   	        }
+// 		   	    },
+// 		   	    messages: {
+// 		   	    	remote: $.format("The identifier {0} is already taken")
+// 		   	    },
+// 		    });
+// 	    }
+// 	    else {
+// 	    	$('#identifier').attr('readonly', 'readonly').attr('disabled', 'disabled');
+// 	    }
 	});
 /* ]]> */
 </script>
