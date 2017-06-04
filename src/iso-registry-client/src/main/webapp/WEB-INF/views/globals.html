@@ -33,7 +33,7 @@
 	<input th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
 	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
 	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
-	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
@@ -42,7 +42,7 @@
 	<textarea th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
 	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
 	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
-	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <div th:fragment="dateTimePicker" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
@@ -50,7 +50,7 @@
 	<div class="input-group date" th:id="'datetimepicker-' + ${property}">
 		<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 		<input th:type="text" class="form-control" th:field="*{__${property}__}" th:placeholder="${placeholder}" data-date-format="YYYY-MM-DD"/>  
-		<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
+		<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
 	</div>
 
 	<script type="text/javascript" th:inline="text">
