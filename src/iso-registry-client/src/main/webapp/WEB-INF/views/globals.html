@@ -87,7 +87,8 @@
 						data: function(term, page) {
 							return {
 								orderBy: 'name',
-								q: term
+								q: term,
+								where: "[[${where} ? ${where} : '']]"
 							};
 						},
 						results: function (data) {
