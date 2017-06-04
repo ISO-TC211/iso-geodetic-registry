@@ -693,6 +693,7 @@
 		<column columnName="M">
 			<javaProperty>accuracy</javaProperty>
 			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.operation.AccuracyMapper</valueMapper>
 		</column>
 		<column columnName="N">
 			<javaProperty>informationSource</javaProperty>
