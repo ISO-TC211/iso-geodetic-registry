@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +22,7 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 @Audited @Entity
 public abstract class SingleOperationItem extends CoordinateOperationItem
 {
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private OperationMethodItem method;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
