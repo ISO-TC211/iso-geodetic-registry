@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <body>
-        Dear $user.name:<p/>
+        Dear $user.name,<p/>
 
 		Your are registered as a point of contact for $delegation.delegatingOrganization.name. This message is to inform you that action is required from your side.<p/> 
 		<p/> 

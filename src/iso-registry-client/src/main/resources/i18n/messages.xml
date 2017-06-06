@@ -349,6 +349,18 @@
 	<entry key="tabs.uomDetails">Unit of Measure details</entry>
 	<entry key="tabs.standardUnitDetails">Standard Unit</entry>
 		
+	<entry key="mail.subject.signup.confirmation">You have signed up for the ISO Geodetic Registry</entry>
+	<entry key="mail.subject.signup.confirmed">[ISO Geodetic Registry] You have successfully confirmed your account</entry>
+	<entry key="mail.subject.password.reset">[ISO Geodetic Registry] Password reset</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Geodetic Registry] Permission requested by user</entry>
+	<entry key="mail.subject.delegation.denied">[ISO Geodetic Registry] Permission request was denied</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Geodetic Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Geodetic Registry] New proposal submitted</entry>
+	<entry key="mail.subject.proposal.reviewed">[ISO Geodetic Registry] New proposal requires approval</entry>
+	<entry key="mail.subject.proposal.appealed">[ISO Geodetic Registry] Proposal was appealed</entry>
+	<entry key="mail.subject.proposal.accepted">[ISO Geodetic Registry] Proposal was accepted</entry>
+	<entry key="mail.subject.proposal.rejected">[ISO Geodetic Registry] Proposal was rejected</entry>
+		
 	<entry key="legend.create">Create new proposal</entry>
 	<entry key="legend.edit">Edit proposal</entry>
 	<entry key="legend.view">Proposed item</entry>

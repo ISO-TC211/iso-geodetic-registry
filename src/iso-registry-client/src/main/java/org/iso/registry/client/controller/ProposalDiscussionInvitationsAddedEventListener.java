@@ -46,7 +46,7 @@ public class ProposalDiscussionInvitationsAddedEventListener extends AbstractEve
 
 	        try {
 	        	InternetAddress recipient = new InternetAddress(invitee);
-	        	this.sendMail(recipient, "mail.subject.discussion.invitation", "mailtemplates/discussion_invitation", "de", 
+	        	this.sendMail(recipient, "mail.subject.discussion.invitation", "mailtemplates/discussion_invitation", "en", 
 	        			registryConfiguration.getMailBaseUrl(), model);
 	        }
 	    	catch (Throwable t) {
