@@ -48,7 +48,8 @@
 								</tr>
 								<tr>
 									<td th:text="#{itemIdentifier}"></td>
-									<td th:text="*{itemIdentifier}"></td>
+									<td th:if="*{itemIdentifier} gt 0" th:text="*{itemIdentifier}"></td>
+									<td th:unless="*{itemIdentifier} gt 0" th:text="#{form.label.autoAssigned}"></td>
 								</tr>
 								<tr th:if="${current.isAddition()}">
 									<td th:text="#{targetRegister}"></td>
