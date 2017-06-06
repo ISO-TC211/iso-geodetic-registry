@@ -12,6 +12,7 @@
 	<entry key="mail.smtp.port">${mail.smtp.port}</entry> <!-- Port number of SMTP server (TLS: 587, plain: 25) -->
 	<entry key="mail.smtp.user">${mail.smtp.user}</entry> <!-- User name used for SMTP authentication -->
 	<entry key="mail.smtp.password">${mail.smtp.password}</entry> <!-- Password used for SMTP authentication (plain text) -->
+	<entry key="mail.baseUrl">${mail.baseUrl}</entry> <!-- POM: <client.mail.baseUrl> --> 
 	<entry key="gml.identifier.baseurl">${gml.identifier.baseurl}</entry> <!-- Base URL used in GML identifiers -->
 	<entry key="gml.identifier.pathpattern">${gml.identifier.pathpattern}</entry> <!-- Pattern for referenced items -->
 	<entry key="register.aliases">${register.aliases}</entry> <!-- Aliases for registers in the form "alias1:name1;alias2:name2;..." -->
