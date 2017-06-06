@@ -261,6 +261,7 @@ public class ProposalsController
 	public String viewProposal(WebRequest request, 
 							   @PathVariable("uuid") UUID proposalUuid, 
 							   @RequestParam(value = "edit", required = false) String forceEdit,
+							   @RequestParam(value = "role", required = false) String role,
 							   final Model model) throws ProposalNotFoundException, UnauthorizedException {
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
@@ -271,6 +272,13 @@ public class ProposalsController
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(proposal);
 		model.addAttribute("proposal", dto);
 		model.addAttribute("itemClass", dto.getItemClassUuid());
+		
+		if (!StringUtils.isEmpty("role")) {
+			model.addAttribute("_userRole", role);
+		}
+		else {
+			model.addAttribute("_userRole", "submitter");
+		}
 		
 		if (!dto.getSupersededItems().isEmpty()) {
 			Set<RegisterItemViewBean> supersededItems = new HashSet<RegisterItemViewBean>();
@@ -454,6 +462,11 @@ public class ProposalsController
 		}
 		security.assertMayWrite(proposal);
 		
+		String role = null;
+		if (allParams.containsKey("_userRole")) {
+			role = (String)allParams.get("_userRole");
+		}
+		
 		if (proposal instanceof Supersession) {
 			SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 			if (state == null) {
@@ -471,7 +484,12 @@ public class ProposalsController
 			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest);
 			
 			proposalService.updateProposal(proposalDto);
-			return "redirect:/management/submitter";
+			if (role != null) {
+				return "redirect:/management/" + role;
+			}
+			else {
+				return "redirect:/";
+			}
 		}
 	}
 

@@ -8,6 +8,7 @@
 				<fieldset>		
 					<input type="hidden" name="_method" value="PUT"/>
 					<input type="hidden" th:field="*{itemClassUuid}"/>
+					<input type="hidden" name="_userRole" th:value="${_userRole}"/>
 					<div class="col-md-12 column">
 		
 						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
