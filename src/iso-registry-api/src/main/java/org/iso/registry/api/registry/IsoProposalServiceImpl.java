@@ -1,5 +1,7 @@
 package org.iso.registry.api.registry;
 
+import static de.geoinfoffm.registry.core.workflow.Iso19135ProposalWorkflowManager.*;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,6 @@ import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 
 public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoProposalService
 {
-	public static final String STATUS_RETURNED_BY_MANAGER = "RETURNED_BY_MANAGER";
-	public static final String STATUS_RETURNED_BY_CONTROLBODY = "RETURNED_BY_CONTROLBODY";
-	
 	private static final Logger logger = LoggerFactory.make();
 	
 	@Autowired
