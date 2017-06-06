@@ -21,20 +21,18 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.ApiConfiguration;
-import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategy;
-import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategyImpl;
+import de.geoinfoffm.registry.api.RoleDiscoveryStrategyImpl;
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.OrganizationServiceImpl;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterService;
-import de.geoinfoffm.registry.api.RegistrySecurityImpl;
+import de.geoinfoffm.registry.api.RoleDiscoveryStrategy;
 import de.geoinfoffm.registry.api.forum.ProposalDiscussionService;
 import de.geoinfoffm.registry.api.forum.ProposalDiscussionServiceImpl;
 import de.geoinfoffm.registry.core.forum.ProposalDiscussionRepository;
 import de.geoinfoffm.registry.core.model.DelegationRepository;
 import de.geoinfoffm.registry.core.model.OrganizationRepository;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
-import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
 
 /**
@@ -76,10 +74,10 @@ public class IsoApiConfiguration
 	
 	@Autowired 
 	@Bean
-	public ControlBodyDiscoveryStrategy controlBodyDiscoveryStrategy(RegisterService registerService, DelegationRepository delegationRepository) {
-		return new ControlBodyDiscoveryStrategyImpl(registerService, delegationRepository);
+	public RoleDiscoveryStrategy roleDiscoveryStrategy(RegisterService registerService, DelegationRepository delegationRepository) {
+		return new RoleDiscoveryStrategyImpl(registerService, delegationRepository);
 	}
-	
+
 	@Autowired
 	@Bean
 	public ProposalDiscussionService proposalDiscussionService(ProposalDiscussionRepository repository) {
