@@ -72,7 +72,7 @@
 			<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
 			<div class="input-group">
 				<input th:if="${isProposal}" th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
-				<span th:unless="${isProposal}" class="text-muted" th:text="${rowStat.index} + '.'"></span>&nbsp;<big th:unless="${isProposal}" th:text="${altTitle}"/>
+				<span th:unless="${isProposal}" class="text-muted" th:text="${rowStat.index + 1} + '.'"></span>&nbsp;<big th:unless="${isProposal}" th:text="${altTitle}"/>
 				<span class="input-group-btn" th:if="${isProposal}">
 					<button type="button" class="btn btn-default button-delete-alt-title" th:id="'delete-alt-title-' + ${rowStat.index}"><span class="glyphicon glyphicon-remove"/></button>
 				</span>
