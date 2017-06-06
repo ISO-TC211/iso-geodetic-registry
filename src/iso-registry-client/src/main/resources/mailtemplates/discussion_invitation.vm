@@ -2,12 +2,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <body>
-        Dear $user.name:<p/>
+        Dear Sir or Madam,<p/>
  
  		You have been invited to a discussion regarding a proposal in the ISO Geodetic Registry: <p/>
         </p>
         Register: $register.name<p/>
-        Proposal title: $proposal.name<p/>
+        Proposal title: $proposal.title<p/>
         <p/>
         You may access the discussion by opening the following URL in your web browser:
         <a href="$discussionUrl">$discussionUrl</a><p/>

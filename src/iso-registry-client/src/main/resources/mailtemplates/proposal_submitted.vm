@@ -4,12 +4,12 @@
     <body>
         Dear $user.name:<p/>
 
-		Your are registered as a control body member for $delegation.delegatingOrganization.name. This message is to inform you that action is required from your side.<p/> 
+		You are registered as a register manager for $delegation.delegatingOrganization.name in the ISO Geodetic Registry.<p/> 
 		<p/>
-		A new $prposal.proposalType proposal was submitted to the "$register.name" register. The proposal is titled "$propsoal.name". 
+		A new $proposal.proposalType proposal was submitted to the "$register.name" register. The proposal is titled "$proposal.name". 
  		</p>
  		To review the proposal, please log in to the ISO Geodetic Registry
- 		and open the <a href="${baseUrl}management/controlbody">Control Body</a> page.
+ 		and open the <a href="${baseUrl}management/manager">Register Manager</a> page.
  		</p>
         <br/><br/>
         ISO Geodetic Registry
