@@ -72,7 +72,7 @@
 	
 		$('#proposalsTable').on('click', '.button-details', function(e) {
 			var uuid = $(this).data('uuid');
-			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid;
+			location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '?role=manager';
 		});
 
 		$('#finishedProposalsTable').on('click', '.button-details', function(e) {
