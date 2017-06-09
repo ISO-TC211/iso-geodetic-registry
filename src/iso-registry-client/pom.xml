@@ -461,6 +461,7 @@
 				<mail.smtp.starttls.enable>false</mail.smtp.starttls.enable>
 				<mail.smtp.host>localhost</mail.smtp.host>
 				<mail.smtp.port>25</mail.smtp.port>
+				<mail.baseUrl>http://localhost:8080/gcp</mail.baseUrl>
 				<client.signup.sendConfirmationMails>false</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>http://localhost:8080/signup/confirmation</client.signup.confirmationUrl>
 				<gml.identifier.baseurl>http://localhost:8080</gml.identifier.baseurl>		
