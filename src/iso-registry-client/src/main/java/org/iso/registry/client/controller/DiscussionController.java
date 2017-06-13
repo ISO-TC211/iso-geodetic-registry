@@ -210,7 +210,7 @@ public class DiscussionController
 		
 		Map<String, Object> msgModel = new HashMap<String, Object>();
 		msgModel.put("user", user);
-		msgModel.put("register", proposal.getAffectedRegisters().get(0));
+		msgModel.put("register", proposal.getAffectedRegisters().iterator().next());
 		
 		String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "mailtemplates/discussion_invitation.vm", "UTF-8", msgModel);
 		discussion.setMessage(message);
