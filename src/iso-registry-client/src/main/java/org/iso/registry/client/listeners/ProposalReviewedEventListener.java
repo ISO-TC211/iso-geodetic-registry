@@ -78,6 +78,9 @@ public class ProposalReviewedEventListener extends AbstractEventListener impleme
 		event.annotate(this.getClass());
 		
 		Proposal proposal = event.getSource();
+		if (proposal.hasParent()) {
+			return;
+		}
 		
 		for (Authorization authorization : proposalService.findAuthorizedControlBody(proposal)) {
 			if (authorization instanceof Delegation) {
