@@ -155,7 +155,7 @@
 
 	<div th:fragment="foot">
 		<footer class="footer">
-	        <p class="text-muted"><!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-Mail: <a href="mailto:registry@isotc211.org">registry@isotc211.org</a>-->
+	        <p class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last updated:&nbsp;<span th:text="${@registerService.getFormattedDateOfLastChange()}"></span><!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-Mail: <a href="mailto:registry@isotc211.org">registry@isotc211.org</a>-->
 	        <span class="pull-right"><span th:text="#{application.version}"></span></span></p>
 		</footer>
 		

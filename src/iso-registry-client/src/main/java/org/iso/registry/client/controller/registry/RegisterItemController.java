@@ -69,6 +69,7 @@ import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
+import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -111,6 +112,9 @@ public class RegisterItemController
 
 	@Autowired
 	private ProposalService proposalService;
+	
+	@Autowired
+	private RegisterService registerService;
 	
 	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
@@ -230,6 +234,7 @@ public class RegisterItemController
 		
 		model.addAttribute("item", vb);
 		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+		model.addAttribute("dateOfLastChange", registerService.getFormattedDateOfLastChange());
 
 		String templateLocation = "pdftemplates/" + item.getItemClass().getName().toLowerCase() + ".fo";
 
