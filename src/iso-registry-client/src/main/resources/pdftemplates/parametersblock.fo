@@ -1,5 +1,5 @@
-<fo:block font-size="12pt" font-family="sans-serif" line-height="24pt" space-before.optimum="15pt" padding-top="3pt">Operation parameters</fo:block>
 #if ($item.parameter && !$item.parameter.isEmpty())
+<fo:block font-size="12pt" font-family="sans-serif" line-height="24pt" space-before.optimum="15pt" padding-top="3pt">Operation parameters</fo:block>
 	#set($parameters = $item.parameter)
 	#parse("pdftemplates/parameters.fo")
 #end
