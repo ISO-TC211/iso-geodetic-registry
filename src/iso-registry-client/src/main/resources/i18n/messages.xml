@@ -521,6 +521,7 @@
 	<entry key="form.placeholder.identifier"></entry>
 	<entry key="form.placeholder.scope"></entry>
 	<entry key="form.placeholder.symbol"></entry>
+	<entry key="form.placeholder.selectStandardUnit"></entry>
 	
 	<entry key="form.placeholder.semiMajorAxis"></entry>
 	<entry key="form.placeholder.semiMinorAxis"></entry>
