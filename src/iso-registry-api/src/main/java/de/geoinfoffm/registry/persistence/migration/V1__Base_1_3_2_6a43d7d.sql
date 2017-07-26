@@ -2214,7 +2214,8 @@ CREATE TABLE operationmethoditem_aud (
 
 CREATE TABLE operationmethoditem_generaloperationparameteritem (
     operationmethoditem_uuid uuid NOT NULL,
-    parameter_uuid uuid NOT NULL
+    parameter_uuid uuid NOT NULL,
+    parameter_index integer NOT NULL
 );
 
 
@@ -2227,6 +2228,7 @@ CREATE TABLE operationmethoditem_generaloperationparameteritem_aud (
     rev integer NOT NULL,
     operationmethoditem_uuid uuid NOT NULL,
     parameter_uuid uuid NOT NULL,
+    parameter_index integer NOT NULL,    
     revtype smallint
 );
 
