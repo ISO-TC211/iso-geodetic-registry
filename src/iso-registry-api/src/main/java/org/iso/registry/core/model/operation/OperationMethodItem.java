@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -38,6 +39,7 @@ public class OperationMethodItem extends IdentifiedItem
 	private Boolean reversible;
 	
 	@ManyToMany
+	@OrderColumn(name = "parameter_index")
 	private List<GeneralOperationParameterItem> parameter;
 
 	protected OperationMethodItem() {

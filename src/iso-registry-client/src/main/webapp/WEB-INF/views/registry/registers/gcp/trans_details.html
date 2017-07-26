@@ -138,12 +138,17 @@
 							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.parameterUnit.uuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
 							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name}"></a>&nbsp;<span th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" class="text-muted" th:text="'[' + ${parameterValue.unitOfMeasure.identifier} + ']'"></span>
 						</td>							
-						<td>
-							<div th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
+						<td th:with="isFile=(${parameterValue.parameterType} eq 'FILE')">
+							<div th:if="${isProposal}">
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="#{button.edit}"/>
+								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							</div>
+							<div th:unless="${isProposal}" th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
 								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
 								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
 							</div>
-						</td>							
+						</td>
+						<td th:text="${row.index}"/>			
 					</tr>
 				</tbody>
 			</table>
@@ -211,11 +216,14 @@
        		$('#parametersTable').dataTable({
        			"bPaginate": false,
        			"bFilter": false,
+       			"aaSorting": [[ "5", "asc" ]],
 	   			 aoColumns: [
-   						{"bSortable" : false, "sWidth": "35%"},
+   						{"bSortable" : false, "sWidth": "25%"},
   						{"bSortable" : false, "sWidth": "10%"},
    						{"bSortable" : false, "sWidth": "20%"},
-   						{"bSortable" : false, "sWidth": "35%"}
+   						{"bSortable" : false, "sWidth": "25%"},
+   						{"bSortable" : false, "sWidth": "20%"},
+   						{"bVisible" : false},
    					]
        		});
        		
@@ -240,6 +248,18 @@
        				$('#parameterUom_' + idx).select2('enable', false);
        				$('#parameterUom_' + idx).removeAttr('required');
        			}
+
+       			if ($(this).val() == 'FILE') {
+       				$('#parameterUom_' + idx).removeAttr('disabled');
+       				$('#parameterUom_' + idx).select2('enable', true);
+       				$('#parameterUom_' + idx).select2('readonly', false);
+       				$('#parameterUom_' + idx).attr('required', 'required');
+       			}
+       			else {
+       				$('#parameterUom_' + idx).val('');
+       				$('#parameterUom_' + idx).select2('enable', false);
+       				$('#parameterUom_' + idx).removeAttr('required');
+       			}
        		});
 
 			$('#method').change(function(e) {
@@ -254,7 +274,9 @@
         					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
         					"<input type='hidden' id='paramValueType_" + idx + "' data-index='" + idx + "' class='select-paramtype' name='parameterValues[" + idx + "].parameterType' value='MEASURE' required='required' style='width: 100%'/>",
         					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
-    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>",
+    						"",
+    						idx
 						]);
         				uomSelect($('#parameterUom_' + idx));
         				paramTypeSelect($('#paramValueType_' + idx));
