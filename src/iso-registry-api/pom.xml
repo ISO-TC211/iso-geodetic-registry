@@ -4,7 +4,7 @@
 	<parent>
         <groupId>org.iso.registry</groupId>
         <artifactId>iso-registry-parent</artifactId>
-        <version>1.5</version>
+        <version>1.5.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>	
 	<artifactId>iso-registry-api</artifactId>
@@ -183,12 +183,12 @@
 		<dependency>
 			<groupId>de.bespire.io.xml.isotc211</groupId>
 			<artifactId>iso-tc211-xml</artifactId>
-			<version>1.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.bespire.io.wkt</groupId>
 			<artifactId>de.bespire.io.wkt</artifactId>
-			<version>1.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>
