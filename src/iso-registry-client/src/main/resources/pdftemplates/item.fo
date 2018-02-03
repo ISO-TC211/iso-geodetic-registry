@@ -3,7 +3,7 @@
 		<fo:block>Item class</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.itemClassName)</fo:block>
+		<fo:block><![CDATA[$item.itemClassName]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 <fo:table-row height="15pt">
@@ -11,7 +11,7 @@
 		<fo:block>Name</fo:block>
 	</fo:table-cell>
 	<fo:table-cell font-weight="bold" font-size="14pt">
-		<fo:block>$esc.html($item.name)</fo:block>
+		<fo:block><![CDATA[$item.name]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 <fo:table-row height="15pt">
@@ -27,6 +27,6 @@
 ##		<fo:block>Register</fo:block>
 ##	</fo:table-cell>
 ##	<fo:table-cell>
-##		<fo:block>$esc.html($item.registerName)</fo:block>
+##		<fo:block><![CDATA[$item.registerName]]></fo:block>
 ##	</fo:table-cell>
 ## </fo:table-row>

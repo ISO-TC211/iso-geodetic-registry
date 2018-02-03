@@ -48,7 +48,8 @@
 								</tr>
 								<tr>
 									<td th:text="#{itemIdentifier}"></td>
-									<td th:text="*{itemIdentifier}"></td>
+									<td th:if="*{itemIdentifier} gt 0" th:text="*{itemIdentifier}"></td>
+									<td th:unless="*{itemIdentifier} gt 0" th:text="#{form.label.autoAssigned}"></td>
 								</tr>
 								<tr th:if="${current.isAddition()}">
 									<td th:text="#{targetRegister}"></td>
@@ -185,7 +186,7 @@
 				<div class="col-md-12 column">
 					<button class="btn btn-default" th:text="#{button.back}" onclick="history.back();">Zurück</button>
 					<div class="pull-right" th:if="${proposal.isUnderReview()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_MANAGER_', #vars.proposal.registerUuid)">
-						<button class="btn btn-success" th:text="#{button.review}" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${proposal.proposalUuid} + '/review'} + '\', goback);'">Zur Entscheidung annehmen</button>
+						<button class="btn btn-success button-reviewproposal" th:text="#{button.review}" th:attr="data-uuid=${proposal.proposalUuid}" th:disabled="${status}">Zur Entscheidung annehmen</button>
 						<button type="button" th:id="'return-' + ${proposal.proposalUuid}" class="btn btn-warning" th:href="'#confirmreturn-' + ${proposal.proposalUuid}" data-toggle="modal" th:text="#{button.return}"></button>
 					</div>
 					<div class="pull-right" th:if="${proposal.isPending()}" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_CONTROLBODY_', #vars.proposal.registerUuid)">
@@ -367,13 +368,8 @@
 				 "aaSorting": [[ 1, "asc" ]],
 				"aoColumns": [
 					{ 
-						"mDataProp": "proposalDate",
-						"sWidth": "10%",
-						"bSortable": true
-					},
-					{ 
 						"mDataProp": "title",
-						"sWidth": "30%",
+						"sWidth": "40%",
 						"bSortable": true
 					},
 					{ 
@@ -399,14 +395,14 @@
 					},
 				],
 				"aoColumnDefs": [
-					{ "aTargets": [3],
+					{ "aTargets": [2],
 							"mData": null,
 							"mRender": function (data, type, full) {
-								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
+								var $href = $('<p>' + full.sponsorName + '</p>');
 								return $("<div/>").append($href).html();
 							}
 					},
-					{ "aTargets": [5],
+					{ "aTargets": [4],
 						  "mData": null,
 						  "mRender": function (data, type, full) {
 								var actions = "";

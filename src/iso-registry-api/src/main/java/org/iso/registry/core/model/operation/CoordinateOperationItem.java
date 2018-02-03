@@ -9,6 +9,7 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -39,10 +40,10 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<DQ_PositionalAccuracy> coordinateOperationAccuracy;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private CoordinateReferenceSystemItem sourceCrs;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private CoordinateReferenceSystemItem targetCrs;
 	
 	protected CoordinateOperationItem() {

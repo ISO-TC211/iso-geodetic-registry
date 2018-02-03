@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <body>
-        Dear $user.name:<p/>
+        Dear $user.name,<p/>
 
 		Your are registered as a point of contact for $delegation.delegatingOrganization.name. This message is to inform you that action is required from your side.<p/> 
 		<p/> 
@@ -13,10 +13,10 @@
 		    for the organization "$roleOrganization.name".
 		#end
  		</p>
- 		To accept or deny the request, please log in to the ISO Registry of Geodetic Codes and Parameters
+ 		To accept or deny the request, please log in to the ISO Geodetic Registry
  		and open the <a href="${baseUrl}management/poc">Point of Conatct</a> page.
  		</p>
         <br/><br/>
-        ISO Registry of Geodetic Codes and Parameters
+        ISO Geodetic Registry
     </body>
 </html>

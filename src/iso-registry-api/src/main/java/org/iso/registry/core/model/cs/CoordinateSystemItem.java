@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
@@ -23,6 +24,7 @@ public abstract class CoordinateSystemItem extends IdentifiedItem
 	 * Ordered sequence of associations to the coordinate system axes included in a coordinate system.  
 	 */
 	@ManyToMany
+	@OrderColumn(name = "axis_index")
 	private List<CoordinateSystemAxisItem> axes = new ArrayList<CoordinateSystemAxisItem>();
 
 	public List<CoordinateSystemAxisItem> getAxes() {

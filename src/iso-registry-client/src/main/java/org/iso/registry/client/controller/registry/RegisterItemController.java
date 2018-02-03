@@ -5,7 +5,6 @@ package org.iso.registry.client.controller.registry;
 
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -33,7 +32,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -42,18 +40,14 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
-import org.iso.registry.core.model.crs.VerticalCoordinateReferenceSystemItem;
-import org.iso.registry.core.model.cs.CoordinateSystemItem;
 import org.iso.registry.persistence.io.gml.GmlExporter;
 import org.iso.registry.persistence.io.wkt.WktExporter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +69,7 @@ import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
+import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -117,6 +112,9 @@ public class RegisterItemController
 
 	@Autowired
 	private ProposalService proposalService;
+	
+	@Autowired
+	private RegisterService registerService;
 	
 	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
@@ -236,6 +234,7 @@ public class RegisterItemController
 		
 		model.addAttribute("item", vb);
 		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+		model.addAttribute("dateOfLastChange", registerService.getFormattedDateOfLastChange());
 
 		String templateLocation = "pdftemplates/" + item.getItemClass().getName().toLowerCase() + ".fo";
 
@@ -300,14 +299,10 @@ public class RegisterItemController
 		ServletOutputStream out = response.getOutputStream();
 
 		if (item instanceof CoordinateReferenceSystemItem) {
-//			WktExporter.exportCrs((CoordinateReferenceSystemItem)item, sw);
 			GmlExporter.exportCrs((CoordinateReferenceSystemItem)item, out);
 		}
-//		else if (item instanceof CoordinateSystemItem) {
-//			WktExporter.exportCs((CoordinateSystemItem)item, sw);
-//		}
 		else {
-			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as WKT", item.getClass().getName()));
+			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as GML", item.getClass().getName()));
 		}
 
 		out.flush();

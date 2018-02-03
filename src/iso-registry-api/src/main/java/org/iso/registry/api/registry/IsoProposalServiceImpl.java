@@ -1,8 +1,13 @@
 package org.iso.registry.api.registry;
 
+import static de.geoinfoffm.registry.core.workflow.Iso19135ProposalWorkflowManager.*;
+
 import java.math.BigInteger;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.ProposalNote;
 import org.iso.registry.core.model.ProposalNoteRepository;
+import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +30,6 @@ import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.ProposalGroup;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.RegistryUser;
-import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.ProposalManagementInformationRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemStatus;
@@ -36,9 +41,6 @@ import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 
 public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoProposalService
 {
-	public static final String STATUS_RETURNED_BY_MANAGER = "RETURNED_BY_MANAGER";
-	public static final String STATUS_RETURNED_BY_CONTROLBODY = "RETURNED_BY_CONTROLBODY";
-	
 	private static final Logger logger = LoggerFactory.make();
 	
 	@Autowired
@@ -75,23 +77,157 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 			assignItemIdentifier(addition);
 		}
 		else if (proposal instanceof ProposalGroup) {
+			LinkedList<Addition> q = new LinkedList<>();
 			ProposalGroup group = (ProposalGroup)proposal;
 			for (Proposal subproposal : group.getProposals()) {
 				if (subproposal instanceof Addition) {
 					Addition addition = (Addition)subproposal;
-					assignItemIdentifier(addition);
-					for (Proposal dependentProposal : subproposal.getDependentProposals()) {
-						if (dependentProposal instanceof Addition) {
-							assignItemIdentifier((Addition)dependentProposal);
+					processGroupProposal(q, addition);
+				}
+			}
+			
+			Addition unity = null;
+			LinkedList<Addition> si = new LinkedList<>();
+			LinkedList<Addition> nonsi = new LinkedList<>();
+			LinkedList<Addition> per = new LinkedList<>();
+			LinkedList<Addition> uom = new LinkedList<>();
+			LinkedList<Addition> pm = new LinkedList<>();
+			LinkedList<Addition> ell = new LinkedList<>();
+			LinkedList<Addition> axis = new LinkedList<>();
+			LinkedList<Addition> cs = new LinkedList<>();
+			LinkedList<Addition> param = new LinkedList<>();
+			LinkedList<Addition> method = new LinkedList<>();
+			LinkedList<Addition> conv = new LinkedList<>();
+			LinkedList<Addition> datum = new LinkedList<>();
+			LinkedList<Addition> crs = new LinkedList<>();
+			LinkedList<Addition> tx = new LinkedList<>();
+			LinkedList<Addition> other = new LinkedList<>();
+			for (Addition addition : q) {
+				if ("UnitOfMeasure".equals(addition.getItemClassName())) {
+					UnitOfMeasureItem uomItem = (UnitOfMeasureItem)addition.getItem();
+					switch (uomItem.getName()) {
+					case "unity":
+						unity = addition;
+						break;
+					case "metre":
+					case "second":
+					case "radian":
+						si.add(addition);
+						break;
+					case "degree":
+					case "degree (supplier to define representation)":
+					case "arc-second":
+					case "US survey foot":
+						nonsi.add(addition);
+						break;
+					default:
+						if (uomItem.getName().contains(" per ")) {
+							per.add(addition);
+						} 
+						else { 
+							uom.add(addition);
 						}
 					}
 				}
+				else if ("PrimeMeridian".equals(addition.getItemClassName())) {
+					pm.add(addition);
+				}
+				else if ("Ellipsoid".equals(addition.getItemClassName())) {
+					ell.add(addition);
+				}
+				else if ("CoordinateSystemAxis".equals(addition.getItemClassName())) {
+					axis.add(addition);
+				}
+				else if (addition.getItemClassName().endsWith("CS")) {
+					cs.add(addition);
+				}
+				else if ("OperationParameter".equals(addition.getItemClassName())) {
+					param.add(addition);
+				}
+				else if ("OperationMethod".equals(addition.getItemClassName())) {
+					method.add(addition);
+				}
+				else if ("Conversion".equals(addition.getItemClassName())) {
+					conv.add(addition);
+				}
+				else if (addition.getItemClassName().endsWith("Datum")) {
+					datum.add(addition);
+				}
+				else if (addition.getItemClassName().endsWith("CRS")) {
+					crs.add(addition);
+				}
+				else if ("Transformation".equals(addition.getItemClassName())) {
+					tx.add(addition);
+				}
+				else {
+					logger.debug(MessageFormat.format("Unpriviledged item class: {0}", addition.getItemClassName()));
+					other.add(addition);
+				}
+			}
+
+			if (unity != null) {
+				assignItemIdentifier(unity);
+			}
+			for (Addition a : si) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : nonsi) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : uom) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : per) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : pm) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : ell) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : axis) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : cs) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : param) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : method) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : conv) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : datum) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : crs) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : tx) {
+				assignItemIdentifier(a);
+			}
+			for (Addition a : other) {
+				assignItemIdentifier(a);
 			}
 		}
 		
 		return super.acceptProposal(proposal, controlBodyDecisionEvent);
 	}
 
+	private void processGroupProposal(Queue<Addition> queue, Proposal proposal) { 
+		for (Proposal dependentProposal : proposal.getDependentProposals()) {
+			processGroupProposal(queue, dependentProposal);
+		}
+		if (proposal instanceof Addition) {
+//			assignItemIdentifier((Addition)proposal);
+			queue.add((Addition)proposal);
+		}
+	}
+	
 	private void assignItemIdentifier(Addition addition) {
 		RE_RegisterItem proposedItem = addition.getItem();
 		if (proposedItem instanceof IdentifiedItem) {

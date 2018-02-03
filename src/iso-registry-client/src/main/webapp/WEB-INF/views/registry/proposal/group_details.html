@@ -227,7 +227,7 @@
 					{ "aTargets": [2],
 							"mData": null,
 							"mRender": function (data, type, full) {
-								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
+								var $href = $('<p>' + full.sponsorName + '</p>');
 								return $("<div/>").append($href).html();
 							}
 					},
@@ -338,7 +338,7 @@
 					{ "aTargets": [2],
 							"mData": null,
 							"mRender": function (data, type, full) {
-								var $href = $('<a>' + full.sponsorName + '</a>').prop("href", '[[@{__${basePath}__/organization/by-sponsor/}]]' + full.sponsorUuid);
+								var $href = $('<p>' + full.sponsorName + '</p>');
 								return $("<div/>").append($href).html();
 							}
 					},

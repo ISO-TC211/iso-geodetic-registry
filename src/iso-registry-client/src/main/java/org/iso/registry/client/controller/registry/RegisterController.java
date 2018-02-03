@@ -9,12 +9,14 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,12 +104,14 @@ import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.DatatablesResult;
+import de.geoinfoffm.registry.client.web.NotFoundException;
 import de.geoinfoffm.registry.client.web.RegisterItemListItem;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
 import de.geoinfoffm.registry.core.NonExistentRevisionException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.Proposal;
@@ -290,19 +294,30 @@ public class RegisterController
 				addItemClassToList("VerticalCRS", itemClasses);
 				addItemClassToList("ProjectedCRS", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("cs")) {
+			else if (itemClassParam.equalsIgnoreCase("cs")) {
 				addItemClassToList("CartesianCS", itemClasses);
 				addItemClassToList("EllipsoidalCS", itemClasses);
 				addItemClassToList("VerticalCS", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("datums")) {
+			else if (itemClassParam.equalsIgnoreCase("datums")) {
 				addItemClassToList("GeodeticDatum", itemClasses);
 				addItemClassToList("VerticalDatum", itemClasses);
 			}
-			if (itemClassParam.equalsIgnoreCase("operations")) {
+			else if (itemClassParam.equalsIgnoreCase("operations")) {
 				addItemClassToList("ConcatenatedOperation", itemClasses);
 				addItemClassToList("Conversion", itemClasses);
 				addItemClassToList("Transformation", itemClasses);
+			}
+			else if (itemClassParam.equalsIgnoreCase("others")) {
+				addItemClassToList("CoordinateSystemAxis", itemClasses);
+				addItemClassToList("Ellipsoid", itemClasses);
+				addItemClassToList("OperationMethod", itemClasses);
+				addItemClassToList("OperationParameter", itemClasses);
+				addItemClassToList("PrimeMeridian", itemClasses);
+				addItemClassToList("UnitOfMeasure", itemClasses);
+			}
+			else {
+				addItemClassToList(itemClassParam, itemClasses);
 			}
 		}
 		
@@ -347,6 +362,26 @@ public class RegisterController
 		}
 	}
 
+	@RequestMapping(value = "/{register}/items/{itemIdentifier}", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public String getItemById(@PathVariable("register") String registerName, 
+			   @PathVariable("itemIdentifier") BigInteger itemIdentifier,
+			   final Model model, final RedirectAttributes redirectAttributes, final Pageable pageable) {
+		RE_Register register = findRegister(registerName);
+		if (register == null) {
+			redirectAttributes.addFlashAttribute("registerName", registerName);
+			return "registry/register_notfound";
+		}
+		model.addAttribute("register", register);
+
+		List<RE_RegisterItem> items = itemRepository.findByRegisterAndItemIdentifierAndStatusIn(register, itemIdentifier, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED));
+		if (items.isEmpty()) {
+			throw new ItemNotFoundException(register, itemIdentifier);
+		}
+		
+		return String.format("redirect:/item/%s", items.get(0).getUuid().toString());
+	}
+
 	@RequestMapping(value = "/{register}/{itemClassText}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public String registerOverview(@PathVariable("register") String registerName, 
@@ -361,16 +396,25 @@ public class RegisterController
 		
 		RE_ItemClass itemClass = null;
 		if (itemClassFilter != null) {
-			if (itemClassFilter.contains("-")) {
-				UUID itemClassUuid = UUID.fromString(itemClassFilter);
+			UUID itemClassUuid = null; 
+			try {
+				itemClassUuid = UUID.fromString(itemClassFilter);
+			}
+			catch (Throwable t) {
+				// Ignore
+			}
+			if (itemClassUuid != null) {
 				itemClass = itemClassRepository.findOne(itemClassUuid);
+				if (itemClass == null) {
+					throw new NotFoundException(MessageFormat.format("Item class {0} does not exist", itemClassUuid));
+				}
 				model.addAttribute("itemClass", itemClass);
 				model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
 			}
 			else {
 				model.addAttribute("itemClassFilter", itemClassFilter);
 				if (itemClassFilter.equalsIgnoreCase("crs")) {
-					model.addAttribute("pageTitle", "CRS");
+					model.addAttribute("pageTitle", "Coordinate Reference Systems");
 				}
 				else if (itemClassFilter.equalsIgnoreCase("cs")) {
 					model.addAttribute("pageTitle", "Coordinate Systems");
@@ -380,6 +424,17 @@ public class RegisterController
 				}
 				else if (itemClassFilter.equalsIgnoreCase("operations")) {
 					model.addAttribute("pageTitle", "Coordinate Operations");
+				}
+				else if (itemClassFilter.equalsIgnoreCase("others")) {
+					model.addAttribute("pageTitle", "Other item classes");
+				}
+				else {
+					itemClass = itemClassRepository.findByName(itemClassFilter);
+					if (itemClass == null) {
+						throw new NotFoundException(MessageFormat.format("Item class {0} does not exist", itemClassFilter));
+					}
+					model.addAttribute("itemClass", itemClass);
+					model.addAttribute("pageTitle", messageSource.getMessage(itemClass.getName(), new Object[] { }, LocaleContextHolder.getLocale()));
 				}
 			}
 		}
@@ -430,6 +485,14 @@ public class RegisterController
 				// Ignore
 			}
 		}
+		
+		if (register == null) {
+			String resolvedName = RegistryConfiguration.getInstance().getRegisterNameByAlias(registerName);
+			if (!StringUtils.isEmpty(resolvedName)) {
+				register = registerRepository.findByName(resolvedName);
+			}
+		}
+		
 		return register;
 	}
 

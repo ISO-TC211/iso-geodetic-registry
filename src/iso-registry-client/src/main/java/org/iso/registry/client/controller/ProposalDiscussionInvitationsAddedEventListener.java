@@ -41,12 +41,12 @@ public class ProposalDiscussionInvitationsAddedEventListener extends AbstractEve
 			final String discussionUrl = confirmationUrlBase + discussion.getUuid() + "?token=" + token;
 			final Map<String, Object> model = new HashMap<String, Object>();
 	        model.put("discussionUrl", discussionUrl);
-	        model.put("register", discussion.getDiscussedProposal().getAffectedRegisters().get(0));
+	        model.put("register", discussion.getDiscussedProposal().getAffectedRegisters().iterator().next());
 	        model.put("proposal", discussion.getDiscussedProposal());
 
 	        try {
 	        	InternetAddress recipient = new InternetAddress(invitee);
-	        	this.sendMail(recipient, "mail.subject.discussion.invitation", "mailtemplates/discussion_invitation", "de", 
+	        	this.sendMail(recipient, "mail.subject.discussion.invitation", "mailtemplates/discussion_invitation", "en", 
 	        			registryConfiguration.getMailBaseUrl(), model);
 	        }
 	    	catch (Throwable t) {

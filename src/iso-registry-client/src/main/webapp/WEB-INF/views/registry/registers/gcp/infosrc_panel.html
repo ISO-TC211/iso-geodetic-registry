@@ -7,7 +7,12 @@
 	</div>
 	<div id="informationSourcePanel" class="panel-collapse">
 		<ul id="infosrc-tabs" class="nav nav-tabs">
-			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:attr="data-index=${rowStat.index}"><a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab" th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"/></li>
+			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'li-infosrc-' + ${rowStat.index}" th:attr="data-index=${rowStat.index}">
+				<a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab">
+					<span th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"></span>
+					<button th:if="${isProposal}" th:id="'delete-infosrc-' + ${rowStat.index}" type="button" th:attr="data-index=${rowStat.index}" class="btn btn-xs btn-default button-close-infosrc"><span class="fa fa-times"></span></button>
+				</a>
+			</li>
 			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span>&nbsp;&nbsp;<span th:text="#{button.addNew}"></span></a></li>
 		</ul>
 		<div class="tab-content">
@@ -74,7 +79,7 @@
 <div th:fragment="informationSourceDetails" class="form-group">
 	<label class="control-label" for="informationSource" th:text="#{form.label.informationSource}"></label>
 	<div th:unless="*{informationSource.isEmpty()}" th:each="infosrc,rowstat : *{informationSource}">
-		<a th:id="'informationSource-' + ${rowstat.index}" th:href="'#dialog-info-src-' + ${rowstat.index}" data-toggle="modal"><big th:text="${infosrc.title} ? ${infosrc.title} : ('[' + #{untitled} + ']')"/></a>
+		<span class="text-muted" th:text="${rowstat.index + 1} + '.'"></span>&nbsp;<a th:id="'informationSource-' + ${rowstat.index}" th:href="'#dialog-info-src-' + ${rowstat.index}" data-toggle="modal"><big th:text="${infosrc.title} ? ${infosrc.title} : ('[' + #{untitled} + ']')"/></a>
 		
 		<div class="modal fade" th:id="'dialog-info-src-' + ${rowstat.index}" role="dialog">
 			<div class="modal-dialog modal-lg">
@@ -94,9 +99,27 @@
 				</div>
 			</div>							
 		</div>
-		
 	</div>
 	<div th:if="*{informationSource.isEmpty()}">
 		<p th:text="'[' + #{undefined} + ']'"/>
 	</div>	
+</div>
+
+<div th:fragment="citationPopup(index)" class="modal fade" th:id="'dialog-citation-' + ${index}" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 th:text="#{popup.informationSource.header}"></h4>
+			</div>
+			<div th:unless="${isProposal}" class="modal-body" th:object="${citation}">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div th:if="${isProposal}" class="modal-body" th:object="${citation}" th:with="isReadOnly='true'">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+			</div>
+		</div>
+	</div>							
 </div>

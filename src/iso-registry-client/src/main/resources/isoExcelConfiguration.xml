@@ -641,32 +641,27 @@
 		<exportType>org.iso.registry.client.SingleOperationItemViewBean</exportType>
 		<itemClassName>Transformation</itemClassName>
 		<column columnName="B">
+			<javaProperty>name</javaProperty>
+			<multiple>false</multiple>
+		</column>
+		<column columnName="C">
+			<javaProperty>aliases</javaProperty>
+			<multiple>true</multiple>
+		</column>
+		<column columnName="D">
 			<javaProperty>sourceCrs</javaProperty>
 			<multiple>false</multiple>
 			<references>CRS(CR#)</references>
 		</column>
-		<column columnName="C">
+		<column columnName="E">
 			<javaProperty>targetCrs</javaProperty>
 			<multiple>false</multiple>
 			<references>CRS(CR#)</references>
-		</column>
-		<column columnName="D">
-			<javaProperty>name</javaProperty>
-			<multiple>false</multiple>
-		</column>
-		<column columnName="E">
-			<javaProperty>aliases</javaProperty>
-			<multiple>true</multiple>
 		</column>
 		<column columnName="F">
 			<javaProperty>operationType</javaProperty>
 			<multiple>false</multiple>
 			<valueMapper>org.iso.registry.api.registry.registers.gcp.operation.OperationTypeMapper</valueMapper>
-		</column>
-		<column columnName="F">
-			<javaProperty>#itemClassName</javaProperty>
-			<multiple>false</multiple>
-			<valueMapper>org.iso.registry.api.registry.registers.gcp.ItemClassNameMapper</valueMapper>
 		</column>
 		<column columnName="G">
 			<javaProperty>scope</javaProperty>
@@ -698,6 +693,7 @@
 		<column columnName="M">
 			<javaProperty>accuracy</javaProperty>
 			<multiple>false</multiple>
+			<valueMapper>org.iso.registry.api.registry.registers.gcp.operation.AccuracyMapper</valueMapper>
 		</column>
 		<column columnName="N">
 			<javaProperty>informationSource</javaProperty>
@@ -735,43 +731,18 @@
 			<multiple>false</multiple>
 		</column>
 		<column columnName="F">
-			<javaProperty>value</javaProperty>
-			<multiple>true</multiple>
-		</column>
-		<column columnName="G">
 			<javaProperty>parameterUnit</javaProperty>
 			<multiple>false</multiple>
 			<references>UoM(UM#)</references>
 		</column>
 		<column columnName="H">
-			<javaProperty>parameterUnit</javaProperty>
-			<javaPropertyExport>unitOfMeasure</javaPropertyExport>
+			<javaProperty>value</javaProperty>
 			<multiple>false</multiple>
-			<references>UoM(UM#)</references>
 		</column>
 		<column columnName="I">
-			<javaProperty>value</javaProperty>
+			<javaProperty>valueFileCitation</javaProperty>
 			<multiple>false</multiple>
+			<references>Source_Citation(CI#)</references>
 		</column>
-		<column columnName="J">
-			<javaProperty>value</javaProperty>
-			<multiple>true</multiple>
-		</column>
-		<column columnName="K">
-			<javaProperty>value</javaProperty>
-			<multiple>false</multiple>
-		</column>
-		<column columnName="L">
-			<javaProperty>value</javaProperty>
-			<multiple>false</multiple>
-		</column>
-		<column columnName="M">
-			<javaProperty>value</javaProperty>
-			<multiple>false</multiple>
-		</column>
-<!-- 		<column columnName="N"> -->
-<!-- 			<javaProperty>valueFileCitation</javaProperty> -->
-<!-- 			<multiple>false</multiple> -->
-<!-- 		</column> -->
 	</sheet>
 </ExcelConfiguration>

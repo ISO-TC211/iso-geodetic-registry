@@ -66,7 +66,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 	}
 	
 	private void initializeEmpty() {
-		this.dataSource = "ISO Registry of Geodetic Codes & Parameters";
+		this.dataSource = "ISO Geodetic Registry";
 //		this.getInformationSource().add(new CitationDTO());
 	}
 
@@ -77,7 +77,7 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		return aliases;
 	}
 
-	protected void setAliases(List<String> aliases) {
+	public void setAliases(List<String> aliases) {
 		this.aliases = aliases;
 	}
 	
@@ -163,10 +163,12 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 			item.setItemIdentifier(BigInteger.valueOf(item.getIdentifier().longValue()));
 			item.setRemarks(this.getRemarks());
 			
-			for (CitationDTO citation : this.getInformationSource()) {
-				item.getInformationSource().add(citation.toCitation());
+			if (this.getInformationSource() != null) {
+				item.getInformationSource().clear();
+				for (CitationDTO citation : this.getInformationSource()) {
+					item.getInformationSource().add(citation.toCitation());
+				}
 			}
-//			item.setInformationSource(toJson(this.getInformationSource()));
 			
 			item.setDataSource(this.getDataSource());
 		}

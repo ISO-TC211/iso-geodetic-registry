@@ -2,8 +2,8 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.title">ISO Geodetic Registry</entry>
+	<entry key="application.header">Geodetic Registry</entry>
 	<entry key="application.welcome">Welcome</entry>
 	<entry key="application.version">${git.commit.id.describe}-${git.commit.id.abbrev}</entry>
 	
@@ -82,6 +82,8 @@
 	<entry key="tableheader.axisAbbreviation">Axis abbreviation</entry>
 	<entry key="tableheader.axisUnit">Axis unit</entry>
 	<entry key="tableheader.axisDirection">Axis direction</entry>
+	<entry key="tableheader.citation">Citation</entry>
+	<entry key="tableheader.scope">Scope</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -133,6 +135,7 @@
 	<entry key="header.containedProposals">Contained proposals</entry>
 	<entry key="header.ungroupedProposals">Ungrouped proposals that may be added</entry>
 	<entry key="header.groupProposal">Group proposal</entry>
+	<entry key="header.terms">Terms of Use</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -271,8 +274,8 @@
 	<entry key="alert.accountConfirmed">Your account was confirmed. You may now login using your e-mail address {0}.</entry>	
 	<entry key="alert.accountConfirmationFailed">The provided confirmation token was incorrect.</entry>	
 	<entry key="alert.userProfileUpdated">Your profile was updated.</entry>	
-	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
-	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
+	<entry key="alert.historicView">Es wird ein historischer Stand der ISO Geodetic Registry angezeigt.</entry>
+	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der ISO Geodetic Registry. Es wird der aktuelle Stand angezeigt.</entry>
 	<entry key="alert.organizationCreated">The organization was created successfully.</entry>
 	<entry key="alert.organizationDeleted">The organization was deleted.</entry>
 	<entry key="alert.noSupersededItems">At least one item must be selected.</entry>
@@ -343,6 +346,20 @@
 	<entry key="tabs.geographicExtent">Geographic extent</entry>
 	<entry key="tabs.verticalExtent">Vertical extent</entry>
 	<entry key="tabs.temporalExtent">Temporal extent</entry>
+	<entry key="tabs.uomDetails">Unit of Measure details</entry>
+	<entry key="tabs.standardUnitDetails">Standard Unit</entry>
+	
+	<entry key="mail.subject.signup.confirmation">You have signed up for the ISO Geodetic Registry</entry>
+	<entry key="mail.subject.signup.confirmed">[ISO Geodetic Registry] You have successfully confirmed your account</entry>
+	<entry key="mail.subject.password.reset">[ISO Geodetic Registry] Password reset</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Geodetic Registry] Permission requested by user</entry>
+	<entry key="mail.subject.delegation.denied">[ISO Geodetic Registry] Permission request was denied</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Geodetic Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Geodetic Registry] New proposal submitted</entry>
+	<entry key="mail.subject.proposal.reviewed">[ISO Geodetic Registry] New proposal requires approval</entry>
+	<entry key="mail.subject.proposal.appealed">[ISO Geodetic Registry] Proposal was appealed</entry>
+	<entry key="mail.subject.proposal.accepted">[ISO Geodetic Registry] Proposal was accepted</entry>
+	<entry key="mail.subject.proposal.rejected">[ISO Geodetic Registry] Proposal was rejected</entry>
 		
 	<entry key="legend.create">Create new proposal</entry>
 	<entry key="legend.edit">Edit proposal</entry>
@@ -419,6 +436,7 @@
 	<entry key="form.label.coordinateReferenceEpoch">Coordinate Reference Epoch</entry>
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
+	<entry key="form.label.symbol">Symbol</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
 	<entry key="form.label.factorB">Numerator (factor B)</entry>
 	<entry key="form.label.factorC">Denominator (factor C)</entry>
@@ -466,6 +484,8 @@
 	<entry key="form.label.accuracy">Accuracy</entry>
 	<entry key="form.label.accuracyUom">Accuracy unit</entry>
 	<entry key="form.label.coordinateOperations">Coordinate Operations</entry>
+	<entry key="form.label.selectUom">Select a unit</entry>
+	<entry key="form.label.orDefineNewUom">OR define a new unit</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -500,6 +520,8 @@
 	<entry key="form.placeholder.confirmPassword"></entry>
 	<entry key="form.placeholder.identifier"></entry>
 	<entry key="form.placeholder.scope"></entry>
+	<entry key="form.placeholder.symbol"></entry>
+	<entry key="form.placeholder.selectStandardUnit"></entry>
 	
 	<entry key="form.placeholder.semiMajorAxis"></entry>
 	<entry key="form.placeholder.semiMinorAxis"></entry>
@@ -591,10 +613,10 @@
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposed contents</entry>
 
-	<entry key="mail.subject.signup.confirmation">You have signed up for ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="mail.subject.delegation.requested">[ISO Registry] Permission requested by user</entry>
-	<entry key="mail.subject.discussion.invitation">[ISO Registry] Proposal discussion invitation</entry>
-	<entry key="mail.subject.proposal.submitted">[ISO Registry] New proposal</entry>
+	<entry key="mail.subject.signup.confirmation">You have signed up for the ISO Geodetic Registry</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Geodetic Registry] Permission requested by user</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Geodetic Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Geodetic Registry] New proposal</entry>
 			
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Target register</entry>
