@@ -1,10 +1,8 @@
 package de.bespire.registry.iso.importer;
 
 import java.io.IOException;
-import java.math.BigInteger;
 
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
@@ -50,7 +48,7 @@ public class PrimeMeridiansImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 		
 		Integer epsgCode = (Integer)row.get(PRIME_MERIDIAN_CODE);
 //		proposal.setIdentifier(determineIdentifier("Ellipsoid", epsgCode));
@@ -59,7 +57,7 @@ public class PrimeMeridiansImporter extends AbstractImporter
 		proposal.setGreenwichLongitude((Double)row.get(GREENWICH_LONGITUDE));
 
 		Integer uomCode = (Integer)row.get(UOM_CODE);
-		UnitOfMeasureItem uom = uomRepository.findOne(findMappedCode("UnitOfMeasure", uomCode));
+		UnitOfMeasureItem uom = findMappedEntity("UnitOfMeasure", uomCode, UnitOfMeasureItem.class);
 		proposal.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO(uom));
 
 		proposal.setRemarks((String)row.get(REMARKS));

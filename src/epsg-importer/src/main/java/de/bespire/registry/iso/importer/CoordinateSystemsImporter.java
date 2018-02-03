@@ -60,7 +60,7 @@ public class CoordinateSystemsImporter extends AbstractImporter
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
 
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+		fillProposalRelatedFields(proposal, row, codeProperty());
 
 		// Add axes
 		Integer epsgCode = (Integer)row.get(COORD_SYS_CODE);
@@ -73,12 +73,12 @@ public class CoordinateSystemsImporter extends AbstractImporter
 			do {
 				Row axisRow = cursor.getCurrentRow();
 				Integer axisCode = (Integer)axisRow.get(CoordinateSystemAxesImporter.COORD_AXIS_CODE);
-				CoordinateSystemAxisItem axis = axisRepository.findOne(findMappedCode("CoordinateSystemAxis", axisCode));
+				CoordinateSystemAxisItem axis = findMappedEntity("CoordinateSystemAxis", axisCode, CoordinateSystemAxisItem.class);
 				if (axis == null) {
 					logger.error("!!! Missing axis #{}", axisCode.toString());
 				}
 				
-				proposal.addAxis(new AxisDTO(axis));
+				proposal.getAxes().add(new CoordinateSystemAxisItemProposalDTO(axis));
 			} while (cursor.findNextRow(m));
 		}
 		

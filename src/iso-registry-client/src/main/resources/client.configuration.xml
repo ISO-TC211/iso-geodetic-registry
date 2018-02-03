@@ -11,4 +11,7 @@
 	 
 	<!-- URL that must be used by external clients to perform confirmation (this is included in confirmation mails)  -->	
 	<entry key="signup.confirmationUrl">${client.signup.confirmationUrl}</entry> 
+	
+	<!-- Static part of client URLs (e.g. ~/regdev) -->
+	<entry key="client.demoMode">${client.demoMode}</entry>
 </properties>

@@ -10,6 +10,14 @@
 				<div th:include="layout :: navtree"></div>
 			</div>
 			<div class="col-md-9" role="main">
+				<div th:if="${uploadNothingProcessed}" class="alert alert-warning">
+					<p>
+						<span th:text="#{alert.nothingProcessed}"></span>
+					</p>
+				</div>
+				<div th:if="${uploadProposalGroupCreated}" class="alert alert-success">
+					<span th:text="#{alert.proposalGroupCreated}"></span><a th:href="@{__${basePath}__/proposals/__${uploadProposalGroupCreatedUuid}__}" class="alert-link" th:text="${uploadProposalGroupCreated}"/>
+				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title" th:text="#{mgmt.submitter.content.header}">Proposed item</h3>
@@ -52,7 +60,7 @@
 													</div>
 												</div>
 												<div class="modal-footer">
-													<button type="button" id="addition" class="btn btn-success" th:text="#{button.addition}">Item registrieren</button>
+													<button type="button" id="addition" class="btn btn-success button-addition" th:text="#{button.addition}">Item registrieren</button>
 													<button type="button" name="cancel" data-dismiss="modal" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
 												</div>
 											</div>
@@ -158,8 +166,7 @@
 				var uuid = $(this).data('uuid');
 				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/submit', null, function(success, errorThrown) {
 					if (success) {
-						showProcessing(uuid, 4);
-						clearCell(uuid, 5);
+						document.location.reload();
 					}
 					else {
 						showError(errorThrown, '[[@{__${basePath}__}]]');
@@ -187,8 +194,7 @@
 				var uuid = $(this).data('uuid');
 				postDelete('[[@{__${basePath}__/proposals/}]]' + uuid, function(success, errorThrown) {
 					if (success) {
-						showProcessing(uuid, 4);
-						clearCell(uuid, 5);
+						document.location.reload();
 					}
 					else {
 						alert(errorThrown);
@@ -388,6 +394,13 @@
 				initGroupSelect(uuid);
 			});
 
+			$('body').on('click', '.button-addition', function() {
+// 				location.href = '[[@{__${basePath}__/register/}]]' + $('#register').val() + '?itemClass= + ' $('#itemClass').val();
+				location.href = '[[@{__${basePath}__/register/}]]' + $('#register').val() + '/proposal/addition?itemClass=' + $('#itemClass').val();
+			});
+
+			
+// 			th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''"
 		});
 		
 	/* ]]> */

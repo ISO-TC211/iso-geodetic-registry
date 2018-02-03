@@ -59,9 +59,10 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		proposal.setItemClassUuid(itemClass.getUuid());
 		proposal.setSponsorUuid(sponsor.getUuid());
 		proposal.setTargetRegisterUuid(register.getUuid());
-
-		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
 		
+		// Don't call fillProposalRelatedFields() here! Reference to EPSG code makes no sense for axes
+		proposal.setJustification(AbstractImporter.IMPORT_SOURCE);
+
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put(COORD_AXIS_NAME_CODE, (Integer)row.get(COORD_AXIS_NAME_CODE));
 		if (!namesTable.getDefaultCursor().findFirstRow(m)) {
@@ -77,8 +78,7 @@ public class CoordinateSystemAxesImporter extends AbstractImporter
 		
 		Integer uomEpsgCode = (Integer)row.get(UOM_CODE);
 //		Integer uomCode = mapRepository.findByItemClassAndEpsgCode("UnitOfMeasure", uomEpsgCode);
-		UUID uomCode = findMappedCode("UnitOfMeasure", uomEpsgCode);
-		UnitOfMeasureItem uom = uomRepository.findOne(uomCode);
+		UnitOfMeasureItem uom = findMappedEntity("UnitOfMeasure", uomEpsgCode, UnitOfMeasureItem.class);
 		if (uom == null) {
 			logger.error("!!! Missing UoM #{}", uomEpsgCode.toString());
 			return;

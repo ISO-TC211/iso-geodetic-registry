@@ -1,8 +1,9 @@
 package org.iso.registry.core.model.iso19115.extent;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 
 import org.hibernate.envers.Audited;
@@ -27,6 +28,16 @@ public class EX_GeographicBoundingBox extends EX_GeographicExtent
 		this.northBoundLatitude = northBoundLatitude;
 		this.westBoundLongitude = westBoundLongitude;
 		this.southBoundLatitude = southBoundLatitude;
+	}
+
+	public EX_GeographicBoundingBox(BigDecimal eastBoundLongitude,
+			BigDecimal northBoundLatitude,
+			BigDecimal westBoundLongitude,
+			BigDecimal southBoundLatitude) {
+		this.eastBoundLongitude = eastBoundLongitude.doubleValue();
+		this.northBoundLatitude = northBoundLatitude.doubleValue();
+		this.westBoundLongitude = westBoundLongitude.doubleValue();
+		this.southBoundLatitude = southBoundLatitude.doubleValue();
 	}
 
 	/**

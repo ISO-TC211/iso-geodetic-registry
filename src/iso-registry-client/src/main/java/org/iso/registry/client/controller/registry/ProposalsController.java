@@ -3,11 +3,17 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.CONTROLBODY_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.OWNER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +29,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +48,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
@@ -45,12 +56,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.ProposalListItem;
+import de.geoinfoffm.registry.api.ProposalListItemImpl;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
+import de.geoinfoffm.registry.client.web.DatatableParameters;
+import de.geoinfoffm.registry.client.web.DatatablesResult;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
 import de.geoinfoffm.registry.core.ItemClassRegistry;
@@ -58,6 +73,7 @@ import de.geoinfoffm.registry.core.PropertyConfiguration;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalChangeRequestRepository;
 import de.geoinfoffm.registry.core.model.ProposalGroup;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
 import de.geoinfoffm.registry.core.model.ProposalType;
@@ -132,6 +148,12 @@ public class ProposalsController
 	
 	@Autowired
 	private ProposalDtoFactory proposalDtoFactory;
+
+	@Autowired
+	private ProposalChangeRequestRepository pcrRepository;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@Autowired
 	private ConversionService conversionService;
@@ -239,6 +261,7 @@ public class ProposalsController
 	public String viewProposal(WebRequest request, 
 							   @PathVariable("uuid") UUID proposalUuid, 
 							   @RequestParam(value = "edit", required = false) String forceEdit,
+							   @RequestParam(value = "role", required = false) String role,
 							   final Model model) throws ProposalNotFoundException, UnauthorizedException {
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
@@ -249,6 +272,13 @@ public class ProposalsController
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(proposal);
 		model.addAttribute("proposal", dto);
 		model.addAttribute("itemClass", dto.getItemClassUuid());
+		
+		if (!StringUtils.isEmpty("role")) {
+			model.addAttribute("_userRole", role);
+		}
+		else {
+			model.addAttribute("_userRole", "submitter");
+		}
 		
 		if (!dto.getSupersededItems().isEmpty()) {
 			Set<RegisterItemViewBean> supersededItems = new HashSet<RegisterItemViewBean>();
@@ -432,6 +462,11 @@ public class ProposalsController
 		}
 		security.assertMayWrite(proposal);
 		
+		String role = null;
+		if (allParams.containsKey("_userRole")) {
+			role = (String)allParams.get("_userRole");
+		}
+		
 		if (proposal instanceof Supersession) {
 			SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 			if (state == null) {
@@ -449,7 +484,12 @@ public class ProposalsController
 			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest);
 			
 			proposalService.updateProposal(proposalDto);
-			return "redirect:/management/submitter";
+			if (role != null) {
+				return "redirect:/management/" + role;
+			}
+			else {
+				return "redirect:/";
+			}
 		}
 	}
 
@@ -589,7 +629,7 @@ public class ProposalsController
 		security.assertMayWrite(pmi);
 		
 		if (!StringUtils.isEmpty(operation)) {
-			proposal = new RegisterItemProposalDTO(pmi, proposalDtoFactory);
+			proposal = new RegisterItemProposalDTO(pmi);
 			UUID uuid = UUID.fromString(itemUuid);
 			// perform special operation
 			if ("removeSupersedingItem".equals(operation)) {
@@ -911,6 +951,113 @@ public class ProposalsController
 		proposalService.concludeProposal(proposal);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{uuid}/addproposal", method = RequestMethod.POST)
+	@Transactional 
+	public ResponseEntity<Void> addProposalToGroup(@PathVariable("uuid") UUID proposalUuid, @RequestParam("addedProposalUuid") UUID addedProposalUuid) throws InvalidProposalException, IllegalOperationException, UnauthorizedException, ProposalNotFoundException {
+		logger.debug("POST /proposal/{}/addproposal", proposalUuid);
+		
+		security.assertHasRoleWith(SUBMITTER_ROLE_PREFIX);
+		RegistryUser currentUser = security.getCurrentUser();
+
+		Proposal proposal = proposalService.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+		if (!(proposal instanceof ProposalGroup)) {
+			throw new IllegalOperationException("Cannot add proposal to non-group");
+		}
+		if (proposalUuid.equals(addedProposalUuid)) {
+			throw new IllegalOperationException("Cannot add group to itself");			
+		}
+		
+		Proposal addedProposal = proposalService.findOne(addedProposalUuid);
+
+		ProposalGroup group = (ProposalGroup)proposal;
+		group.addProposal(addedProposal);
+		proposalService.saveProposal(group);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);		
+	}
+
+	@RequestMapping(value = "/{uuid}/removefromgroup", method = RequestMethod.POST)
+	@Transactional 
+	public ResponseEntity<Void> removeProposalFromGroup(@PathVariable("uuid") UUID proposalUuid) throws InvalidProposalException, IllegalOperationException, UnauthorizedException, ProposalNotFoundException {
+		logger.debug("POST /proposal/{}/removefromgroup", proposalUuid);
+		
+		security.assertHasRoleWith(SUBMITTER_ROLE_PREFIX);
+		RegistryUser currentUser = security.getCurrentUser();
+
+		Proposal proposal = proposalService.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+		if (!proposal.hasParent() || !(proposal.getParent() instanceof ProposalGroup) || proposal.getParent() instanceof Supersession) {
+			throw new IllegalOperationException("Proposal is not part of a group");
+		}
+		
+		ProposalGroup group = (ProposalGroup)proposal.getParent();
+		group.removeProposal(proposal);
+		proposalService.saveProposal(group);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);				
+	}
+
+	@RequestMapping(value = "/{uuid}/dissolve", method = RequestMethod.POST)
+	@Transactional 
+	public ResponseEntity<Void> dissolveProposalGroup(@PathVariable("uuid") UUID proposalUuid) throws InvalidProposalException, IllegalOperationException, UnauthorizedException, ProposalNotFoundException {
+		logger.debug("POST /proposal/{}/dissolve", proposalUuid);
+		
+		security.assertHasRoleWith(SUBMITTER_ROLE_PREFIX);
+		RegistryUser currentUser = security.getCurrentUser();
+
+		Proposal proposal = proposalService.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+		if (!(proposal instanceof ProposalGroup) || (proposal instanceof Supersession)) {
+			throw new IllegalOperationException("Cannot dissolve non-group or supersessions");
+		}
+		
+		ProposalGroup group = (ProposalGroup)proposal;
+		while (!group.getProposals().isEmpty()) {
+			group.removeProposal(group.getProposals().get(0));
+		}
+		
+		group = proposalService.saveProposal(group);
+		proposalService.delete(group.getUuid());
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);		
+	}
+	
+	@RequestMapping(value = "/by-group/{uuid}", method = RequestMethod.GET)
+	@Transactional
+	public @ResponseBody DatatablesResult getAdminProposals(@PathVariable("uuid") UUID groupUuid,
+														    @RequestParam Map<String, String> parameters) throws UnauthorizedException {
+
+		DatatableParameters dtParameters = new DatatableParameters(parameters);
+		Pageable pageable = dtParameters.createPageable();
+
+		Page<Proposal> proposals;
+		if (!StringUtils.isEmpty(dtParameters.sSearch)) {
+			proposals = proposalRepository.findByParentAndIsConcludedIsFalse(groupUuid, "%" + dtParameters.sSearch + "%", pageable);
+		}
+		else {
+			proposals = proposalRepository.findByParentAndIsConcludedIsFalse(groupUuid, pageable);
+		}
+
+		Locale locale = LocaleContextHolder.getLocale();
+		
+		List<ProposalListItem> proposalViewBeans = new ArrayList<>();
+
+		for (Proposal proposal : proposals) {
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
+			proposalViewBeans.add(rvb);
+		}
+		DatatablesResult result = new DatatablesResult(proposals.getTotalElements(), proposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);
+		
+		return result;
 	}
 
 	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {

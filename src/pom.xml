@@ -3,12 +3,12 @@
 	<parent>
         <groupId>de.geoinfoffm.registry</groupId>
         <artifactId>registry-parent</artifactId>
-        <version>2.2</version>
+        <version>2.3</version>
         <relativePath>registry-base</relativePath>
     </parent>
 	<groupId>org.iso.registry</groupId>
 	<artifactId>iso-registry-parent</artifactId>
-	<version>1.4.2</version>
+	<version>1.5</version>
 	<packaging>pom</packaging>
 	<properties>
 	</properties>
@@ -69,5 +69,13 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+                <repository>
+                        <id>jboss-third-party</id>
+                        <name>JBoss 3rd-party</name>
+                        <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+                        <snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+                </repository>
 	</repositories>	
 </project>

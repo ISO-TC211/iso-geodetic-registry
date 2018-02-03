@@ -1,17 +1,26 @@
 package de.bespire.registry.iso.importer;
 
-import java.util.UUID;
-
 import org.iso.registry.core.model.AliasRepository;
 import org.iso.registry.core.model.IdentifiedItem;
+import org.iso.registry.core.model.NamingSystemItem;
 import org.iso.registry.core.model.NamingSystemItemRepository;
+import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.UnitOfMeasureItemRepository;
 import org.iso.registry.core.model.crs.AreaItemRepository;
+import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItemRepository;
+import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.cs.CoordinateSystemAxisItemRepository;
+import org.iso.registry.core.model.datum.DatumItem;
 import org.iso.registry.core.model.datum.DatumItemRepository;
+import org.iso.registry.core.model.datum.EllipsoidItem;
 import org.iso.registry.core.model.datum.EllipsoidItemRepository;
+import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItemRepository;
+import org.iso.registry.core.model.operation.ConversionItem;
+import org.iso.registry.core.model.operation.OperationMethodItem;
+import org.iso.registry.core.model.operation.OperationParameterItem;
+import org.iso.registry.core.model.operation.TransformationItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.healthmarketscience.jackcess.Row;
 
-import de.geoinfoffm.registry.core.Entity;
-import de.geoinfoffm.registry.core.EntityRepository;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -52,13 +59,13 @@ public class AliasesImporter extends AbstractImporter
 	
 	public AliasesImporter() { }
 	
-	private <T extends Entity> T getObjectEx(String itemClass, Integer objectCode, EntityRepository<T> repository) {
-		UUID uuid = findMappedCode(itemClass, objectCode);
-		if (uuid != null) {
-			return repository.findOne(uuid);
-		}
-		return null;
-	}
+//	private <T extends Entity> T getObjectEx(String itemClass, Integer objectCode, EntityRepository<T> repository) {
+//		UUID uuid = findMappedCode(itemClass, objectCode);
+//		if (uuid != null) {
+//			return repository.findOne(uuid);
+//		}
+//		return null;
+//	}
 	
 	@Override
 	@Transactional
@@ -86,34 +93,37 @@ public class AliasesImporter extends AbstractImporter
 	//			item = areaRepository.findByIdentifier(objectCode);
 	//		}
 			if (objectType.equals("Coordinate Axis Name")) {
-				item = getObjectEx("CoordinateAxis", objectCode, axisRepository);
+				item = findMappedEntity("CoordinateSystemAxis", objectCode, CoordinateSystemAxisItem.class);
 			}
 			else if (objectType.equals("Coordinate Reference System")) {
-				item = getObjectEx("CoordinateReferenceSystem", objectCode, crsRepository);
+				item = findMappedEntity("*CRS", objectCode, CoordinateReferenceSystemItem.class);
 			}
 			else if (objectType.equals("Coordinate_Operation")) {
-				return;
+				item = findMappedEntity("Conversion", objectCode, ConversionItem.class);
+				if (item == null) {
+					item = findMappedEntity("Transformation", objectCode, TransformationItem.class);					
+				}
 			}
 			else if (objectType.equals("Coordinate_Operation Method")) {
-				return;
+				item = findMappedEntity("OperationMethod", objectCode, OperationMethodItem.class);
 			}
 			else if (objectType.equals("Coordinate_Operation Parameter")) {
-				return;
+				item = findMappedEntity("OperationParameter", objectCode, OperationParameterItem.class);
 			}
 			else if (objectType.equals("Datum")) {
-				item = getObjectEx("Datum", objectCode, datumRepository);
+				item = findMappedEntity("*Datum", objectCode, DatumItem.class);
 			}
 			else if (objectType.equals("Ellipsoid")) {
-				item = getObjectEx("Ellipsoid", objectCode, ellipsoidRepository);
+				item = findMappedEntity("Ellipsoid", objectCode, EllipsoidItem.class);
 			}
 			else if (objectType.equals("Naming System")) {
-				item = namingSystemRepository.findOne(findMappedCode("NamingSystem", objectCode));
+				item = findMappedEntity("NamingSystem", objectCode, NamingSystemItem.class);
 			}
 			else if (objectType.equals("Prime Meridian")) {
-				item = getObjectEx("PrimeMeridian", objectCode, pmRepository);
+				item = findMappedEntity("PrimeMeridian", objectCode, PrimeMeridianItem.class);
 			}
 			else if (objectType.equals("Unit of Measure")) {
-				item = getObjectEx("UnitOfMeasure", objectCode, uomRepository);
+				item = findMappedEntity("UnitOfMeasure", objectCode, UnitOfMeasureItem.class);
 			}
 			else {
 				logger.info("Skipped alias '{}' (#{}) for object #{} in unknown table {}", new Object[] { aliasText, aliasCode, objectCode, objectType }); 
@@ -152,8 +162,8 @@ public class AliasesImporter extends AbstractImporter
 
 	@Override
 	protected String codeProperty() {
-		return ALIAS_CODE;
-//		return OBJECT_CODE;
+//		return ALIAS_CODE;
+		return OBJECT_CODE;
 	}
 
 }

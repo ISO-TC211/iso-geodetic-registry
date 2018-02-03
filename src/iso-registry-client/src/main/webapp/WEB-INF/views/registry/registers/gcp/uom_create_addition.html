@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" th:with="referencedDetailsTemplate='registry/registers/gcp/uom_stdunit_details.html'">
 <head th:include="layout :: headerFragment" />
-<body th:include="registry/registers/create_item :: body(#{header.uom}, 'registry/registers/gcp/uom_details')"/>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="row clearfix" style="margin-top: 0px">
+		
+			<form id="proposal" role="form" th:object="${proposal}" method="post" style="padding: 20px">
+				<fieldset>		
+		
+					<div class="col-md-12 column">
+		
+						<div th:replace="registry/registers/proposal-globals :: itemClassSelector"/> 			
+						
+						<div class="panel-group" id="accordion" th:with="isCollapsible='true'">
+
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<a data-toggle="collapse" data-parent="#accordion" href="#dataPanel">
+										<span class="panel-title" th:text="${itemClassName} ? #{${itemClassName}} : ${headerLabel}"></span>									
+									</a>
+									<div class="pull-right">
+										<span class="glyphicon glyphicon-chevron-right"></span>
+									</div>
+								</div>
+
+								<div id="dataPanel" class="panel-collapse collapse in">								
+									<div class="panel-body">
+										<div th:if="${itemClass}">
+											<div th:replace="globals :: itemClassNotConfiguredWarning"/>
+											<div th:fragment="tabs">
+												<ul class="nav nav-tabs">
+													<li class="active"><a href="#uomDetails" data-toggle="tab" th:text="#{tabs.uomDetails}"></a></li>
+													<li><a href="#standardUnitDetails" data-toggle="tab" th:text="#{tabs.standardUnitDetails}"></a></li>
+												</ul>
+
+												<div class="tab-content">
+													<div id="uomDetails" class="tab-pane in active" style="padding-top: 10px">
+														<div th:replace="registry/registers/gcp/uom_details :: details"/>
+													</div>
+													<div id="standardUnitDetails" class="tab-pane in" style="padding-top: 10px">
+														<div th:replace="registry/registers/gcp/uom_stdunit_details :: details"/>
+													</div>
+												</div>
+											</div>
+										</div> <!-- if ${itemClass} -->
+									</div>
+								</div>
+							</div>
+	
+							<div th:if="${showExtentPanel}" th:unless="${proposal.isClarification()}">
+								<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
+							</div>
+							<div th:unless="${proposal.isClarification()}">
+								<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetailsPanel"/>
+							</div>
+							<div th:replace="globals :: proposalDetailsPanel (isCollapsible='true')"/>
+
+						</div>
+						
+						<div id="validationFailed" class="alert alert-danger" th:utext="#{alert.validationFailed}"/>
+						<div th:replace="registry/registers/proposal-globals :: proposalButtons"/>
+					</div>
+					
+				</fieldset>
+			</form>
+			
+		</div>
+	</div>
+
+	<div th:include="layout :: foot"></div>
+	
+	<script th:replace="globals :: js-proposal"/>
+
+</body>
+<!-- <body th:include="registry/registers/create_item :: body(#{header.uom}, 'registry/registers/gcp/uom_details')"/> -->
 </html>

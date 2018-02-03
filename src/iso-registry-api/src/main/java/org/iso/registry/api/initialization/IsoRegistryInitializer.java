@@ -1,37 +1,24 @@
 package org.iso.registry.api.initialization;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.isotc211.iso19135.RE_SubmittingOrganization_PropertyType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.security.access.intercept.RunAsUserToken;
-import org.springframework.security.acls.model.MutableAclService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ViewResolver;
 
 import de.geoinfoffm.registry.api.AbstractRegistryInitializer;
-import de.geoinfoffm.registry.api.ProposalService;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
-import de.geoinfoffm.registry.api.RegisterItemService;
+import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.RoleService;
 import de.geoinfoffm.registry.api.UserRegistrationException;
+import de.geoinfoffm.registry.api.soap.CreateOrganizationRequest;
 import de.geoinfoffm.registry.api.soap.CreateRegistryUserRequest;
-import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;
 import de.geoinfoffm.registry.core.RegistryInitializer;
 import de.geoinfoffm.registry.core.UnauthorizedException;
-import de.geoinfoffm.registry.core.model.Addition;
+import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
@@ -39,116 +26,184 @@ import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
 import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
 import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
-import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
-import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
-import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
+import de.geoinfoffm.registry.persistence.RegisterRepository;
 
+@Component
 public class IsoRegistryInitializer extends AbstractRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
 {
-	private static final Logger logger = LoggerFactory.getLogger(IsoRegistryInitializer.class);
+	@Autowired
+	private RegistryUserGroupRepository groupRepository;
 	
-	@Autowired private RegistryUserGroupRepository groupRepository;
-	@Autowired private ItemClassRepository itemClassRepository;
-	@Autowired private RegistryUserRepository userRepository;
-	@Autowired private RegistryUserService userService;
-	@Autowired private SubmittingOrganizationRepository suborgRepository;
-	@Autowired private RegisterService registerService;
-	@Autowired private RoleService roleService;
-	@Autowired private RegisterItemService itemService;
-	@Autowired private ProposalService proposalService;
-	@Autowired private ViewResolver viewResolver;
-	@Autowired private RegistrySecurity security;
-	@Autowired private MutableAclService mutableAclService;
+	@Autowired
+	private SubmittingOrganizationRepository suborgRepository;
 
-	private ApplicationEventPublisher eventPublisher;
+	@Autowired
+	private RegistryUserRepository userRepository;
+
+	@Autowired
+	private RegistryUserService userService;
 	
-	private AtomicInteger progress;
+	@Autowired
+	private OrganizationService orgService;
 
-	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-		this.eventPublisher = applicationEventPublisher;
-	}
-
+	@Autowired
+	private ItemClassRepository itemClassRepository;
+	
+	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
+	private RegisterRepository registerRepository;
+	
+	@Autowired
+	private RegisterService registerService;
+	
 	@Override
 	@Transactional
-	protected void initialize() throws UserRegistrationException, UnauthorizedException, InstantiationException, IllegalAccessException, InvalidProposalException {
-		RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");
-		if (adminGroup == null) {
-			logger.info("> Creating ROLE_ADMIN...");
-			adminGroup = new RegistryUserGroup("ROLE_ADMIN");
-			groupRepository.save(adminGroup);
-		}
-
-		CI_ResponsibleParty respExample = new CI_ResponsibleParty("Johne Doe", null, null, CI_RoleCode.USER);
-		RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization("EXAMPLE", respExample);
-		suborgRepository.save(orgExample);
-
-		RegistryUser rt = createUser("René Thiele", "r", "rene.thiele@geoinfoffm.de", adminGroup);
-		RegistryUser ex = createUser("Sam Submitter", "s", "submitter@example.org");
-
-		String registerName = "Geodetic Codes & Parameters";
-		RE_Register r = registerService.findByName(registerName);
-		if (r == null) {
-			logger.info("> Creating register...");
-			r = registerService.createRegister(registerName, rt, rt, rt, roleService, RE_Register.class,
-					new ParameterizedRunnable<RE_Register>() {
-						@Override
-						public void run(RE_Register parameter) {
+	protected void initialize() {
+		try {
+			RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");  
+			if (adminGroup == null) {
+				log("> Creating ROLE_ADMIN...");
+				adminGroup = new RegistryUserGroup("ROLE_ADMIN");
+				groupRepository.save(adminGroup);
+				log("done");
+			}
+			
+			Organization isotc211 = orgService.findByName("ISO/TC 211");
+			if (isotc211 == null) {
+				isotc211 = createOrganization("ISO/TC 211", "TC211");
+			}
+			
+			String registerName = "ISO Geodetic Register";
+			RE_Register r = registerService.findByName(registerName); 
+			if (r == null) {
+				log("> Creating register...");
+				r = registerService.createRegister(
+						registerName,
+						isotc211, isotc211, isotc211,
+						roleService, 
+						RE_Register.class,
+						new ParameterizedRunnable<RE_Register>() {
+							public void run(RE_Register parameter) {
+							}
 						}
-					});
+				);
 
-			eventPublisher.publishEvent(new RegistersChangedEvent(this));
+				eventPublisher().publishEvent(new RegistersChangedEvent(this));
 
-			logger.info(">>> {} (owner = {}; manager = {})", new Object[] { r.getName(), r.getOwner().getName(), r.getManager().getName() });
+				log(String.format(">>> '%s' (owner = %s; manager = %s)", r.getName(), r.getOwner().getName(), r.getManager().getName()));
+			}
+			
+			addItemClass("CompoundCRS", r);
+			addItemClass("EngineeringCRS", r);
+			addItemClass("GeodeticCRS", r);
+			addItemClass("ProjectedCRS", r);
+			addItemClass("VerticalCRS", r);
+			addItemClass("CartesianCS", r);
+			addItemClass("EllipsoidalCS", r);
+			addItemClass("SphericalCS", r);
+			addItemClass("VerticalCS", r);
+			addItemClass("EngineeringDatum", r);
+			addItemClass("GeodeticDatum", r);
+			addItemClass("VerticalDatum", r);
+			addItemClass("ConcatenatedOperation", r);
+			addItemClass("Conversion", r);
+			addItemClass("Transformation", r);
+			addItemClass("CoordinateSystemAxis", r);
+			addItemClass("Ellipsoid", r);
+			addItemClass("OperationMethod", r);
+			addItemClass("OperationParameter", r);
+			addItemClass("PrimeMeridian", r);
+			addItemClass("UnitOfMeasure", r);
 		}
+		catch (Throwable t) {
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+
+	@Transactional
+	@Override
+	protected void loadExampleData() throws Exception {
+		Organization isotc211 = orgService.findByName("ISO/TC 211");
+		RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");
+		
+		RegistryUser submitter = createUser("ISO Geodetic Registry Submitter", "s", "submitter@example.org", isotc211);
+		RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
+		RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
+		RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
+		RegistryUser admin = createUser("ISO Geodetic Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
+		RegistryUser poc = createUser("ISO TC/211 Point of Contact", "p", "poc@example.org", isotc211);
+
+		String registerName = "ISO Geodetic Register";
+		RE_Register r = registerService.findByName(registerName); 
 
 		Role submitterRole = registerService.getSubmitterRole(r);
-		logger.info(">>> Adding submitter {}", ex.getEmailAddress());
+		isotc211.assignRole(submitterRole);
+		orgService.delegate(submitter, submitterRole, isotc211);
 
-		RE_ItemClass icCrs = this.addItemClass("CoordinateReferenceSystem", r);
-		RE_ItemClass icArea = this.addItemClass("Area", r);
+		Role managerRole = registerService.getManagerRole(r);
+		orgService.delegate(regman, managerRole, isotc211);
 
-//		final RE_RegisterItem worldArea = this.registerItem(r, icArea, "World", AreaItemProposalDTO.class,
-//				new ParameterizedRunnable<AreaItemProposalDTO>() {
-//					@Override
-//					public void run(AreaItemProposalDTO parameter) {
-//						parameter.setCode(1262);
-//						parameter.setSouthBoundLatitude(-90.0);
-//						parameter.setNorthBoundLatitude(+90.0);
-//						parameter.setWestBoundLongitude(-180.0);
-//						parameter.setEastBoundLongitude(+180.0);
-//					}
-//				});
-//		this.registerItem(r, icArea, "Germany - west of 7.5°E", AreaItemProposalDTO.class,
-//				new ParameterizedRunnable<AreaItemProposalDTO>() {
-//					@Override
-//					public void run(AreaItemProposalDTO parameter) {
-//						parameter.setCode(1624);
-//						parameter.setSouthBoundLatitude(49.1);
-//						parameter.setNorthBoundLatitude(53.75);
-//						parameter.setWestBoundLongitude(5.87);
-//						parameter.setEastBoundLongitude(7.5);
-//					}
-//				});
+		Role ownerRole = registerService.getOwnerRole(r);
+		orgService.delegate(owner, ownerRole, isotc211);
 
-		this.registerItem(r, icCrs, "WGS 84", CoordinateReferenceSystemItemProposalDTO.class,
-				new ParameterizedRunnable<CoordinateReferenceSystemItemProposalDTO>() {
-					@Override
-					public void run(CoordinateReferenceSystemItemProposalDTO parameter) {
-//						parameter.setCode(4326);
-//						parameter.setArea(new AreaItemProposalDTO(worldArea.getUuid()));
-//						parameter.setScope("Horizontal component of 3D system. Used by the GPS satellite navigation "
-//								+ "system and for NATO military geodetic surveying.");
-//						parameter.setType(CoordinateSystemType.GEOGRAPHIC_2D);
-					}
-				});
+		Role controlBodyRole = registerService.getControlBodyRole(r);
+		orgService.delegate(cb, controlBodyRole, isotc211);
+		
+		Role pocRole = orgService.getPointOfContactRole(isotc211);
+		orgService.delegate(poc, pocRole, isotc211);
+	}
 
-		logger.info("Initialization complete.");
+
+	protected Organization createOrganization(String name, String shortName) throws UnauthorizedException {
+		CI_ResponsibleParty respExample = new CI_ResponsibleParty("John Doe", null, null, CI_RoleCode.USER);
+		RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization(name, respExample);
+		orgExample = suborgRepository.save(orgExample);
+
+		RE_SubmittingOrganization_PropertyType pt = new RE_SubmittingOrganization_PropertyType();
+		pt.setUuidref(orgExample.getUuid().toString());
+		
+		CreateOrganizationRequest cor = new CreateOrganizationRequest();
+		cor.setName(name);
+		cor.setShortName(shortName);
+		cor.setSubmittingOrganization(pt);
+		return orgService.createOrganization(cor);
+	}
+
+	protected RegistryUser createUser(String name, String password, String mail, Organization organization, Role... roles)
+			throws UserRegistrationException, UnauthorizedException {
+		
+		RegistryUser existingUser = userRepository.findByEmailAddressIgnoreCase(mail);
+		
+		if (existingUser != null) {
+			return existingUser;
+		}
+
+		CreateRegistryUserRequest req = new CreateRegistryUserRequest();
+		req.setName(name);
+		req.setPassword(password);
+		req.setOrganizationUuid(organization.getUuid().toString());
+		req.setEmailAddress(mail);
+		req.setPreferredLanguage("en");
+		req.setActive(true);
+		for (Role role : roles) {
+			req.getRole().add(role.getName());
+		}
+		
+		log(mail);
+
+		existingUser = userService.registerUser(req);
+		
+		Role membershipRole = orgService.getMembershipRole(organization);
+		orgService.delegate(existingUser, membershipRole, organization);
+		
+		return existingUser;
 	}
 
 	private RE_ItemClass addItemClass(String name, RE_Register r) {
@@ -159,86 +214,18 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 				break;
 			}
 		}
-
+		
 		if (ic == null) {
-			logger.info("> Adding item class to register '{}'...", r.getName());
+			log(String.format("> Adding item class '%s' to register '%s'...\n", name, r.getName()));
 			ic = new RE_ItemClass();
 			ic.setName(name);
 			r.getContainedItemClasses().add(ic);
+			ic.getRegisters().add(r);
 			ic = itemClassRepository.save(ic);
-
-			logger.info(">>> {}", ic.getName());
+			r = registerRepository.save(r);
 		}
-
+		
 		return ic;
 	}
-
-	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register,
-			RE_ItemClass itemClass, String name, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter)
-			throws InvalidProposalException, InstantiationException, IllegalAccessException, UnauthorizedException {
-		P proposal;
-		proposal = dtoClass.newInstance();
-		proposal.setItemClassUuid(itemClass.getUuid());
-		proposal.setSponsorUuid(suborgRepository.findAll().get(0).getUuid());
-		proposal.setTargetRegisterUuid(register.getUuid());
-
-		proposal.setName(name);
-		proposal.setDefinition("Definition");
-		proposal.setJustification("Justification");
-
-		paramSetter.run(proposal);
-
-		logger.info("> Adding item {}' of class {}' to register '{}'...", new Object[] { proposal.getName(), itemClass.getName(), register.getName() });
-
-		Addition ai = proposalService.createAdditionProposal(proposal);
-		proposalService.submitProposal(ai);
-		
-		String decisionEvent = "Decision event";
-		acceptProposal(ai, decisionEvent);
-
-		return ai.getItem();
-	}
-
-	protected void acceptProposal(Addition ai, String decisionEvent) throws InvalidProposalException, UnauthorizedException {
-		try {
-			proposalService.reviewProposal(ai);
-			proposalService.acceptProposal(ai, decisionEvent);
-		}
-		catch (IllegalOperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	@Transactional
-	public synchronized void loadExampleData() throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
-		logger.info("Loading example data...");
-	}
-
-	protected RegistryUser createUser(String name, String password, String mail, Role... roles)
-			throws UserRegistrationException, UnauthorizedException {
-
-		RegistryUser existingUser = userRepository.findByEmailAddressIgnoreCase(mail);
-
-		if (existingUser != null) {
-			return existingUser;
-		}
-
-		CreateRegistryUserRequest req = new CreateRegistryUserRequest();
-		req.setName(name);
-		req.setPassword(password);
-		req.setEmailAddress(mail);
-		req.setPreferredLanguage("en");
-		req.setActive(true);
-		for (Role role : roles) {
-			req.getRole().add(role.getName());
-		}
-
-		logger.info(">>>  {}", mail);
-
-		return userService.registerUser(req);
-	}
-	
 
 }

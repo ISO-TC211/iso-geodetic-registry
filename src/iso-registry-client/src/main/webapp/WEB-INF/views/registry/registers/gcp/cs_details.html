@@ -40,10 +40,11 @@
 <!-- 							<a th:unless="${isProposal}" th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name} + ' [' + ${axis.code} + ']'"></a> -->
 <!-- 						</td>							 -->
 						<td th:text="${axis.identifier}"/>
-						<td th:text="${axis.name}"/>
+						<td><a th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name}"/></td>
 						<td th:text="${axis.axisAbbreviation}"/>
 						<td th:text="${axis.axisUnit.name}"/>
 						<td th:text="${axis.axisDirection.code}"/>
+						<td th:text="${row.index}"/>
 					</tr>
 				</tbody>
 			</table>
@@ -107,13 +108,15 @@
        		$('#axesTable').dataTable({
        			"bPaginate": false,
        			"bFilter": false,
-	   			 aoColumns: [
-	    						{"bSortable" : false},
-	       						{"bSortable" : false},
-	       						{"bSortable" : false},
-	       						{"bSortable" : false},
-	       						{"bSortable" : false},
-   					]
+       			"aaSorting": [[ "5", "asc" ]],
+	   			"aoColumns": [
+	    			{"bSortable": false},
+	       			{"bSortable": false},
+	       			{"bSortable": false},
+	       			{"bSortable": false},
+	       			{"bSortable": false},
+					{ "bVisible": false }
+   				]
        		});
        		
        		$('.select-axis').each(function() {

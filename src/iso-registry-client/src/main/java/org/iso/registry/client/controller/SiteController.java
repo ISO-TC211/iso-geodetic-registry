@@ -1,45 +1,23 @@
 package org.iso.registry.client.controller;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.math.BigInteger;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.crs.GeodeticCoordinateReferenceSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemAxisItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.cs.CoordinateSystemItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.DatumItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.EllipsoidItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO;
-import org.iso.registry.api.registry.registers.gcp.operation.AxisDTO;
-import org.iso.registry.core.model.UnitOfMeasureItem;
-import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
-import org.iso.registry.core.model.cs.CoordinateSystemItem;
-import org.iso.registry.core.model.datum.EllipsoidItem;
-import org.iso.registry.core.model.datum.GeodeticDatumItem;
-import org.iso.registry.core.model.datum.PrimeMeridianItem;
-import org.iso.registry.core.model.iso19103.MeasureType;
-import org.iso.registry.core.model.iso19111.cs.CS_AxisDirection;
-import org.isotc211.iso19135.RE_SubmittingOrganization_PropertyType;
+import org.iso.registry.api.initialization.IsoRegistryInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.acls.model.MutableAclService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -57,7 +35,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.ProposalService;
-import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.RegistryUserService;
@@ -71,11 +48,8 @@ import de.geoinfoffm.registry.client.web.ClientConfiguration;
 import de.geoinfoffm.registry.client.web.OrganizationFormBean;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
 import de.geoinfoffm.registry.client.web.SignupFormBean;
-import de.geoinfoffm.registry.core.IllegalOperationException;
-import de.geoinfoffm.registry.core.ParameterizedRunnable;
-import de.geoinfoffm.registry.core.RegistersChangedEvent;
+import de.geoinfoffm.registry.core.RegistryInitializer;
 import de.geoinfoffm.registry.core.UnauthorizedException;
-import de.geoinfoffm.registry.core.model.Addition;
 import de.geoinfoffm.registry.core.model.Delegation;
 import de.geoinfoffm.registry.core.model.DelegationRepository;
 import de.geoinfoffm.registry.core.model.Organization;
@@ -85,13 +59,7 @@ import de.geoinfoffm.registry.core.model.RegistryUserGroup;
 import de.geoinfoffm.registry.core.model.RegistryUserGroupRepository;
 import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.model.Role;
-import de.geoinfoffm.registry.core.model.iso19115.CI_ResponsibleParty;
-import de.geoinfoffm.registry.core.model.iso19115.CI_RoleCode;
 import de.geoinfoffm.registry.core.model.iso19135.InvalidProposalException;
-import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
-import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
-import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
-import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 import de.geoinfoffm.registry.core.model.iso19135.SubmittingOrganizationRepository;
 import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
@@ -103,7 +71,7 @@ import de.geoinfoffm.registry.persistence.ItemClassRepository;
  * 
  */
 @Controller
-@ComponentScan(basePackages = { "org.iso.registry", "de.geoinfoffm.registry" })
+@ComponentScan(basePackages = { "org.iso.registry", "de.bespire.registry", "de.geoinfoffm.registry" })
 public class SiteController extends AbstractController
 {
 	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
@@ -152,9 +120,10 @@ public class SiteController extends AbstractController
 	
 	@Autowired
 	private DelegationRepository delegationRepository;
-
-	private StringBuilder initLog;
 	
+	@Autowired
+	private RegistryInitializer initializer;
+
 	private static boolean isInitializing = false;
 
 	@InitBinder
@@ -185,6 +154,11 @@ public class SiteController extends AbstractController
 		return "403";
 	}
 
+	@RequestMapping(value = "/terms", method = RequestMethod.GET)
+	public String termsHandler() {
+		return "terms";
+	}
+
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public String initialize(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
 		return "init";
@@ -192,27 +166,22 @@ public class SiteController extends AbstractController
 
 	@RequestMapping(value = "/init/status", method = RequestMethod.GET)
 	public ResponseEntity<String> initStatus(HttpServletRequest request) {
-		if (initLog == null) {
-			return new ResponseEntity<String>("Not initializing.", HttpStatus.NO_CONTENT);
-		}
-		else if (isInitializing) {
-			return new ResponseEntity<String>(initLog.toString(), HttpStatus.PARTIAL_CONTENT);			
-		}
-		else {
-			return new ResponseEntity<String>(initLog.toString(), HttpStatus.OK);						
+		switch (initializer.status()) {
+			case IsoRegistryInitializer.STATUS_NOT_INITIALIZING:
+				return new ResponseEntity<String>("Not initializing.", HttpStatus.NO_CONTENT);
+			case IsoRegistryInitializer.STATUS_INITIALIZING:
+				return new ResponseEntity<String>(initializer.log(), HttpStatus.PARTIAL_CONTENT);			
+			case IsoRegistryInitializer.STATUS_DONE:
+				return new ResponseEntity<String>(initializer.log(), HttpStatus.OK);
+			default:
+				return new ResponseEntity<String>("Unknown status: " + initializer.status(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@RequestMapping(value = "/init/start", method = RequestMethod.GET)
 	@Transactional
-	public ResponseEntity<String> initializeStart(HttpServletRequest request) throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
-		isInitializing = true;
-		initLog = new StringBuilder();
-		
-		initializeRegistry();
-		loadExampleData();
-		isInitializing = false;
-
+	public ResponseEntity<String> initializeStart(HttpServletRequest request) throws Exception {
+		initializer.initializeRegistry();
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
@@ -230,7 +199,37 @@ public class SiteController extends AbstractController
 		return "acls";
 	}
 
-
+	/**
+	 * Displays the application error view.
+	 * 
+	 * May be used e.g. by unsuccessful AJAX calls to display the server-side exception to the user
+	 *  
+	 * @param model View model (injected)
+	 * @param details POST parameter "errorDetails" to hold the server-side error message
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/error", method = RequestMethod.POST) 
+	public String handleError(final Model model, @RequestParam("errorDetails") String details) throws UnsupportedEncodingException {
+		// Log the error
+		if (!StringUtils.isEmpty(details)) {
+			logger.error(details);
+			try {
+				details = URLDecoder.decode(details, "UTF-8"); 
+			}
+			catch (Throwable t) {
+				details = "Please check the server log for details.";
+			}
+			
+			model.addAttribute("errorDetails", details);
+		}
+		else {
+			model.addAttribute("errorDetails", "No error details available");			
+		}
+		
+		return "error";
+	}
+	
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String registerUser(WebRequest request, @ModelAttribute("user") final SignupFormBean userData,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) {
@@ -484,211 +483,4 @@ public class SiteController extends AbstractController
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-
-	@Transactional
-	private synchronized void initializeRegistry() {
-		initLog.append("Initializing registry...\n\n");
-
-		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-		try {
-			Authentication authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			
-			RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");  
-			if (adminGroup == null) {
-				initLog.append("> Creating ROLE_ADMIN...");
-				adminGroup = new RegistryUserGroup("ROLE_ADMIN");
-				groupRepository.save(adminGroup);
-				initLog.append("done\n");
-			}
-
-			Organization isotc211 = createOrganization("ISO/TC 211");
-			
-			RegistryUser regman = createUser("ISO Register Manager", "m", "regman@example.org", isotc211);
-			RegistryUser admin = createUser("ISO Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
-
-			initLog.append("\n");
-			
-			String registerName = "Geodetic Codes & Parameters";
-			RE_Register r = registerService.findByName(registerName); 
-			if (r == null) {
-				initLog.append("> Creating register...\n");
-				r = registerService.createRegister(
-						registerName,
-						regman, regman, regman,
-						roleService, 
-						RE_Register.class,
-						new ParameterizedRunnable<RE_Register>() {
-							@Override
-							public void run(RE_Register parameter) {
-							}
-						}
-				);
-				
-				eventPublisher().publishEvent(new RegistersChangedEvent(this));
-
-				initLog.append(String.format(">>> '%s'", r.getName()));
-				initLog.append(String.format(" (owner = %s; manager = %s)\n", r.getOwner().getName(), r.getManager().getName()));
-				
-				initLog.append("\n");
-			}
-
-			initLog.append("Initialization complete.");
-		}
-		catch (Throwable t) {
-			t.printStackTrace();
-			initLog.append("\n\n");
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			t.printStackTrace(pw);
-			initLog.append(sw.toString());
-		}
-		finally {
-			SecurityContextHolder.getContext().setAuthentication(currentAuth);
-		}
-	}
-
-	private Organization createOrganization(String name) throws UnauthorizedException {
-		CI_ResponsibleParty respExample = new CI_ResponsibleParty("John Doe", null, null, CI_RoleCode.USER);
-		RE_SubmittingOrganization orgExample = new RE_SubmittingOrganization(name, respExample);
-		orgExample = suborgRepository.save(orgExample);
-
-		RE_SubmittingOrganization_PropertyType pt = new RE_SubmittingOrganization_PropertyType();
-		pt.setUuidref(orgExample.getUuid().toString());
-		
-		CreateOrganizationRequest cor = new CreateOrganizationRequest();
-		cor.setName(name);
-		cor.setSubmittingOrganization(pt);
-		return orgService.createOrganization(cor);
-	}
-	
-	private RE_ItemClass addItemClass(String name, RE_Register r) {
-		RE_ItemClass ic = null;
-		for (RE_ItemClass itemClass : r.getContainedItemClasses()) {
-			if (itemClass.getName().equals(name)) {
-				ic = itemClass;
-				break;
-			}
-		}
-		
-		if (ic == null) {
-			initLog.append(String.format("> Adding item class to register '%s'...\n", r.getName()));
-			ic = new RE_ItemClass();
-			ic.setName(name);
-			r.getContainedItemClasses().add(ic);
-			ic = itemClassRepository.save(ic);
-
-			initLog.append(String.format(">>> %s\n", ic.getName()));
-			
-			initLog.append("\n");
-		}
-		
-		return ic;
-	}
-
-	public <P extends RegisterItemProposalDTO> RE_RegisterItem registerItem(RE_Register register, RE_ItemClass itemClass, String name, BigInteger itemIdentifier, Organization sponsor, Class<P> dtoClass, ParameterizedRunnable<P> paramSetter) throws InvalidProposalException, InstantiationException, IllegalAccessException, UnauthorizedException {
-		P proposal;
-		proposal = BeanUtils.instantiateClass(dtoClass);
-		proposal.setItemClassUuid(itemClass.getUuid());
-		proposal.setSponsorUuid(sponsor.getSubmittingOrganization().getUuid());
-		proposal.setTargetRegisterUuid(register.getUuid());
-
-		proposal.setName(name);
-		proposal.setDefinition("Definition");
-		proposal.setJustification("Justification");
-		
-		paramSetter.run(proposal);
-
-		initLog.append(String.format("> Adding item '%s' of class '%s' to register '%s'...", proposal.getName(), itemClass.getName(), register.getName()));
-		
-		Addition ai = proposalService.createAdditionProposal(proposal);
-		proposalService.submitProposal(ai);
-		
-		String decisionEvent = "Decision event";
-		acceptProposal(ai, decisionEvent, itemIdentifier);
-		
-		initLog.append("done.\n");
-		
-		return ai.getItem();
-	}
-
-	protected void acceptProposal(Addition ai, String decisionEvent, BigInteger itemIdentifier) throws InvalidProposalException, UnauthorizedException {
-		try {
-			if (itemIdentifier != null) {
-				ai.getItem().setItemIdentifier(itemIdentifier);
-				itemService.saveRegisterItem(ai.getItem());
-			}
-			proposalService.reviewProposal(ai);
-			proposalService.acceptProposal(ai, decisionEvent);
-		}
-		catch (IllegalOperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Transactional
-	public synchronized void loadExampleData() throws InvalidProposalException, UserRegistrationException, UnauthorizedException {
-		initLog.append("\n");
-		initLog.append("===========================================================\n");
-		initLog.append("Loading example data...\n\n");
-		
-		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
-		try {
-			Authentication authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
-			initLog.append("\n\n\n");
-			initLog.append("Finished. Please click Start to continue.");
-		}
-		catch (Throwable t) {
-			t.printStackTrace();
-			initLog.append("\n\n");
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			t.printStackTrace(pw);
-			initLog.append(sw.toString());
-		}
-		finally {
-			SecurityContextHolder.getContext().setAuthentication(currentAuth);
-		}
-	}
-
-	protected RegistryUser createUser(String name, String password, String mail, Organization organization, Role... roles)
-			throws UserRegistrationException, UnauthorizedException {
-		
-		RegistryUser existingUser = userRepository.findByEmailAddressIgnoreCase(mail);
-		
-		if (existingUser != null) {
-			return existingUser;
-		}
-
-		CreateRegistryUserRequest req = new CreateRegistryUserRequest();
-		req.setName(name);
-		req.setPassword(password);
-		req.setOrganizationUuid(organization.getUuid().toString());
-		req.setEmailAddress(mail);
-		req.setPreferredLanguage("en");
-		req.setActive(true);
-		for (Role role : roles) {
-			req.getRole().add(role.getName());
-		}
-		
-		initLog.append(">>> ");
-		initLog.append(mail);
-		initLog.append("\n");
-
-		return userService.registerUser(req);
-	}
-
-	private static String leadingZero(int i) {
-		if (i < 10) {
-			return "0" + Integer.toString(i);
-		}
-		else {
-			return Integer.toString(i);
-		}
-	}
-
 }

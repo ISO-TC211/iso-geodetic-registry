@@ -1,0 +1,654 @@
+<!-- Mit XMLSpy v2014 sp1 (x64) (http://www.altova.com) von Florian Esser (Fachhochschule Frankfurt a.M.) bearbeitet -->
+<xs:schema xmlns:reg="http://www.geoinfoffm.de/registry/soap" xmlns:gdisoap="http://registry.gdi-de.org/api/soap" xmlns:grg="http://www.isotc211.org/2005/grg" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:whttp="http://www.w3.org/ns/wsdl/http" xmlns:wsdl="http://www.w3.org/ns/wsdl" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.geoinfoffm.de/registry/soap" elementFormDefault="qualified">
+	<xs:import namespace="http://www.isotc211.org/2005/grg" schemaLocation="../schema/iso/19135/grg.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../schema/iso/19139/gco/gco.xsd"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AbstractProposal_Type" abstract="true">
+		<xs:sequence>
+			<xs:element name="sponsor" type="grg:RE_SubmittingOrganization_PropertyType"/>
+			<xs:element name="justification" type="xs:string"/>
+			<xs:element name="registerManagerNotes" type="xs:string" minOccurs="0"/>
+			<xs:element name="controlBodyNotes" type="xs:string" minOccurs="0"/>
+			<xs:element name="transportUuid" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="uuid" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractProposal" type="reg:AbstractProposal_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Proposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:AbstractProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ProposalGroup_Type">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ProposalGroup" type="reg:ProposalGroup_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ProposalGroup_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:ProposalGroup" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Addition_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractProposal_Type">
+				<xs:sequence>
+					<xs:element name="itemDetails" type="reg:RegisterItemProposal_PropertyType"/>
+					<xs:element name="targetRegisterUuid" type="xs:string"/>
+					<xs:element name="createdItem" type="grg:RE_RegisterItem_PropertyType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Addition" type="reg:Addition_Type" substitutionGroup="reg:AbstractProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Addition_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Addition" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Retirement_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractProposal_Type">
+				<xs:sequence>
+					<xs:element name="retiredItemUuid" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Retirement" type="reg:Retirement_Type" substitutionGroup="reg:AbstractProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Retirement_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Retirement" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ProposedChange_Type">
+		<xs:sequence>
+			<xs:element name="property" type="xs:string"/>
+			<xs:element name="newValue" type="gco:CharacterString_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ProposedChange" type="reg:ProposedChange_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ProposedChange_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:ProposedChange" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Clarification_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractProposal_Type">
+				<xs:sequence>
+					<xs:element name="clarifiedItemUuid" type="xs:string"/>
+					<xs:element name="proposedChange" type="reg:ProposedChange_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Clarification" type="reg:Clarification_Type" substitutionGroup="reg:AbstractProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Clarification_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Clarification" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Supersession_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractProposal_Type">
+				<xs:sequence>
+					<xs:element name="supersededItemUuid" type="xs:string" maxOccurs="unbounded"/>
+					<!-- use uuidref attribute to reference existing items -->
+					<xs:element name="supersedingItem" type="reg:RegisterItemProposal_PropertyType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Supersession" type="reg:Supersession_Type" substitutionGroup="reg:AbstractProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Supersession_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Supersession" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RegisterItemProposal_Type">
+		<xs:sequence>
+			<xs:element name="itemClassUuid" type="xs:string"/>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="definition" type="xs:string"/>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RegisterItemProposal" type="reg:RegisterItemProposal_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="RegisterItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:RegisterItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="GDI_RegisterItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:RegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="shortName" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GDI_RegisterItemProposal" type="reg:GDI_RegisterItemProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GDI_RegisterItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:GDI_RegisterItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="HierarchicalRegisterItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:GDI_RegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="parentItem" type="reg:HierarchicalRegisterItemProposal_PropertyType" minOccurs="0"/>
+					<xs:element name="containedItems" type="reg:HierarchicalRegisterItemProposal_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="delegatedControlBodyOrganizationItemUuid" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="HierarchicalRegisterItemProposal" type="reg:HierarchicalRegisterItemProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="HierarchicalRegisterItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:HierarchicalRegisterItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="DomainNamespaceProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:HierarchicalRegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="oidResolver" type="reg:OIDResolver_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="DomainNamespaceProposal" type="reg:DomainNamespaceProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="DomainNamespaceProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:DomainNamespaceProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="OIDResolver_Type">
+		<xs:sequence>
+			<xs:element name="priority" type="xs:int"/>
+			<xs:element name="onlineResourceTemplate" type="xs:string"/>
+			<xs:element name="oidPattern" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OIDResolver" type="reg:OIDResolver_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OIDResolver_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:OIDResolver" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="OrganizationItemProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:HierarchicalRegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="onlineResourceLogo" type="xs:string"/>
+					<xs:element name="onlineResourceWebsite" type="xs:string"/>
+					<xs:element name="street" type="xs:string"/>
+					<xs:element name="addressLine2" type="xs:string" minOccurs="0"/>
+					<xs:element name="city" type="xs:string"/>
+					<xs:element name="postalCode" type="xs:string"/>
+					<xs:element name="administrativeArea" type="xs:string"/>
+					<xs:element name="country" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="OrganizationItemProposal" type="reg:OrganizationItemProposal_Type" substitutionGroup="reg:HierarchicalRegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="OrganizationItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:OrganizationItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AbstractMonitoringItemProposal_Type" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="reg:GDI_RegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="metadataIdentifier" type="xs:string" minOccurs="0"/>
+					<xs:element name="monitoringYear" type="xs:int"/>
+					<xs:element name="metadataExistent" type="xs:boolean"/>
+					<xs:element name="metadataInspireCompliant" type="xs:boolean"/>
+					<xs:element name="inspireCompliant" type="xs:boolean"/>
+					<xs:element name="searchable" type="xs:boolean"/>
+					<xs:element name="comment" type="xs:string" minOccurs="0"/>
+					<xs:element name="contactEmail" type="xs:string" minOccurs="0"/>
+					<xs:element name="providerOrganization" type="xs:string"/>
+					<xs:element name="regionCode" type="xs:string"/>
+					<xs:element name="contactLevelCode" type="xs:string"/>
+					<xs:element name="contactLevelCodespace" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractMonitoringItemProposal" type="reg:AbstractMonitoringItemProposal_Type" abstract="true" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MonitoringItemProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:AbstractMonitoringItemProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ServiceProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractMonitoringItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="averageDailyRequests" type="xs:int"/>
+					<xs:element name="serviceUrl" type="xs:string"/>
+					<xs:element name="serviceType" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ServiceProposal" type="reg:ServiceProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ServiceProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:ServiceProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="DataSetProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:AbstractMonitoringItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="relevantArea" type="xs:double"/>
+					<xs:element name="actualArea" type="xs:double"/>
+					<xs:element name="viewServiceFid" type="xs:string"/>
+					<xs:element name="downloadServiceFid" type="xs:string"/>
+					<xs:element name="theme" type="xs:string" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="DataSetProposal" type="reg:DataSetProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="DataSetProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:DataSetProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="CodeListProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:GDI_RegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="isExtendable" type="xs:boolean"/>
+					<xs:element name="extendsExternalCodeList" type="xs:string" minOccurs="0"/>
+					<xs:element name="extendsCodeList" type="xs:string" minOccurs="0"/>
+					<xs:element name="containedCodes" type="reg:CodeProposal_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CodeListProposal" type="reg:CodeListProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CodeListProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:CodeListProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="LocalisedCode_Type">
+		<xs:sequence>
+			<xs:element name="locale" type="xs:string"/>
+			<xs:element name="localisedCode" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="CodeProposal_Type">
+		<xs:complexContent>
+			<xs:extension base="reg:GDI_RegisterItemProposal_Type">
+				<xs:sequence>
+					<xs:element name="code" type="xs:string"/>
+					<xs:element name="localisedCode" type="reg:LocalisedCode_Type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="codeList" type="xs:string" minOccurs="0"/>
+					<xs:element name="specializes" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CodeProposal" type="reg:CodeProposal_Type" substitutionGroup="reg:RegisterItemProposal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CodeProposal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:CodeProposal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="SubmitProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="SubmitProposalRequest" type="reg:SubmitProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="SubmitProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="SubmitProposalResponse" type="reg:SubmitProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="CreateProposalRequest">
+		<xs:sequence>
+			<xs:element name="createGroup" type="xs:boolean" default="false"/>
+			<xs:element name="groupName" type="xs:string" minOccurs="0"/>
+			<xs:element name="addToGroup" type="xs:string" minOccurs="0"/>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CreateProposalRequest" type="reg:CreateProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="CreateProposalResponse">
+		<xs:sequence>
+			<xs:element name="groupUuid" type="xs:string" minOccurs="0"/>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="CreateProposalResponse" type="reg:CreateProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="GetProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GetProposalRequest" type="reg:GetProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="GetProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GetProposalResponse" type="reg:GetProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="GetProposalDescriptionsRequest">
+		<xs:sequence>
+			<xs:element name="registerUuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GetProposalDescriptionsRequest" type="reg:GetProposalDescriptionsRequest"/>
+	<!-- =========================================================== -->
+	<xs:complexType name="ProposalDescription">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="proposalType" type="xs:string"/>
+			<xs:element name="sponsor" type="xs:string"/>
+			<xs:element name="status" type="xs:string"/>
+			<xs:element name="belongsToGroup" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ProposalDescription" type="reg:ProposalDescription"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="GetProposalDescriptionsResponse">
+		<xs:sequence>
+			<xs:element ref="reg:ProposalDescription" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="GetProposalDescriptionsResponse" type="reg:GetProposalDescriptionsResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="WithdrawProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="WithdrawProposalRequest" type="reg:WithdrawProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="WithdrawProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="WithdrawProposalResponse" type="reg:WithdrawProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="UpdateProposalRequest">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="UpdateProposalRequest" type="reg:UpdateProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="UpdateProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="UpdateProposalResponse" type="reg:UpdateProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ReviewProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ReviewProposalRequest" type="reg:ReviewProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ReviewProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ReviewProposalResponse" type="reg:ReviewProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AcceptProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="controlBodyDecisionEvent" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AcceptProposalRequest" type="reg:AcceptProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AcceptProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AcceptProposalResponse" type="reg:AcceptProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RejectProposalRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="controlBodyDecisionEvent" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RejectProposalRequest" type="reg:RejectProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RejectProposalResponse">
+		<xs:sequence>
+			<xs:element name="proposal" type="reg:Proposal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RejectProposalResponse" type="reg:RejectProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:simpleType name="AppealDisposition_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="pending"/>
+			<xs:enumeration value="accepted"/>
+			<xs:enumeration value="notAccepted"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ........................................................................ -->
+	<xs:element name="AppealDisposition" type="reg:AppealDisposition_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="AppealDisposition_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:AppealDisposition" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Appeal_Type">
+		<xs:sequence>
+			<xs:element name="appealedProposal" type="reg:Proposal_PropertyType"/>
+			<xs:element name="appealDate" type="xs:date"/>
+			<xs:element name="situation" type="xs:string"/>
+			<xs:element name="justification" type="xs:string"/>
+			<xs:element name="impact" type="xs:string"/>
+			<xs:element name="appealDisposition" type="reg:AppealDisposition_PropertyType"/>
+			<xs:element name="dispositionDate" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="uuid" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Appeal" type="reg:Appeal_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Appeal_PropertyType">
+		<xs:sequence>
+			<xs:element ref="reg:Appeal" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AppealProposalRequest">
+		<xs:sequence>
+			<xs:element name="appealedProposalUuid" type="xs:string"/>
+			<xs:element name="situation" type="xs:string"/>
+			<xs:element name="justification" type="xs:string"/>
+			<xs:element name="impact" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AppealProposalRequest" type="reg:AppealProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AppealProposalResponse">
+		<xs:sequence>
+			<xs:element name="appeal" type="reg:Appeal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AppealProposalResponse" type="reg:AppealProposalResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AcceptAppealRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AcceptAppealRequest" type="reg:AcceptAppealRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AcceptAppealResponse">
+		<xs:sequence>
+			<xs:element name="appeal" type="reg:Appeal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AcceptAppealResponse" type="reg:AcceptAppealResponse"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RejectAppealRequest">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RejectAppealRequest" type="reg:RejectProposalRequest"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="RejectAppealResponse">
+		<xs:sequence>
+			<xs:element name="appeal" type="reg:Appeal_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RejectAppealResponse" type="reg:RejectAppealResponse"/>
+	<!-- =========================================================================== -->
+</xs:schema>

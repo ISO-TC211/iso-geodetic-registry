@@ -71,7 +71,8 @@
 		<div class="form-group col-md-12">
 			<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
 			<div class="input-group">
-				<input th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
+				<input th:if="${isProposal}" th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
+				<span th:unless="${isProposal}" class="text-muted" th:text="${rowStat.index + 1} + '.'"></span>&nbsp;<big th:unless="${isProposal}" th:text="${altTitle}"/>
 				<span class="input-group-btn" th:if="${isProposal}">
 					<button type="button" class="btn btn-default button-delete-alt-title" th:id="'delete-alt-title-' + ${rowStat.index}"><span class="glyphicon glyphicon-remove"/></button>
 				</span>
@@ -109,12 +110,12 @@
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:unless="!${isProposal} and !*{series}">
 		<div class="col-md-12" th:with="property='series.name',modifier='informationSource',inputType='text',label=#{form.label.seriesName},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesName},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:unless="!${isProposal} and !*{series}">
 		<div class="col-md-6" th:with="property='series.issueIdentification',modifier='informationSource',inputType='text',label=#{form.label.seriesIssueIdentification},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.seriesIssueIdentification},isRequired='false'">
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
@@ -122,7 +123,7 @@
 			<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:unless="!${isProposal} and !*{series}">
 		<div class="col-md-12" th:with="property='otherCitationDetails',inputType='text',label=#{form.label.otherCitationDetails},parentLabel=#{form.label.informationSource},placeholder=#{form.placeholder.otherCitationDetails},isRequired='false'">
 			<div th:replace="globals :: textArea"/>
 		</div>

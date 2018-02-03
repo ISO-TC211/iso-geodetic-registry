@@ -16,10 +16,10 @@ import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
  * @author Florian Esser
  * 
  */
-@ComponentScan(basePackages = { "de.geoinfoffm.registry", "org.iso.registry" })
+@ComponentScan(basePackages = { "de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" })
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = { "de.geoinfoffm.registry", "org.iso.registry" },
+@EnableJpaRepositories(basePackages = { "de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" },
 				       repositoryFactoryBeanClass = EntityBackendFactoryBean.class)
 public class IsoPersistenceConfiguration
 {

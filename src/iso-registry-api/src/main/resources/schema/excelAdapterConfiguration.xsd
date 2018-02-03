@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xlio="http://www.bespire.de/io/excel" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.bespire.de/io/excel" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="ExcelAdapterConfiguration">
+		<xs:sequence>
+			<xs:element name="javaObject" type="xlio:JavaObject" maxOccurs="unbounded"/>
+			<xs:element name="sheet" type="xlio:Sheet" maxOccurs="unbounded"/>
+			<xs:element name="mapping" type="xlio:Mapping" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ExcelAdapterConfiguration" type="xlio:ExcelAdapterConfiguration"/>
+	<!-- .................... -->
+	<xs:complexType name="Sheet">
+		<xs:sequence>
+			<xs:element name="column" type="xlio:Column" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="sheetName" type="xs:string" use="required"/>
+		<xs:attribute name="idColumn" type="xs:string" use="required"/>
+		<xs:attribute name="idPrefix" type="xs:string" use="required"/>
+		<xs:attribute name="headerRow" type="xs:int" use="optional" default="1"/>
+		<xs:attribute name="firstDataRow" type="xs:int" use="optional" default="2"/>
+		<xs:attribute name="firstDataColumn" type="xs:string" use="optional" default="B"/>
+	</xs:complexType>
+	<xs:element name="Sheet" type="xlio:Sheet"/>
+	<!-- .................... -->
+	<xs:complexType name="Column">
+		<xs:sequence>
+			<xs:element name="sheetName" type="xs:string"/>
+			<xs:element name="referencedSheetName" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="columnName" type="xs:string" use="required"/>
+		<xs:attribute name="multiple" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="separatorChar" type="xs:string" use="optional" default=";"/>
+	</xs:complexType>
+	<xs:element name="Column" type="xlio:Column"/>
+	<!-- .................... -->
+	<xs:complexType name="JavaObject">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="property" type="xlio:Property"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="JavaObject" type="xlio:JavaObject"/>
+	<!-- .................... -->
+	<xs:complexType name="Property">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="javaType" type="xs:string"/>
+			<xs:element name="multiple" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Property" type="xlio:Property"/>
+	<!-- .................... -->
+	<xs:complexType name="Mapping">
+		<xs:sequence>
+			<xs:element name="direction" type="xs:string"/>
+			<xs:element name="property" type="xlio:Property"/>
+			<xs:element name="column" type="xlio:Column"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Mapping" type="xlio:Mapping"/>
+</xs:schema>

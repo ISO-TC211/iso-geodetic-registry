@@ -10,7 +10,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.support.ConversionServiceFactoryBean;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
+import org.springframework.data.repository.support.DomainClassConverter;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
@@ -49,9 +53,15 @@ public class ImporterConfiguration
 
 				hibernateProperties.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
 				hibernateProperties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+				hibernateProperties.put("flyway.migration", env.getProperty("flyway.migration"));
 
 				return hibernateProperties;
 			}
 		};
+	}
+	
+	@Bean
+	public ConversionService conversionService() {
+		return new ConversionServiceFactoryBean().getObject();
 	}
 }

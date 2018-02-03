@@ -1,21 +1,25 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.core.model.IdentifiedItem;
 import org.iso.registry.core.model.UnitOfMeasureItem;
-import org.iso.registry.core.model.cs.CoordinateSystemAxisItem;
 import org.iso.registry.core.model.datum.EllipsoidItem;
-import org.iso.registry.core.model.iso19103.MeasureType;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.EllipsoidItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.UnitOfMeasureItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
-import de.geoinfoffm.registry.api.soap.Addition_Type;
 
 public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 {
@@ -53,6 +57,10 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 	public EllipsoidItemProposalDTO(EllipsoidItem item) {
 		super(item);
 	}
+
+	public EllipsoidItemProposalDTO(EllipsoidItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
 	
 	public EllipsoidItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
@@ -62,8 +70,8 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	public EllipsoidItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public EllipsoidItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public EllipsoidItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
@@ -133,6 +141,52 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 	}
 
 	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof EllipsoidItemProposal_Type) {
+			EllipsoidItemProposal_Type xmlProposal = (EllipsoidItemProposal_Type) itemDetails;
+	
+			this.setInverseFlattening(xmlProposal.getInverseFlattening());	
+			this.setSphere(xmlProposal.isIsSphere());	
+			this.setSemiMajorAxis(xmlProposal.getSemiMajorAxis());	
+			
+			final UnitOfMeasureItemProposal_PropertyType inverseFlatteningUomProperty = xmlProposal.getInverseFlatteningUom();
+			if (inverseFlatteningUomProperty != null) {
+				final UnitOfMeasureItemProposalDTO dto;
+				if (inverseFlatteningUomProperty.isSetUnitOfMeasureItemProposal()) {
+					dto = new UnitOfMeasureItemProposalDTO(inverseFlatteningUomProperty.getUnitOfMeasureItemProposal());
+				}
+				else if (inverseFlatteningUomProperty.isSetUuidref()) {
+					dto = new UnitOfMeasureItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(inverseFlatteningUomProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setInverseFlatteningUom(dto);
+			}
+			final UnitOfMeasureItemProposal_PropertyType semiMajorAxisUomProperty = xmlProposal.getSemiMajorAxisUom();
+			if (semiMajorAxisUomProperty != null) {
+				final UnitOfMeasureItemProposalDTO dto;
+				if (semiMajorAxisUomProperty.isSetUnitOfMeasureItemProposal()) {
+					dto = new UnitOfMeasureItemProposalDTO(semiMajorAxisUomProperty.getUnitOfMeasureItemProposal());
+				}
+				else if (semiMajorAxisUomProperty.isSetUuidref()) {
+					dto = new UnitOfMeasureItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(semiMajorAxisUomProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setSemiMajorAxisUom(dto);
+			}
+		}	
+	}
+
+	@Override
 	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
 		super.setAdditionalValues(item, entityManager);
 		
@@ -178,5 +232,9 @@ public class EllipsoidItemProposalDTO extends IdentifiedItemProposalDTO
 			this.setSphere(el.isSphere());
 		}
 	}
-	
+
+	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		return super.findDependentProposals(this.getSemiMajorAxisUom(), this.getSemiMinorAxisUom(), this.getInverseFlatteningUom());
+	}
 }

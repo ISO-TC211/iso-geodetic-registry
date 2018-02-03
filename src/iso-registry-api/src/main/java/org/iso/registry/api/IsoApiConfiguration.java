@@ -1,6 +1,12 @@
 package org.iso.registry.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.xml.bind.JAXBException;
+
 import org.iso.registry.api.registry.IsoProposalServiceImpl;
+import org.iso.registry.persistence.IsoExcelConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,21 +19,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import de.bespire.registry.io.excel.configuration.ExcelConfiguration;
 import de.geoinfoffm.registry.api.ApiConfiguration;
-import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategy;
-import de.geoinfoffm.registry.api.ControlBodyDiscoveryStrategyImpl;
+import de.geoinfoffm.registry.api.RoleDiscoveryStrategyImpl;
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.OrganizationServiceImpl;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterService;
-import de.geoinfoffm.registry.api.RegistrySecurityImpl;
+import de.geoinfoffm.registry.api.RoleDiscoveryStrategy;
 import de.geoinfoffm.registry.api.forum.ProposalDiscussionService;
 import de.geoinfoffm.registry.api.forum.ProposalDiscussionServiceImpl;
 import de.geoinfoffm.registry.core.forum.ProposalDiscussionRepository;
 import de.geoinfoffm.registry.core.model.DelegationRepository;
 import de.geoinfoffm.registry.core.model.OrganizationRepository;
 import de.geoinfoffm.registry.core.model.ProposalRepository;
-import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
 
 /**
@@ -38,9 +43,9 @@ import de.geoinfoffm.registry.persistence.EntityBackendFactoryBean;
  */
 @Configuration
 @Import(ApiConfiguration.class)
-@ComponentScan(basePackages = { "de.geoinfoffm.registry", "org.iso.registry" })
+@ComponentScan(basePackages = { "de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" })
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"de.geoinfoffm.registry", "org.iso.registry"}, 
+@EnableJpaRepositories(basePackages = {"de.geoinfoffm.registry", "de.bespire.registry", "org.iso.registry" }, 
 					   repositoryFactoryBeanClass = EntityBackendFactoryBean.class)
 public class IsoApiConfiguration 
 {
@@ -53,12 +58,6 @@ public class IsoApiConfiguration
 	@Bean
 	public ProposalService proposalService(ProposalRepository repository) {
 		return new IsoProposalServiceImpl(repository);
-	}
-	
-	@Autowired
-	@Bean
-	public RegistrySecurity registrySecurity() {
-		return new RegistrySecurityImpl();
 	}
 	
 //	@Autowired
@@ -75,10 +74,10 @@ public class IsoApiConfiguration
 	
 	@Autowired 
 	@Bean
-	public ControlBodyDiscoveryStrategy controlBodyDiscoveryStrategy(RegisterService registerService, DelegationRepository delegationRepository) {
-		return new ControlBodyDiscoveryStrategyImpl(registerService, delegationRepository);
+	public RoleDiscoveryStrategy roleDiscoveryStrategy(RegisterService registerService, DelegationRepository delegationRepository) {
+		return new RoleDiscoveryStrategyImpl(registerService, delegationRepository);
 	}
-	
+
 	@Autowired
 	@Bean
 	public ProposalDiscussionService proposalDiscussionService(ProposalDiscussionRepository repository) {
@@ -90,5 +89,10 @@ public class IsoApiConfiguration
 		SimpleAsyncTaskExecutor result = new SimpleAsyncTaskExecutor();
 		
 		return new DelegatingSecurityContextAsyncTaskExecutor(result);
+	}
+	
+	@Bean
+	public ExcelConfiguration excelConfiguration() throws IOException, JAXBException, URISyntaxException {
+		return IsoExcelConfiguration.reload();
 	}
 }

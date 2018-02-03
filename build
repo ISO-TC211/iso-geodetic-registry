@@ -4,27 +4,18 @@ PROFILES=$@
 
 if [ -z $@ ]; then
     PROFILESARG=""
+    DISTDIR="dist"
 else
     PROFILESARG="-P ${PROFILES}"
+    DISTDIR="dist/${PROFILES}"
 fi
 
-mkdir -p dist
-rm dist/*
+mkdir -p ${DISTDIR}
+rm ${DISTDIR}/*
 
 set -e
 
-# update current branch
-
-git pull origin 
-
-# update submodule
-
-#cd registry-base
-#git fetch origin
-#cd ..
-git submodule update --recursive
-
 # compile
-mvn -Dmaven.test.skip=true ${PROFILESARG} clean compile package
-cp iso-registry-client/target/*.war dist
-
+mvn -B -U -Dmaven.test.skip=true -Dproject.build.sourceEncoding=UTF-8 "-Dregistry.schema.xsd=src/iso-registry-api/src/main/resources/schema/service.xsd" "-Dregistry.schema.bindingFile=src/iso-registry-api/src/main/resources/schema/bindings.xjb" ${PROFILESARG} clean compile package
+cp src/iso-registry-client/target/*.war ${DISTDIR}
+cp src/iso-registry-soap/target/*.war ${DISTDIR}

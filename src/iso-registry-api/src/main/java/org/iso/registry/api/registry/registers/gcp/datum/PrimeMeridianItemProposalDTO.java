@@ -1,5 +1,8 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
+import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;
 
@@ -10,8 +13,11 @@ import org.iso.registry.core.model.UnitOfMeasureItem;
 import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.isotc211.iso19135.RE_RegisterItem_Type;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
+import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
 import de.geoinfoffm.registry.api.soap.Addition_Type;
+import de.geoinfoffm.registry.api.soap.PrimeMeridianItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.UnitOfMeasureItemProposal_PropertyType;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
@@ -38,7 +44,10 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 
-	
+	public PrimeMeridianItemProposalDTO(PrimeMeridianItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+		
 	public PrimeMeridianItemProposalDTO(Addition_Type proposal, RE_SubmittingOrganization sponsor) {
 		super(proposal, sponsor);
 		// TODO Auto-generated constructor stub
@@ -49,8 +58,8 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 		// TODO Auto-generated constructor stub
 	}
 
-	public PrimeMeridianItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public PrimeMeridianItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public PrimeMeridianItemProposalDTO(RE_RegisterItem_Type item, RE_SubmittingOrganization sponsor) {
@@ -80,6 +89,34 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 	}
 
 	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof PrimeMeridianItemProposal_Type) {
+			PrimeMeridianItemProposal_Type xmlProposal = (PrimeMeridianItemProposal_Type) itemDetails;
+	
+			this.setGreenwichLongitude(xmlProposal.getGreenwichLongitude());	
+			
+			final UnitOfMeasureItemProposal_PropertyType greenwichLongitudeUomProperty = xmlProposal.getGreenwichLongitudeUom();
+			if (greenwichLongitudeUomProperty != null) {
+				final UnitOfMeasureItemProposalDTO dto;
+				if (greenwichLongitudeUomProperty.isSetUnitOfMeasureItemProposal()) {
+					dto = new UnitOfMeasureItemProposalDTO(greenwichLongitudeUomProperty.getUnitOfMeasureItemProposal());
+				}
+				else if (greenwichLongitudeUomProperty.isSetUuidref()) {
+					dto = new UnitOfMeasureItemProposalDTO();
+					dto.setReferencedItemUuid(UUID.fromString(greenwichLongitudeUomProperty.getUuidref()));
+				}
+				else {
+					throw new RuntimeException("unexpected reference");
+				}
+				
+				this.setGreenwichLongitudeUom(dto);
+			}
+		}	
+	}
+
+	@Override
 	public void setAdditionalValues(RE_RegisterItem item, EntityManager entityManager) {
 		super.setAdditionalValues(item, entityManager);
 		
@@ -103,6 +140,11 @@ public class PrimeMeridianItemProposalDTO extends IdentifiedItemProposalDTO
 				this.setGreenwichLongitudeUom(new UnitOfMeasureItemProposalDTO(pm.getGreenwichLongitudeUom()));
 			}
 		}
+	}
+
+	@Override
+	public List<RegisterItemProposalDTO> getAggregateDependencies() {
+		return super.findDependentProposals(this.getGreenwichLongitudeUom());
 	}
 
 }

@@ -1,33 +1,31 @@
 package org.iso.registry.api.registry.registers.gcp.operation;
 
-import java.util.UUID;
-
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
+import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.core.model.operation.OperationParameterValue.OperationParameterValueType;
 
 public class ParameterValueDTO {
 	
-	private UUID parameterUuid;
-	private String parameterName;
+	private OperationParameterItemProposalDTO parameter;
 	private OperationParameterValueType parameterType;
 	private String value;
-	private UUID uomUuid;
+	private CitationDTO valueFileCitation;
+	private UnitOfMeasureItemProposalDTO parameterUnit;
 	
 	public ParameterValueDTO() { }
 
-	public ParameterValueDTO(UUID parameterUuid, String parameterName, OperationParameterValueType parameterType, String value) {
-		this.parameterUuid = parameterUuid;
-		this.setParameterName(parameterName);
+	public ParameterValueDTO(OperationParameterItemProposalDTO parameter, OperationParameterValueType parameterType, String value) {
+		this.parameter = parameter;
 		this.value = value;
 		this.parameterType = parameterType;
-		this.uomUuid = null;
+		this.parameterUnit = null;
 	}
 
-	public ParameterValueDTO(UUID parameterUuid, String parameterName, String value, UUID uomUuid) {
-		this.parameterUuid = parameterUuid;
-		this.setParameterName(parameterName);
+	public ParameterValueDTO(OperationParameterItemProposalDTO parameter, String value, UnitOfMeasureItemProposalDTO parameterUnit) {
+		this.parameter = parameter;
 		this.value = value;
-		this.uomUuid = uomUuid;
-		if (this.uomUuid != null) {
+		this.parameterUnit = parameterUnit;
+		if (this.parameterUnit != null) {
 			this.parameterType = OperationParameterValueType.MEASURE;
 		}
 		else {
@@ -35,26 +33,12 @@ public class ParameterValueDTO {
 		}
 	}
 
-	public UUID getParameterUuid() {
-		return parameterUuid;
+	public OperationParameterItemProposalDTO getParameter() {
+		return parameter;
 	}
 
-	public void setParameterUuid(UUID parameterUuid) {
-		this.parameterUuid = parameterUuid;
-	}
-
-	/**
-	 * @return the parameterName
-	 */
-	public String getParameterName() {
-		return parameterName;
-	}
-
-	/**
-	 * @param parameterName the parameterName to set
-	 */
-	public void setParameterName(String parameterName) {
-		this.parameterName = parameterName;
+	public void setParameter(OperationParameterItemProposalDTO parameter) {
+		this.parameter = parameter;
 	}
 
 	/**
@@ -79,11 +63,23 @@ public class ParameterValueDTO {
 		this.value = value;
 	}
 
-	public UUID getUomUuid() {
-		return uomUuid;
+	public CitationDTO getValueFileCitation() {
+		return valueFileCitation;
 	}
 
-	public void setUomUuid(UUID uomUuid) {
-		this.uomUuid = uomUuid;
+	public void setValueFileCitation(CitationDTO valueFileCitation) {
+		this.valueFileCitation = valueFileCitation;
+	}
+
+	public UnitOfMeasureItemProposalDTO getParameterUnit() {
+		return parameterUnit;
+	}
+
+	public void setParameterUnit(UnitOfMeasureItemProposalDTO parameterUnit) {
+		this.parameterUnit = parameterUnit;
+	}
+	
+	public String getParameterName() {
+		return parameter.getName();
 	}
 }

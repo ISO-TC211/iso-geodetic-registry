@@ -3,10 +3,14 @@
  */
 package org.iso.registry.client.controller;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.CONTROLBODY_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.POINTOFCONTACT_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,10 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.config.TaskManagementConfigUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -41,6 +48,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import de.bespire.LoggerFactory;
 import de.geoinfoffm.registry.api.OrganizationService;
 import de.geoinfoffm.registry.api.ProposalListItem;
+import de.geoinfoffm.registry.api.ProposalListItemImpl;
 import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.ProposalTaskManager;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
@@ -160,7 +168,7 @@ public class ManagementController
 		List<ProposalListItem> appealListItems = new ArrayList<ProposalListItem>();
 		for (Appeal appeal : appeals) {
 			if (appeal.isPending()) {
-				appealListItems.add(new ProposalListItem(appeal, messageSource, locale, workflowManager));
+				appealListItems.add(new ProposalListItemImpl(appeal, messageSource, locale, workflowManager, pcrRepository));
 			}
 		}
 
@@ -237,19 +245,13 @@ public class ManagementController
 		if (!uuids.isEmpty()) {
 			filteredProposals = proposalRepository.findByUuids(uuids, pageable);
 			for (Proposal proposal : filteredProposals) {
-				ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
+				ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 
 				if (proposalTaskManager.hasActiveTask(proposal)) {
 					rvb.overrideProposalStatus(ProposalWorkflowManager.STATUS_PROCESSING);
 				}
 				
-				Collection<ProposalChangeRequest> pcrs = pcrRepository.findByProposalAndReviewedIsFalse(proposal);
-				if (!pcrs.isEmpty()) {
-					rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
-				}
-				
 				proposalViewBeans.add(rvb);
-
 			}
 
 			result = new DatatablesResult(filteredProposals.getTotalElements(), filteredProposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);
@@ -310,13 +312,7 @@ public class ManagementController
 		Locale locale = LocaleContextHolder.getLocale();
 
 		for (Proposal proposal : proposals) {
-			ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
-
-			Collection<ProposalChangeRequest> pcrs = pcrRepository.findByProposalAndReviewedIsFalse(proposal);
-			if (!pcrs.isEmpty()) {
-				rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
-			}
-
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 			proposalViewBeans.add(rvb);
 		}
 		DatatablesResult result = new DatatablesResult(proposals.getTotalElements(), proposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);
@@ -359,13 +355,7 @@ public class ManagementController
 		List<ProposalListItem> proposalViewBeans = new ArrayList<>();
 
 		for (Proposal proposal : proposals) {
-			ProposalListItem rvb = new ProposalListItem(proposal, messageSource, locale, workflowManager);
-
-			Collection<ProposalChangeRequest> pcrs = pcrRepository.findByProposalAndReviewedIsFalse(proposal);
-			if (!pcrs.isEmpty()) {
-				rvb.setPendingChangeRequest((ProposalChangeRequest)pcrs.toArray()[0]);
-			}
-
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 			rvb.setSubmitter(security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters()));
 			proposalViewBeans.add(rvb);
 		}
@@ -395,6 +385,89 @@ public class ManagementController
 		model.addAttribute("proposal", pvb);
 		
 		return "mgmt/review";
+	}
+
+	@RequestMapping(value = "/submitter/proposals/groupcandidates", method = RequestMethod.GET)
+	public @ResponseBody DatatablesResult getGroupCandidateProposals(@RequestParam Map<String, String> parameters) throws UnauthorizedException {
+		security.assertHasRoleWith(RegistrySecurity.SUBMITTER_ROLE_PREFIX);
+
+		String sEcho = parameters.get("sEcho");
+		String iDisplayStart = parameters.get("iDisplayStart");
+		String iDisplayLength = parameters.get("iDisplayLength");
+		String iColumns = parameters.get("iColumns");
+		String iSortingsCols = parameters.get("iSortingCols");
+		String sSearch = parameters.get("sSearch");
+		
+		Map<Integer, String> columns = new HashMap<Integer, String>();
+		if (iColumns != null) {
+			int columnCount = Integer.parseInt(iColumns);
+			for (int i = 0; i < columnCount; i++) {
+				columns.put(i, parameters.get("mDataProp_" + Integer.toString(i)));
+			}
+		}
+
+		Map<String, String> sortingColumns = new HashMap<String, String>();
+		if (iSortingsCols != null) {
+			int sortingCols = Integer.parseInt(iSortingsCols);
+			for (int i = 0; i < sortingCols; i++) {
+				String sortingCol = parameters.get("iSortCol_" + Integer.toString(i));
+				String direction = parameters.get("sSortDir_" + Integer.toString(i));
+				sortingColumns.put(columns.get(Integer.parseInt(sortingCol)), direction);
+			}
+		}
+		
+		Pageable pageable;
+		if (iDisplayStart != null && iDisplayLength != null) {
+			int startAt = Integer.parseInt(iDisplayStart);
+			int length = Integer.parseInt(iDisplayLength);
+			int pageNo = startAt / length;
+			
+			Sort sort;
+			if (!sortingColumns.isEmpty()) {
+				List<Order> orders = new ArrayList<Order>();
+				for (String property : sortingColumns.keySet()) {
+					String sortCol = property;
+					if (property.equals("proposalStatus")) {
+						sortCol = "status";
+					}
+					Order order = new Order(Direction.fromString(sortingColumns.get(property).toString().toUpperCase()), sortCol);
+					orders.add(order);
+				}
+				sort = new Sort(orders);
+			}
+			else {
+				sort = new Sort(new Order("status"));
+			}
+			
+			pageable = new PageRequest(pageNo, length, sort);
+		}
+		else {
+			pageable = new PageRequest(0, 10);
+		}
+		
+		List<Class<?>> excludedClasses = new ArrayList<>();
+		excludedClasses.add(ProposalGroup.class);
+		
+		Page<Proposal> proposals;
+		if (!StringUtils.isEmpty(sSearch)) {
+			proposals = proposalRepository.findBySponsorAndParentIsNullAndDateSubmittedIsNullAndTypeNotIn(RegistryUserUtils.getUserSponsor(userRepository), excludedClasses, "%" + sSearch + "%", pageable);
+		}
+		else {
+			proposals = proposalRepository.findBySponsorAndParentIsNullAndDateSubmittedIsNullAndTypeNotIn(RegistryUserUtils.getUserSponsor(userRepository), excludedClasses, pageable);
+		}
+
+		Locale locale = LocaleContextHolder.getLocale();
+		
+		List<ProposalListItem> proposalViewBeans = new ArrayList<>();
+
+		for (Proposal proposal : proposals) {
+			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
+			proposalViewBeans.add(rvb);
+		}
+
+		DatatablesResult result = new DatatablesResult(proposals.getTotalElements(), proposals.getTotalElements(), sEcho, proposalViewBeans);
+		
+		return result;
 	}
 
 	@RequestMapping(value = "/poc", method = RequestMethod.GET)

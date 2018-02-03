@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:grg="http://www.isotc211.org/2005/grg" targetNamespace="http://www.isotc211.org/2005/grg" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2012-07-13">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>GRG is the XML Schema Implementation of Geographic Information, Procedures for item registration documented in ISO 19135:2005.GRG includes all the definitions of http://www.isotc211.org/2005/grg namespace. The root document of this namespace is the file grg.xsd.</xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:include schemaLocation="register.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+</xs:schema>

@@ -5,7 +5,6 @@ package org.iso.registry.client.controller.registry;
 
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -21,6 +20,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -32,7 +32,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -40,14 +39,15 @@ import org.apache.fop.apps.MimeConstants;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
+import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
+import org.iso.registry.persistence.io.gml.GmlExporter;
+import org.iso.registry.persistence.io.wkt.WktExporter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +69,7 @@ import de.geoinfoffm.registry.api.ProposalService;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
+import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.core.IllegalOperationException;
@@ -111,6 +112,9 @@ public class RegisterItemController
 
 	@Autowired
 	private ProposalService proposalService;
+	
+	@Autowired
+	private RegisterService registerService;
 	
 	@Autowired
 	private ProposalManagementInformationRepository pmiRepository;
@@ -230,6 +234,7 @@ public class RegisterItemController
 		
 		model.addAttribute("item", vb);
 		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+		model.addAttribute("dateOfLastChange", registerService.getFormattedDateOfLastChange());
 
 		String templateLocation = "pdftemplates/" + item.getItemClass().getName().toLowerCase() + ".fo";
 
@@ -255,6 +260,55 @@ public class RegisterItemController
 		response.flushBuffer();
 	}
 
+	@RequestMapping(value = "/{uuid}/wkt", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public void viewItemAsWkt(@PathVariable("uuid") UUID itemUuid, final Model model, HttpServletResponse response) throws ItemNotFoundException, IOException, JAXBException {
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		RegisterItemViewBean vb = viewBeanFactory.getViewBean(item);
+		
+		model.addAttribute("item", vb);
+		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+
+		StringWriter sw = new StringWriter();
+		ServletOutputStream out = response.getOutputStream();
+
+		if (item instanceof CoordinateReferenceSystemItem) {
+			WktExporter.exportCrs((CoordinateReferenceSystemItem)item, out);
+		}
+//		else if (item instanceof CoordinateSystemItem) {
+//			WktExporter.exportCs((CoordinateSystemItem)item, out);
+//		}
+		else {
+			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as WKT", item.getClass().getName()));
+		}
+
+		out.flush();
+		out.close();
+		response.flushBuffer();
+	}
+
+	@RequestMapping(value = "/{uuid}/gml", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public void viewItemAsGml(@PathVariable("uuid") UUID itemUuid, final Model model, HttpServletResponse response) throws ItemNotFoundException, IOException, JAXBException {
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		RegisterItemViewBean vb = viewBeanFactory.getViewBean(item);
+		
+		model.addAttribute("item", vb);
+		model.addAttribute("downloadDate", DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(Calendar.getInstance()));
+
+		ServletOutputStream out = response.getOutputStream();
+
+		if (item instanceof CoordinateReferenceSystemItem) {
+			GmlExporter.exportCrs((CoordinateReferenceSystemItem)item, out);
+		}
+		else {
+			throw new IllegalOperationException(String.format("Items of class %s cannot be exported as GML", item.getClass().getName()));
+		}
+
+		out.flush();
+		out.close();
+		response.flushBuffer();
+	}
 
 	@RequestMapping(value = "/{uuid}/retire", method = RequestMethod.GET)
 	@Transactional
@@ -278,6 +332,32 @@ public class RegisterItemController
 		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 
 		proposalService.createRetirement(item, justification, registerManagerNotes, controlBodyNotes, suborg);
+
+		return new BasePathRedirectView("/management/submitter");
+	}
+
+	@RequestMapping(value = "/{uuid}/invalidate", method = RequestMethod.GET)
+	@Transactional
+	public View proposeItemInvalidation(@PathVariable("uuid") UUID itemUuid,
+									    @RequestParam(value = "justification", required = true) String justification,
+									    @RequestParam(value = "registerManagerNotes", required = false) String registerManagerNotes,
+									    @RequestParam(value = "controlBodyNotes", required = false) String controlBodyNotes) throws IllegalOperationException, ItemNotFoundException {
+		if (StringUtils.isEmpty(justification)) {
+			throw new IllegalOperationException("Cannot accept empty justification.");
+		}
+		
+		RE_RegisterItem item = itemService.findOne(itemUuid);
+		if (item == null) {
+			throw new ItemNotFoundException(itemUuid);
+		}
+		
+		if (!item.isValid()) {
+			throw new IllegalOperationException(String.format("Cannot retire item with status %s", item.getStatus().name()));
+		}
+		
+		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
+
+		proposalService.createInvalidation(item, justification, registerManagerNotes, controlBodyNotes, suborg);
 
 		return new BasePathRedirectView("/management/submitter");
 	}
@@ -347,7 +427,7 @@ public class RegisterItemController
 
 		RE_Register targetRegister = item.getRegister();
 		if (targetRegister == null) {
-			redirectAttributes.addFlashAttribute("registerName", targetRegister.getName());
+			redirectAttributes.addFlashAttribute("registerName", "<null>");
 			return "registry/register_notfound";
 		}
 		model.addAttribute("register", targetRegister);
@@ -579,6 +659,8 @@ public class RegisterItemController
 						return ProposalType.SUPERSESSION;
 					case RETIREMENT:
 						return ProposalType.RETIREMENT;
+					case INVALIDATION:
+						return ProposalType.INVALIDATION;
 					default:
 						return null;
 				}

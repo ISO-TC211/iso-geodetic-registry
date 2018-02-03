@@ -10,7 +10,8 @@
 				</div>
 				<div class="col-md-6 form-group">
 					<label class="control-label" th:for="axisDirection" th:text="#{form.label.axisDirection}"></label>
-					<input type="hidden" id="axisDirection" th:field="*{axisDirection.code}" style="width: 100%"/>
+					<input th:if="${isProposal}" type="hidden" id="axisDirection" th:field="*{axisDirection.code}" style="width: 100%"/>
+					<p th:unless="${isProposal}"><big th:text="*{axisDirection.code}"/></p>
 				</div>
 			</div>
 			<div class="row">
@@ -27,7 +28,8 @@
 				</div>
 				<div class="col-md-4 form-group">
 					<label class="control-label" th:for="rangeMeaning" th:text="#{form.label.rangeMeaning}"></label>
-					<input type="hidden" id="rangeMeaning" th:field="*{rangeMeaning}" style="width: 100%"/>
+					<input th:if="${isProposal}" type="hidden" id="rangeMeaning" th:field="*{rangeMeaning}" style="width: 100%"/>
+					<p th:unless="${isProposal}"><big th:text="*{rangeMeaning}"/></p>
 				</div>
 			</div>
 		</div>	<!-- END OF LEFT -->

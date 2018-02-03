@@ -2,8 +2,8 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="application.header">Registry of Geodetic Codes and Parameters</entry>
+	<entry key="application.title">ISO Geodetic Registry</entry>
+	<entry key="application.header">Geodetic Registry</entry>
 	<entry key="application.welcome">Welcome</entry>
 	<entry key="application.version">${git.commit.id.describe}-${git.commit.id.abbrev}</entry>
 	
@@ -47,6 +47,7 @@
 	<entry key="tableheader.title">Title</entry>
 	<entry key="tableheader.itemClassName">Item class</entry>
 	<entry key="tableheader.status">Status</entry>
+	<entry key="tableheader.disposition">Disposition</entry>
 	<entry key="tableheader.proposalType">Proposal type</entry>
 	<entry key="tableheader.submitter">Submitter</entry>
 	<entry key="tableheader.action">Action</entry>
@@ -57,6 +58,7 @@
 	<entry key="tableheader.organization">Organization</entry>
 	<entry key="tableheader.date">Date</entry>
 	<entry key="tableheader.itemClass">Item class</entry>
+	<entry key="tableheader.targetRegister">Register</entry>
 	<entry key="tableheader.shortName">Short name</entry>
 	<entry key="tableheader.category">Category</entry>
 	<entry key="tableheader.appealStatus">Appeal status</entry>
@@ -80,6 +82,8 @@
 	<entry key="tableheader.axisAbbreviation">Axis abbreviation</entry>
 	<entry key="tableheader.axisUnit">Axis unit</entry>
 	<entry key="tableheader.axisDirection">Axis direction</entry>
+	<entry key="tableheader.citation">Citation</entry>
+	<entry key="tableheader.scope">Scope</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -127,6 +131,11 @@
 	<entry key="header.primeMeridian">Prime Meridian</entry>
 	<entry key="header.extent">Extent</entry>
 	<entry key="header.informationSource">Information source</entry>
+	<entry key="header.resetPassword">Reset password</entry>
+	<entry key="header.containedProposals">Contained proposals</entry>
+	<entry key="header.ungroupedProposals">Ungrouped proposals that may be added</entry>
+	<entry key="header.groupProposal">Group proposal</entry>
+	<entry key="header.terms">Terms of Use</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -144,10 +153,15 @@
 	<entry key="button.edit">Edit</entry>
 	<entry key="button.set">Set</entry>
 	<entry key="button.action">Action</entry>
+	<entry key="button.createGroup">Create proposal group</entry>
+	<entry key="button.dissolveGroup">Dissolve group</entry>
+	<entry key="button.addToGroup">Add to group</entry>
+	<entry key="button.removeFromGroup">Remove from group</entry>
 	<entry key="button.addition">Propose new</entry>
 	<entry key="button.clarification">Clarify</entry>
 	<entry key="button.supersession">Supersede</entry>
 	<entry key="button.retirement">Retire</entry>
+	<entry key="button.invalidation">Invalidate</entry>
 	<entry key="button.newUser">New user</entry>
 	<entry key="button.delete">Delete</entry>
 	<entry key="button.yes">Yes</entry>
@@ -188,6 +202,14 @@
 	<entry key="button.startDiscussion">Start discussion</entry>
 	<entry key="button.reply">Reply</entry>	
 	<entry key="button.send">Send</entry>
+	<entry key="button.approveChanges">Approve changes</entry>
+	<entry key="button.resetPassword">Reset password</entry>	
+	<entry key="button.changePassword">Change password</entry>	
+	<entry key="button.search">Search</entry>	
+	<entry key="button.showCurrentVersion">Show current version</entry>	
+	<entry key="button.start">Start</entry>	
+	<entry key="button.saveName">Save name</entry>
+	<entry key="button.backToSubmitterList">Back to list of proposals</entry>
 	<entry key="button.showAccessUrl">Show access URL</entry>	
 	<entry key="button.proposalDetails">Proposal Details</entry>
 	<entry key="button.addBoundingBox">Add bounding box</entry>
@@ -195,7 +217,11 @@
 	<entry key="button.addGeographicDescription">Add geographic description</entry>
 	<entry key="button.cannotDeleteOrganization">Why can't I delete this organization?</entry>
 	<entry key="button.addAlternateTitle">Add alternate title</entry>
-	<entry key="button.pdf">Download</entry>
+	<entry key="button.pdf">Download PDF</entry>
+	<entry key="button.wkt">Show WKT</entry>
+	<entry key="button.gml">Show GML</entry>
+	<entry key="button.uploadProposals">Upload proposals</entry>
+	<entry key="button.downloadExcel">Excel export</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
@@ -206,6 +232,7 @@
 	<entry key="CLARIFICATION">Clarification</entry>
 	<entry key="SUPERSESSION">Supersession</entry>
 	<entry key="RETIREMENT">Retirement</entry>
+	<entry key="INVALIDATION">Invalidation</entry>
 	<entry key="GROUP">Proposal Group</entry>
 	
 	<entry key="NOT_SUBMITTED">not yet submitted</entry>
@@ -237,6 +264,7 @@
 	<entry key="de.geoinfoffm.registry.core.model.SupersessionPart">Supersession</entry>
 	<entry key="de.geoinfoffm.registry.core.model.Retirement">Retirement</entry>
 	<entry key="de.geoinfoffm.registry.core.model.ProposalGroup">Proposal Group</entry>
+	<entry key="de.bespire.registry.core.model.Invalidation">Invalidation</entry>
 
 	<entry key="alert.loginFailed">Login failed. Please check your login credentials.</entry>
 	<entry key="alert.userCreated">The user was created successfully.</entry>
@@ -246,8 +274,8 @@
 	<entry key="alert.accountConfirmed">Your account was confirmed. You may now login using your e-mail address {0}.</entry>	
 	<entry key="alert.accountConfirmationFailed">The provided confirmation token was incorrect.</entry>	
 	<entry key="alert.userProfileUpdated">Your profile was updated.</entry>	
-	<entry key="alert.historicView">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</entry>
-	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</entry>
+	<entry key="alert.historicView">Es wird ein historischer Stand der ISO Geodetic Registry angezeigt.</entry>
+	<entry key="alert.noRevisionAtGivenDate">Zum angegebenen Zeitpunkt existiert kein Stand der ISO Geodetic Registry. Es wird der aktuelle Stand angezeigt.</entry>
 	<entry key="alert.organizationCreated">The organization was created successfully.</entry>
 	<entry key="alert.organizationDeleted">The organization was deleted.</entry>
 	<entry key="alert.noSupersededItems">At least one item must be selected.</entry>
@@ -255,6 +283,8 @@
 	<entry key="alert.registerNotFound">Register "{0}" does not exist.</entry>
 	<entry key="alert.validationFailed">The action cannot be completed due to erroneous or missing form data. Please check the following input fields:</entry>
 	<entry key="alert.unauthorized">You are not authorized to access the requested resource.</entry>
+	<entry key="alert.nothingProcessed">The uploaded spreadsheet contained no processable data.</entry>
+	<entry key="alert.proposalGroupCreated">The following proposal group was created: </entry>
 
 	<entry key="popup.newOrganization.header">Details of your organization</entry>
 	<entry key="popup.deleteUser.header">Delete user</entry>
@@ -265,6 +295,10 @@
 	<entry key="popup.retire.justification">Please provide a justification for the retirement:</entry>
 	<entry key="popup.retire.registerManagerNotes">Notes for the register manager:</entry>
 	<entry key="popup.retire.controlBodyNotes">Notes for the control body:</entry>
+	<entry key="popup.invalidate.header">Invalidate item</entry>
+	<entry key="popup.invalidate.justification">Please provide a justification for the invalidation:</entry>
+	<entry key="popup.invalidate.registerManagerNotes">Notes for the register manager:</entry>
+	<entry key="popup.invalidate.controlBodyNotes">Notes for the control body:</entry>
 	<entry key="popup.acceptProposal.header">Accept proposal</entry>
 	<entry key="popup.acceptProposal.controlBodyDecisionEvent">Please describe the event where the decision to accept the proposal was made:</entry>
 	<entry key="popup.rejectProposal.header">Reject proposal</entry>
@@ -281,10 +315,22 @@
 	<entry key="popup.message.header">New message</entry>
 	<entry key="popup.inviteParticipants.header">Invite participants</entry>
 	<entry key="popup.itemClass.header">Please select an item class</entry>
+	<entry key="popup.createGroup.header">Create proposal group</entry>
+	<entry key="popup.dissolveGroup.header">Dissolve proposal group</entry>
+	<entry key="popup.addToGroup.header">Add proposal to group</entry>
+	<entry key="popup.removeFromGroup.header">Remove proposal from group</entry>
+	<entry key="popup.removeFromGroup.reallyRemove">Do you want to remove the proposal "{0}" from the group?</entry>
 	<entry key="popup.submitProposal.header">Submit proposal</entry>
 	<entry key="popup.submitProposal.reallySubmit">Do you want to submit the proposal "{0}"?</entry>
 	<entry key="popup.deleteProposal.header">Delete proposal</entry>
 	<entry key="popup.deleteProposal.reallyDelete">Do you want to delete the proposal "{0}"?</entry>
+	<entry key="popup.withdrawProposal.header">Withdraw proposal</entry>
+	<entry key="popup.withdrawProposal.reallyWithdraw">Do you want to withdraw the proposal "{0}"?</entry>
+	<entry key="popup.dissolveGroup.reallyDissolve">Do you want to dissolve the proposal group "{0}"?</entry>
+	<entry key="popup.acceptAppeal.header">Accept appeal</entry>
+	<entry key="popup.acceptAppeal.reallyAccept">Do you want to accept the appeal of proposal "{0}"?</entry>
+	<entry key="popup.rejectAppeal.header">Reject appeal</entry>
+	<entry key="popup.rejectAppeal.reallyReject">Do you want to reject the appeal of proposal "{0}"?</entry>
 	<entry key="popup.createProposal.header">Create proposal</entry>
 	<entry key="popup.proposalNotes.header">Proposal Notes</entry>
 	<entry key="popup.extent.header">Extent</entry>
@@ -300,6 +346,20 @@
 	<entry key="tabs.geographicExtent">Geographic extent</entry>
 	<entry key="tabs.verticalExtent">Vertical extent</entry>
 	<entry key="tabs.temporalExtent">Temporal extent</entry>
+	<entry key="tabs.uomDetails">Unit of Measure details</entry>
+	<entry key="tabs.standardUnitDetails">Standard Unit</entry>
+	
+	<entry key="mail.subject.signup.confirmation">You have signed up for the ISO Geodetic Registry</entry>
+	<entry key="mail.subject.signup.confirmed">[ISO Geodetic Registry] You have successfully confirmed your account</entry>
+	<entry key="mail.subject.password.reset">[ISO Geodetic Registry] Password reset</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Geodetic Registry] Permission requested by user</entry>
+	<entry key="mail.subject.delegation.denied">[ISO Geodetic Registry] Permission request was denied</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Geodetic Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Geodetic Registry] New proposal submitted</entry>
+	<entry key="mail.subject.proposal.reviewed">[ISO Geodetic Registry] New proposal requires approval</entry>
+	<entry key="mail.subject.proposal.appealed">[ISO Geodetic Registry] Proposal was appealed</entry>
+	<entry key="mail.subject.proposal.accepted">[ISO Geodetic Registry] Proposal was accepted</entry>
+	<entry key="mail.subject.proposal.rejected">[ISO Geodetic Registry] Proposal was rejected</entry>
 		
 	<entry key="legend.create">Create new proposal</entry>
 	<entry key="legend.edit">Edit proposal</entry>
@@ -312,6 +372,7 @@
 	<entry key="datatable.sInfoEmpty">No items</entry>
 	<entry key="datatable.sInfoFiltered">(filtered from _MAX_ total items)</entry>
 	<entry key="datatable.searchPlaceholder">Search</entry>
+	<entry key="datatable.searchPlaceholder.title">Search title</entry>
 	<entry key="datatable.sLoadingRecords">Loading...</entry>
 	<entry key="datatable.sProcessing">Processing...</entry>
 	<entry key="datatable.oPaginate.sFirst">First</entry>
@@ -375,6 +436,7 @@
 	<entry key="form.label.coordinateReferenceEpoch">Coordinate Reference Epoch</entry>
 	<entry key="form.label.ellipsoid">Ellipsoid</entry>
 	<entry key="form.label.primeMeridian">Prime Meridian</entry>
+	<entry key="form.label.symbol">Symbol</entry>
 	<entry key="form.label.standardUnit">Standard Target UoM</entry>
 	<entry key="form.label.factorB">Numerator (factor B)</entry>
 	<entry key="form.label.factorC">Denominator (factor C)</entry>
@@ -423,6 +485,8 @@
 	<entry key="form.label.accuracy">Accuracy</entry>
 	<entry key="form.label.accuracyUom">Accuracy unit</entry>
 	<entry key="form.label.coordinateOperations">Coordinate Operations</entry>
+	<entry key="form.label.selectUom">Select a unit</entry>
+	<entry key="form.label.orDefineNewUom">OR define a new unit</entry>
 	
 	<entry key="form.select.choose">-- select --</entry>
 	<entry key="form.select.none">-- none --</entry>
@@ -458,6 +522,8 @@
 	<entry key="form.placeholder.confirmPassword"></entry>
 	<entry key="form.placeholder.identifier"></entry>
 	<entry key="form.placeholder.scope"></entry>
+	<entry key="form.placeholder.symbol"></entry>
+	<entry key="form.placeholder.selectStandardUnit"></entry>
 	
 	<entry key="form.placeholder.semiMajorAxis"></entry>
 	<entry key="form.placeholder.semiMinorAxis"></entry>
@@ -550,10 +616,10 @@
 	<entry key="tabs.contents">Contents</entry>
 	<entry key="tabs.proposals">Proposed contents</entry>
 
-	<entry key="mail.subject.signup.confirmation">You have signed up for ISO Registry of Geodetic Codes and Parameters</entry>
-	<entry key="mail.subject.delegation.requested">[ISO Registry] Permission requested by user</entry>
-	<entry key="mail.subject.discussion.invitation">[ISO Registry] Proposal discussion invitation</entry>
-	<entry key="mail.subject.proposal.submitted">[ISO Registry] New proposal</entry>
+	<entry key="mail.subject.signup.confirmation">You have signed up for the ISO Geodetic Registry</entry>
+	<entry key="mail.subject.delegation.requested">[ISO Geodetic Registry] Permission requested by user</entry>
+	<entry key="mail.subject.discussion.invitation">[ISO Geodetic Registry] Proposal discussion invitation</entry>
+	<entry key="mail.subject.proposal.submitted">[ISO Geodetic Registry] New proposal</entry>
 			
 	<entry key="itemIdentifier">ID</entry>
 	<entry key="targetRegister">Target register</entry>

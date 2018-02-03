@@ -1,9 +1,7 @@
 package org.iso.registry.api.registry.registers.gcp.datum;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -17,8 +15,9 @@ import org.iso.registry.core.model.datum.PrimeMeridianItem;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.springframework.util.StringUtils;
 
-import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
+import de.geoinfoffm.registry.api.soap.AbstractDatumItemProposal_Type;
+import de.geoinfoffm.registry.api.soap.AbstractRegisterItemProposal_Type;
 import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
@@ -50,8 +49,12 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 		super(item);
 	}
 	
-	public DatumItemProposalDTO(Proposal proposal, ProposalDtoFactory factory) {
-		super(proposal, factory);
+	public DatumItemProposalDTO(AbstractDatumItemProposal_Type itemDetails) {
+		super(itemDetails);
+	}
+	
+	public DatumItemProposalDTO(Proposal proposal) {
+		super(proposal);
 	}
 
 	public DatumType getType() {
@@ -119,6 +122,28 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 	}
 	
 	@Override
+	protected void initializeFromItemDetails(AbstractRegisterItemProposal_Type itemDetails) {
+		super.initializeFromItemDetails(itemDetails);
+	
+		if (itemDetails instanceof AbstractDatumItemProposal_Type) {
+			AbstractDatumItemProposal_Type xmlProposal = (AbstractDatumItemProposal_Type) itemDetails;
+	
+			this.setAnchorDefinition(xmlProposal.getAnchorDefinition());	
+			this.setCoordinateReferenceEpoch(xmlProposal.getCoordinateReferenceEpoch());	
+			this.setRealizationEpoch(xmlProposal.getRealizationEpoch());	
+			this.setScope(xmlProposal.getScope());	
+			
+			if (xmlProposal.getDomainOfValidity() != null) {
+				final ExtentDTO dto;
+				if (xmlProposal.isSetDomainOfValidity()) {
+					dto = new ExtentDTO(xmlProposal.getDomainOfValidity().getEX_Extent());
+					this.setDomainOfValidity(dto);
+				}
+			}
+		}	
+	}
+
+	@Override
 	public List<RegisterItemProposalDTO> getAggregateDependencies() {
 		return super.findDependentProposals(this.getEllipsoid(), this.getPrimeMeridian());
 	}
@@ -137,23 +162,14 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 				datum.setDomainOfValidity(extent);
 			}
 			
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Date realizationEpoch = null;
-			Date coordinateReferenceEpoch = null;
-			try {
-				 if (!StringUtils.isEmpty(this.getRealizationEpoch())) {
-					realizationEpoch = df.parse(this.getRealizationEpoch());
-				 }
-				datum.setRealizationEpoch(realizationEpoch);
-				
-				if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
-					coordinateReferenceEpoch = df.parse(this.getCoordinateReferenceEpoch());
-				}
-				datum.setCoordinateReferenceEpoch(coordinateReferenceEpoch);
+			if (!StringUtils.isEmpty(this.getRealizationEpoch())) {
+				datum.setRealizationEpoch(this.getRealizationEpoch());
 			}
-			catch (ParseException e) {
-				// Ignore
+
+			if (!StringUtils.isEmpty(this.getCoordinateReferenceEpoch())) {
+				datum.setCoordinateReferenceEpoch(this.getCoordinateReferenceEpoch());
 			}
+
 			datum.setScope(this.getScope());
 			
 			if (item instanceof GeodeticDatumItem) {
@@ -185,13 +201,11 @@ public class DatumItemProposalDTO extends IdentifiedItemProposalDTO
 			}
 			
 			if (datum.getRealizationEpoch() != null) {
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				this.setRealizationEpoch(df.format(datum.getRealizationEpoch()));
+				this.setRealizationEpoch(datum.getRealizationEpoch());
 			}
 
 			if (datum.getCoordinateReferenceEpoch() != null) {
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				this.setCoordinateReferenceEpoch(df.format(datum.getCoordinateReferenceEpoch()));
+				this.setCoordinateReferenceEpoch(datum.getCoordinateReferenceEpoch());
 			}
 
 			this.setScope(datum.getScope());

@@ -9,8 +9,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
@@ -39,6 +39,7 @@ public class OperationMethodItem extends IdentifiedItem
 	private Boolean reversible;
 	
 	@ManyToMany
+	@OrderColumn(name = "parameter_index")
 	private List<GeneralOperationParameterItem> parameter;
 
 	protected OperationMethodItem() {
@@ -83,18 +84,14 @@ public class OperationMethodItem extends IdentifiedItem
 	}
 
 	public List<GeneralOperationParameterItem> getParameter() {
+		if (this.parameter == null) {
+			this.parameter = new ArrayList<>();
+		}
 		return parameter;
 	}
 
 	public void setParameter(List<GeneralOperationParameterItem> parameter) {
 		this.parameter = parameter;
-	}
-	
-	public void addParameter(GeneralOperationParameterItem parameter) {
-		if (this.parameter == null) {
-			this.parameter = new ArrayList<>();
-		}
-		this.parameter.add(parameter);
 	}
 	
 	public void removeParameter(int index) {
