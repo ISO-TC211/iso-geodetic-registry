@@ -12,7 +12,7 @@
 		<fo:block>Alias</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($alias)</fo:block>
+		<fo:block><![CDATA[$alias]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
@@ -25,7 +25,7 @@
 		<fo:block>Data source</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.dataSource)</fo:block>
+		<fo:block><![CDATA[$item.dataSource]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end
@@ -35,7 +35,7 @@
 		<fo:block>Remarks</fo:block>
 	</fo:table-cell>
 	<fo:table-cell>
-		<fo:block>$esc.html($item.remarks)</fo:block>
+		<fo:block><![CDATA[$item.remarks]]></fo:block>
 	</fo:table-cell>
 </fo:table-row>
 #end

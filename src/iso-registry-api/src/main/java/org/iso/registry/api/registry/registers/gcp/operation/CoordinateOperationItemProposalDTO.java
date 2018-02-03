@@ -1,10 +1,12 @@
 package org.iso.registry.api.registry.registers.gcp.operation;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
@@ -170,19 +172,29 @@ public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemP
 				item.addScopes(this.getScope());
 			}
 			
-//			if (this.getCoordinateOperationAccuracy() != null) {
-//				for (DQ_PositionalAccuracy pa : this.getCoordinateOperationAccuracy()) {
-//					item.addCoordinateOperationAccuracy(pa);
-//				}
-//			}
-			
-			if (this.getAccuracy() != null && this.getAccuracyUom() != null) {
-				UnitOfMeasureItem uom = entityManager.find(UnitOfMeasureItem.class, this.getAccuracyUom().getReferencedItemUuid());
+			if (this.getAccuracy() != null) {
+				UnitOfMeasureItem uom;
+				if (this.getAccuracyUom() == null) {
+					// Try to find metre
+					TypedQuery<UUID> metreQuery = entityManager.createQuery("SELECT i.uuid FROM UnitOfMeasureItem i WHERE i.name = 'metre' AND i.status = 'VALID'", UUID.class);
+					List<UUID> metreUoms = metreQuery.getResultList();
+					if (metreUoms.isEmpty()) {
+						// Try to find NOT VALID uom that may be part of a currently processed proposal group
+						metreQuery = entityManager.createQuery("SELECT i.uuid FROM UnitOfMeasureItem i WHERE i.name = 'metre' AND i.status = 'NOT_VALID'", UUID.class);
+						metreUoms = metreQuery.getResultList();
+					}
+					if (metreUoms.size() != 1) {
+						throw new RuntimeException(MessageFormat.format("Missing accuracy UoM, could not automatically determine item 'metre': {0} valid items for 'metre'", metreUoms.size()));
+					}
+					uom = entityManager.find(UnitOfMeasureItem.class, metreUoms.get(0));
+				}
+				else {
+					uom = entityManager.find(UnitOfMeasureItem.class, this.getAccuracyUom().getReferencedItemUuid());
+				}
 				TransformationAccuracy trafoAccuracy = new TransformationAccuracy(this.getAccuracy(), uom);
 				DQ_AbsoluteExternalPositionalAccuracy accuracy = new DQ_AbsoluteExternalPositionalAccuracy();
 				accuracy.setResult(trafoAccuracy);
 				item.addCoordinateOperationAccuracy(accuracy);
-
 			}
 			
 			if (this.getSourceCrs() != null && this.getSourceCrs().getReferencedItemUuid() != null) {

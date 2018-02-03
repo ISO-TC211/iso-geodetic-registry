@@ -41,7 +41,7 @@ public class OperationMethodItemProposalDTO extends IdentifiedItemProposalDTO
 	private Boolean reversible;
 
 	public OperationMethodItemProposalDTO() {
-		// TODO Auto-generated constructor stub
+		super("OperationMethod");
 	}
 
 	public OperationMethodItemProposalDTO(String itemClassName) {

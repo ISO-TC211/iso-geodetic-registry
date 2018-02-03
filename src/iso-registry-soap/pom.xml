@@ -2,10 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>org.iso.registry</groupId>
+        <artifactId>iso-registry-parent</artifactId>
+        <version>1.5</version>
+        <relativePath>..</relativePath>
+    </parent>	
     <groupId>org.iso.registry</groupId>
     <artifactId>iso-registry-soap</artifactId>
     <packaging>war</packaging>
-    <version>1.5-SNAPSHOT</version>
     <name>iso-registry-soap</name>
     <url>http://www.springframework.org/spring-ws</url>
 	<properties>
@@ -21,6 +26,7 @@
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 		<hibernate.search.default.directory_provider>filesystem</hibernate.search.default.directory_provider>
 		<hibernate.search.default.indexBase>lucene</hibernate.search.default.indexBase>
+		<flyway.migration>false</flyway.migration>
 		<soap.baselocation>http://localhost:8080/soap</soap.baselocation>
 		<basePackages>de.geoinfoffm.registry,de.bespire.registry,org.iso.registry</basePackages>
 		<mail.enabled>false</mail.enabled>
@@ -251,7 +257,6 @@
         <dependency>
         	<groupId>org.iso.registry</groupId>
         	<artifactId>iso-registry-api</artifactId>
-        	<version>1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.springframework</groupId>
@@ -341,7 +346,6 @@
 		<dependency>
 			<groupId>de.geoinfoffm.registry</groupId>
 			<artifactId>registry-client-base</artifactId>
-			<version>2.3-SNAPSHOT</version>
 		</dependency>
     </dependencies>
     
@@ -385,5 +389,35 @@
 				<client.signup.confirmationUrl>~~ClientProxyScheme~~://~~ClientProxyName~~:~~ClientProxyPort~~/~~ClientProxyBasePathGui~~/signup/confirmation</client.signup.confirmationUrl>
 			</properties>
 		</profile>
+		
+		<profile>
+			<id>testbed-demo</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<hibernate.connection.username>isoreg</hibernate.connection.username>
+				<hibernate.connection.password>isoreg</hibernate.connection.password>
+				<hibernate.connection.url>jdbc:postgresql://10.199.2.203:5432/isoreg-demo-current</hibernate.connection.url>
+				<hibernate.connection.schema>public</hibernate.connection.schema>
+				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
+				<soap.baselocation>http://localhost:8080/api/soap</soap.baselocation>
+				<mail.enabled>true</mail.enabled>
+				<mail.from.name>ISO Geodetic Registry</mail.from.name>
+				<mail.from.address>registry@bespire.eu</mail.from.address>
+				<mail.smtp.auth>true</mail.smtp.auth>
+				<mail.smtp.starttls.enable>true</mail.smtp.starttls.enable>
+				<mail.smtp.host>mx.bespire.de</mail.smtp.host>
+				<mail.smtp.port>587</mail.smtp.port>
+				<mail.smtp.user>registry@bespire.eu</mail.smtp.user>
+				<mail.smtp.password>phiePhie3eeNgieniTaegauheiPaitu6</mail.smtp.password>
+				<mail.baseUrl>https://iso.registry.bespire.eu/gcpdemo</mail.baseUrl>
+				<client.signup.sendConfirmationMails>true</client.signup.sendConfirmationMails>
+				<client.signup.confirmationUrl>https://iso.registry.bespire.eu/signup/confirmation</client.signup.confirmationUrl>
+				<gml.identifier.baseurl>https://iso.registry.bespire.eu/</gml.identifier.baseurl>		
+				<gml.identifier.pathpattern>def/%d</gml.identifier.pathpattern>
+			</properties>
+		</profile>
+		
 	</profiles>
 </project>

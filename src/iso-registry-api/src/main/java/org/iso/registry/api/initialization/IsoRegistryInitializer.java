@@ -80,7 +80,7 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 				isotc211 = createOrganization("ISO/TC 211", "TC211");
 			}
 			
-			String registerName = "Geodetic Codes & Parameters";
+			String registerName = "ISO Geodetic Register";
 			RE_Register r = registerService.findByName(registerName); 
 			if (r == null) {
 				log("> Creating register...");
@@ -133,14 +133,14 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 		Organization isotc211 = orgService.findByName("ISO/TC 211");
 		RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");
 		
-		RegistryUser submitter = createUser("ISO Registry Submitter", "s", "submitter@example.org", isotc211);
+		RegistryUser submitter = createUser("ISO Geodetic Registry Submitter", "s", "submitter@example.org", isotc211);
 		RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
 		RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
 		RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
-		RegistryUser admin = createUser("ISO Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
+		RegistryUser admin = createUser("ISO Geodetic Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
 		RegistryUser poc = createUser("ISO TC/211 Point of Contact", "p", "poc@example.org", isotc211);
 
-		String registerName = "Geodetic Codes & Parameters";
+		String registerName = "ISO Geodetic Register";
 		RE_Register r = registerService.findByName(registerName); 
 
 		Role submitterRole = registerService.getSubmitterRole(r);

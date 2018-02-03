@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="../../resources/js/datatables.js" th:src="@{__${basePath}__/resources/js/datatables.js}"></script>
 		<script type="text/javascript" src="../../resources/js/registry.js" th:src="@{__${basePath}__/resources/js/registry.js}"></script>
 		<script type="text/javascript" src="../../resources/js/select2.js" th:src="@{__${basePath}__/resources/js/select2.js}"></script>
-		<script type="text/javascript" src="https://bespire.atlassian.net/s/5aabcb68bc266b63d9c98db2e18c606b-T/en_USbdmabc/6327/13/1.4.11/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=3eddc320"></script>
+<!-- 		<script type="text/javascript" src="https://bespire.atlassian.net/s/5aabcb68bc266b63d9c98db2e18c606b-T/en_USbdmabc/6327/13/1.4.11/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=3eddc320"></script> -->
 		<link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{__${basePath}__/resources/css/bootstrap.min.css}" />
 		<link rel="stylesheet" href="../../resources/css/bootstrap-theme.min.css" th:href="@{__${basePath}__/resources/css/bootstrap-theme.min.css}" />
 		<link rel="stylesheet" href="../../resources/css/bootstrap-datetimepicker.min.css" th:href="@{__${basePath}__/resources/css/bootstrap-datetimepicker.min.css}" />		
@@ -94,7 +94,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.help}">Help</span> <span class="caret"></span></a>
 						<ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
 							<li>					
-								<a th:href="@{~/static/gcp-userguide.pdf}" target="_blank" th:text="#{navbar.help.userguide}"></a>
+								<a th:href="@{~/static/ISO_Geodetic_Registry_User_Guide.pdf}" target="_blank" th:text="#{navbar.help.userguide}"></a>
 							</li>
 						</ul>
 					</li>
@@ -155,7 +155,8 @@
 
 	<div th:fragment="foot">
 		<footer class="footer">
-			<p class="pull-right text-muted text-sm"><small><span th:text="#{application.version}"></span></small></p>
+	        <p class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last updated:&nbsp;<span th:text="${@registerService.getFormattedDateOfLastChange()}"></span><!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-Mail: <a href="mailto:registry@isotc211.org">registry@isotc211.org</a>-->
+	        <span class="pull-right"><span th:text="#{application.version}"></span></span></p>
 		</footer>
 		
 		<div class="loading-modal" th:style="'background: rgba( 255, 255, 255, .8 ) url(' + @{__${basePath}__/resources/images/loader-lg.gif} + ') 50% 50% no-repeat;'"/>
@@ -168,55 +169,52 @@
 					<div id="demo1" class="demo" style="height: 100%;">
 						<ul>
 							<li id="nav_start"><a class="jstest" th:href="@{__${basePath}__/}" th:text="#{application.welcome}">Welcome</a></li>
-							<li id="nav_register"><a href="#">Register</a>
-								<ul>
 									<li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
-									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:id="'register' + ${register.key}" class="jstree-open">
-										<a th:href="@{__${basePath}__/register/__${register.key}__}" th:text="#{${register.value}}" th:title="#{${register.value}}"></a>
+									<li th:each="register : ${@registerService.getCachedRegisterNames()}" th:if="${register.key.isTopLevelRegister()}" th:id="'register' + ${register.key.alias}" class="jstree-open">
+										<a th:href="@{__${basePath}__/register/__${register.key.alias}__}" th:text="#{${register.key.name}}" th:title="#{${register.key.name}}"></a>
 										<ul>
 											<li>
-												<a th:id="'register' + ${register.key} + 'crs'" th:href="@{__${basePath}__/register/__${register.key}__/crs}">Coordinate Reference Systems</a>
+												<a th:id="'register' + ${register.key.alias} + 'crs'" th:href="@{__${basePath}__/register/__${register.key.alias}__/crs}">Coordinate Reference Systems</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CRS')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.endsWith(itemClass.value,'CRS')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'cs'" th:href="@{__${basePath}__/register/__${register.key}__/cs}">Coordinate Systems</a>
+												<a th:id="'register' + ${register.key.alias} + 'cs'" th:href="@{__${basePath}__/register/__${register.key.alias}__/cs}">Coordinate Systems</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'CS')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.endsWith(itemClass.value,'CS')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'datums'" th:href="@{__${basePath}__/register/__${register.key}__/datums}">Datums</a>
+												<a th:id="'register' + ${register.key.alias} + 'datums'" th:href="@{__${basePath}__/register/__${register.key.alias}__/datums}">Datums</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.endsWith(itemClass,'Datum')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.endsWith(itemClass.value,'Datum')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'operations'" th:href="@{__${basePath}__/register/__${register.key}__/operations}">Coordinate Operations</a>
+												<a th:id="'register' + ${register.key.alias} + 'operations'" th:href="@{__${basePath}__/register/__${register.key.alias}__/operations}">Coordinate Operations</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:if="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:if="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass.value,'Transformation')} or ${#strings.endsWith(itemClass.value,'Conversion')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 											<li>
-												<a th:id="'register' + ${register.key} + 'other'" th:href="@{__${basePath}__/register/__${register.key}__}">Other</a>
+												<a th:id="'register' + ${register.key.alias} + 'others'" th:href="@{__${basePath}__/register/__${register.key.alias}__/others}">Other</a>
 												<ul>
-													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key)}" th:id="'register' + ${register.key} + ${itemClass.key}" th:unless="${#strings.contains(itemClass,'Concatenated')} or ${#strings.endsWith(itemClass,'CRS')} or ${#strings.endsWith(itemClass,'CS')} or ${#strings.endsWith(itemClass,'Datum')} or ${#strings.endsWith(itemClass,'Transformation')} or ${#strings.endsWith(itemClass,'Conversion')}">
-														<a th:href="@{__${basePath}__/register/__${register.key}__/__${itemClass.key}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
+													<li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}" th:id="'register' + ${register.key.alias} + ${itemClass.value}" th:unless="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass.value,'CRS')} or ${#strings.endsWith(itemClass.value,'CS')} or ${#strings.endsWith(itemClass.value,'Datum')} or ${#strings.endsWith(itemClass.value,'Transformation')} or ${#strings.endsWith(itemClass.value,'Conversion')}">
+														<a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}" th:text="#{${itemClass.value}}" th:title="#{${itemClass.value}}"></a>
 													</li>
 												</ul>
 											</li>
 										</ul>
 									</li>
-								</ul></li>
 								<li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
 								<ul>
 									<li id="managementsubmitter" sec:authorize="@registrySecurity.hasRoleWith('ROLE_SUBMITTER_')"><a th:href="@{__${basePath}__/management/submitter}" th:text="#{navbar.submittingOrganizations}">Einreichende Organisationen</a></li>

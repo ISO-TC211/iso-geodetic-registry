@@ -33,7 +33,7 @@
 	<input th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
 	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
 	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
-	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
@@ -42,7 +42,7 @@
 	<textarea th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
 	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
 	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
-	<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
+	<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <div th:fragment="dateTimePicker" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
@@ -50,7 +50,7 @@
 	<div class="input-group date" th:id="'datetimepicker-' + ${property}">
 		<span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 		<input th:type="text" class="form-control" th:field="*{__${property}__}" th:placeholder="${placeholder}" data-date-format="YYYY-MM-DD"/>  
-		<span th:if="${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
+		<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left input-group-addon" th:title="#{mandatoryField}"></span>
 	</div>
 
 	<script type="text/javascript" th:inline="text">
@@ -87,7 +87,8 @@
 						data: function(term, page) {
 							return {
 								orderBy: 'name',
-								q: term
+								q: term,
+								where: "[[${where} ? ${where} : '']]"
 							};
 						},
 						results: function (data) {
@@ -130,10 +131,10 @@
 	<div th:unless="${isProposal}">
 		<!-- form-backing bean: RegisterItemViewBean -->
 		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
-			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:title="*{__${property}__.name} + ' [' + *{__${property}__.identifier} + ']'"><big th:text="*{__${property}__.name}"/></a>
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:title="*{__${property}__.name} + ' [' + *{__${property}__.identifier} + ']'"><big th:text="*{__${property}__.name}"/></a>&nbsp;<big class="text-muted" th:text="'[' + *{__${property}__.itemIdentifier} + ']'"/>
 		</div>
 		<div th:unless="*{__${property}__}">
-			<big>[<span th:text="#{undefined}"></span>]</big>
+			<big>[<span class="text-muted" th:text="#{undefined}"></span>]</big>
 		</div>		
 	</div>
 	
@@ -400,24 +401,17 @@
 <div th:fragment="aliasesTable(modifier)">
 	<div class="col-md-12" th:unless="!*{aliases} or ${isProposal}">
 		<div class="panel">
-<!-- 			<div class="panel-header"> -->
-<!-- 				<label class="form-label" th:for="'aliasesTable_' + ${modifier}" th:text="#{form.label.aliases}">Aliases</label> -->
-<!-- 			</div> -->
 			<div class="panel-body">
 				<table th:id="'aliasesTable_' + ${modifier}" class="datatable table table-condensed table-striped">
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.alias}">Alias</th>
-<!-- 							<th th:text="#{tableheader.namingSystem}">Naming system</th> -->
-<!-- 							<th th:text="#{tableheader.remarks}">Remarks</th> -->
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="alias : *{aliases}">
 							<td th:text="${alias}"/>
-<!-- 							<td th:text="${alias.namingSystem.name}"/> -->
-<!-- 							<td th:text="${alias.remarks}"/> -->
 							<td></td>
 						</tr>
 					</tbody>
@@ -431,6 +425,9 @@
 				table = $('#aliasesTable_[[${modifier}]]').dataTable({
 				"sPaginationType": "bs_normal",
 				"bFilter": false,
+				"bInfo": false,
+				"bPaginate": false,
+				"bSearchable": false,
 				"oLanguage": {
 					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
 					  "sInfo": "[[#{datatable.sInfo}]]",
@@ -453,22 +450,6 @@
 					{"bSortable" : false}
 				]
 			});
-		
-	// 		$(document).ready(function() {
-	// 			var aliasesTable_[[${modifier}]] = $('#aliasesTable_[[${modifier}]]').dataTable();
-	// 			var aliases_[[${modifier}]]_count = aliasesTable_[[${modifier}]].fnGetData().length();  
-				
-	// 			$('#addAlias_[[${modifier}]]').click(function(e) {
-	// 				var idx = aliases_[[${modifier}]]_count;
-					
-	// 				table.fnAddData([
-	// 					"<input type='text' name='aliases[" + idx + "]' placeholder='[[#{form.placeholder.alias}]]' required='required'/>",
-	// 					"<button type='button' class='btn btn-sm btn-default btn-deleterow' name='removeRow' data-index='" + (index - 1) + "' value='" + index + "'>Remove</button>"
-	// 				]);
-					
-	// 				aliases_[[${modifier}]]_count++;
-	// 			});
-	// 		});
 		/* ]]> */
 		</script>
 	</div>
@@ -488,6 +469,94 @@
 					placeholder: '[[#{form.placeholder.aliases}]]',
 					formatNoMatches: "Please enter an alias. You may enter multiple aliases by pressing comma (,).",
 					tokenSeparators: [','],
+					initSelection : function (element, callback) {
+						var data = [];
+				        $(element.val().split(",")).each(function () {
+				            data.push({
+				            	id: this, 
+				            	text: this
+				            });
+				        });
+				        callback(data);
+				    }
+				});		    	
+		    });
+		/* ]]> */
+		</script>
+	</div>	
+</div>
+
+<div th:fragment="scopeTable(modifier)">
+	<div class="col-md-12" th:unless="!*{scope} or ${isProposal}">
+		<div class="panel">
+			<div class="panel-body">
+				<table th:id="'scopeTable_' + ${modifier}" class="datatable table table-condensed table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{tableheader.scope}">Scope</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="scope : *{scope}">
+							<td th:text="${scope}"/>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+				<button th:if="${isProposal} and !${proposal.isClarification()}" th:id="'addScope_' + ${modifier}" type="button" th:attr="data-modifier=${modifier}" th:text="#{button.addScope}" class="btn btn-sm btn-default button-addalias">Add new</button>
+			</div>
+		</div>
+
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+				table = $('#scopeTable_[[${modifier}]]').dataTable({
+				"sPaginationType": "bs_normal",
+				"bFilter": false,
+				"bInfo": false,
+				"bPaginate": false,
+				"bSearchable": false,
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 0, "asc" ]],
+				 aoColumns: [
+				    null,
+					{"bSortable" : false}
+				]
+			});
+		/* ]]> */
+		</script>
+	</div>
+	
+	<div th:if="${isProposal}">
+		<div class="col-md-12 form-group">
+			<label class="control-label" th:for="'scopes_' + ${modifier}" th:text="#{form.label.scope}"></label>
+			<input type="hidden" style="width: 100%" th:id="'scopes_' + ${modifier}" th:field="*{scope}"/>
+		</div>
+		
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+		    $(document).ready(function() {
+				$('#scopes_[[${modifier}]]').select2({
+					tags: [],
+					multiple: true,
+					placeholder: '[[#{form.placeholder.scope}]]',
+					formatNoMatches: "Please enter a scope. You may enter multiple scopes by pressing semicolon (;).",
+					tokenSeparators: [';'],
 					initSelection : function (element, callback) {
 						var data = [];
 				        $(element.val().split(",")).each(function () {
@@ -727,57 +796,57 @@
 			}
 		});
 
-		if (!$('#identifier').val()) {
-			var jqxhr = $.get("[[@{__${basePath}__/entities/identifier/next-available}]]", function(data) {
-				$('#identifier').val(data);
-			});
-		}
+// 		if (!$('#identifier').val()) {
+// 			var jqxhr = $.get("[[@{__${basePath}__/entities/identifier/next-available}]]", function(data) {
+// 				$('#identifier').val(data);
+// 			});
+// 		}
 
-	    // validate signup form on keyup and submit
-		$('#identifier').popover({
-				"html": true,
-				"trigger": "manual",
-				"placement": "top",
-				"content": function() {
-					return "<b>Code is taken</b>";	
-				}
-			});
+// 	    // validate signup form on keyup and submit
+// 		$('#identifier').popover({
+// 				"html": true,
+// 				"trigger": "manual",
+// 				"placement": "top",
+// 				"content": function() {
+// 					return "<b>Code is taken</b>";	
+// 				}
+// 			});
 
-	    if ([[!${proposal.isClarification()}]]) { 
-		    $("#identifier").rules("add", {
-		   	    required: true,
-		   	    onkeyup: false,
-		   	    remote: {
-		   	        url: "[[@{__${basePath}__/entities/identifier/check-availability}]]",
-		   	        type: "GET",
-		   	        cache: false,
-		   	     	data: {
-						identifier: function() {
-							return $("#identifier").val();
-		             	},
-		             	itemUuid: function() {
-		             		return $("#itemUuid").val();
-		             	}
-		   	     	},
-		   	        dataFilter: function(response) {
-		   	        	if (response == 0) {
-		   	        		$('#identifier').popover("hide");
-		          	    	return true;
-		   	        	}
-		   	        	else {
-		   	        		$('#identifier').popover("show");
-		          	    	return false;
-		   	        	}
-		   	        }
-		   	    },
-		   	    messages: {
-		   	    	remote: $.format("The identifier {0} is already taken")
-		   	    },
-		    });
-	    }
-	    else {
-	    	$('#identifier').attr('readonly', 'readonly').attr('disabled', 'disabled');
-	    }
+// 	    if ([[!${proposal.isClarification()}]]) { 
+// 		    $("#identifier").rules("add", {
+// 		   	    required: true,
+// 		   	    onkeyup: false,
+// 		   	    remote: {
+// 		   	        url: "[[@{__${basePath}__/entities/identifier/check-availability}]]",
+// 		   	        type: "GET",
+// 		   	        cache: false,
+// 		   	     	data: {
+// 						identifier: function() {
+// 							return $("#identifier").val();
+// 		             	},
+// 		             	itemUuid: function() {
+// 		             		return $("#itemUuid").val();
+// 		             	}
+// 		   	     	},
+// 		   	        dataFilter: function(response) {
+// 		   	        	if (response == 0) {
+// 		   	        		$('#identifier').popover("hide");
+// 		          	    	return true;
+// 		   	        	}
+// 		   	        	else {
+// 		   	        		$('#identifier').popover("show");
+// 		          	    	return false;
+// 		   	        	}
+// 		   	        }
+// 		   	    },
+// 		   	    messages: {
+// 		   	    	remote: $.format("The identifier {0} is already taken")
+// 		   	    },
+// 		    });
+// 	    }
+// 	    else {
+// 	    	$('#identifier').attr('readonly', 'readonly').attr('disabled', 'disabled');
+// 	    }
 	});
 /* ]]> */
 </script>

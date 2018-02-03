@@ -23,8 +23,8 @@
 				<div class="col-md-4" th:with="property='accuracy',inputType='number',label=#{form.label.accuracy},placeholder=#{form.placeholder.accuracy},isRequired='false'">
 					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
-				<div class="col-md-8" th:with="property='accuracyUom',label=#{form.label.accuracyUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
-					<div th:replace="globals :: selectIdentifiedItem"/>
+				<div class="col-md-8" th:with="property='accuracyUom',label=#{form.label.accuracyUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem',where='i.name = \'metre\''">
+					<div th:replace="globals :: selectIdentifiedItem2"/>
 				</div>
 			</div>
 
@@ -35,7 +35,7 @@
 						<div th:unless="${isProposal}">
 							<!-- form-backing bean: RegisterItemViewBean -->
 							<div th:if="*{method}" th:with="uuid=*{method.uuid}">
-								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.identifier} + '] ' + *{method.name}"></a>
+								<big><a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="*{method.name}"></a>&nbsp;<span class="text-muted" th:text="'[' + *{method.identifier} + ']'"></span></big>
 							</div>
 							<div th:unless="*{method}">
 								[<span th:text="#{undefined}"></span>]
@@ -103,11 +103,7 @@
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row">
-				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
-					<div th:replace="globals :: textArea"/>
-				</div>
-			</div>
+			<div class="row" th:include="globals :: scopeTable('transformation')" />
 			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
@@ -122,6 +118,7 @@
 						<th th:text="#{tableheader.parameterType}">Parameter type</th>
 						<th th:text="#{tableheader.value}">Value</th>
 						<th th:text="#{tableheader.uom}">UoM</th>
+						<th th:text="#{tableheader.citation}">Citation</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -138,9 +135,20 @@
 							<span th:unless="${isProposal}" th:text="${parameterValue.value}"></span>
 						</td>
 						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
-							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
-							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
+							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.parameterUnit.uuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
+							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name}"></a>&nbsp;<span th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" class="text-muted" th:text="'[' + ${parameterValue.unitOfMeasure.identifier} + ']'"></span>
 						</td>							
+						<td th:with="isFile=(${parameterValue.parameterType} eq 'FILE')">
+							<div th:if="${isProposal}">
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="#{button.edit}"/>
+								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							</div>
+							<div th:unless="${isProposal}" th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
+								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							</div>
+						</td>
+						<td th:text="${row.index}"/>			
 					</tr>
 				</tbody>
 			</table>
@@ -156,8 +164,8 @@
 				data: [
 						{ id: 'MEASURE', text: 'measure (w/ UoM)' },
 						{ id: 'FILE', text: 'parameter file name' },
-						{ id: 'STRING', text: 'text' },
-						{ id: 'INTEGER', text: 'number' },
+// 						{ id: 'STRING', text: 'text' },
+// 						{ id: 'INTEGER', text: 'number' },
 				]				
 			});
 		};
@@ -208,11 +216,14 @@
        		$('#parametersTable').dataTable({
        			"bPaginate": false,
        			"bFilter": false,
+       			"aaSorting": [[ "5", "asc" ]],
 	   			 aoColumns: [
-   						{"bSortable" : false, "sWidth": "35%"},
+   						{"bSortable" : false, "sWidth": "25%"},
   						{"bSortable" : false, "sWidth": "10%"},
    						{"bSortable" : false, "sWidth": "20%"},
-   						{"bSortable" : false, "sWidth": "35%"}
+   						{"bSortable" : false, "sWidth": "25%"},
+   						{"bSortable" : false, "sWidth": "20%"},
+   						{"bVisible" : false},
    					]
        		});
        		
@@ -237,6 +248,18 @@
        				$('#parameterUom_' + idx).select2('enable', false);
        				$('#parameterUom_' + idx).removeAttr('required');
        			}
+
+       			if ($(this).val() == 'FILE') {
+       				$('#parameterUom_' + idx).removeAttr('disabled');
+       				$('#parameterUom_' + idx).select2('enable', true);
+       				$('#parameterUom_' + idx).select2('readonly', false);
+       				$('#parameterUom_' + idx).attr('required', 'required');
+       			}
+       			else {
+       				$('#parameterUom_' + idx).val('');
+       				$('#parameterUom_' + idx).select2('enable', false);
+       				$('#parameterUom_' + idx).removeAttr('required');
+       			}
        		});
 
 			$('#method').change(function(e) {
@@ -251,7 +274,9 @@
         					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
         					"<input type='hidden' id='paramValueType_" + idx + "' data-index='" + idx + "' class='select-paramtype' name='parameterValues[" + idx + "].parameterType' value='MEASURE' required='required' style='width: 100%'/>",
         					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
-    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>",
+    						"",
+    						idx
 						]);
         				uomSelect($('#parameterUom_' + idx));
         				paramTypeSelect($('#paramValueType_' + idx));

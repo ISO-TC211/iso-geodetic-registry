@@ -36,7 +36,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -375,16 +374,6 @@ public class AdministrationController
 		return "admin/organizations";
 	}
 
-	/**
-	 * Handles {@link NotFoundException}s.
-	 * 
-	 * @return The error view
-	 */
-	@ExceptionHandler(NotFoundException.class)
-	public String handleNotFoundException() {
-		return "notfound";
-	}
-	
 	/**
 	 * Finds and display details of an organization.
 	 * 

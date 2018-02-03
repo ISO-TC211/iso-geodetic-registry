@@ -2,6 +2,7 @@ package org.iso.registry.api.registry.registers.gcp.operation;
 
 import java.util.Collection;
 
+import org.iso.registry.api.registry.registers.gcp.CitationDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemViewBean;
 import org.iso.registry.core.model.operation.Measure;
 import org.iso.registry.core.model.operation.OperationParameterValue;
@@ -12,6 +13,7 @@ public class OperationParameterValueViewBean extends GeneralParameterValueViewBe
 	private Object value;
 	private UnitOfMeasureItemViewBean unitOfMeasure;
 	private OperationParameterValueType parameterType;
+	private CitationDTO referenceFileCitation;
 
 	public OperationParameterValueViewBean() {
 		// TODO Auto-generated constructor stub
@@ -30,6 +32,10 @@ public class OperationParameterValueViewBean extends GeneralParameterValueViewBe
 		}
 		else {
 			this.value = parameterValue.getValue();
+		}
+		
+		if (parameterValue.getReferenceFileCitation() != null) {
+			this.referenceFileCitation = new CitationDTO(parameterValue.getReferenceFileCitation());
 		}
 	}
 
@@ -61,6 +67,14 @@ public class OperationParameterValueViewBean extends GeneralParameterValueViewBe
 	 */
 	public void setParameterType(OperationParameterValueType parameterType) {
 		this.parameterType = parameterType;
+	}
+
+	public CitationDTO getReferenceFileCitation() {
+		return referenceFileCitation;
+	}
+
+	public void setReferenceFileCitation(CitationDTO referenceFileCitation) {
+		this.referenceFileCitation = referenceFileCitation;
 	}
 	
 }

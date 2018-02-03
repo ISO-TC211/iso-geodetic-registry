@@ -1149,7 +1149,8 @@ CREATE TABLE coordinateoperationitem_scope_aud (
 
 CREATE TABLE coordinatesystem_axis (
     coordinatesystem_uuid uuid NOT NULL,
-    axes_uuid uuid NOT NULL
+    axes_uuid uuid NOT NULL,
+    axis_index integer NOT NULL
 );
 
 
@@ -1162,6 +1163,7 @@ CREATE TABLE coordinatesystem_axis_aud (
     rev integer NOT NULL,
     coordinatesystem_uuid uuid NOT NULL,
     axes_uuid uuid NOT NULL,
+    axis_index integer NOT NULL,
     revtype smallint
 );
 
@@ -2212,7 +2214,8 @@ CREATE TABLE operationmethoditem_aud (
 
 CREATE TABLE operationmethoditem_generaloperationparameteritem (
     operationmethoditem_uuid uuid NOT NULL,
-    parameter_uuid uuid NOT NULL
+    parameter_uuid uuid NOT NULL,
+    parameter_index integer NOT NULL
 );
 
 
@@ -2225,6 +2228,7 @@ CREATE TABLE operationmethoditem_generaloperationparameteritem_aud (
     rev integer NOT NULL,
     operationmethoditem_uuid uuid NOT NULL,
     parameter_uuid uuid NOT NULL,
+    parameter_index integer NOT NULL,    
     revtype smallint
 );
 
