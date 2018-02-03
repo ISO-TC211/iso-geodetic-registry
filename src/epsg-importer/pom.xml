@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.iso.registry</groupId>
 			<artifactId>iso-registry-api</artifactId>
-			<version>1.5-SNAPSHOT</version>
+			<version>1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.healthmarketscience.jackcess</groupId>
