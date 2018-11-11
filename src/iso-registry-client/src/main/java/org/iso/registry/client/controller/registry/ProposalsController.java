@@ -63,6 +63,7 @@ import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegistryUserService;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
+import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.DatatableParameters;
 import de.geoinfoffm.registry.client.web.DatatablesResult;
@@ -100,7 +101,7 @@ import de.geoinfoffm.registry.persistence.SupersessionRepository;
  */
 @Controller
 @RequestMapping("/proposals")
-public class ProposalsController
+public class ProposalsController extends AbstractController
 {
 	private static final Logger logger = LoggerFactory.getLogger(ProposalsController.class);
 	
@@ -481,7 +482,7 @@ public class ProposalsController
 		}
 		else {
 			proposalDto = proposalDtoFactory.getProposalDto(proposal);
-			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest);
+			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 			
 			proposalService.updateProposal(proposalDto);
 			if (role != null) {
@@ -655,27 +656,15 @@ public class ProposalsController
 		}
 		
 		if (bindingResult.hasErrors()) {
-//			if (pmi instanceof Addition) {
-//				RE_Register targetRegister = ((Addition)pmi).getRegister();
-//
-//				Set<RE_ItemClass> itemClasses = targetRegister.getContainedItemClasses();
-//				itemClasses.size();
-//				model.addAttribute("itemClasses", itemClasses);
-//			}
-
-//			return "registry/proposal";
 			return new ResponseEntity<Void>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 
 		RE_ItemClass itemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(itemClass);
-		dto = bindAdditionalAttributes(dto, servletRequest);
-//		ServletRequestDataBinder binder = new ServletRequestDataBinder(dto);
-//		binder.bind(servletRequest);
+		dto = bindAdditionalAttributes(dto, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 
 		proposalService.updateProposal(dto);
 		
-//		return new ResponseEntity<Void>(HttpStatus.OK);
 		return "redirect:/management/submitter";
 	}
 
@@ -754,7 +743,8 @@ public class ProposalsController
 	@RequestMapping(value = "/{uuid}/accept", method = RequestMethod.POST)
 	@Transactional
 	public ResponseEntity<Void> acceptProposal(@PathVariable("uuid") UUID proposalUuid,
-											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+											   @RequestParam("controlBodyAcceptDecisionEvent") String controlBodyDecisionEvent) 
+	throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 		logger.debug("POST /proposal/{}/accept", proposalUuid);
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
@@ -820,7 +810,8 @@ public class ProposalsController
 	@RequestMapping(value = "/{uuid}/reject", method = RequestMethod.POST)
 	@Transactional
 	public ResponseEntity<?> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
-											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+											   @RequestParam("controlBodyRejectDecisionEvent") String controlBodyDecisionEvent) 
+	throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 		logger.debug("POST /proposals/{}/reject", proposalUuid);
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
@@ -1059,27 +1050,4 @@ public class ProposalsController
 		
 		return result;
 	}
-
-	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
-		RE_ItemClass selectedItemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
-		ItemClassConfiguration itemClassConfiguration = itemClassRegistry.getConfiguration(selectedItemClass.getName());
-		
-		if (itemClassConfiguration != null) {
-			try {
-				@SuppressWarnings("unchecked")
-				Class<? extends RegisterItemProposalDTO> dtoClass = 
-						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
-				proposal = BeanUtils.instantiateClass(dtoClass);
-				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
-				binder.setConversionService(conversionService);
-				binder.bind(servletRequest);
-				
-//				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
-			}
-			catch (ClassNotFoundException e) {
-				throw new RuntimeException(e.getMessage(), e);
-			}
-		}
-		return proposal;
-	}	
 }

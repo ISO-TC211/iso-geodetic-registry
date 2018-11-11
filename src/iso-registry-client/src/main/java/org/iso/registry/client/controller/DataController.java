@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.hsqldb.lib.StringUtil;
@@ -35,11 +36,10 @@ import de.geoinfoffm.registry.core.Entity;
 @RequestMapping("/entities")
 public class DataController
 {
-	@Autowired private DatumItemRepository datumRepository;
-	@Autowired private CoordinateSystemItemRepository csRepository;
-	@Autowired private OperationMethodItemRepository methodRepository;
-	
 	@Autowired
+	private OperationMethodItemRepository methodRepository;
+	
+	@PersistenceContext
 	private EntityManager entityManager;
 	
 	@Autowired

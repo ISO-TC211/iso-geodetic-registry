@@ -71,6 +71,7 @@ import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegisterService;
 import de.geoinfoffm.registry.api.ViewBeanFactory;
+import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.ItemClassConfiguration;
@@ -105,7 +106,7 @@ import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationExcepti
  */
 @Controller
 @RequestMapping("/item")
-public class RegisterItemController
+public class RegisterItemController extends AbstractController
 {
 	@Autowired
 	private RegisterItemService itemService;
@@ -461,7 +462,7 @@ public class RegisterItemController
 			model.addAttribute("itemClassNotConfigured", "true");
 		}
 
-		proposal = bindAdditionalAttributes(proposal, servletRequest);
+		proposal = bindAdditionalAttributes(proposal, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -634,7 +635,7 @@ public class RegisterItemController
 		RE_SubmittingOrganization suborg = suborgRepository.findOne(proposal.getSponsorUuid());
 		
 		RegisterItemProposalDTO dto = proposalDtoFactory.getProposalDto(item.getItemClass());
-		dto = bindAdditionalAttributes(dto, servletRequest); new Object();
+		dto = bindAdditionalAttributes(dto, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 
 		Clarification clarification = proposalService.createClarification(item, dto.calculateProposedChanges(item), dto.getJustification(), 
 				dto.getRegisterManagerNotes(), dto.getControlBodyNotes(), suborg);
@@ -670,29 +671,6 @@ public class RegisterItemController
 			}
 		}
 	}
-	
-	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
-		RE_ItemClass selectedItemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
-		ItemClassConfiguration itemClassConfiguration = itemClassRegistry.getConfiguration(selectedItemClass.getName());
-		
-		if (itemClassConfiguration != null) {
-			try {
-				@SuppressWarnings("unchecked")
-				Class<? extends RegisterItemProposalDTO> dtoClass = 
-						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
-				proposal = BeanUtils.instantiateClass(dtoClass);
-				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
-				binder.setConversionService(conversionService);
-				binder.bind(servletRequest);
-				
-//				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
-			}
-			catch (ClassNotFoundException e) {
-				throw new RuntimeException(e.getMessage(), e);
-			}
-		}
-		return proposal;
-	}	
 
 	public String createProposal(RE_Register register,
 			String itemClassUuid,
