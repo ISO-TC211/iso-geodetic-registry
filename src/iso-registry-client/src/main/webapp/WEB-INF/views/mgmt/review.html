@@ -211,7 +211,7 @@
 										<!-- Text input-->
 										<div class="form-group">
 											<div class="controls">
-												<textarea id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+												<textarea id="controlBodyAcceptDecisionEvent" name="controlBodyAcceptDecisionEvent" rows="3" cols="40" class="form-control" required="true" type="text" /> 
 											</div>
 										</div>
 									</form>
@@ -240,7 +240,7 @@
 										<!-- Text input-->
 										<div class="form-group">
 											<div class="controls">
-												<textarea th:if="${proposal.isPending()}" id="controlBodyDecisionEvent" name="controlBodyDecisionEvent" rows="3" cols="40" class="form-control" required="required" type="text" /> 
+												<textarea th:if="${proposal.isPending()}" id="controlBodyRejectDecisionEvent" name="controlBodyRejectDecisionEvent" rows="3" cols="40" class="form-control" required="required" type="text" /> 
 											</div>
 										</div>
 									</form>								

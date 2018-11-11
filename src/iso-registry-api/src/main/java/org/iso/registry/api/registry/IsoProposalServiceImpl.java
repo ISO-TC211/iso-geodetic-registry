@@ -73,6 +73,12 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 		
 		if (proposal instanceof Addition) {
 			// assign final identifier to IdentifiedItems
+			for (Proposal dependentProposal : proposal.getDependentProposals()) {
+				if (dependentProposal instanceof Addition) {
+					assignItemIdentifier((Addition)dependentProposal);
+				}
+			}
+
 			Addition addition = (Addition)proposal;
 			assignItemIdentifier(addition);
 		}

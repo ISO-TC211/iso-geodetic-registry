@@ -76,6 +76,7 @@ import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -714,6 +715,7 @@ public class ExcelAdapter
 		Row headingRow = s.getRow(sheetConfig.getHeaderRow() - 1);
 		
 		int row = sheetConfig.getFirstDataRow() - 1;
+		int emptyRows = 0;
 		while (true) {
 			Row r = s.getRow(row);
 			String rowId = null;
@@ -734,7 +736,13 @@ public class ExcelAdapter
 
 			String first = getString(r.getCell(columnNameToIndex(sheetConfig.getFirstDataColumn())));
 			if (StringUtils.isEmpty(first)) {
-				break;
+				if (++emptyRows > 10) {
+					break;
+				}
+				else {
+					row++;
+					continue;
+				}
 			}
 			
 			if (rowId == null) {
@@ -894,6 +902,9 @@ public class ExcelAdapter
 		}
 		
 		for (String reference : references) {
+			// Catch trailing or double semi-colons 
+			if (!StringUtils.hasText(reference)) continue;
+
 			reference = reference.trim();
 			
 			if (NumberUtils.isNumber(reference)) {
@@ -917,6 +928,7 @@ public class ExcelAdapter
 				Sheet subSheet = null;
 				SheetConfiguration subSheetConfiguration = null;
 				
+				Assert.state(reference.length() > 2, MessageFormat.format("Bad reference {0} in row {1} of sheet {2}", reference, row.getRowNum() + 1, currentSheetConfiguration.getSheetName()));
 				String idPrefix = reference.substring(0, 2);
 				for (SheetConfiguration otherSheetConfig : configuration.getSheet()) {
 					if (otherSheetConfig.getIdPrefix().equalsIgnoreCase(idPrefix)) {

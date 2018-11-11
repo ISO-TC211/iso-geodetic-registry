@@ -102,6 +102,7 @@ import de.geoinfoffm.registry.api.RegisterItemProposalDTO;
 import de.geoinfoffm.registry.api.RegisterItemService;
 import de.geoinfoffm.registry.api.RegisterItemViewBean;
 import de.geoinfoffm.registry.api.RegisterService;
+import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.BasePathRedirectView;
 import de.geoinfoffm.registry.client.web.DatatablesResult;
 import de.geoinfoffm.registry.client.web.NotFoundException;
@@ -147,7 +148,7 @@ import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationExcepti
  */
 @Controller
 @RequestMapping("/register")
-public class RegisterController
+public class RegisterController extends AbstractController
 {
 	private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 	
@@ -776,7 +777,7 @@ public class RegisterController
 			@ModelAttribute("proposal") RegisterItemProposalDTO proposal,
 			final Model model) {
 
-		proposal = bindAdditionalAttributes(proposal, servletRequest);
+		proposal = bindAdditionalAttributes(proposal, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
@@ -902,7 +903,7 @@ public class RegisterController
 			return "proposal";
 		}
 		
-		proposal = bindAdditionalAttributes(proposal, servletRequest);
+		proposal = bindAdditionalAttributes(proposal, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 		
 		Addition addition = proposalService.createAdditionProposal(proposal);
 		
@@ -915,29 +916,6 @@ public class RegisterController
 		return "redirect:/management/submitter";
 	}
 
-	protected RegisterItemProposalDTO bindAdditionalAttributes(RegisterItemProposalDTO proposal, ServletRequest servletRequest) {
-		RE_ItemClass selectedItemClass = itemClassRepository.findOne(proposal.getItemClassUuid());
-		ItemClassConfiguration itemClassConfiguration = itemClassRegistry.getConfiguration(selectedItemClass.getName());
-		
-		if (itemClassConfiguration != null) {
-			try {
-				@SuppressWarnings("unchecked")
-				Class<? extends RegisterItemProposalDTO> dtoClass = 
-						(Class<? extends RegisterItemProposalDTO>)this.getClass().getClassLoader().loadClass(itemClassConfiguration.getDtoClass());
-				proposal = BeanUtils.instantiateClass(dtoClass);
-				ServletRequestDataBinder binder = new ServletRequestDataBinder(proposal); 
-				binder.setConversionService(conversionService);
-				binder.bind(servletRequest);
-				
-//				proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
-			}
-			catch (ClassNotFoundException e) {
-				throw new RuntimeException(e.getMessage(), e);
-			}
-		}
-		return proposal;
-	}	
-	
 	@RequestMapping(value = "/{register}/proposal/upload", method = RequestMethod.POST)
 	public String handleProposalUpload(@PathVariable("register") String registerName,
 									   @RequestParam("file") CommonsMultipartFile file,

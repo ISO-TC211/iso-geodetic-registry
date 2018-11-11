@@ -82,6 +82,10 @@
 								</div>
 								<div class="panel-collapse" th:id="'additionInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}">
+										<colgroup>
+											<col span="1" style="width: 20%;"/>
+											<col span="1" style="width: 80%;"/>
+										</colgroup>
 										<tbody>
 											<tr th:if="*{sponsor}">
 												<td th:text="#{sponsor}"></td>
@@ -95,11 +99,11 @@
 												<td th:text="#{justification}"></td>
 												<td th:text="*{justification}"></td>
 											</tr>
-											<tr th:if="*{registerManagerNotes}">
+											<tr th:if="*{registerManagerNotes}" sec:authorize="@registrySecurity.hasRoleWith('ROLE_ADMIN_') or @registrySecurity.hasRoleWith('ROLE_OWNER_') or @registrySecurity.hasRoleWith('ROLE_CONTROLBODY_') or @registrySecurity.hasRoleWith('ROLE_MANAGER_')">
 												<td th:text="#{registerManagerNotes}"></td>
 												<td th:text="*{registerManagerNotes}"></td>
 											</tr>
-											<tr th:if="*{controlBodyNotes}">
+											<tr th:if="*{controlBodyNotes}" sec:authorize="@registrySecurity.hasRoleWith('ROLE_ADMIN_') or @registrySecurity.hasRoleWith('ROLE_OWNER_') or @registrySecurity.hasRoleWith('ROLE_CONTROLBODY_') or @registrySecurity.hasRoleWith('ROLE_MANAGER_')">
 												<td th:text="#{controlBodyNotes}"></td>
 												<td th:text="*{controlBodyNotes}"></td>
 											</tr>
@@ -115,7 +119,7 @@
 												<td th:text="#{status}"></td>
 												<td th:text="#{*{status}}"></td>
 											</tr>
-											<tr th:if="*{controlBodyDecisionEvent}">
+											<tr th:if="*{controlBodyDecisionEvent}" sec:authorize="@registrySecurity.hasRoleWith('ROLE_ADMIN_') or @registrySecurity.hasRoleWith('ROLE_OWNER_') or @registrySecurity.hasRoleWith('ROLE_CONTROLBODY_') or @registrySecurity.hasRoleWith('ROLE_MANAGER_')">
 												<td th:text="#{controlBodyDecisionEvent}"></td>
 												<td th:text="*{controlBodyDecisionEvent}"></td>
 											</tr>
@@ -138,6 +142,10 @@
 								</div>
 								<div class="panel-collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}" th:id="'amendmentInformation_' + ${pmi.uuid}">
+										<colgroup>
+											<col span="1" style="width: 20%;"/>
+											<col span="1" style="width: 80%;"/>
+										</colgroup>
 										<tbody>
 											<tr>
 												<td th:text="#{amendmentType}"></td>
@@ -187,6 +195,10 @@
 								</div>
 								<div class="panel-collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
 									<table class="table table-striped" th:object="${pmi}" th:id="'clarificationInformation_' + ${pmi.uuid}">
+										<colgroup>
+											<col span="1" style="width: 20%;"/>
+											<col span="1" style="width: 80%;"/>
+										</colgroup>
 										<tbody>
 											<tr>
 												<td th:text="#{proposedChange}"></td>
