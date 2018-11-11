@@ -743,7 +743,8 @@ public class ProposalsController extends AbstractController
 	@RequestMapping(value = "/{uuid}/accept", method = RequestMethod.POST)
 	@Transactional
 	public ResponseEntity<Void> acceptProposal(@PathVariable("uuid") UUID proposalUuid,
-											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+											   @RequestParam("controlBodyAcceptDecisionEvent") String controlBodyDecisionEvent) 
+	throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 		logger.debug("POST /proposal/{}/accept", proposalUuid);
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
@@ -809,7 +810,8 @@ public class ProposalsController extends AbstractController
 	@RequestMapping(value = "/{uuid}/reject", method = RequestMethod.POST)
 	@Transactional
 	public ResponseEntity<?> rejectProposal(@PathVariable("uuid") UUID proposalUuid,
-											   @RequestParam("controlBodyDecisionEvent") String controlBodyDecisionEvent) throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
+											   @RequestParam("controlBodyRejectDecisionEvent") String controlBodyDecisionEvent) 
+	throws InvalidProposalException, IllegalOperationException, ProposalNotFoundException, UnauthorizedException {
 		logger.debug("POST /proposals/{}/reject", proposalUuid);
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
