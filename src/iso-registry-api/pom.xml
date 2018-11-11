@@ -4,7 +4,7 @@
 	<parent>
         <groupId>org.iso.registry</groupId>
         <artifactId>iso-registry-parent</artifactId>
-        <version>1.5</version>
+        <version>1.5.1</version>
         <relativePath>..</relativePath>
     </parent>	
 	<artifactId>iso-registry-api</artifactId>
@@ -15,7 +15,6 @@
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<org.apache.sis-version>0.6</org.apache.sis-version>
-		<registry-base-version>2.0.2-SNAPSHOT</registry-base-version>
 	</properties>
 	<repositories>
 		<repository>
