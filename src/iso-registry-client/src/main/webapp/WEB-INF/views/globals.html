@@ -663,18 +663,9 @@
 </div>
 
 <div th:fragment="registerItemDefinition">
-	<div class="col-md-12 hidden" th:with="property='definition',rows=6,cols=120,label=#{form.label.definition},placeholder=#{form.placeholder.definition},help=#{form.help.definition},isRequired='true'">
-		<div th:replace="globals :: textArea"/>
-	</div>
-	
-	<script th:fragment="js-proposal" type="text/javascript" th:inline="text">
-	/* <![CDATA[ */
-	    $('#definition').val($('#name').val());
-		$('#name').bind('keypress keyup blur', function() {
-	    	$('#definition').val($(this).val());
-		});
-	/* ]]> */
-	</script>
+<!--
+	handled in back-end 
+-->
 </div>
 
 <div th:fragment="proposalDetailsPanel (isCollapsible)" class="panel panel-default" th:if="${itemClass}">
