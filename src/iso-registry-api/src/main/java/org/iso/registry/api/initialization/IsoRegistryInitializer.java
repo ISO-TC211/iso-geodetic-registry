@@ -1,5 +1,7 @@
 package org.iso.registry.api.initialization;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.isotc211.iso19135.RE_SubmittingOrganization_PropertyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -18,6 +20,7 @@ import de.geoinfoffm.registry.core.ParameterizedRunnable;
 import de.geoinfoffm.registry.core.RegistersChangedEvent;
 import de.geoinfoffm.registry.core.RegistryInitializer;
 import de.geoinfoffm.registry.core.UnauthorizedException;
+import de.geoinfoffm.registry.core.configuration.RegistryConfiguration;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.RegistryUser;
 import de.geoinfoffm.registry.core.model.RegistryUserGroup;
@@ -36,6 +39,8 @@ import de.geoinfoffm.registry.persistence.RegisterRepository;
 @Component
 public class IsoRegistryInitializer extends AbstractRegistryInitializer implements RegistryInitializer, ApplicationEventPublisherAware
 {
+	public static final String ISO_REGISTRY_CONTROLBODY_ORG_NAME = "Control Body for the ISO Geodetic Registry Network";
+	
 	@Autowired
 	private RegistryUserGroupRepository groupRepository;
 	
@@ -75,11 +80,15 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 				log("done");
 			}
 			
-			Organization isotc211 = orgService.findByName("ISO/TC 211");
+			Organization isotc211 = orgService.findByName(ISO_REGISTRY_CONTROLBODY_ORG_NAME);
 			if (isotc211 == null) {
-				isotc211 = createOrganization("ISO/TC 211", "TC211");
+				isotc211 = createOrganization(ISO_REGISTRY_CONTROLBODY_ORG_NAME, "CB");
 			}
-			
+
+			String adminPassword = RandomStringUtils.randomAlphanumeric(16);
+			RegistryUser admin = createUser("ISO Geodetic Registry Administrator", adminPassword, "admin@example.org", isotc211, adminGroup);
+			log(String.format(">>> Password of admin@example.org was set to %s", adminPassword));
+
 			String registerName = "ISO Geodetic Register";
 			RE_Register r = registerService.findByName(registerName); 
 			if (r == null) {
@@ -99,7 +108,23 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 
 				log(String.format(">>> '%s' (owner = %s; manager = %s)", r.getName(), r.getOwner().getName(), r.getManager().getName()));
 			}
+
+			Role submitterRole = registerService.getSubmitterRole(r);
+			isotc211.assignRole(submitterRole);
+			orgService.delegate(admin, submitterRole, isotc211);
+
+			Role managerRole = registerService.getManagerRole(r);
+			orgService.delegate(admin, managerRole, isotc211);
+
+			Role ownerRole = registerService.getOwnerRole(r);
+			orgService.delegate(admin, ownerRole, isotc211);
+
+			Role controlBodyRole = registerService.getControlBodyRole(r);
+			orgService.delegate(admin, controlBodyRole, isotc211);
 			
+			Role pocRole = orgService.getPointOfContactRole(isotc211);
+			orgService.delegate(admin, pocRole, isotc211);
+
 			addItemClass("CompoundCRS", r);
 			addItemClass("EngineeringCRS", r);
 			addItemClass("GeodeticCRS", r);
@@ -130,14 +155,13 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 	@Transactional
 	@Override
 	protected void loadExampleData() throws Exception {
-		Organization isotc211 = orgService.findByName("ISO/TC 211");
+		Organization isotc211 = orgService.findByName(ISO_REGISTRY_CONTROLBODY_ORG_NAME);
 		RegistryUserGroup adminGroup = groupRepository.findByName("ROLE_ADMIN");
 		
 		RegistryUser submitter = createUser("ISO Geodetic Registry Submitter", "s", "submitter@example.org", isotc211);
 		RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
 		RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
 		RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
-		RegistryUser admin = createUser("ISO Geodetic Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
 		RegistryUser poc = createUser("ISO TC/211 Point of Contact", "p", "poc@example.org", isotc211);
 
 		String registerName = "ISO Geodetic Register";
