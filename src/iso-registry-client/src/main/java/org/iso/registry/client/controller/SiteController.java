@@ -233,6 +233,10 @@ public class SiteController extends AbstractController
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String registerUser(WebRequest request, @ModelAttribute("user") final SignupFormBean userData,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes) {
+		
+		if (!ClientConfiguration.isSignupEnabled()) {
+			return "redirect:/";
+		}
 
 		request.removeAttribute("signupData", WebRequest.SCOPE_SESSION);
 
@@ -247,6 +251,10 @@ public class SiteController extends AbstractController
 	public String createUser(WebRequest request, @Valid @ModelAttribute("user") final SignupFormBean userData,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes)
 			throws Exception {
+
+		if (!ClientConfiguration.isSignupEnabled()) {
+			return "redirect:/";
+		}
 
 		if (bindingResult.hasErrors()) {
 			List<Organization> orgs = orgRepository.findAll();
@@ -276,6 +284,10 @@ public class SiteController extends AbstractController
 	public String registerUserOrganizationDetails(WebRequest request, @ModelAttribute("organization") final OrganizationFormBean organization,
 			final Model model, final RedirectAttributes redirectAttributes) throws Exception {
 	
+		if (!ClientConfiguration.isSignupEnabled()) {
+			return "redirect:/";
+		}
+
 		SignupFormBean signupData = (SignupFormBean)request.getAttribute("signupData", WebRequest.SCOPE_SESSION);
 		if (signupData == null) {
 			return "redirect:/signup";
@@ -291,6 +303,10 @@ public class SiteController extends AbstractController
 	public String createUserWithNewOrganization(WebRequest request, @Valid @ModelAttribute("organization") final OrganizationFormBean organizationData,
 			final BindingResult bindingResult, final Model model, final RedirectAttributes redirectAttributes)
 			throws Exception {
+
+		if (!ClientConfiguration.isSignupEnabled()) {
+			return "redirect:/";
+		}
 
 		SignupFormBean userData = (SignupFormBean)request.getAttribute("signupData", WebRequest.SCOPE_SESSION);
 		if (userData == null) {
@@ -310,6 +326,10 @@ public class SiteController extends AbstractController
 	protected RegistryUser registerUser(CreateRegistryUserRequest userData, CreateOrganizationRequest organizationData, final RedirectAttributes redirectAttributes) 
 			throws UserRegistrationException, UnauthorizedException, InvalidProposalException {
 		
+		if (!ClientConfiguration.isSignupEnabled()) {
+			throw new UserRegistrationException("User registration is disabled");
+		}
+
 		RegistryUser user;
 		boolean sendConfirmationMails = ClientConfiguration.isSendConfirmationMails();
 		if (sendConfirmationMails) {
