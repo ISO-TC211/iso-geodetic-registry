@@ -118,7 +118,7 @@
 											</div>
 											<div class="form-group">
 												<button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden</button>
-												<button type="button" class="btn btn-primary btn-block" th:text="#{navbar.login.button.register}" th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren</button>
+												<button th:if="${T(de.geoinfoffm.registry.client.web.ClientConfiguration).isSignupEnabled()}" type="button" class="btn btn-primary btn-block" th:text="#{navbar.login.button.register}" th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren</button>
 											</div>
 										</form>
 									</div>

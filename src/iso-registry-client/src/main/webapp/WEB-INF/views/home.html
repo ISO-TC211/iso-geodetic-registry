@@ -10,7 +10,7 @@
 				<div th:include="layout :: navtree"></div>
 			</div>
 			<div class="col-md-9" role="main">
-				<div th:fragment="demo" th:if="${T(de.geoinfoffm.registry.client.web.ClientConfiguration).isDemoMode()}">
+				<div th:fragment="demo" th:if="${@registryConfiguration.getInstance().isDemoMode()}">
 					<div class="alert alert-danger">
 						<p class="text-center"><strong>*** DEMONSTRATION VERSION ONLY ***</strong></p>
 						<p class="text-center">This Registry is for demonstration purposes only. The current content of the Registry is provided only to demonstrate the features and capabilities of the Registry software.</p>
