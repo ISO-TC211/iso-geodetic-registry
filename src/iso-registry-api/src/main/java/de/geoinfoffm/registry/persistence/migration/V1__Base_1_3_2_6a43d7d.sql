@@ -9298,10 +9298,10 @@ ALTER TABLE ONLY conversionitem
 -- Name: public; Type: ACL; Schema: -; Owner: -
 --
 
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+-- REVOKE ALL ON SCHEMA public FROM PUBLIC;
+-- REVOKE ALL ON SCHEMA public FROM postgres;
+-- GRANT ALL ON SCHEMA public TO postgres;
+-- GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 -- Completed on 2015-02-10 14:52:06

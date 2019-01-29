@@ -1,2 +1,14 @@
 **/rebel.xml
 dist
+
+.ecs
+gitlab.yml
+docker-compose.yml
+creds_input.yml
+ecs-dist.sh
+ecs-params.yml
+ecs-registry-creds_*
+.project
+.settings
+.idea
+.ignoreme
