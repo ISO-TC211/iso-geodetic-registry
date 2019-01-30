@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfigurationImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
 
@@ -67,19 +68,34 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
     }
 
 	public boolean isDbConnected(Connection connection) {
-		final String CHECK_SQL_QUERY = "SELECT 1;";
+		String waitSql = System.getenv("WAIT_SQL");
+		boolean hasWaitSql = StringUtils.isNotBlank(waitSql);
+		String checkSqlQuery = hasWaitSql ? waitSql : "SELECT 1;";
+
+		System.out.println("Checking DB Connection SQL= " + checkSqlQuery);
+
 		boolean isConnected = false;
 		try {
-			final PreparedStatement statement = connection.prepareStatement(CHECK_SQL_QUERY);
-//			ResultSet resultSet = statement.executeQuery();
-//			resultSet.next();
+			final PreparedStatement statement = connection.prepareStatement(checkSqlQuery);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
 //			System.out.println("Count registryuser= " + resultSet.getInt(1));
-			isConnected = true;
+
+			if (hasWaitSql) {
+				String waitResult = System.getenv("WAIT_RESULT");
+				isConnected = waitResult.equals(resultSet.getString(1));
+			}
+			else {
+				isConnected = true;
+			}
 		} catch (Exception e) {
 			// handle SQL error here!
 			System.err.println(e);
 			System.out.println("DB is not ready => waiting");
 		}
+
+		System.out.println("DB IsConnected= " + isConnected);
+
 		return isConnected;
 	}
 }
