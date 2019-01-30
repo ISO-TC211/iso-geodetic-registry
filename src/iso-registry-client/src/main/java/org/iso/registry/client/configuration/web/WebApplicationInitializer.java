@@ -47,12 +47,13 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 		try {
 			Connection connection  = conf.dataSource().getConnection();
 			int count = 0;
-			while (!this.isDbConnected(connection) && count < 10) {
-				Thread.sleep(10_000);
+			int maxCount = 360;//1 hours
+			while (!this.isDbConnected(connection) && count < maxCount) {
+				Thread.sleep(10_000);//wait for each 10sec
 				System.out.println("Waiting count= " + count++);
 			}
 
-			if (count >= 10) {
+			if (count >= maxCount) {
 				throw new ServletException("DB failed (count expired)");
 			}
 
