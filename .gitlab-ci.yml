@@ -14,6 +14,7 @@ app-build:
   variables:
     MAVEN_OPTS: -Dmaven.repo.local=/cache/maven.repository
   before_script:
+    - apk --no-cache add git
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
