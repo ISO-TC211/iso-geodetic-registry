@@ -80,7 +80,6 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 			final PreparedStatement statement = connection.prepareStatement(checkSqlQuery);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
-//			System.out.println("Count registryuser= " + resultSet.getInt(1));
 
 			if (hasWaitSql) {
 				String waitResult = System.getenv("WAIT_RESULT");
@@ -90,9 +89,7 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 				isConnected = true;
 			}
 		} catch (Exception e) {
-			// handle SQL error here!
-			System.err.println(e);
-			System.out.println("DB is not ready => waiting");
+			System.out.println("DB is not ready => waiting, error: " + e.getMessage());
 		}
 
 		System.out.println("DB IsConnected= " + isConnected);
