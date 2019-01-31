@@ -6,15 +6,16 @@ stages:
   - build
   - dockerise
 
+before_script:
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
+
 app-build:
   only: ["docker"]
   stage: build
   image: maven:3-jdk-7-alpine
   variables:
     MAVEN_OPTS: -Dmaven.repo.local=/cache/maven.repository
-  before_script:
-    - git submodule sync --recursive
-    - git submodule update --init --recursive
   script:
     - /bin/sh build-dist.sh
   artifacts:
