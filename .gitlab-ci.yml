@@ -9,7 +9,7 @@ stages:
 app-build:
   only: ["docker"]
   stage: build
-  image: maven:3-jdk-8
+  image: maven:3-jdk-7-alpine
   variables:
     MAVEN_OPTS: -Dmaven.repo.local=/cache/maven.repository
   before_script:
