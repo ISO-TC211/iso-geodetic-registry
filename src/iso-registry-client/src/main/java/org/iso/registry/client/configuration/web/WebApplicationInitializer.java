@@ -47,13 +47,17 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 		try {
 			Connection connection  = conf.dataSource().getConnection();
 			int count = 0;
-			int maxCount = 360;//1 hours
-			while (!this.isDbConnected(connection) && count < maxCount) {
+			int maxCount = 3_600_000;//1 hours
+			String waitStr = System.getenv("WAIT_IN_SECONDS");
+			int waitSecs = StringUtils.isNotBlank(waitStr) ? Integer.parseInt(waitStr) : 0;
+			waitSecs = Math.min(waitSecs * 1000, maxCount); //to mili-sec
+			while (count < waitSecs) {
 				Thread.sleep(10_000);//wait for each 10sec
-				System.out.println("Waiting count= " + count++);
+				count += 10_000;
+				System.out.println("Waiting count= " + count);
 			}
 
-			if (count >= maxCount) {
+			if (count >= maxCount || !this.isDbConnected(connection)) {
 				throw new ServletException("DB failed (count expired)");
 			}
 
@@ -69,9 +73,9 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
     }
 
 	public boolean isDbConnected(Connection connection) {
-		String waitSql = System.getenv("WAIT_SQL");
-		boolean hasWaitSql = StringUtils.isNotBlank(waitSql);
-		String checkSqlQuery = hasWaitSql ? waitSql : "SELECT 1;";
+//		String waitSql = System.getenv("WAIT_IN_");
+//		boolean hasWaitSql = StringUtils.isNotBlank(waitSql);
+		String checkSqlQuery = "SELECT 1;";//hasWaitSql ? waitSql : "SELECT 1;";
 
 		System.out.println("Checking DB Connection SQL= " + checkSqlQuery);
 
@@ -81,13 +85,15 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 
-			if (hasWaitSql) {
-				String waitResult = System.getenv("WAIT_RESULT");
-				isConnected = waitResult.equals(resultSet.getString(1));
-			}
-			else {
-				isConnected = true;
-			}
+//			if (hasWaitSql) {
+//				String waitResult = System.getenv("WAIT_RESULT_PATTERN");
+//				Pattern patt = Pattern.compile(waitResult);
+//				isConnected = patt.matcher(resultSet.getString(1)).matches();
+//			}
+//			else {
+//				isConnected = true;
+//			}
+			isConnected = true;
 		} catch (Exception e) {
 			System.out.println("DB is not ready => waiting, error: " + e.getMessage());
 		}
