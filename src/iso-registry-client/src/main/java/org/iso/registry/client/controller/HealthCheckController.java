@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class HealthCheckController {
 
     @ResponseStatus(OK)
-    @RequestMapping(value = "/ping", method = RequestMethod.HEAD)
+    @RequestMapping(value = "/ping", method = RequestMethod.GET)
     public void ping() {
         System.out.println("Pinging me. I m OK.");
     }
