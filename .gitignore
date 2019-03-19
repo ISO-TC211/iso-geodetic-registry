@@ -12,3 +12,5 @@ ecs-registry-creds_*
 .settings
 .idea
 .ignoreme
+.DS_Store
+*.iml
