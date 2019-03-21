@@ -224,7 +224,7 @@
 
 <!-- property=domainOfValidity field=domainOfValidity.referencedItemUuid   items =${@areaItemRepository.findAll(), noAddNew='true'}  -->
 <div th:fragment="selectIdentifiedItem" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_byid'" href="#" th:title="#{tooltip.orderByIdentifier}" th:text="#{orderByIdentifier}">[by Identifier]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
+  <label class="control-label" th:for="${property}" th:text="${label}"/>&nbsp;<small style="color: gray;" th:if="${isProposal} and !${proposal.isClarification()}"><span th:text="#{orderBy}"></span>: <a th:id="${property} + '_byid'" href="#" th:title="#{tooltip.orderByIdentifier}" th:text="#{orderByIdentifier}">[by Identifier]</a></small>&nbsp;<small th:if="${isProposal} and !${proposal.isClarification()}"><a th:id="${property} + '_byname'" href="#" th:title="#{tooltip.orderByName}" th:text="#{orderByName}">[by Name]</a></small> <small th:if="${ajaxPaths}" th:hidden="!${isProposal} or ${proposal.isClarification()}"><select th:id="${property} + '_ajaxPath'"><option th:each="path : ${ajaxPaths}" th:value="${path}" th:text="#{${path}}"/></select></small><input th:unless="${ajaxPaths}" hidden="hidden" th:id="${property} + '_ajaxPath'" th:name="${property} + '_ajaxPath'" th:value="${ajaxPath}"/>&nbsp;&nbsp;<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left" th:title="#{mandatoryField}"></span> <img hidden="hidden" th:id="${property} + '_loader'" th:src="@{__${basePath}__/resources/images/loader.gif}"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group" th:with="isClarification=${proposal.isClarification()}">
 		<!-- form-backing bean: RegisterItemProposalDTO -->
 		<input th:unless="${index}" hidden="hidden" th:id="${property}" th:name="${property}" th:field="*{__${property}__.referencedItemUuid}" style="width: 100%"/>
@@ -372,8 +372,8 @@
 </div>
 
 <div th:fragment="selectEnum" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
-	<label class="control-label" th:for="${property}" th:text="${label}"></label>
-	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
+		<label class="control-label" th:for="${property}"><span th:text="${label}"></span>&nbsp;&nbsp;<span th:if="${isRequired}" class="glyphicon glyphicon-hand-left" th:title="#{mandatoryField}"></span></label>
+  	<div th:if="${isProposal}" th:id="${property} + 'Group'" class="input-group">
 		<select th:id="${property}" th:name="${property}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}">>
 		  <option th:each="elem : ${T(__${type}__).values()}" th:value="${elem.name()}" th:text="#{${elem.name()}}"></option>
 		</select>

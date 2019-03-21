@@ -28,8 +28,11 @@
 		
 		<div class="col-md-6"> <!-- RIGHT -->
 			<div class="row">
-				<div class="col-md-12" th:with="property='measureType',label=#{form.label.measureType},type='org.iso.registry.core.model.iso19103.MeasureType',isRequired='true'">
+				<div class="col-md-6" th:with="property='measureType',label=#{form.label.measureType},type='org.iso.registry.core.model.iso19103.MeasureType',isRequired='true'">
 					<div th:replace="globals :: selectEnum"/>
+				</div>
+				<div class="col-md-6" th:with="property='symbol',inputType='text',label=#{form.label.symbol},placeholder=#{form.placeholder.symbol},isRequired='false'">
+					<div th:replace="registry/registers/globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
 				</div>
 			</div>
 		

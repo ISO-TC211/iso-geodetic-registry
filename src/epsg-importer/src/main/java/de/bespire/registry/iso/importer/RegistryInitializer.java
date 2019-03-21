@@ -42,6 +42,11 @@ import de.geoinfoffm.registry.persistence.ItemClassRepository;
 @Component
 public class RegistryInitializer implements ApplicationEventPublisherAware
 {
+public static enum Mode {
+	PRODUCTION,
+	DEMO
+}
+
 	private static final Logger logger = LoggerFactory.getLogger(RegistryInitializer.class);
 	
 	@Autowired
@@ -71,7 +76,7 @@ public class RegistryInitializer implements ApplicationEventPublisherAware
 	private ApplicationEventPublisher eventPublisher;
 	
 	@Transactional
-	public void initializeRegistry() {
+	public void initializeRegistry(Mode mode) {
 		logger.info("Initializing registry...");
 		
 		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
@@ -86,18 +91,9 @@ public class RegistryInitializer implements ApplicationEventPublisherAware
 				groupRepository.save(adminGroup);
 				logger.info("done");
 			}
-			
-			Organization isotc211 = orgService.findByName("ISO/TC 211");
-			if (isotc211 == null) {
-				isotc211 = createOrganization("ISO/TC 211", "TC211");
-			}
-			
-			RegistryUser submitter = createUser("ISO Registry Submitter", "s", "submitter@example.org", isotc211);
-			RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
-			RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
-			RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
+
+			Organization isotc211 = createOrganization("ISO/TC 211", "TC211");
 			RegistryUser admin = createUser("ISO Registry Administrator", "a", "admin@example.org", isotc211, adminGroup);
-			RegistryUser poc = createUser("ISO TC/211 Point of Contact", "p", "poc@example.org", isotc211);
 
 			String registerName = "Geodetic Codes & Parameters";
 			RE_Register r = registerService.findByName(registerName); 
@@ -121,19 +117,61 @@ public class RegistryInitializer implements ApplicationEventPublisherAware
 
 			Role submitterRole = registerService.getSubmitterRole(r);
 			isotc211.assignRole(submitterRole);
-			orgService.delegate(submitter, submitterRole, isotc211);
 
 			Role managerRole = registerService.getManagerRole(r);
-			orgService.delegate(regman, managerRole, isotc211);
-
 			Role ownerRole = registerService.getOwnerRole(r);
-			orgService.delegate(owner, ownerRole, isotc211);
-
 			Role controlBodyRole = registerService.getControlBodyRole(r);
-			orgService.delegate(cb, controlBodyRole, isotc211);
-			
 			Role pocRole = orgService.getPointOfContactRole(isotc211);
-			orgService.delegate(poc, pocRole, isotc211);
+
+			authentication = new PreAuthenticatedAuthenticationToken("SYSTEM", "N/A", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_CONTROLBODY_" + r.getUuid().toString())));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			switch (mode) {
+				case PRODUCTION:
+					orgService.delegate(admin, submitterRole, isotc211);
+					orgService.delegate(admin, controlBodyRole, isotc211);
+					orgService.delegate(admin, managerRole, isotc211);
+
+					Organization nrcan = createOrganization("Natural Resources Canada", "NRCan");
+					nrcan.assignRole(submitterRole);
+					nrcan.assignRole(managerRole);
+					nrcan.assignRole(controlBodyRole);
+
+					Organization ngs = createOrganization("National Geodetic Survey, NOS, NOAA", "NGS");
+					ngs.assignRole(submitterRole);
+
+					Organization ign = createOrganization("Institut Géographique National", "NGS");
+					ign.assignRole(submitterRole);
+
+					Organization nga = createOrganization("National Geospatial Intelligence Agency", "NGA");
+					nga.assignRole(submitterRole);
+
+					Organization drdlr = createOrganization("Rural Development and Land Reform South Africa", "DRDLR");
+					drdlr.assignRole(submitterRole);
+
+					Organization ga = createOrganization("Geoscience Australia", "GA");
+					ga.assignRole(submitterRole);
+
+					Organization linz	= createOrganization("Land Information New Zealand", "LINZ");
+					linz.assignRole(submitterRole);
+					break;
+				case DEMO:
+					RegistryUser submitter = createUser("ISO Registry Submitter", "s", "submitter@example.org", isotc211);
+					orgService.delegate(submitter, submitterRole, isotc211);
+
+					RegistryUser regman = createUser("ISO Register Manager", "r", "regman@example.org", isotc211);
+					orgService.delegate(regman, managerRole, isotc211);
+
+					RegistryUser owner = createUser("ISO Register Owner", "o", "owner@example.org", isotc211);
+					orgService.delegate(owner, ownerRole, isotc211);
+
+					RegistryUser cb = createUser("ISO Register Control Body", "c", "controlbody@example.org", isotc211);
+					orgService.delegate(cb, controlBodyRole, isotc211);
+
+					RegistryUser poc = createUser("ISO/TC 211 Point of Contact", "p", "poc@example.org", isotc211);
+					orgService.delegate(poc, pocRole, isotc211);
+					break;
+			}
 		}
 		catch (Throwable t) {
 			logger.error(t.getMessage(), t);
