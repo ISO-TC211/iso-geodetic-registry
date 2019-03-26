@@ -1,12 +1,12 @@
 [submodule "registry-base"]
         path = src/registry-base
-        url = git@github.com:ISO-TC211/registry-base.git
+        url = ../registry-base.git
         branch = master
 [submodule "src/wkt"]
         path = src/wkt
-        url = git@github.com:ISO-TC211/wkt-serializer.git
+        url = ../wkt-serializer.git
         branch = master
 [submodule "src/iso-tc211-xml"]
         path = src/iso-tc211-xml
-        url = git@github.com:ISO-TC211/excel-adapter.git
+        url = ../excel-adapter.git
         branch = master
