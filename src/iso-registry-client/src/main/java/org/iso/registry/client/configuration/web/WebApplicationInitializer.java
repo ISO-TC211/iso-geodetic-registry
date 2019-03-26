@@ -73,8 +73,6 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
     }
 
 	public boolean isDbConnected(Connection connection) {
-//		String waitSql = System.getenv("WAIT_IN_");
-//		boolean hasWaitSql = StringUtils.isNotBlank(waitSql);
 		String checkSqlQuery = "SELECT 1;";//hasWaitSql ? waitSql : "SELECT 1;";
 
 		System.out.println("Checking DB Connection SQL= " + checkSqlQuery);
@@ -85,14 +83,6 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 
-//			if (hasWaitSql) {
-//				String waitResult = System.getenv("WAIT_RESULT_PATTERN");
-//				Pattern patt = Pattern.compile(waitResult);
-//				isConnected = patt.matcher(resultSet.getString(1)).matches();
-//			}
-//			else {
-//				isConnected = true;
-//			}
 			isConnected = true;
 		} catch (Exception e) {
 			System.out.println("DB is not ready => waiting, error: " + e.getMessage());
