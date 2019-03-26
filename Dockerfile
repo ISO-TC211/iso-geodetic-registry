@@ -1,5 +1,6 @@
 FROM maven:3-jdk-7-alpine as APP
 WORKDIR /app
+ADD . /app
 RUN bash /app/build
 
 FROM tomcat:7-jre7-alpine
