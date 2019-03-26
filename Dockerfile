@@ -1,4 +1,4 @@
-FROM 3-jdk-7-alpine as APP
+FROM maven:3-jdk-7-alpine as APP
 WORKDIR /app
 RUN bash /app/build
 
