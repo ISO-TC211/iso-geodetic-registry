@@ -15,3 +15,4 @@ ecs-registry-creds_*
 .ignoreme
 .DS_Store
 *.iml
+build-dist.sh
