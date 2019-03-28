@@ -7,7 +7,7 @@ env:
   - WEB_TAG: tc211/geodetic-registry-docker/web:$TRAVIS_JOB_ID
 
 before_install:
-  - docker login -u gitlab+deploy-token-39628 -p PhCyixbzCK-rAMAWoFyf registry.gitlab.com
+  - docker login -u phuonghqh -p CP6yW8BVeT2zgkWj5nHe registry.gitlab.com
   - docker build -t $WEB_TAG .
   - docker push $WEB_TAG
 #  - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
