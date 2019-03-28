@@ -6,13 +6,11 @@ services:
 env:
   - REGISTRY: registry.gitlab.com/tc211/geodetic-registry-docker/web
 
-jobs:
-  include:
-    - stage: build
-      script: bash .travis/docker_build.sh
-    - stage: push
-      script: bash .travis/docker_push.sh
+before_install:
+  - bash .travis/docker_build.sh
 
-stages:
-  - build
-  - push
+deploy:
+  provider: script
+  script: bash .travis/docker_push.sh
+  on:
+    branch: travis
