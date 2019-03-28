@@ -7,12 +7,6 @@ env:
   - WEB_TAG: tc211/geodetic-registry-docker/web:$TRAVIS_JOB_ID
 
 before_install:
-  - docker login -u phuonghqh -p CP6yW8BVeT2zgkWj5nHe registry.gitlab.com
+  - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD registry.gitlab.com
   - docker build -t registry.gitlab.com/tc211/geodetic-registry-docker/web:travis .
   - docker push registry.gitlab.com/tc211/geodetic-registry-docker/web:travis
-#  - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
-#  - docker ps -a
-#  - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
-
-#script:
-#  - bundle exec rake test
