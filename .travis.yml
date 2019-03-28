@@ -12,3 +12,7 @@ jobs:
       script: bash .travis/docker_build.sh
     - stage: push
       script: bash .travis/docker_push.sh
+
+stages:
+  - build
+  - push
