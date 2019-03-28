@@ -1,6 +1,7 @@
 **/rebel.xml
 dist
 
+.DS_Store
 .ecs
 gitlab.yml
 docker-compose.yml
