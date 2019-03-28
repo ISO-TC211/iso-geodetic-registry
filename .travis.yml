@@ -4,9 +4,11 @@ services:
   - docker
 
 env:
-  - WEB_TAG: tc211/geodetic-registry-docker/web:$TRAVIS_JOB_ID
+  - REGISTRY: registry.gitlab.com/tc211/geodetic-registry-docker/web
 
-before_install:
-  - docker login -u $DOCKER_LOGIN_USERNAME -p $DOCKER_LOGIN_PASSWORD registry.gitlab.com
-  - docker build -t registry.gitlab.com/tc211/geodetic-registry-docker/web:travis .
-  - docker push registry.gitlab.com/tc211/geodetic-registry-docker/web:travis
+jobs:
+  include:
+    - stage: build
+      script: bash .travis/docker_build.sh
+    - stage: push
+      script: bash .travis/docker_push.sh
