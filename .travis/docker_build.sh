@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t ${DOCKER_TAG} .
+docker build -t ${CI_REGISTRY_IMAGE} .
