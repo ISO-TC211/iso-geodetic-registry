@@ -2,6 +2,6 @@
 
 echo "DOCKER_TAG= ${DOCKER_TAG}"
 
-echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin registry.gitlab.com
+echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin ${CI_REGISTRY}
 
-docker push ${DOCKER_TAG}
+docker push ${CI_REGISTRY_IMAGE}

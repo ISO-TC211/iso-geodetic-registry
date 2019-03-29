@@ -5,8 +5,8 @@ services:
 
 env:
   global:
-    - DOCKER_REGISTRY: tc211/geodetic-registry-docker/web
-    - DOCKER_TAG: ${DOCKER_REGISTRY}:t${TRAVIS_BUILD_NUMBER}
+    - CI_REGISTRY: registry.gitlab.com
+    - CI_REGISTRY_IMAGE: ${CI_REGISTRY}/tc211/geodetic-registry-docker/web:t${TRAVIS_BUILD_NUMBER}
 
 before_install:
   - bash .travis/docker_build.sh
