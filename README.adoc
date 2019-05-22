@@ -1,3 +1,14 @@
 = ISO Geodetic Registry server
 
+== General
+
+This server is used to power the official ISO Geodetic Registry,
+provided at https://registry.isotc211.org.
+
+== License
+
+This software is provided under a set of BSD-{2,3} licenses shown
+in link:LICENSE.adoc[].
+
+== Contributing
 
