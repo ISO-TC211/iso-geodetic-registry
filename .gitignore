@@ -16,3 +16,5 @@ ecs-registry-creds_*
 .DS_Store
 *.iml
 build-dist.sh
+Dockerfile
+isoreg1.sql
