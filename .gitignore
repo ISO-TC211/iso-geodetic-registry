@@ -18,3 +18,5 @@ ecs-registry-creds_*
 build-dist.sh
 Dockerfile
 isoreg1.sql
+docker-compose-db.yml
+.env
