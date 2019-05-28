@@ -1,5 +1,9 @@
 = ISO Geodetic Registry server
 
+
+image:http://img.shields.io/travis/ISO-TC211/iso-geodetic-registry.svg?branch=master["Build Status", link="https://travis-ci.com/ISO-TC211/iso-geodetic-registry"]
+
+
 == General
 
 This server is used to power the official ISO Geodetic Registry,
