@@ -15,8 +15,8 @@ before_install:
   - bash .travis/docker_build.sh
 
 deploy:
-  branches:
-    only:
-      - deploy
   provider: script
   script: bash .travis/docker_push.sh
+  on:
+    branch:
+      - deploy
