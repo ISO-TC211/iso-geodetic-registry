@@ -19,3 +19,4 @@ build-dist.sh
 isoreg1.sql
 docker-compose-db.yml
 .env
+build-ignoreme

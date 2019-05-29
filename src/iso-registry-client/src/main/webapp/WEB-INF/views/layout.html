@@ -75,6 +75,24 @@
   				font-family: 'Titillium Web', sans-serif, Arial, sans-serif;
   				font-size: 18pt;
 			}
+
+			.powered-by {
+				flex: 1;
+				width: 112px;
+				padding-top: 0.5em;
+			}
+
+			.powered-by .powered-by-text {
+				font-size: 0.5em;
+				text-transform: uppercase;
+				font-weight: 600;
+				display: block
+			}
+
+			.powered-by img {
+				width: 100px;
+				display: block
+			}
 		</style>
 		<!--[if lt IE 9]>
 			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> 
@@ -165,8 +183,17 @@
 
 	<div th:fragment="foot">
 		<footer class="footer">
-	        <p class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last updated:&nbsp;<span th:text="${@registerService.getFormattedDateOfLastChange()}"></span><!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-Mail: <a href="mailto:registry@isotc211.org">registry@isotc211.org</a>-->
-	        <span class="pull-right"><span th:text="#{application.version}"></span></span></p>
+			<span class="powered-by pull-right">
+					<span class="powered-by-text">Powered by</span>
+					<a href="https://open.ribose.com" class="powered-by-logo">
+						<img th:src="@{__${basePath}__/resources/images/logo-ribose.svg}" class="img-responsive" alt="Ribose" />
+					</a>
+			</span>
+
+	        <p class="text-muted">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last updated:&nbsp;<span th:text="${@registerService.getFormattedDateOfLastChange()}"></span><!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-Mail: <a href="mailto:registry@isotc211.org">registry@isotc211.org</a>-->
+	        	<span><span th:text="#{application.version}"></span></span>
+			</p>
 		</footer>
 		
 		<div class="loading-modal" th:style="'background: rgba( 255, 255, 255, .8 ) url(' + @{__${basePath}__/resources/images/loader-lg.gif} + ') 50% 50% no-repeat;'"/>
