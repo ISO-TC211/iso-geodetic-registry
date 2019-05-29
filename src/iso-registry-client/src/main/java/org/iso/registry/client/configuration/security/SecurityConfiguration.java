@@ -55,7 +55,7 @@ import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
  */
 @Configuration
 @ComponentScan(basePackages = { "org.iso.registry", "de.bespire.registry", "de.geoinfoffm.registry" })
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
