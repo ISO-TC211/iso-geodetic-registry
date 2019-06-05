@@ -1,8 +1,7 @@
 = ISO Geodetic Registry server
 
 
-image:http://img.shields.io/travis/ISO-TC211/iso-geodetic-registry.svg?branch=master["Build Status", link="https://travis-ci.com/ISO-TC211/iso-geodetic-registry"]
-
+image:https://img.shields.io/travis/com/ISO-TC211/iso-geodetic-registry.svg?logo=travis&branch=master["Build Status", link="https://travis-ci.com/ISO-TC211/iso-geodetic-registry"]
 
 == General
 
