@@ -97,7 +97,6 @@
 		<!--[if lt IE 9]>
 			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> 
 		<![endif]-->
-
 </head>
 
 <body>
@@ -143,10 +142,11 @@
 											<div class="form-group">
 												<label class="sr-only" for="inputPassword" th:text="#{navbar.login.label.password}">Password</label> 
 												<input type="password" class="form-control" name="password" id="inputPassword" th:placeholder="#{navbar.login.label.password}" required="required"></input>
-											</div>
+                                            </div>
 											<div class="form-group">
 												<button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden</button>
 												<button th:if="${T(de.geoinfoffm.registry.client.web.ClientConfiguration).isSignupEnabled()}" type="button" class="btn btn-primary btn-block" th:text="#{navbar.login.button.register}" th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren</button>
+												<button type="button" class="btn btn-default btn-block" th:onclick="'location.href = \'' + @{${basePath} + '/forgot-password'} + '\''">Forgot password</button>
 											</div>
 										</form>
 									</div>

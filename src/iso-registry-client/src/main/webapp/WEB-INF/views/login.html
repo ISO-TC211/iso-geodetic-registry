@@ -64,6 +64,8 @@
 									</div>
 								</div>
 								<button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden</button>
+
+								<button type="button" class="btn btn-default btn-block" th:onclick="'location.href = \'' + @{${basePath} + '/forgot-password'} + '\''">Forgot password</button>
 							</fieldset>
 						</form>
 					</div>
