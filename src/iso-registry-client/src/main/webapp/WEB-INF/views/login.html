@@ -47,7 +47,13 @@
 				<div class="row">
 					<div class="col-md-10 login-form">
 						<h2 th:text="#{application.title}">Login</h2>
+
+						<div th:if="${param.resetSuccess}" class="alert alert-info">
+							Password reset successful. You now can login using the new password
+						</div>
+
 						<div th:if="${param.error}" class="alert alert-danger" th:text="#{alert.loginFailed}"/>
+
 						<form method="post">
 							<fieldset>
 								<input type="hidden" name="targetUrl" th:value="${targetUrl}"/>

@@ -1,6 +1,7 @@
 package org.iso.registry.client.controller;
 
 import de.geoinfoffm.registry.api.RegistryUserService;
+import de.geoinfoffm.registry.api.ex.ResetPasswordException;
 import org.iso.registry.client.dto.PasswordForgotDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class ForgotPasswordController {
         try {
             this.userService.requestPasswordReset(form.getEmail());
         }
-        catch (Exception e) {
+        catch (ResetPasswordException e) {
             logger.warn("Request reset password for email failed {}, reason: {}", form.getEmail(), e.getMessage());
         }
 
