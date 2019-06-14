@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 	<head th:include="layout :: headerFragment"/>
 
  	<style type="text/css">
@@ -47,7 +47,13 @@
 				<div class="row">
 					<div class="col-md-10 login-form">
 						<h2 th:text="#{application.title}">Login</h2>
+
+						<div th:if="${param.resetSuccess}" class="alert alert-info">
+							Password reset successful. You now can login using the new password
+						</div>
+
 						<div th:if="${param.error}" class="alert alert-danger" th:text="#{alert.loginFailed}"/>
+
 						<form method="post">
 							<fieldset>
 								<input type="hidden" name="targetUrl" th:value="${targetUrl}"/>
@@ -64,6 +70,8 @@
 									</div>
 								</div>
 								<button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden</button>
+
+								<button type="button" class="btn btn-default btn-block" th:onclick="'location.href = \'' + @{${basePath} + '/forgot-password'} + '\''">Forgot password</button>
 							</fieldset>
 						</form>
 					</div>
