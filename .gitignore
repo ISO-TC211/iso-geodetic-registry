@@ -20,3 +20,4 @@ isoreg1.sql
 docker-compose-db.yml
 .env
 build-ignoreme
+setenv.sh
