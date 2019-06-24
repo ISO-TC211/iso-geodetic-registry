@@ -128,9 +128,9 @@ public class SiteController extends AbstractController
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-		if (binder.getTarget() instanceof SignupFormBean) {
-			binder.setValidator(new SignupValidator(userService));
-		}
+//		if (binder.getTarget() instanceof SignupFormBean) {
+//			binder.setValidator(new SignupValidator(userService));
+//		}
 		if (binder.getTarget() instanceof RegistryUserFormBean) {
 			binder.setValidator(new AdministrationValidator(userService));
 		}

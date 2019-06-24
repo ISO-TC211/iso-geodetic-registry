@@ -10,7 +10,6 @@ public class PasswordForgotDto {
     @NotEmpty
     private String email;
 
-//    @NotEmpty(message = "Captcha error, please try again")
     @ValidReCaptcha
     private String reCaptchaResponse;
 

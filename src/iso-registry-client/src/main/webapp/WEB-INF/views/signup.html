@@ -85,6 +85,8 @@
 								<label><input id="orgNotListed" type="checkbox" th:text="#{form.signup.button.organizationDetails}" th:field="*{organizationNotListed}"></input></label>
 							</div>
 
+							<div th:include="layout :: captchaInput" />
+
 <!-- 
 							
 							<div class="form-group">

@@ -150,7 +150,7 @@
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
-  <script src='https://www.google.com/recaptcha/api.js'></script>
+  <script th:if="${@captchaSettings.isCaptchaEnabled()}" src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
@@ -513,6 +513,17 @@
   <!-- 			</div> -->
   <!-- 	    </footer>			 -->
 
+</div>
+
+<div th:fragment="captchaInput">
+  <!-- ReCaptcha -->
+  <div th:if="${@captchaSettings.isCaptchaEnabled()}" class="form-group">
+    <div class="g-recaptcha"
+         th:attr="data-sitekey=${@captchaSettings.getKey()}"></div>
+    <p class="text-danger"
+       th:each="error: ${#fields.errors('reCaptchaResponse')}"
+       th:text="${error}">Validation error</p>
+  </div>
 </div>
 </body>
 
