@@ -9,7 +9,6 @@ import static de.geoinfoffm.registry.core.security.RegistrySecurity.POINTOFCONTA
 import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,14 +57,13 @@ import de.geoinfoffm.registry.client.web.ClientConfiguration;
 import de.geoinfoffm.registry.client.web.DatatableParameters;
 import de.geoinfoffm.registry.client.web.DatatablesResult;
 import de.geoinfoffm.registry.client.web.OrganizationFormBean;
-import de.geoinfoffm.registry.client.web.SignupFormBean;
+import de.geoinfoffm.registry.client.web.signup.SignupFormBean;
 import de.geoinfoffm.registry.core.IllegalOperationException;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Appeal;
 import de.geoinfoffm.registry.core.model.AppealDisposition;
 import de.geoinfoffm.registry.core.model.Organization;
 import de.geoinfoffm.registry.core.model.Proposal;
-import de.geoinfoffm.registry.core.model.ProposalChangeRequest;
 import de.geoinfoffm.registry.core.model.ProposalChangeRequestRepository;
 import de.geoinfoffm.registry.core.model.ProposalFactory;
 import de.geoinfoffm.registry.core.model.ProposalGroup;

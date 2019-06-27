@@ -1,6 +1,5 @@
 package org.iso.registry.client.controller;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import org.iso.registry.api.initialization.IsoRegistryInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ import de.geoinfoffm.registry.client.web.AbstractController;
 import de.geoinfoffm.registry.client.web.ClientConfiguration;
 import de.geoinfoffm.registry.client.web.OrganizationFormBean;
 import de.geoinfoffm.registry.client.web.RegistryUserFormBean;
-import de.geoinfoffm.registry.client.web.SignupFormBean;
+import de.geoinfoffm.registry.client.web.signup.SignupFormBean;
 import de.geoinfoffm.registry.core.RegistryInitializer;
 import de.geoinfoffm.registry.core.UnauthorizedException;
 import de.geoinfoffm.registry.core.model.Delegation;
@@ -128,9 +128,10 @@ public class SiteController extends AbstractController
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-//		if (binder.getTarget() instanceof SignupFormBean) {
+		if (binder.getTarget() instanceof SignupFormBean) {
 //			binder.setValidator(new SignupValidator(userService));
-//		}
+			binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+		}
 		if (binder.getTarget() instanceof RegistryUserFormBean) {
 			binder.setValidator(new AdministrationValidator(userService));
 		}

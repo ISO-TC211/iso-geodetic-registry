@@ -4,8 +4,10 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import de.geoinfoffm.registry.api.RegistryUserService;
-import de.geoinfoffm.registry.client.web.SignupFormBean;
+import de.geoinfoffm.registry.client.web.signup.SignupFormBean;
 
+
+@Deprecated
 public class SignupValidator implements Validator
 {
 	private RegistryUserService userService;

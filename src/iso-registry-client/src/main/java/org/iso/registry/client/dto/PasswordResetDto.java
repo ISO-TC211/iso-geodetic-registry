@@ -1,6 +1,6 @@
 package org.iso.registry.client.dto;
 
-import de.geoinfoffm.registry.api.ann.FieldMatch;
+import de.geoinfoffm.registry.validators.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 

@@ -150,7 +150,6 @@
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
-  <script th:if="${@captchaSettings.isCaptchaEnabled()}" src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
@@ -516,6 +515,9 @@
 </div>
 
 <div th:fragment="captchaInput">
+
+  <script th:if="${@captchaSettings.isCaptchaEnabled()}" src='https://www.google.com/recaptcha/api.js'></script>
+
   <!-- ReCaptcha -->
   <div th:if="${@captchaSettings.isCaptchaEnabled()}" class="form-group">
     <div class="g-recaptcha"
