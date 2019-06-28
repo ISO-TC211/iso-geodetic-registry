@@ -17,4 +17,9 @@
 	<entry key="gml.identifier.pathpattern">${gml.identifier.pathpattern}</entry> <!-- Pattern for referenced items -->
 	<entry key="register.aliases">${register.aliases}</entry> <!-- Aliases for registers in the form "alias1:name1;alias2:name2;..." -->
 	<entry key="registry.demoMode">${registry.demoMode}</entry> <!-- Activate demo mode -->
+
+	<entry key="recaptcha.enabled">${recaptcha.enabled}</entry>
+	<entry key="recaptcha.url">${recaptcha.url}</entry>
+	<entry key="recaptcha.key">${recaptcha.key}</entry>
+	<entry key="recaptcha.secret">${recaptcha.secret}</entry>
 </properties>
