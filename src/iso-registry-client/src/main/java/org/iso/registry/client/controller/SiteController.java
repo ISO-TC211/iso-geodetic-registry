@@ -504,4 +504,9 @@ public class SiteController extends AbstractController
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/feedback")
+	public String displayFeedbackForm() {
+		return "feedback";
+	}
 }
