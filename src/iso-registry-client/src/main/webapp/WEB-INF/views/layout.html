@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head id="headerFragment" th:fragment="headerFragment">
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -253,6 +253,11 @@
               </div>
             </li>
           </ul>
+        </li>
+
+        <li class="dropdown">
+          <a th:href="@{__${basePath}__/feedback}" class="dropdown-toggle">
+            <span>Feedback</span><span></span></a>
         </li>
       </ul>
       <!-- 				<div class="navbar-form navbar-right"> -->
