@@ -253,6 +253,7 @@
 						<nonFilteredFileExtension>xls</nonFilteredFileExtension>
 						<nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
 					</nonFilteredFileExtensions>
+					<overwrite>true</overwrite>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -553,6 +554,36 @@
 			</properties>
 			<build>
 				<finalName>isoreg</finalName>
+				<resources>
+					<resource>
+						<directory>src/main/webapp</directory>
+						<targetPath>../webapp</targetPath>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+						<excludes>
+							<exclude>i18n/*</exclude>
+							<exclude>**/*.java</exclude>
+						</excludes>
+						<filtering>true</filtering>
+					</resource>
+					<resource>
+						<directory>src/main/resources/i18n</directory>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+						<filtering>true</filtering>
+						<targetPath>i18n</targetPath>
+					</resource>
+					<resource>
+						<directory>src/main/resources/aws</directory>
+						<filtering>true</filtering>
+						<targetPath>./</targetPath>
+					</resource>
+				</resources>
 			</build>
 		</profile>
 	</profiles>
