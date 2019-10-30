@@ -18,7 +18,5 @@ jobs:
 #        DOCKER_LOGIN_USERNAME: "${{github.actor}}"
 #        DOCKER_LOGIN_PASSWORD: "${{github.token}}"
       run: |
-#        chmod +x .scripts/make-it.sh
-#        bash .scripts/make-it.sh
-        ls --all web
+        find /github
         echo "DONE !!!"
