@@ -8,15 +8,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: build-tag-publish docker images
-#      env:
-#        WEB_BRANCH: "master"
-#        ITEMS: "1"
-#        IMAGE_TYPES: "web"
-#        VERSIONS: "1.0.0"
-#        REMOTE_HOST: "docker.pkg.github.com"
-#        REMOTE_REPOSITORY: "${{github.repository}}"
-#        DOCKER_LOGIN_USERNAME: "${{github.actor}}"
-#        DOCKER_LOGIN_PASSWORD: "${{github.token}}"
+      env:
+        CI_REGISTRY: "docker.pkg.github.com"
+        CI_REGISTRY_IMAGE: "${{github.repository}}"
+        DOCKER_LOGIN_USERNAME: "${{github.actor}}"
+        DOCKER_LOGIN_PASSWORD: "${{github.token}}"
       run: |
-        find /github
+        bash .github-sh/docker_build.sh
+        bash .github-sh/docker_push.sh
         echo "DONE !!!"
