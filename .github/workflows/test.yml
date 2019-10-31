@@ -1,0 +1,13 @@
+name: Test pull request
+
+on:  [push]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+        fetch-depth: 50
+    - uses: elgohr/Publish-Docker-Github-Action@2.7
