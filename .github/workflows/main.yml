@@ -13,6 +13,7 @@ jobs:
     - uses: elgohr/Publish-Docker-Github-Action@2.7
       with:
         registry: docker.pkg.github.com
-        name: iso-tc211/iso-geodetic-registry
+        name: ${{github.repository}}/iso-registry
         username: ${{github.actor}}
         password: ${{github.token}}
+#        //:owner/:repo_name/:image_name.
