@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: recursive
     - name: build-tag-publish docker images
       env:
         CI_REGISTRY: "docker.pkg.github.com"
@@ -15,5 +17,4 @@ jobs:
         DOCKER_LOGIN_PASSWORD: "${{github.token}}"
       run: |
         bash .github-sh/docker_build.sh
-        bash .github-sh/docker_push.sh
         echo "DONE !!!"
