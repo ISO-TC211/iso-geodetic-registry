@@ -10,12 +10,8 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 50
-    - name: build-tag-publish docker images
-      env:
-        CI_REGISTRY: "docker.pkg.github.com"
-        CI_REGISTRY_IMAGE: "${{github.repository}}"
-        DOCKER_LOGIN_USERNAME: "${{github.actor}}"
-        DOCKER_LOGIN_PASSWORD: "${{github.token}}"
-      run: |
-        bash .github-sh/docker_build.sh
-        echo "DONE !!!"
+    - uses: elgohr/Publish-Docker-Github-Action@2.7
+      with:
+        name: iso-tc211/iso-geodetic-registry
+        username: ${{github.actor}}
+        password: ${{github.token}}
