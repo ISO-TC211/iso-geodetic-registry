@@ -1,8 +1,6 @@
-image:https://img.shields.io/travis/com/ISO-TC211/iso-geodetic-registry.svg?style=flat-square&logo=travis&branch=master["Build Status", link="https://travis-ci.com/ISO-TC211/iso-geodetic-registry"]
-
-
 = ISO Geodetic Registry server
 
+image:https://github.com/ISO-TC211/iso-geodetic-registry/workflows/docker/badge.svg["Build Status", link="https://github.com/ISO-TC211/iso-geodetic-registry/actions?workflow=docker"]
 
 == General
 
@@ -16,3 +14,4 @@ in link:LICENSE.adoc[].
 
 == Contributing
 
+Please utilize the Pull Request functionality and tag @ronaldtse (ronald.tse@ribose.com) for contributions.
