@@ -20,7 +20,7 @@
 		<hibernate.connection.schema>public</hibernate.connection.schema>
 		<hibernate.connection.url>jdbc:postgresql://db:5432/isoreg</hibernate.connection.url>
 		<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
-		<flyway.migration>true</flyway.migration>
+		<flyway.migration>repairAndMigrate</flyway.migration>
 		<client.basepath></client.basepath>
 		<registry.demoMode>true</registry.demoMode>
 		<client.signup.enabled>true</client.signup.enabled>
