@@ -21,4 +21,4 @@ docker-compose-db.yml
 .env
 build-ignoreme
 setenv.sh
-*ignoreme*
+**/*ignoreme*/
