@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-footer',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  version: string;
+
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
+    this.httpClient.get(`${environment.apiRoot}/version`, {responseType: "text"}).subscribe((version: string) => this.version = version);//.then(version => this.version = version);
   }
 
 }
