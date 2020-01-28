@@ -12,6 +12,9 @@ import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -22,31 +25,31 @@ import javax.servlet.http.HttpServletResponse;
 @Import({ HomeController.class })
 public class Main extends SpringBootServletInitializer {
 
-    /*
-     * Create required HandlerMapping, to avoid several default HandlerMapping instances being created
-     */
     @Bean
     public HandlerMapping handlerMapping() {
         return new RequestMappingHandlerMapping();
     }
 
-    /*
-     * Create required HandlerAdapter, to avoid several default HandlerAdapter instances being created
-     */
+
     @Bean
     public HandlerAdapter handlerAdapter() {
         return new RequestMappingHandlerAdapter();
     }
 
-    /*
-     * optimization - avoids creating default exception resolvers; not required as the serverless container handles
-     * all exceptions
-     *
-     * By default, an ExceptionHandlerExceptionResolver is created which creates many dependent object, including
-     * an expensive ObjectMapper instance.
-     *
-     * To enable custom @ControllerAdvice classes remove this bean.
-     */
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://test-phuonghqh-ang.s3-website-us-east-1.amazonaws.com")
+                        .allowedMethods("PUT", "DELETE", "GET", "POST");
+            }
+        };
+    }
+
+
     @Bean
     public HandlerExceptionResolver handlerExceptionResolver() {
         return new HandlerExceptionResolver() {
