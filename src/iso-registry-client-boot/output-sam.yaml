@@ -14,7 +14,7 @@ Outputs:
 Resources:
   PetStoreFunction:
     Properties:
-      CodeUri: s3://testsam-phuonghqh/42130106c8b4ec4071ba650397f66199
+      CodeUri: s3://testsam-phuonghqh/a3a235b014f63da5a852c61f828bdbac
       Events:
         GetResource:
           Properties:
