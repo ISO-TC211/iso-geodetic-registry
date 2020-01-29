@@ -42,7 +42,7 @@ public class Main extends SpringBootServletInitializer {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
+                registry.addMapping("/**") //TODO set origin to properties
                         .allowedOrigins("http://test-phuonghqh-ang.s3-website-us-east-1.amazonaws.com")
                         .allowedMethods("PUT", "DELETE", "GET", "POST");
             }
