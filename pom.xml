@@ -18,5 +18,6 @@
 		<module>src/iso-registry-api</module>
 		<module>src/iso-registry-client</module>
 		<module>src/iso-registry-soap</module>
+		<module>src/iso-registry-client-boot</module>
 	</modules>
 </project>

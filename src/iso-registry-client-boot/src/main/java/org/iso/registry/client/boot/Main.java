@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @SpringBootApplication
 @Import({ HomeController.class })
+@ComponentScan(basePackages = { "org.iso.registry", "de.bespire.registry", "de.geoinfoffm.registry" })
 public class Main extends SpringBootServletInitializer {
 
     @Bean
@@ -43,7 +45,7 @@ public class Main extends SpringBootServletInitializer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") //TODO set origin to properties
-                        .allowedOrigins("http://test-phuonghqh-ang.s3-website-us-east-1.amazonaws.com")
+//                        .allowedOrigins("http://test-phuonghqh-ang.s3-website-us-east-1.amazonaws.com")
                         .allowedMethods("PUT", "DELETE", "GET", "POST");
             }
         };

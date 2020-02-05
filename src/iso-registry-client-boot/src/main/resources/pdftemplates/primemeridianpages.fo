@@ -1,0 +1,5 @@
+#set($pmitem = $item)
+
+#set($itemdetails = "pdftemplates/primemeridian_details.fo")
+## no itemafter
+#parse("pdftemplates/itempage.fo")
