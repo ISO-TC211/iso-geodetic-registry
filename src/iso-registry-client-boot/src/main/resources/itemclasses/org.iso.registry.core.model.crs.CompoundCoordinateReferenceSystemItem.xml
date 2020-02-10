@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="CompoundCRS">
-	<dtoClass>org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO</dtoClass>
-	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemViewBean</viewBeanClass>
-	<viewItemTemplate>registry/registers/gcp/ccrs_view_item</viewItemTemplate>
-	<viewProposalTemplate>registry/registers/gcp/ccrs_edit_addition</viewProposalTemplate>
-	<createProposalTemplate>registry/registers/gcp/ccrs_create_addition</createProposalTemplate>
-	<editProposalTemplate>registry/registers/gcp/ccrs_edit_addition</editProposalTemplate>
-</reg:ItemClassConfiguration>

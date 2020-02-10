@@ -58,10 +58,10 @@
 <!--            <artifactId>spring-boot-configuration-processor</artifactId>-->
 <!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.iso.registry</groupId>
-            <artifactId>iso-registry-api</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.iso.registry</groupId>-->
+<!--            <artifactId>iso-registry-api</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -79,6 +79,12 @@
             <groupId>io.symphonia</groupId>
             <artifactId>lambda-logging</artifactId>
             <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.2-1002-jdbc4</version>
         </dependency>
     </dependencies>
 

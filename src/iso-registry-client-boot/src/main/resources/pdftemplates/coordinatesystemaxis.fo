@@ -1,3 +1,0 @@
-#set($pages = "pdftemplates/coordinatesystemaxispages.fo")
-## no $itemafter
-#parse("pdftemplates/itemmaster.fo")

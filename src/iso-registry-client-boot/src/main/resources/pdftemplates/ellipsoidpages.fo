@@ -1,5 +1,0 @@
-#set($ellipsoiditem = $item)
-
-#set($itemdetails = "pdftemplates/ellipsoid_details.fo")
-## no itemafter
-#parse("pdftemplates/itempage.fo")
