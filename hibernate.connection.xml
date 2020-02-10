@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment></comment>
+<entry key="hibernate.connection.username">org.postgresql.Driver</entry>
+<entry key="hibernate.connection.password">org.postgresql.Driver</entry>
+<entry key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</entry>
+<entry key="hibernate.connection.url">jdbc:postgresql://localhost:5432/gdireg</entry>
+<entry key="hibernate.connection.driver_class">org.postgresql.Driver</entry>
+</properties>
