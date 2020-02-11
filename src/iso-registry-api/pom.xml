@@ -6,11 +6,11 @@
         <artifactId>iso-registry-parent</artifactId>
         <version>1.6.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
-    </parent>	
+    </parent>
 	<artifactId>iso-registry-api</artifactId>
 	<properties>
 		<java-version>1.7</java-version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.springframework-version>4.0.2.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
@@ -19,11 +19,11 @@
 	<repositories>
 		<repository>
 			<id>central</id>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>https://repo1.maven.org/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>	
+		</repository>
 		<repository>
 			<id>apache.snapshots</id>
 			<name>Apache Snapshot Repository</name>
@@ -31,7 +31,7 @@
 			<releases>
 				<enabled>false</enabled>
 			</releases>
-		</repository>		
+		</repository>
  	</repositories>
 	<build>
 		<directory>target</directory>
