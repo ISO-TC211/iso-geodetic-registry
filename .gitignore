@@ -4,7 +4,6 @@ dist
 .DS_Store
 .ecs
 gitlab.yml
-docker-compose.yml
 creds_input.yml
 ecs-dist.sh
 ecs-params.yml
