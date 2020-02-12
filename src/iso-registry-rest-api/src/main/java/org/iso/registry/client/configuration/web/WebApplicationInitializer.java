@@ -69,7 +69,7 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 		}
 
 
-//		servletContext.addListener(new SessionListener());
+		servletContext.addListener(new SessionListener());
     }
 
 	public boolean isDbConnected(Connection connection) {
