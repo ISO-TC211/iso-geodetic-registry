@@ -1,0 +1,213 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('conv')" />
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12">
+					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='accuracy',inputType='number',label=#{form.label.accuracy},placeholder=#{form.placeholder.accuracy},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+				<div class="col-md-8" th:with="property='accuracyUom',label=#{form.label.accuracyUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem',where='i.name = \'metre\''">
+					<div th:replace="globals :: selectIdentifiedItem2"/>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label" th:for="method" th:text="#{form.label.conversionMethod}"></label>
+						<div th:unless="${isProposal}">
+							<!-- form-backing bean: RegisterItemViewBean -->
+							<div th:if="*{method}" th:with="uuid=*{method.uuid}">
+								<a th:href="@{__${basePath}__/item/__${uuid}__}" th:text="'[' + *{method.identifier} + '] ' + *{method.name}"></a>
+							</div>
+							<div th:unless="*{method}">
+								[<span th:text="#{undefined}"></span>]
+							</div>		
+						</div>
+						<input th:if="${isProposal}" type="hidden" id="method" style="width: 100%" th:field="*{method.referencedItemUuid}" required="required"/>
+						<script th:if="${isProposal}" type="text/javascript" charset="utf-8" th:inline="text">
+						/* <![CDATA[ */
+							$(function() {
+								$('#method').select2({
+									multiple: false,
+									dropdownCssClass: "bigdrop",
+									ajax: {
+										url: "[[@{__${basePath}__/}]]entities/methods",
+										dataType: "json",
+										data: function(term, page) {
+											return {
+												q: term
+											};
+										},
+										results: function (data) {
+											return { 
+												results : $.map(data, function (item) { 
+													return { 
+														id: item[0], 
+														text: item[2] + " [" + item[1] + "]", 
+													} 
+												}) 
+											};
+										}
+						            },
+						            initSelection: function(element, callback) {
+				                		var result = [];
+				                		// Collect AJAX requests needed to resolve initially
+				                		// selected items
+					                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+					                    	dataType: "json"
+					                	}))
+					                	.done(function(data) {
+	 						                var item = data[0].toString().split(",");
+					                		result.push({
+					                			id: item[0],
+												text: item[2] + " [" + item[1] + "]", 
+					                		});
+							                callback(result[0]); 
+					                	});
+						            }						            
+						        });
+								
+								if ([[${proposal.isClarification()}]]) {
+									$('#method').select2("readonly", true);
+								}
+							});
+						
+						/* ]]> */
+						</script>
+					</div>
+				</div>				
+			</div>
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row" th:include="globals :: scopeTable('conversion')" />
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<table id="parametersTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th th:text="#{tableheader.parameter}">Parameter</th>
+						<th th:text="#{tableheader.value}">Value</th>
+						<th th:text="#{tableheader.uom}">UoM</th>
+						<th th:text="#{tableheader.citation}">Citation</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="parameterValue,row : *{parameterValues}">
+						<td th:text="${parameterValue.parameterName}"></td>
+						<td>
+							<div class="form-group">
+								<input type="text" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
+							</div>
+						</td>
+						<td>
+							<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
+							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
+						</td>							
+						<td>
+							<div th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
+								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							</div>
+						</td>							
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+	    var uomSelect = function(element) {
+			element.select2({
+				width: 'resolve',
+				ajax: {
+					url: "[[@{__${basePath}__/}]]entities/by-class/UnitOfMeasureItem",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: 'name',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) { 
+								return { 
+									text: item[2] + " [" + item[1] + "]", 
+									id: item[0] 
+								} 
+							}) 
+						};
+					},
+				},
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+                    	dataType: "json"
+                	}))
+                	.done(function(data) {
+                		item = data[0];
+                		result.push({
+                			id: item[0],
+							text: item[2] + " [" + item[1] + "]", 
+                		});
+		                callback(result[0]); 
+                	});
+	            }						            
+			});        						
+		};
+
+       	$(document).ready(function() {
+       		$('#parametersTable').dataTable({
+       			"bPaginate": false,
+       			"bFilter": false,
+	   			 aoColumns: [
+   						{"bSortable" : false},
+  						{"bSortable" : false},
+   						{"bSortable" : false}
+   					]
+       		});
+       		
+
+       		
+       		$('.select-uom').each(function() {
+				uomSelect($(this));
+       		});
+
+			$('#method').change(function(e) {
+				table = $('#parametersTable').dataTable();
+				table.fnClearTable();
+            	$.when($.ajax("[[@{__${basePath}__/}]]entities/parameters/" + $(this).val(), {
+                	dataType: "json"
+            	}))
+            	.done(function (data) {
+            		$.each(data, function(idx, item) {
+        				table.fnAddData([
+        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
+        					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
+						]);
+        				uomSelect($('#parameterUom_' + idx));
+            		});
+            	});
+			});
+       	});		
+	/* ]]> */
+	</script>
+</div>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        Dear $user.name:<p/>
+
+		You are registered as a register manager for $delegation.delegatingOrganization.name in the ISO Geodetic Registry.<p/> 
+		<p/>
+		A new $proposal.proposalType proposal was submitted to the "$register.name" register. The proposal is titled "$proposal.name". 
+ 		</p>
+ 		To review the proposal, please log in to the ISO Geodetic Registry
+ 		and open the <a href="${baseUrl}management/manager">Register Manager</a> page.
+ 		</p>
+        <br/><br/>
+        ISO Geodetic Registry
+    </body>
+</html>

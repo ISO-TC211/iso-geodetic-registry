@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+  
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+			  	
+			  	<div th:replace="home :: demo"/>
+				
+				<h3 th:unless="${pageTitle}" th:text="${register.name}"/>
+				<h3 th:if="${pageTitle}" th:text="${pageTitle}"/>
+				
+<!-- 				<div th:replace="home :: demo"/> -->
+
+				<div th:if="${revisionDate}" th:unless="${noRevisionAtGivenDate}" class="alert alert-danger">
+					<p th:text="#{alert.historicView}">Es wird ein historischer Stand der GDI-DE Registry angezeigt.</p>
+				</div>
+
+				<div th:if="${noRevisionAtGivenDate}" class="alert alert-danger">
+					<p th:text="#{alert.noRevisionAtGivenDate}">Zum angegebenen Zeitpunkt existiert kein Stand der GDI-DE Registry. Es wird der aktuelle Stand angezeigt.</p>
+				</div>
+
+				<div th:if="${revision}" class="alert alert-danger">
+					<p>
+						<span th:text="#{alert.historicView}">Es wird historischer Stand der GDI-DE Registry angezeigt</span> (Revision #<span th:text="${revision}">revision</span>).
+					</p>
+				</div>
+
+				<ul class="nav nav-tabs">
+					<li><a href="#overview" data-toggle="tab" th:text="#{tabs.overview}">Übersicht</a></li>
+					<li class="active"> <!-- th:classappend="(${viewMode} == 'contents') ? 'active'"--><a href="#contents" data-toggle="tab" th:text="#{tabs.contents}">Inhalte</a></li>
+<!-- 					<li sec:authorize="isAuthenticated()" th:classappend="(${viewMode} == 'proposals') ? 'active'"><a href="#proposals" data-toggle="tab" th:text="#{tabs.proposals}">Vorgeschlagene Inhalte</a></li> -->
+				</ul>
+				
+				<div class="tab-content">
+					<div id="overview" class="tab-pane in">
+						<p th:text="#{tabs.overview}">Übersicht</p>
+					</div>
+					
+					<div id="contents" class="tab-pane in" th:classappend="(${viewMode} == 'contents') ? 'active'">
+						<div sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)" th:unless="${revision} or ${revisionDate}">
+							<div class="control-group" style="margin-top: 10px; margin-bottom: 10px">
+								<button th:unless="${itemClass}" id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''" th:text="#{button.addition}">Item registrieren</button>
+								<button th:if="${itemClass}" id="addition" class="btn btn-success" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition?itemClass=' + ${itemClass.uuid}} + '\''" th:text="#{button.addition}">Item registrieren</button>
+<!-- 								<button id="supersession" class="btn btn-warning" th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/supersession'} + '\''" th:text="#{button.supersession}">Item ersetzen</button> -->
+<!-- 								<a th:href="@{__${basePath}__/register/__${register.uuid}__/export}" id="excelexport" class="btn btn-default pull-right" style="margin-left: 10px;"><span class="fa fa-file-code-o"></span>&nbsp;&nbsp;<span th:text="#{button.downloadExcel}"></span></a> -->
+								<form th:action="@{__${basePath}__/register/__${register.uuid}__/proposal/upload}" id="uploadForm" class="pull-right" role="form" method="post" enctype="multipart/form-data">
+									<div class="form-inline">
+										<div class="form-group">
+											<input id="file" name="file" type="file"></input>
+										</div>
+										<button id="submitUpload" disabled="disabled" type="button" class="btn sm btn-default" th:text="#{button.uploadProposals}"></button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div style="padding: 10px">				
+							<table id="contentsTable" class="datatable table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.identifier}">Identifier</th>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.itemClassName}">Klasse</th>
+										<th th:text="#{tableheader.status}">Status</th>
+										<th></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:include="layout :: foot"></div>
+
+	<div th:replace="globals-lists :: js-lists"/>
+<script type="text/javascript" th:inline="text">
+/*<![CDATA[ */
+            
+	var datatable2Rest = function(sSource, aoData, fnCallback) {
+	    //extract name/value pairs into a simpler map for use later
+	    var paramMap = {};
+	    for ( var i = 0; i < aoData.length; i++) {
+	        paramMap[aoData[i].name] = aoData[i].value;
+	    }
+
+	    //page calculations
+	    var pageSize = paramMap.iDisplayLength;
+	    var start = paramMap.iDisplayStart;
+	    var pageNum = start / pageSize; // pageNum is 0 based
+
+	    // extract sort information
+	    var sortCol = paramMap.iSortCol_0;
+	    var sortDir = paramMap.sSortDir_0;
+	    var sortName = paramMap['mDataProp_' + sortCol];
+
+	    //create new json structure for parameters for REST request
+	    var restParams = new Array();
+	    restParams.push({"name" : "limit", "value" : pageSize});
+	    restParams.push({"name" : "page", "value" : pageNum });
+	    restParams.push({"name" : "sort", "value" : sortName });
+	    restParams.push({"name" : sortName + ".dir", "value" : sortDir });
+
+	    //if we are searching by name, override the url and add the name parameter
+	    var url = sSource;
+	    alert(url);
+// 	    if (paramMap.sSearch != '') {
+// 	        url = "${baseUrl}rest/customer/search/findByNameContains";
+// 	        restParams.push({ "name" : "name", "value" :  paramMap.sSearch});
+// 	    }
+
+	    //finally, make the request
+	    $.ajax({
+	        "dataType" : 'json',
+	        "type" : "GET",
+	        "url" : url,
+	        "data" : restParams,
+	        "success" : function(data) {
+	            data.iTotalRecords = data.totalCount;
+	            data.iTotalDisplayRecords = data.totalCount;
+
+	            fnCallback(data);
+	        }
+	    });
+	};
+
+	var retireButton = function(item) {
+		return '<button type="button" id="retire_' + item.uuid + '" class="btn btn-xs btn-danger" href="#confirmretirement-' + item.uuid +'" data-toggle="modal">[[#{button.retirement}]]</button>';
+	};
+
+	var retirePopup = function(item) {
+		return '<div class="modal fade" id="confirmretirement-' + item.uuid + '" role="dialog">' +
+			      '<div class="modal-dialog">' +
+				    '<div class="modal-content">' +
+					  '<form action="[[@{__${basePath}__/}]]item/' + item.uuid + '/retire" method="get">' +
+					    '<div class="modal-header"><h4>[[#{popup.retire.header}]]</h4></div>' +
+						  '<div class="modal-body">' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="justification">[[#{popup.retire.justification}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="justification" name="justification" rows="4" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="registerManagerNotes">[[#{popup.retire.registerManagerNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="registerManagerNotes" name="registerManagerNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="controlBodyNotes">[[#{popup.retire.controlBodyNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="controlBodyNotes" name="controlBodyNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+						  '</div>' +
+						  '<div class="modal-footer">' +
+							'<button id="confirmretirement" type="submit" class="btn btn-danger">[[#{button.confirm}]]</button>' +
+							'<button id="denyretirement" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
+						'</div>' +
+					  '</form>' +
+				    '</div>' +
+			      '</div>' +
+		        '</div>' +
+	          '</div>';
+	}
+
+	var invalidateButton = function(item) {
+		return '<button type="button" id="invalidate_' + item.uuid + '" class="btn btn-xs btn-danger" href="#confirminvalidation-' + item.uuid +'" data-toggle="modal">[[#{button.invalidation}]]</button>';
+	};
+
+	var invalidatePopup = function(item) {
+		return '<div class="modal fade" id="confirminvalidation-' + item.uuid + '" role="dialog">' +
+			      '<div class="modal-dialog">' +
+				    '<div class="modal-content">' +
+					  '<form action="[[@{__${basePath}__/}]]item/' + item.uuid + '/invalidate" method="get">' +
+					    '<div class="modal-header"><h4>[[#{popup.invalidate.header}]]</h4></div>' +
+						  '<div class="modal-body">' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="justification">[[#{popup.invalidate.justification}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="justification" name="justification" rows="4" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="registerManagerNotes">[[#{popup.invalidate.registerManagerNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="registerManagerNotes" name="registerManagerNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+							'<div class="form-group">' +
+							  '<label class="form-label" for="controlBodyNotes">[[#{popup.invalidate.controlBodyNotes}]]</label>' +
+							  '<div class="controls">' +
+							    '<textarea id="controlBodyNotes" name="controlBodyNotes" rows="2" cols="80" class="form-control" required="true" type="text"></textarea>' +  
+							  '</div>' +
+							'</div>' +
+						  '</div>' +
+						  '<div class="modal-footer">' +
+							'<button id="confirminvalidation" type="submit" class="btn btn-danger">[[#{button.confirm}]]</button>' +
+							'<button id="denyinvalidation" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
+						'</div>' +
+					  '</form>' +
+				    '</div>' +
+			      '</div>' +
+		        '</div>' +
+	          '</div>';
+	}
+
+	$('#contentsTable').on('click', '.button-details', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid;
+	});
+
+	$('#contentsTable').on('click', '.button-clarify', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/clarify';
+	});
+
+	$('#contentsTable').on('click', '.button-supersede', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/supersede';
+	});
+
+	$('#contentsTable').on('click', '.button-retire', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/retire';
+	});
+
+	$('#contentsTable').on('click', '.button-invalidate', function(e) {
+		var uuid = $(this).data('uuid');
+		location.href = '[[@{__${basePath}__/}]]item/' + uuid + '/invalidate';
+	});
+
+	$(document).ready(function() {
+		var table;
+		
+		table = $('#contentsTable').dataTable({
+			"sAjaxSource": "[[@{__${basePath}__/}]]register/[[${register.uuid}]]/containedItems",
+			"bProcessing": true,
+			"bServerSide": true,
+			"bStateSave": true,
+			"fnServerParams": function (aoData) {
+				if ([[${#strings.isEmpty(itemClassFilter)}]]) {
+		            aoData.push({
+			            	name: "itemClass", 
+			            	value: "[[${itemClass.uuid}]]"
+		            });
+				}
+				if ([[${!#strings.isEmpty(itemClassFilter)}]]) {
+		            aoData.push({
+			            	name: "itemClassFilter", 
+			            	value: "[[${itemClassFilter}]]"
+		            });
+				}
+	        },
+// 			"fnServerData" : datatable2Rest,
+			"sPaginationType": "bs_normal",
+// 			"bFilter": false,
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "<img style='margin-left: 20px' src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			"fnDrawCallback": function( oSettings ) {
+// 				alert( 'DataTables has redrawn the table' );
+			},				
+			"aaSorting": [[ 0, "asc" ]],
+			"aoColumns": [
+				{ 
+					"mDataProp": "itemIdentifier",
+					"sWidth": "8%"
+				},
+				{ 
+					"mDataProp": "name",
+					"sWidth": "50%",
+					"bSearchable": true
+				},
+				{ 	
+					"mDataProp": "itemClassName",
+					"sWidth": "15%",
+				 	"bSortable": false
+				},
+				{ 
+					"mDataProp": "status",
+					"sWidth": "10%",
+					"bSortable": true
+				},
+			],
+			"aoColumnDefs": [
+				{ "aTargets": [4],
+				  "mData": null,
+				  "mRender": function (data, type, full) {
+					  var actions = detailsButton(full.uuid);
+					  
+					  if ([[${@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)}]] && full.status === 'valid') {
+						  var dropdownActions = []; 
+						  dropdownActions.push(clarifyButton(full));
+						  dropdownActions.push(supersedeButton(full));
+						  dropdownActions.push(retireButton(full));
+						  dropdownActions.push(invalidateButton(full));
+						  
+						  actions += dropdownMenu(full.itemUuid, dropdownActions);
+						  actions += retirePopup(full);
+						  actions += invalidatePopup(full);
+					  }
+					  
+					  return actions;
+																		
+// 						<div class="btn-group" sec:authorize="@registrySecurity.hasEntityRelatedRole('ROLE_SUBMITTER_', #vars.register)">
+// 							<button type="button" th:if="${item.isValid()}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+// 								<span th:text="#{button.action}">Aktion</span> <span class="caret"></span>
+// 							</button>
+// 							<ul class="dropdown-menu" role="menu">
+// 								<li><div style="margin-left: 10px"><button th:id="'clarify_' + ${item.uuid}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/item/' + ${item.uuid} + '/clarify'} + '\''" th:text="#{button.clarification}">Klarstellen</button></div></li>
+// 								<li>
+// 									<div style="margin-left: 10px; margin-top: 5px">
+// 										<button td:id="'retire_' + ${item.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmretirement-' + ${item.uuid}" data-toggle="modal" th:text="#{button.retirement}">Aufgeben</button>
+// 									</div>
+									
+// 								</li>
+// 							</ul>
+									
+// 							<div class="modal fade" th:id="'confirmretirement-' + ${item.uuid}" role="dialog">
+// 								<div class="modal-dialog">
+// 									<div class="modal-content">
+// 										<form th:action="@{__${basePath}__/item/__${item.uuid}__/retire}" method="get">
+// 											<div class="modal-header">
+// 												<h4 th:text="#{popup.retire.header}">Registereintrag aufgeben</h4>
+// 											</div>
+// 											<div class="modal-body">
+// 												<p th:text="#{popup.retire.justification}">
+// 													Bitte geben Sie eine Begründung für die Aufgabe des Eintrags an.
+// 												</p>
+												
+// 												Text input
+// 												<div class="form-group">
+// 													<div class="controls">
+// 														<textarea id="justification" name="justification" rows="3" cols="40" class="form-control" required="true" type="text" /> 
+// 													</div>
+// 												</div>
+												
+// 											</div>
+// 											<div class="modal-footer">
+// 												<button id="confirmretirement" type="submit" class="btn btn-warning" th:text="#{button.confirm}">Bestätgigen</button>
+// 												<button id="denyretirement" class="btn btn-primary" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+// 											</div>
+// 										</form>
+// 									</div>
+// 								</div>
+// 							</div>
+
+// 						</div>
+
+					  
+				  }
+				}
+			]
+// 			aoColumns: [
+// 				null,
+// 				null,
+// 				null,
+// 				null,
+// 				{"bSortable" : false}
+// 			]
+		});	
+
+		table = $('#proposalsTable').dataTable({
+			"sPaginationType": "bs_normal",
+			"bStateSave": true,
+			"oLanguage": {
+				  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+				  "sInfo": "[[#{datatable.sInfo}]]",
+				  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+				  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+				  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+				  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+				  "sProcessing": "<img src='[[@{__${basePath}__/resources/images/loader.gif}]]'/>",
+				  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+				  "oPaginate": {
+				        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+				        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+				        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+				        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+				    }
+				},
+			 "aaSorting": [[ 2, "asc" ]],
+			 aoColumns: [
+				null,
+				null,
+				null,
+				null,
+				null,
+				{"bSortable" : false}
+			]
+		});	
+
+		$('.datatable').each(function(){
+			var datatable = $(this);
+			// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+			var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+			search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+			search_input.addClass('form-control input-sm');
+			// LENGTH - Inline-Form control
+			var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+			length_sel.addClass('form-control input-sm');
+		});
+		
+		$('#file').change(function() {
+			$('#submitUpload').removeAttr('disabled');
+		});
+		
+		$('#submitUpload').click(function() {
+			$('body').addClass('loading');				
+			$('#uploadForm').submit();
+		});
+	});
+	
+	
+/* ]]> */
+</script>
+
+</body>
+</html>

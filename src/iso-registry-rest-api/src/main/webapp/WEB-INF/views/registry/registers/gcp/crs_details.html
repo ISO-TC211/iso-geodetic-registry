@@ -1,0 +1,107 @@
+<div th:fragment="details">
+	<a id="downloadWkt" class="btn btn-sm pull-right" target="_blank" th:href="@{__${basePath}__/item/__*{uuid}__/wkt}" style="margin-top: 0px"><span th:text="#{button.wkt}"></span>&nbsp;&nbsp;<span class="fa fa-file-text-o"></span></a>												
+	<a id="downloadGml" class="btn btn-sm pull-right" target="_blank" th:href="@{__${basePath}__/item/__*{uuid}__/gml}" style="margin-top: 0px"><span th:text="#{button.gml}"></span>&nbsp;&nbsp;<span class="fa fa-file-text-o"></span></a>												
+	<div class="row">
+
+		<div class="col-md-6">
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('crs')" />
+		
+			<div class="row">
+				<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
+					<div th:replace="globals :: textArea"/>
+				</div>
+			</div>
+
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+			
+		</div>
+
+		<div class="col-md-6">
+			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
+				<div class="col-md-12">
+					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
+				</div>
+			</div>
+
+			<div th:unless="${itemClassName} eq 'ProjectedCRS'" class="row">
+				<div class="col-md-12" th:with="property='datum',label=#{form.label.datum},isRequired='true',noAddNew='true'">
+					<div th:switch="${itemClassName}">
+<!-- 						<div th:case="all" th:with="ajaxPaths=${#strings.arraySplit('DatumItem,EngineeringDatumItem,GeodeticDatumItem,VerticalDatumItem',',')}"> -->
+						<div th:case="'GeodeticCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div>
+<!-- 						<div th:case="'ProjectedCRS'" th:with="ajaxPaths=${#strings.arraySplit('GeodeticDatumItem',',')}"> -->
+<!-- 							<div th:replace="globals :: selectIdentifiedItem"/> -->
+<!-- 						</div> -->
+						<div th:case="'VerticalCRS'" th:with="ajaxPaths=${#strings.arraySplit('VerticalDatumItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div> 
+						<div th:case="'EngineeringCRS'" th:with="ajaxPaths=${#strings.arraySplit('EngineeringDatumItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div> 
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12" th:with="property='coordinateSystem',label=#{form.label.coordinateSystem},isRequired='true',noAddNew='true'">
+					<div th:switch="${itemClassName}">
+<!-- 						<div th:case="all" th:with="ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}"> -->
+						<div th:case="'GeodeticCRS'" th:with="ajaxPaths=${#strings.arraySplit('CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'ProjectedCRS'" th:with="ajaxPaths=${#strings.arraySplit('CoordinateSystemItem,CartesianCoordinateSystemItem,EllipsoidalCoordinateSystemItem,SphericalCoordinateSystemItem,VerticalCoordinateSystemItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'VerticalCRS'" th:with="ajaxPaths=${#strings.arraySplit('VerticalCoordinateSystemItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div>
+						<div th:case="'EngineeringCRS'" th:with="ajaxPaths=${#strings.arraySplit('CartesianCoordinateSystemItem,SphericalCoordinateSystemItem',',')}">
+							<div th:replace="globals :: selectIdentifiedItem"/>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row" th:unless="${itemClassName} eq 'CompoundCRS'">
+				<div th:if="${itemClassName} eq 'ProjectedCRS'" class="col-md-12" th:with="property='baseCrs',label=#{form.label.baseCrs},isRequired='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('GeodeticCoordinateReferenceSystemItem',',')}">
+					<div th:replace="globals :: selectIdentifiedItem"/>
+				</div>
+				<div th:unless="${itemClassName} eq 'ProjectedCRS'" class="col-md-12" th:with="property='baseCrs',label=#{form.label.baseCrs},isRequired='false',noAddNew='true',ajaxPaths=${#strings.arraySplit('GeodeticCoordinateReferenceSystemItem,EngineeringCoordinateReferenceSystemItem,VerticalCoordinateReferenceSystemItem',',')}">
+					<div th:replace="globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+
+			<div class="row" th:unless="${itemClassName} eq 'CompoundCRS'">
+				<div class="col-md-12" th:with="property='operation',label=#{form.label.operation},isRequired=(${itemClassName} eq 'ProjectedCRS'),isReadOnly='true',noAddNew='true',ajaxPaths=${#strings.arraySplit('ConversionItem,TransformationItem',',')}">
+					<div th:replace="globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+		</div>
+
+		<script th:if="${isProposal}" th:unless="${itemClassName} eq 'CompoundCRS'" type="text/javascript" charset="utf-8" th:inline="text">
+		/* <![CDATA[ */
+			$(document).ready(function() {
+				$('#baseCrs_select').on('change', function() {
+					if ($('#baseCrs_select').val() !== '') {
+						$('#operation_select').removeAttr('readonly');
+						$('#operation_select').removeAttr('disabled');
+					}
+					else {
+						$('#operation_select').val('');
+						$('#operation_select').attr('readonly', 'readonly');
+						$('#operation_select').attr('disabled', 'disabled');						
+					}
+				});
+			});	        
+		/* ]]> */
+		</script>
+		
+	</div>
+
+</div>

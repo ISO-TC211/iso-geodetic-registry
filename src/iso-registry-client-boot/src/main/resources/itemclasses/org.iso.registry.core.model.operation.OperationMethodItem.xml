@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="OperationMethod">
+	<dtoClass>org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO</dtoClass>
+	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemViewBean</viewBeanClass>
+	<xmlType>org.iso.registry.api.OperationMethodItem_Type</xmlType>
+	<viewItemTemplate>registry/registers/gcp/method_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/method_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/method_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/method_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>

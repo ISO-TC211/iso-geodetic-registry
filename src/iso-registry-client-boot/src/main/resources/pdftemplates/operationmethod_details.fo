@@ -1,0 +1,11 @@
+#parse("pdftemplates/identifieditem.fo")
+#if ($item.formula)
+<fo:table-row height="15pt">
+	<fo:table-cell font-style="italic">
+		<fo:block>Formula</fo:block>
+	</fo:table-cell>
+	<fo:table-cell>
+		<fo:block>$item.formula</fo:block>
+	</fo:table-cell>
+</fo:table-row>
+#end

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reg:ItemClassConfiguration xmlns:reg="http://www.geoinfoffm.de/registry" itemClassName="PrimeMeridian">
+	<dtoClass>org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemProposalDTO</dtoClass>
+	<viewBeanClass>org.iso.registry.api.registry.registers.gcp.datum.PrimeMeridianItemViewBean</viewBeanClass>
+	<xmlType>org.iso.registry.api.PrimeMeridianItem_Type</xmlType>
+	<viewItemTemplate>registry/registers/gcp/pm_view_item</viewItemTemplate>
+	<viewProposalTemplate>registry/registers/gcp/pm_edit_addition</viewProposalTemplate>
+	<createProposalTemplate>registry/registers/gcp/pm_create_addition</createProposalTemplate>
+	<editProposalTemplate>registry/registers/gcp/pm_edit_addition</editProposalTemplate>
+</reg:ItemClassConfiguration>

@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
-	</properties>	
+	</properties>
 	<modules>
 		<module>src/iso-tc211-xml/src/iso-tc211-xml</module>
 		<module>src/wkt/src/de.bespire.io.wkt</module>
@@ -18,6 +18,6 @@
 		<module>src/iso-registry-api</module>
 		<module>src/iso-registry-client</module>
 		<module>src/iso-registry-soap</module>
-		<module>src/iso-registry-client-boot</module>
+		<module>src/iso-registry-rest-api</module>
 	</modules>
 </project>

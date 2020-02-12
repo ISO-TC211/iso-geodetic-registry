@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<ul class="nav nav-tabs" th:fragment="itemTabs">
+			<li class="active"><a href="#item" data-toggle="tab" th:text="#{tabs.item}">Eintrag</a></li>
+			<li th:if="!${#maps.isEmpty(item.predecessors)}"><a href="#predecessors" data-toggle="tab" th:text="#{tabs.predecessors}">Vorgänger</a></li>
+			<li th:if="!${#maps.isEmpty(item.successors)}"><a href="#successors" data-toggle="tab" th:text="#{tabs.successors}">Nachfolger</a></li>
+			<li><a href="#managementInformation" data-toggle="tab" th:text="#{tabs.managementInformation}">Verwaltungsinformationen</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div id="item" class="tab-pane in active" style="padding-top: 10px">
+				<div class="span6" th:object="${item}">
+					<!-- Select field: Item Class -->
+					<div class="form-group">
+						<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+						<div class="controls">
+							<input id="itemClass" name="itemClass" class="form-control disabled" th:value="*{itemClassName}" type="text" disabled="disabled" /> 
+						</div>
+					</div>
+		
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="form-label" for="name" th:text="#{form.label.name}">Name</label>
+						<div class="controls">
+							<input id="name" name="name" class="form-control disabled" th:value="*{name}" type="text" disabled="disabled" /> 
+						</div>
+					</div>
+		
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="form-label" for="definition" th:text="#{form.label.definition}">Definition</label>
+						<div class="controls">
+							<textarea id="definition" name="definition" rows="6" cols="120" class="form-control disabled" type="text" th:text="*{definition}" disabled="disabled" />
+						</div>
+					</div>
+		
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="form-label" for="description" th:text="#{form.label.description}">Beschreibung</label>
+						<div class="controls">
+							<textarea id="description" name="description" rows="6" cols="120" class="form-control disabled" type="text" th:text="*{description}" disabled="disabled" />
+						</div>
+					</div>
+
+					<div class="form-group" th:each="entry : *{additionalProperties}">
+						<label class="form-label" th:for="${entry.key}" th:text="#{${entry.key}}">Beschreibung</label>
+						<div class="controls">
+							<textarea th:id="${entry.key}" th:name="${entry.key}" rows="6" cols="120" class="form-control disabled" type="text" th:text="${entry.value}" disabled="disabled" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="predecessors" class="tab-pane in" style="padding-top: 10px">
+				<ul>
+					<li th:each="predecessor : ${item.predecessors}"><a th:href="@{${basePath} + '/item/' + ${predecessor.key}}"><span th:text="${predecessor.value}"></span></a></li>
+				</ul>
+			</div>
+
+			<div id="successors" class="tab-pane in" style="padding: 10px">
+				<ul>
+					<li th:each="successor : ${item.successors}"><a th:href="@{${basePath} + '/item/' + ${successor.key}}"><span th:text="${successor.value}"></span></a></li>
+				</ul>
+			</div>
+			
+			<div id="managementInformation" class="tab-pane in" style="padding-top: 10px">
+				<div class="panel-group" id="accordion">
+					<div th:each="pmi : ${item.sortedProposalManagementInformations}">
+						<div th:switch="${#strings.toString(pmiEvaluator.evaluate(pmi))}">
+							
+							<div th:case="'ADDITION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-success' : 'panel-default'">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion" th:href="'#additionInformation_' + ${pmi.uuid}" th:text="${pmi.dateDisposed} ? #{header.addedOn(${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})} : #{header.additionInformation}"></a>
+									</h3>
+								</div>
+								<div class="panel-collapse" th:id="'additionInformation_' + ${pmi.uuid}">
+									<table class="table table-striped" th:object="${pmi}">
+										<colgroup>
+											<col span="1" style="width: 20%;"/>
+											<col span="1" style="width: 80%;"/>
+										</colgroup>
+										<tbody>
+											<tr th:if="*{sponsor}">
+												<td th:text="#{sponsor}"></td>
+												<td th:text="*{sponsor.name}"></td>
+											</tr>
+											<tr th:if="*{dateProposed}">
+												<td th:text="#{dateProposed}"></td>
+												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr>
+												<td th:text="#{justification}"></td>
+												<td th:text="*{justification}"></td>
+											</tr>
+											<tr th:if="*{registerManagerNotes}" sec:authorize="@registrySecurity.hasRoleWith('ROLE_ADMIN_') or @registrySecurity.hasRoleWith('ROLE_OWNER_') or @registrySecurity.hasRoleWith('ROLE_CONTROLBODY_') or @registrySecurity.hasRoleWith('ROLE_MANAGER_')">
+												<td th:text="#{registerManagerNotes}"></td>
+												<td th:text="*{registerManagerNotes}"></td>
+											</tr>
+											<tr th:if="*{controlBodyNotes}" sec:authorize="@registrySecurity.hasRoleWith('ROLE_ADMIN_') or @registrySecurity.hasRoleWith('ROLE_OWNER_') or @registrySecurity.hasRoleWith('ROLE_CONTROLBODY_') or @registrySecurity.hasRoleWith('ROLE_MANAGER_')">
+												<td th:text="#{controlBodyNotes}"></td>
+												<td th:text="*{controlBodyNotes}"></td>
+											</tr>
+											<tr th:if="*{dateDisposed}">
+												<td th:text="#{dateDisposed}"></td>
+												<td th:text="*{#calendars.format(dateDisposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr th:if="*{disposition}">
+												<td th:text="#{disposition}"></td>
+												<td th:text="#{*{disposition}}"></td>
+											</tr>
+											<tr th:if="*{status}">
+												<td th:text="#{status}"></td>
+												<td th:text="#{*{status}}"></td>
+											</tr>
+											<tr th:if="*{controlBodyDecisionEvent}" sec:authorize="@registrySecurity.hasRoleWith('ROLE_ADMIN_') or @registrySecurity.hasRoleWith('ROLE_OWNER_') or @registrySecurity.hasRoleWith('ROLE_CONTROLBODY_') or @registrySecurity.hasRoleWith('ROLE_MANAGER_')">
+												<td th:text="#{controlBodyDecisionEvent}"></td>
+												<td th:text="*{controlBodyDecisionEvent}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div th:case="'RETIREMENT'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-danger' : 'panel-default'" th:include="registry/item :: amendmentInfo">
+							</div>
+	
+							<div th:case="'SUPERSESSION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-danger' : 'panel-default'" th:fragment="amendmentInfo">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion" th:href="'#amendmentInformation_' + ${pmi.uuid}">
+											<span th:if="${pmi.dateDisposed}" th:text="#{header.amendedOn(#{${pmi.amendmentType}}, ${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})}"></span>
+											<span th:if="!${pmi.dateDisposed}" th:text="#{header.amendmentInformation}"></span>
+										</a>
+									</h3>
+								</div>
+								<div class="panel-collapse" th:id="'amendmentInformation_' + ${pmi.uuid}">
+									<table class="table table-striped" th:object="${pmi}" th:id="'amendmentInformation_' + ${pmi.uuid}">
+										<colgroup>
+											<col span="1" style="width: 20%;"/>
+											<col span="1" style="width: 80%;"/>
+										</colgroup>
+										<tbody>
+											<tr>
+												<td th:text="#{amendmentType}"></td>
+												<td th:text="#{*{amendmentType}}"></td>
+											</tr>
+											<tr th:if="*{dateProposed}">
+												<td th:text="#{dateProposed}"></td>
+												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr th:if="*{dateDisposed}">
+												<td th:text="#{dateDisposed}"></td>
+												<td th:text="*{#calendars.format(dateDisposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr th:if="*{disposition}">
+												<td th:text="#{disposition}"></td>
+												<td th:text="#{*{disposition}}"></td>
+											</tr>
+											<tr>
+												<td th:text="#{status}"></td>
+												<td th:text="#{*{status}}"></td>
+											</tr>
+											<tr>
+												<td th:text="#{justification}"></td>
+												<td th:text="*{justification}"></td>
+											</tr>
+											<tr th:if="*{registerManagerNotes}">
+												<td th:text="#{registerManagerNotes}"></td>
+												<td th:text="*{registerManagerNotes}"></td>
+											</tr>
+											<tr th:if="*{controlBodyNotes}">
+												<td th:text="#{controlBodyNotes}"></td>
+												<td th:text="*{controlBodyNotes}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div th:case="'CLARIFICATION'" class="panel" th:classappend="${pmi.isFinal()} ? 'panel-primary' : 'panel-default'">
+								<div class="panel-heading">
+									<h3 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion" th:href="'#clarificationInformation_' + ${pmi.uuid}">
+											<span th:if="${pmi.dateDisposed}" th:text="#{header.clarifiedOn(${#calendars.format(pmi.dateDisposed, 'yyyy-MM-dd')})}" th:classappend="${pmi.isNotAccepted()} ? 'strikethrough'"></span>
+											<span th:if="!${pmi.dateDisposed}" th:text="#{header.clarificationInformation}"></span>
+										</a>
+									</h3>
+								</div>
+								<div class="panel-collapse" th:id="'clarificationInformation_' + ${pmi.uuid}">
+									<table class="table table-striped" th:object="${pmi}" th:id="'clarificationInformation_' + ${pmi.uuid}">
+										<colgroup>
+											<col span="1" style="width: 20%;"/>
+											<col span="1" style="width: 80%;"/>
+										</colgroup>
+										<tbody>
+											<tr>
+												<td th:text="#{proposedChange}"></td>
+												<td>
+													<table class="table table-striped">
+														<thead>
+															<th th:text="#{changedProperty}"></th>
+															<th th:text="#{changedValue}"></th>
+														</thead>
+														<tbody>
+															<tr th:each="change : ${pmi.fromJson('__*{proposedChange}__')}">
+																<td th:text="#{${change.key}}"></td>
+																<td th:text="${change.value}"></td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
+											<tr th:if="*{dateProposed}">
+												<td th:text="#{dateProposed}"></td>
+												<td th:text="*{#calendars.format(dateProposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr th:if="*{dateDisposed}">
+												<td th:text="#{dateDisposed}"></td>
+												<td th:text="*{#calendars.format(dateDisposed, 'yyyy-MM-dd')}"></td>
+											</tr>
+											<tr th:if="*{disposition}">
+												<td th:text="#{disposition}"></td>
+												<td th:text="#{*{disposition}}"></td>
+											</tr>
+											<tr>
+												<td th:text="#{status}"></td>
+												<td th:text="#{*{status}}"></td>
+											</tr>
+											<tr>
+												<td th:text="#{justification}"></td>
+												<td th:text="*{justification}"></td>
+											</tr>
+											<tr th:if="*{registerManagerNotes}">
+												<td th:text="#{registerManagerNotes}"></td>
+												<td th:text="*{registerManagerNotes}"></td>
+											</tr>
+											<tr th:if="*{controlBodyNotes}">
+												<td th:text="#{controlBodyNotes}"></td>
+												<td th:text="*{controlBodyNotes}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<button id="back" class="btn btn-default" onclick="history.back();" th:text="#{button.back}" style="margin-top: 20px">Zurück</button>												
+	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
+</body>
+<script type="text/javascript" th:inline="text" th:fragment="js-item">
+/* <![CDATA[ */
+	$(document).ready(function() {
+		$('.tab-content :input').attr('readonly', 'readonly').removeAttr('placeholder');
+		$('.feedback').hide();
+	});
+/* ]]> */
+</script>
+</html>

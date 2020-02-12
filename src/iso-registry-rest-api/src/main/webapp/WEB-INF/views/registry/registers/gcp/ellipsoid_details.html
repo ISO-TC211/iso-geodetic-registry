@@ -1,0 +1,91 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('ellipsoid')" />
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label" th:for="sphere" th:text="#{form.label.shape}"></label>
+						<input id="shape-ellipsoid" type="radio" th:field="*{sphere}" value="false" th:disabled="!${isProposal}">Ellipsoid</input>
+						<input id="shape-sphere" type="radio" th:field="*{sphere}" value="true" th:disabled="!${isProposal}">Sphere</input>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='semiMajorAxis',inputType='number',label=#{form.label.semiMajorAxis},placeholder=#{form.placeholder.semiMajorAxis},isRequired='true'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+				<div class="col-md-8" th:with="property='semiMajorAxisUom',label=#{form.label.semiMajorAxisUom},isRequired='true',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
+					<div th:replace="globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='semiMinorAxis',inputType='number',label=#{form.label.semiMinorAxis},placeholder=#{form.placeholder.semiMinorAxis},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+<!-- 				<div class="col-md-8" th:with="property='semiMinorAxisUom',label=#{form.label.semiMinorAxisUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
+<!-- 					<div th:replace="globals :: selectIdentifiedItem"/> -->
+<!-- 				</div> -->
+			</div>
+			<div class="row">
+				<div class="col-md-4" th:with="property='inverseFlattening',inputType='number',label=#{form.label.inverseFlattening},placeholder=#{form.placeholder.inverseFlattening},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+<!-- 				<div class="col-md-8" th:with="property='inverseFlatteningUom',label=#{form.label.inverseFlatteningUom},items=${@unitOfMeasureItemRepository.findAll()},isRequired='false',noAddNew='true'"> -->
+<!-- 					<div th:replace="globals :: selectIdentifiedItem"/> -->
+<!-- 				</div> -->
+			</div>
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->									
+	</div>
+	
+	<script th:if="${isProposal}" type="text/javascript" charset="utf-8" th:inline="text">
+	/* <![CDATA[ */
+		$(document).ready(function() {
+			if ([[*{sphere} eq 'true' ? 'true' : 'false']]) {
+				$('#semiMinorAxis').attr('disabled', 'disabled');
+				$('#inverseFlattening').attr('disabled', 'disabled');
+			}
+			
+			$('#shape-ellipsoid').click(function() {
+				$('#semiMinorAxis').removeAttr('disabled');
+				$('#inverseFlattening').removeAttr('disabled');				
+			});
+			
+			$('#shape-sphere').click(function() {
+				$('#semiMinorAxis').val('');
+				$('#semiMinorAxis').attr('disabled', 'disabled');
+				$('#inverseFlattening').val('');				
+				$('#inverseFlattening').attr('disabled', 'disabled');				
+			});
+			
+			$('#semiMinorAxis').keyup(function() {
+				if ($('#semiMinorAxis').val() !== '') {
+					$('#inverseFlattening').val('');
+					$('#inverseFlattening').attr('disabled', 'disabled');				
+				}
+				else {
+					$('#inverseFlattening').removeAttr('disabled');									
+				}
+			});
+
+			$('#inverseFlattening').keyup(function() {
+				if ($('#inverseFlattening').val() !== '') {
+					$('#semiMinorAxis').val('');
+					$('#semiMinorAxis').attr('disabled', 'disabled');				
+				}
+				else {
+					$('#semiMinorAxis').removeAttr('disabled');									
+				}
+			});
+		});
+	/* ]]> */
+	</script>
+</div>

@@ -1,0 +1,130 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6">
+
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('cs')" />
+			
+			<div class="row">
+				<div th:if="${isProposal}" class="col-md-12" th:with="property='axisUuids',label=#{form.label.coordinateAxis},isRequired='true',ajaxPath='axes',orderBy='name',displayCallback='axisSelectDisplay'">
+					<div th:replace="globals :: selectMultipleIdentifiedItems2"/>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="col-md-6">
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+		</div>
+	</div>
+
+	<div class="row" th:unless="${isProposal}">
+		<div class="col-md-12">
+			<table id="axesTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th th:text="#{tableheader.identifier}"></th>
+						<th th:text="#{tableheader.coordinateAxis}"></th>
+						<th th:text="#{tableheader.axisAbbreviation}"></th>
+						<th th:text="#{tableheader.axisUnit}"></th>
+						<th th:text="#{tableheader.axisDirection}"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="axis,row : *{axes}">
+<!-- 						<td> -->
+<!-- 							<input th:if="${isProposal}" type="hidden" th:id="'axis_' + ${row.index}" class="select-axis" th:value="${axis.axisUuid}" required="required" style="width: 100%"/> -->
+<!-- 							<a th:unless="${isProposal}" th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name} + ' [' + ${axis.code} + ']'"></a> -->
+<!-- 						</td>							 -->
+						<td th:text="${axis.identifier}"/>
+						<td><a th:href="@{__${basePath}__/item/__${axis.uuid}__}" th:text="${axis.name}"/></td>
+						<td th:text="${axis.axisAbbreviation}"/>
+						<td th:text="${axis.axisUnit.name}"/>
+						<td th:text="${axis.axisDirection.code}"/>
+						<td th:text="${row.index}"/>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="text">
+	/*<![CDATA[ */
+	    var axisSelectDisplay = function(item) {
+			return { 
+				id: item[0],
+				text: "[" + item[1] + "] " + item[2] + " (" + item[3] + " / " + item[5] + " / " + item[4].identifier + ")", 
+			} 
+		};
+	            
+	    var axisSelect = function(element) {
+			element.select2({
+				width: 'resolve',
+				ajax: {
+					url: "[[@{__${basePath}__/}]]entities/by-class/CoordinateSystemAxisItem",
+					dataType: "json",
+					data: function(term, page) {
+						return {
+							orderBy: 'name',
+							q: term
+						};
+					},
+					results: function (data) {
+						return { 
+							results : $.map(data, function (item) { 
+								return { 
+									text: item[2] + " [" + item[1] + "]", 
+									id: item[0] 
+								} 
+							}) 
+						};
+					},
+				},
+	            initSelection: function(element, callback) {
+               		var result = [];
+               		// Collect AJAX requests needed to resolve initially
+               		// selected items
+                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+                    	dataType: "json"
+                	}))
+                	.done(function(data) {
+                		item = data[0];
+                		result.push({
+                			id: item[0],
+							text: item[2] + " [" + item[1] + "]", 
+                		});
+		                callback(result[0]); 
+                	});
+	            }						            
+			});        						
+		};
+
+       	$(document).ready(function() {
+//        		$('#panelTitle').text("[[#{${itemClassName}}]]");
+       		
+       		$('#axesTable').dataTable({
+       			"bPaginate": false,
+       			"bFilter": false,
+       			"aaSorting": [[ "5", "asc" ]],
+	   			"aoColumns": [
+	    			{"bSortable": false},
+	       			{"bSortable": false},
+	       			{"bSortable": false},
+	       			{"bSortable": false},
+	       			{"bSortable": false},
+					{ "bVisible": false }
+   				]
+       		});
+       		
+       		$('.select-axis').each(function() {
+				axisSelect($(this));
+       		});
+       	});		
+	/* ]]> */
+	</script>
+	
+
+</div>

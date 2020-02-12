@@ -1,0 +1,5 @@
+#set($datumitem = $item)
+
+#set($itemdetails = "pdftemplates/datum_details.fo")
+#set($itemafter = "pdftemplates/datumafter.fo")
+#parse("pdftemplates/itempage.fo")

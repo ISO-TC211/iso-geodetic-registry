@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head id="headerFragment" th:fragment="headerFragment">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script type="text/javascript"
+          async="async"
+          src="https://www.googletagmanager.com/gtag/js?id=UA-138578173-3"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+          dataLayer.push(arguments);
+      }
+
+      gtag('js', new Date());
+
+      gtag('config', 'UA-138578173-3');
+  </script>
+
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Cache-control" content="no-cache"/>
+  <title th:text="${pageTitle} ? (${pageTitle} + ' - ' + #{application.title}) : #{application.title}">Registry</title>
+  <script type="text/javascript"
+          src="../../resources/js/jquery.js"
+          th:src="@{__${basePath}__/resources/js/jquery.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/jqueryui.js"
+          th:src="@{__${basePath}__/resources/js/jqueryui.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/jquery.cookie.js"
+          th:src="@{__${basePath}__/resources/js/jquery.cookie.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/jquery.hotkeys.js"
+          th:src="@{__${basePath}__/resources/js/jquery.hotkeys.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/jquery.jstree.js"
+          th:src="@{__${basePath}__/resources/js/jquery.jstree.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/jquery.validate.min.js"
+          th:src="@{__${basePath}__/resources/js/jquery.validate.min.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/bootstrap.min.js"
+          th:src="@{__${basePath}__/resources/js/bootstrap.min.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/moment.min.js"
+          th:src="@{__${basePath}__/resources/js/moment.min.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/bootstrap-datetimepicker.min.js"
+          th:src="@{__${basePath}__/resources/js/bootstrap-datetimepicker.min.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/jquery.dataTables.min.js"
+          th:src="@{__${basePath}__/resources/js/jquery.dataTables.min.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/datatables.js"
+          th:src="@{__${basePath}__/resources/js/datatables.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/registry.js"
+          th:src="@{__${basePath}__/resources/js/registry.js}"></script>
+  <script type="text/javascript"
+          src="../../resources/js/select2.js"
+          th:src="@{__${basePath}__/resources/js/select2.js}"></script>
+  <!-- 		<script type="text/javascript" src="https://bespire.atlassian.net/s/5aabcb68bc266b63d9c98db2e18c606b-T/en_USbdmabc/6327/13/1.4.11/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=3eddc320"></script> -->
+  <link rel="stylesheet"
+        href="../../resources/css/bootstrap.min.css"
+        th:href="@{__${basePath}__/resources/css/bootstrap.min.css}"/>
+  <link rel="stylesheet"
+        href="../../resources/css/bootstrap-theme.min.css"
+        th:href="@{__${basePath}__/resources/css/bootstrap-theme.min.css}"/>
+  <link rel="stylesheet"
+        href="../../resources/css/bootstrap-datetimepicker.min.css"
+        th:href="@{__${basePath}__/resources/css/bootstrap-datetimepicker.min.css}"/>
+  <link rel="stylesheet"
+        href="../../resources/css/font-titillium.css"
+        th:href="@{__${basePath}__/resources/css/font-titillium.css}"
+        type="text/css"/>
+  <link rel="stylesheet"
+        href="../../resources/css/font-awesome.min.css"
+        th:href="@{__${basePath}__/resources/css/font-awesome.min.css}"
+        type="text/css"/>
+  <link rel="stylesheet"
+        href="../../resources/css/datatables.css"
+        th:href="@{__${basePath}__/resources/css/datatables.css}"/>
+  <link rel="stylesheet" href="../../resources/css/select2.css" th:href="@{__${basePath}__/resources/css/select2.css}"/>
+  <link rel="stylesheet"
+        href="../../resources/css/select2-bootstrap.css"
+        th:href="@{__${basePath}__/resources/css/select2-bootstrap.css}"/>
+  <link rel="stylesheet"
+        href="../../resources/css/select2-bootstrap-t0m.css"
+        th:href="@{__${basePath}__/resources/css/select2-bootstrap-t0m.css}"/>
+  <link rel="stylesheet"
+        href="../../resources/css/registry.css"
+        th:href="@{__${basePath}__/resources/css/registry.css}"/>
+  <link th:href="@{~/static/fonts/oswald.css}" rel="stylesheet" type="text/css"/>
+  <style type="text/css" th:inline="text">
+    body {
+      padding-top: 110px;
+      padding-bottom: 40px;
+    }
+
+    .sidebartree {
+      padding-left: 20px;
+    }
+
+    /* 			nav[role="navigation"] img { */
+    /* 				background:#013568  */
+    /* 			} */
+
+    .navbar .navbar-brand {
+      max-height: 40px;
+      overflow: visible;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .bs-sidebar1 {
+      padding-top: 9px 0;
+      position: fixed;
+      left: 20px;
+      top: 60px;
+      width: 250px;
+    }
+
+    .test {
+      -webkit-font-smoothing: antialiased;
+      font-family: 'Titillium Web', sans-serif, Arial, sans-serif;
+      font-size: 18pt;
+    }
+
+    .powered-by {
+      flex: 1;
+      width: 112px;
+      padding-top: 0.5em;
+    }
+
+    .powered-by .powered-by-text {
+      font-size: 0.5em;
+      text-transform: uppercase;
+      font-weight: 600;
+      display: block
+    }
+
+    .powered-by img {
+      width: 100px;
+      display: block
+    }
+  </style>
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+</head>
+
+<body>
+
+<div id="navbarFragment" th:fragment="navbarFragment">
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button id="collapsenavbar"
+              type="button"
+              class="navbar-toggle"
+              data-toggle="collapse"
+              data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!-- 				<h1><span>Home</span></h1> -->
+      <img th:src="@{__${basePath}__/resources/images/iso.png}"
+           alt="ISO"
+           id="logo"
+           class="img-responsive pull-left"
+           style="padding-top: 10px; padding-left: 10px"/>
+      <a style="padding-top:15px"
+         class="test navbar-brand"
+         th:href="@{__${basePath}__/}"
+         th:text="#{application.header}">Geodetic Codes and Parameters Registry</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse" style="margin-top: 40px">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span
+            sec:authentication="principal.emailAddress">Nutzer</span></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.help}">Help</span> <span
+              class="caret"></span></a>
+          <ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
+            <li>
+              <a href="https://iso-tc211.github.io/iso-geodetic-register-docs/"
+                 target="_blank"
+                 th:text="#{navbar.help.userguide}"></a>
+            </li>
+          </ul>
+        </li>
+        <li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}"
+                                                 th:text="#{navbar.logout}">Abmelden</a></li>
+        <li class="dropdown" sec:authorize="!isAuthenticated()">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.login}">Anmelden</span>
+            <span class="caret"></span></a>
+          <ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
+            <li>
+              <div class="row">
+                <div class="col-md-12">
+                  <form class="form login-form"
+                        role="form"
+                        method="post"
+                        th:action="@{__${basePath}__/login}"
+                        accept-charset="UTF-8"
+                        id="login-nav">
+                    <!-- Don't add <fieldset> or login fields may be disabled when viewing a register item (see JS in item.html) -->
+                    <div class="form-group">
+                      <label class="sr-only"
+                             for="inputEmail"
+                             th:text="#{navbar.login.label.email}">E-Mail-Adresse</label>
+                      <!-- 												<input type="email" class="form-control" id="inputEmail" th:placeholder="#{navbar.login.label.email}" required="required"></input> -->
+                      <input type="text"
+                             class="form-control"
+                             name="username"
+                             id="inputEmail"
+                             th:placeholder="#{navbar.login.label.email}"
+                             required="required"></input>
+                    </div>
+                    <div class="form-group">
+                      <label class="sr-only"
+                             for="inputPassword"
+                             th:text="#{navbar.login.label.password}">Password</label>
+                      <input type="password"
+                             class="form-control"
+                             name="password"
+                             id="inputPassword"
+                             th:placeholder="#{navbar.login.label.password}"
+                             required="required"></input>
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden
+                      </button>
+                      <button th:if="${T(de.geoinfoffm.registry.client.web.ClientConfiguration).isSignupEnabled()}"
+                              type="button"
+                              class="btn btn-primary btn-block"
+                              th:text="#{navbar.login.button.register}"
+                              th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren
+                      </button>
+                      <button type="button"
+                              class="btn btn-default btn-block"
+                              th:onclick="'location.href = \'' + @{${basePath} + '/forgot-password'} + '\''">Forgot
+                        password
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a th:href="@{__${basePath}__/feedback}" class="dropdown-toggle">
+            <span>Feedback</span><span></span></a>
+        </li>
+      </ul>
+      <!-- 				<div class="navbar-form navbar-right"> -->
+      <!-- 					<div class="btn-group"> -->
+      <!--  						<button id="navbar_lang_DE" th:class="'btn btn-default' + (${#locale.language} eq 'de' ? ' active' : '')">DE</button> -->
+      <!-- 						<button id="navbar_lang_EN" th:class="'btn btn-default' + (${#locale.language} eq 'en' ? ' active' : '')">EN</button> -->
+      <!-- 					</div> -->
+      <!-- 				</div> -->
+      <script type="text/javascript">
+          $('#navbar_lang_EN').click(function () {
+              $.cookie('siteLanguage', 'en', {
+                  path: '/'
+              });
+              location.reload();
+          });
+          $('#navbar_lang_DE').click(function () {
+              $.cookie('siteLanguage', 'de', {
+                  path: '/'
+              });
+              location.reload();
+          });
+      </script>
+
+    </div>
+    <!-- /.navbar-collapse -->
+  </nav>
+</div>
+
+<div th:fragment="foot">
+  <footer class="footer">
+			<span class="powered-by pull-right">
+					<span class="powered-by-text">Powered by</span>
+					<a href="https://open.ribose.com" class="powered-by-logo">
+						<img th:src="@{__${basePath}__/resources/images/logo-ribose.svg}" class="img-responsive" alt="Ribose"/>
+					</a>
+			</span>
+
+    <p class="text-muted">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last
+      updated:&nbsp;<span th:text="${@registerService.getFormattedDateOfLastChange()}"></span>
+      <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-Mail: <a href="mailto:registry@isotc211.org">registry@isotc211.org</a>-->
+      <span><span th:text="#{application.version}"></span></span>
+    </p>
+  </footer>
+
+  <div class="loading-modal"
+       th:style="'background: rgba( 255, 255, 255, .8 ) url(' + @{__${basePath}__/resources/images/loader-lg.gif} + ') 50% 50% no-repeat;'"/>
+</div>
+
+<div th:fragment="navtree">
+  <div class="sidebartree well">
+    <div class="bs-sidebar affix-top">
+      <div style="overflow: hidden">
+        <div id="demo1" class="demo" style="height: 100%;">
+          <ul>
+            <li id="nav_start"><a class="jstest"
+                                  th:href="@{__${basePath}__/}"
+                                  th:text="#{application.welcome}">Welcome</a></li>
+            <li id="registerTest" th:remove="all"><a th:href="@{__${basePath}__/register/Test}">Test (Register)</a></li>
+            <li th:each="register : ${@registerService.getCachedRegisterNames()}"
+                th:if="${register.key.isTopLevelRegister()}"
+                th:id="'register' + ${register.key.alias}"
+                class="jstree-open">
+              <a th:href="@{__${basePath}__/register/__${register.key.alias}__}"
+                 th:text="#{${register.key.name}}"
+                 th:title="#{${register.key.name}}"></a>
+              <ul>
+                <li>
+                  <a th:id="'register' + ${register.key.alias} + 'crs'"
+                     th:href="@{__${basePath}__/register/__${register.key.alias}__/crs}">Coordinate Reference
+                    Systems</a>
+                  <ul>
+                    <li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}"
+                        th:id="'register' + ${register.key.alias} + ${itemClass.value}"
+                        th:if="${#strings.endsWith(itemClass.value,'CRS')}">
+                      <a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}"
+                         th:text="#{${itemClass.value}}"
+                         th:title="#{${itemClass.value}}"></a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a th:id="'register' + ${register.key.alias} + 'cs'"
+                     th:href="@{__${basePath}__/register/__${register.key.alias}__/cs}">Coordinate Systems</a>
+                  <ul>
+                    <li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}"
+                        th:id="'register' + ${register.key.alias} + ${itemClass.value}"
+                        th:if="${#strings.endsWith(itemClass.value,'CS')}">
+                      <a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}"
+                         th:text="#{${itemClass.value}}"
+                         th:title="#{${itemClass.value}}"></a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a th:id="'register' + ${register.key.alias} + 'datums'"
+                     th:href="@{__${basePath}__/register/__${register.key.alias}__/datums}">Datums</a>
+                  <ul>
+                    <li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}"
+                        th:id="'register' + ${register.key.alias} + ${itemClass.value}"
+                        th:if="${#strings.endsWith(itemClass.value,'Datum')}">
+                      <a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}"
+                         th:text="#{${itemClass.value}}"
+                         th:title="#{${itemClass.value}}"></a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a th:id="'register' + ${register.key.alias} + 'operations'"
+                     th:href="@{__${basePath}__/register/__${register.key.alias}__/operations}">Coordinate
+                    Operations</a>
+                  <ul>
+                    <li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}"
+                        th:id="'register' + ${register.key.alias} + ${itemClass.value}"
+                        th:if="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass.value,'Transformation')} or ${#strings.endsWith(itemClass.value,'Conversion')}">
+                      <a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}"
+                         th:text="#{${itemClass.value}}"
+                         th:title="#{${itemClass.value}}"></a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a th:id="'register' + ${register.key.alias} + 'others'"
+                     th:href="@{__${basePath}__/register/__${register.key.alias}__/others}">Other</a>
+                  <ul>
+                    <li th:each="itemClass : ${@registerService.getContainedItemClasses(register.key.uuid)}"
+                        th:id="'register' + ${register.key.alias} + ${itemClass.value}"
+                        th:unless="${#strings.contains(itemClass.value,'Concatenated')} or ${#strings.endsWith(itemClass.value,'CRS')} or ${#strings.endsWith(itemClass.value,'CS')} or ${#strings.endsWith(itemClass.value,'Datum')} or ${#strings.endsWith(itemClass.value,'Transformation')} or ${#strings.endsWith(itemClass.value,'Conversion')}">
+                      <a th:href="@{__${basePath}__/register/__${register.key.alias}__/__${itemClass.value}__}"
+                         th:text="#{${itemClass.value}}"
+                         th:title="#{${itemClass.value}}"></a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li id="nav_mgmt" sec:authorize="@registrySecurity.hasAnyManagementRole()"><a href="#">Management</a>
+              <ul>
+                <li id="managementsubmitter" sec:authorize="@registrySecurity.hasRoleWith('ROLE_SUBMITTER_')">
+                  <a th:href="@{__${basePath}__/management/submitter}" th:text="#{navbar.submittingOrganizations}">Einreichende
+                    Organisationen</a></li>
+                <li id="managementmanager" sec:authorize="@registrySecurity.hasRoleWith('ROLE_MANAGER_')">
+                  <a th:href="@{__${basePath}__/management/manager}"><span th:text="#{navbar.registerManager}">Register-Manager</span>
+                    <span class="badge"
+                          th:if="${@registrySecurity.getRegisterManagerTodoCount()}"
+                          th:text="${@registrySecurity.getRegisterManagerTodoCount()}"></span></a></li>
+                <li id="managementcontrolbody" sec:authorize="@registrySecurity.hasRoleWith('ROLE_CONTROLBODY_')"><a
+                    th:href="@{__${basePath}__/management/controlbody}"><span th:text="#{navbar.controlBody}">Control-Body</span>
+                  <span class="badge"
+                        th:if="${@registrySecurity.getControlBodyTodoCount()}"
+                        th:text="${@registrySecurity.getControlBodyTodoCount()}"></span></a></li>
+                <li id="managementowner" sec:authorize="@registrySecurity.hasRoleWith('ROLE_OWNER_')">
+                  <a th:href="@{__${basePath}__/management/owner}"
+                     th:text="#{navbar.registerOwner}">Register-Inhaber</a></li>
+                <li id="managementpoc" sec:authorize="@registrySecurity.hasRoleWith('ROLE_POINTOFCONTACT_')">
+                  <a th:href="@{__${basePath}__/management/poc}"><span th:text="#{navbar.pointOfContact}">Organisationsverwalter</span>
+                    <span class="badge"
+                          th:if="${@registrySecurity.getPointOfContactTodoCount()}"
+                          th:text="${@registrySecurity.getPointOfContactTodoCount()}"></span></a></li>
+              </ul>
+            </li>
+            <li id="nav_account" sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/myprofile}"
+                                                                      th:text="#{navbar.myAccount}">Mein
+              Benutzerkonto</a></li>
+            <li id="nav_usermgmt" sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" th:text="#{navbar.userManagement}">Benutzerverwaltung</a>
+              <ul>
+                <li id="adminusers"><a th:href="@{__${basePath}__/admin/users}"
+                                       th:text="#{navbar.userManagement.users}">Benutzer</a></li>
+                <li id="adminorganizations"><a th:href="@{__${basePath}__/admin/organizations}"
+                                               th:text="#{navbar.userManagement.organizations}">Organisationen</a></li>
+              </ul>
+            </li>
+            <!-- 							<li id="adminproposals" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{__${basePath}__/admin/proposals}" th:text="#{navbar.proposalManagement}">Vorschlagsverwaltung</a></li> -->
+          </ul>
+        </div>
+        <script type="text/javascript" th:inline="text">
+            $(function () {
+                var ready = false;
+
+                var cancelHashChange = false,
+                    // method sets the selector based off of URL input
+                    setSelector = function (path) {
+                        var basePath = '[[${basePath}]]';
+                        if (basePath !== '') {
+                            basePath = basePath.replace('~', '');
+                        }
+                        basePath = basePath + '/';
+
+                        var startIndex = path.indexOf(basePath);
+                        if (startIndex > -1) {
+                            path = path.substr(startIndex + basePath.length);
+                        }
+                        path = path.replace(/\//g, '');
+                        if ($.trim(path) === '') {
+                            path = 'nav_start';
+                        }
+                        return '#' + path;
+                    };
+
+                $("#demo1").jstree({
+                    // the `plugins` array allows you to configure the active plugins on this instance
+                    "plugins": ["themes", "html_data", "ui", "crrm", "hotkeys"],
+                    // each plugin you have included can have its own config object
+                    "core": {
+                        "animation": 100,
+                        "initially_open": ["nav_register", "nav_mgmt", "nav_usermgmt"]
+                    },
+                    "ui": {
+                        //"initially_select" : [ "nav_start" ]
+                    },
+                    "cookies": {
+                        "auto_save": true,
+                        "cookie_options": {
+                            "path": '/'
+                        }
+                    },
+                    // set a theme
+                    "themes": {
+                        "theme": "proton",
+                        "dots": false
+                    },
+                })
+                    .bind("reselect.jstree", function () {
+                        ready = true;
+                    })
+                    .bind("select_node.jstree", function (e, data) {
+                        var href = data.rslt.obj.children("a").attr("href");
+                        // this will load content into a div:
+                        //$("#contents").load(href);
+                        // this will follow the link:
+                        if (ready) {
+                            document.location.href = href;
+                        }
+                    })
+                    .bind("loaded.jstree", function (event, data) {
+                        //alert(window.location.pathname);
+                        $.jstree._focused().select_node(setSelector(window.location.pathname));
+                        // when loaded sets initial state based off of priority hash first OR url
+//							        if (window.location.hash) { // if hash defined then set tree state
+//							            $.jstree._focused().select_node(selector);
+//							            $(setSelector(window.location.hash.substr(1)) + ' a:first').trigger('click');
+//							        } else { // otherwise base state off of URL
+//							            $.jstree._focused().select_node(setSelector(window.location.pathname));
+//							        }
+                    });
+            });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <!-- 	    <footer class="footer"> -->
+  <!-- 	    	<div class="container"> -->
+  <!-- 		      	<div class="pull-right"> -->
+  <!-- 		      		<p class="text-muted">Software version: <span th:text="#{application.version}"></span></p> -->
+  <!-- 		      	</div> -->
+  <!-- 			</div> -->
+  <!-- 	    </footer>			 -->
+
+</div>
+
+<div th:fragment="captchaInput">
+
+  <script th:if="${@captchaSettings.isCaptchaEnabled()}" src='https://www.google.com/recaptcha/api.js'></script>
+
+  <!-- ReCaptcha -->
+  <div th:if="${@captchaSettings.isCaptchaEnabled()}" class="form-group">
+    <div class="g-recaptcha"
+         th:attr="data-sitekey=${@captchaSettings.getKey()}"></div>
+    <p class="text-danger"
+       th:each="error: ${#fields.errors('reCaptchaResponse')}"
+       th:text="${error}">Validation error</p>
+  </div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,3 @@
+#set($pages = "pdftemplates/operationmethodpages.fo")
+## no $itemafter
+#parse("pdftemplates/itemmaster.fo")

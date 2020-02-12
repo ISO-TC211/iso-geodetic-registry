@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment"/>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<div class="span6">
+			<form class="form-horizontal" th:object="${organization}" method="post">
+				<fieldset>
+					<input th:unless="${isNew}" type="hidden" name="_method" value="PUT"/>
+					
+					<!-- Form Name -->
+					<div th:if="${isNew}">
+						<legend th:text="#{header.createOrganization}">Organisation anlegen</legend>
+					</div>
+					<div th:if="${isReadOnly}">
+						<legend th:text="#{header.viewOrganization}">Organisationsdetails</legend>
+					</div>
+					<div th:unless="${isNew} or ${isReadOnly}">
+						<legend th:text="#{header.editOrganization}">Organisation bearbeiten</legend>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<span th:text="#{admin.organization.main.header}">Stammdaten</span>
+						</div>
+						<div class="panel-body" style="margin-left: 10px; margin-right: 10px">
+							<!-- Text input-->
+							<div class="form-group">
+								<label class="form-label" for="name" th:text="#{form.label.name}">Name</label>
+								<div class="controls">
+									<input id="name" name="name" th:placeholder="#{form.placeholder.name}" th:disabled="${isReadOnly}"
+										class="form-control" required="true" type="text" th:field="*{name}"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="form-label" for="shortName" th:text="#{form.label.shortName}">Name</label>
+								<div class="controls">
+									<input id="shortName" name="shortName" th:placeholder="#{form.placeholder.shortName}" th:disabled="${isReadOnly}"
+										class="form-control" required="true" type="text" th:field="*{shortName}"/>
+								</div>
+							</div>
+		
+						</div>
+					</div>
+					
+					<div class="panel panel-default" th:unless="${isSignup}">
+						<div class="panel-heading">
+							<span th:text="#{admin.organization.roles.header}">Stammdaten</span>
+						</div>
+						<table id="registersTable" class="table table-striped">
+							<thead>
+								<tr>
+									<th th:text="#{tableheader.register}">Register</th>
+									<th th:text="#{ROLE_OWNER}">Owner</th>
+									<th th:text="#{ROLE_CONTROLBODY}">Controlbody</th>
+									<th th:text="#{ROLE_MANAGER}">Manager</th>
+									<th th:text="#{ROLE_SUBMITTER}">Submitter</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="register : ${@registerRepository.findAll()}">
+									<td th:text="${register.name}"></td>
+									<td><input class="orgRole" th:with="roleName=('ROLE_OWNER_' + ${register.uuid})" type="checkbox" th:id="${roleName}" th:name="${roleName}" th:checked="${#lists.contains(organization.roles, roleName)}" th:disabled="!${@registrySecurity.isAdmin()} or ${isReadOnly}"></input></td>
+									<td><input class="orgRole" th:with="roleName=('ROLE_CONTROLBODY_' + ${register.uuid})" type="checkbox" th:id="${roleName}" th:name="${roleName}" th:checked="${#lists.contains(organization.roles, roleName)}" th:disabled="!${@registrySecurity.isAdmin()} or ${isReadOnly}"></input></td>
+									<td><input class="orgRole" th:with="roleName=('ROLE_MANAGER_' + ${register.uuid})" type="checkbox" th:id="${roleName}" th:name="${roleName}" th:checked="${#lists.contains(organization.roles, roleName)}" th:disabled="!${@registrySecurity.isAdmin()} or ${isReadOnly}"></input></td>
+									<td><input class="orgRole" th:with="roleName=('ROLE_SUBMITTER_' + ${register.uuid})" type="checkbox" th:id="${roleName}" th:name="${roleName}" th:checked="${#lists.contains(organization.roles, roleName)}" th:disabled="!${@registrySecurity.isAdmin()} or ${isReadOnly}"></input></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="panel panel-default" th:unless="${isNew}">
+						<div class="panel-heading">
+							<span th:text="#{admin.organization.users.header}">Benutzer der Organisation</span>&nbsp;
+<!-- 							<a th:unless="${isNew} or ${isReadOnly}" class="btn btn-xs btn-success" role="button" href="poc/addUser" th:text="#{button.newUser}"></a> -->
+						</div>
+						<table id="usersTable" class="table table-striped">
+							<tbody>
+								<tr th:each="user : ${users}">
+									<td><span th:text="${user.name}"></span> <span class="badge" th:classappend="'requestCount_' + ${user.uuid}" th:text="${@registrySecurity.getOpenDelegationRequestCount(user.uuid)}"></span></td>
+									<td>
+										<button type="button" td:id="'userdelegation_' + ${user.uuid}" class="btn btn-xs btn-primary" th:href="'#delegations-' + ${user.uuid}" data-toggle="modal" th:text="#{button.delegations}">Autorisierungen</button>
+
+										<div class="modal fade" th:id="'delegations-' + ${user.uuid}" role="dialog">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h4 th:text="#{popup.delegations.header}">Autorisierungen verwalten</h4>
+													</div>
+													<div class="modal-body">
+														<div class="alert alert-info" th:classappend="'requestAlert_' + ${user.uuid}" th:if="${@registrySecurity.getOpenDelegationRequestCount(user.uuid)}">
+															<span th:text="#{popup.delegations.requested}"></span> 
+														</div>													
+														<table id="orgRolesTable" class="table">
+															<tbody>
+																<tr th:with="roleName=('ROLE_ORGANIZATIONMEMBER_' + ${organization.uuid}), delegationRequested=(${@registrySecurity.isDelegationRequested(delegations, user.uuid, organization.uuid, roleName)})" th:class="${roleName}" th:classappend="${delegationRequested} ? 'info'">
+																	<td th:text="#{popup.delegations.member}"/>
+																	<td><input type="checkbox" th:name="'DELEGATE_' + ${roleName} + '_TO_' + ${user.uuid}" th:checked="${@registrySecurity.isDelegated(delegations, user.uuid, organization.uuid, roleName)}" th:disabled="${isReadOnly}"/></td>
+																	<td>
+																		<button th:if="${delegationRequested} and !${isReadOnly}" type="button" class="thumbdown btn btn-xs btn-default" th:title="#{popup.delegations.deny}" th:id="'DENY_' + ${roleName}" th:attr="userUuid=${user.uuid}, orgUuid=${organization.uuid}, roleName=${roleName}"><span class="fa fa-thumbs-down"></span></button>
+																	</td>
+																</tr>
+
+																<tr th:with="roleName=('ROLE_POINTOFCONTACT_' + ${organization.uuid}), delegationRequested=(${@registrySecurity.isDelegationRequested(delegations, user.uuid, organization.uuid, roleName)})" th:classappend="${delegationRequested} ? 'info'">
+																	<td th:text="#{popup.delegations.pointOfContact}"/>
+																	<td><input type="checkbox" th:name="'DELEGATE_' + ${roleName} + '_TO_' + ${user.uuid}" th:checked="${@registrySecurity.isDelegated(delegations, user.uuid, organization.uuid, roleName)}" th:disabled="${isReadOnly}"/></td>
+																	<td>
+																		<button th:if="${delegationRequested} and !${isReadOnly}" type="button" class="thumbdown btn btn-xs btn-default" th:title="#{popup.delegations.deny}" th:id="'DENY_' + ${roleName}" th:attr="userUuid=${user.uuid}, orgUuid=${organization.uuid}, roleName=${roleName}"><span class="fa fa-thumbs-down"></span></button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+														<table id="registersTable" class="table table-striped">
+															<thead>
+																<tr>
+																	<th th:text="#{tableheader.register}">Register</th>
+																	<th th:text="#{ROLE_OWNER}" class="centered-cell">Owner</th>
+																	<th th:text="#{ROLE_CONTROLBODY}" class="centered-cell">Controlbody</th>
+																	<th th:text="#{ROLE_MANAGER}" class="centered-cell">Manager</th>
+																	<th th:text="#{ROLE_SUBMITTER}" class="centered-cell">Submitter</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr th:each="register : ${@registerRepository.findAll()}">
+																	<td th:text="${register.name}"></td>
+																	<td th:with="roleName=('ROLE_OWNER_' + ${register.uuid}), delegationRequested=(${@registrySecurity.isDelegationRequested(delegations, user.uuid, organization.uuid, roleName)})" th:classappend="${roleName} + ' ' + (${delegationRequested} ? 'info')" class="centered-cell">
+																		<input th:class="'DELEGATE_' + ${roleName}" type="checkbox" th:name="'DELEGATE_' + ${roleName} + '_TO_' + ${user.uuid}" th:checked="${@registrySecurity.isDelegated(delegations, user.uuid, organization.uuid, roleName)}" th:disabled="!${#lists.contains(organization.roles, roleName)} or ${isReadOnly}"></input>
+																		<button th:if="${delegationRequested} and !${isReadOnly}" type="button" class="thumbdown btn btn-xs btn-default" th:title="#{popup.delegations.deny}" th:id="'DENY_' + ${roleName}" th:attr="userUuid=${user.uuid}, orgUuid=${organization.uuid}, roleName=${roleName}"><span class="fa fa-thumbs-down"></span></button>
+																	</td>
+																	<td th:with="roleName=('ROLE_CONTROLBODY_' + ${register.uuid}), delegationRequested=(${@registrySecurity.isDelegationRequested(delegations, user.uuid, organization.uuid, roleName)})" th:classappend="${roleName} + ' ' + (${delegationRequested} ? 'info')" class="centered-cell">
+																		<input th:class="'DELEGATE_' + ${roleName}" type="checkbox" th:name="'DELEGATE_' + ${roleName} + '_TO_' + ${user.uuid}" th:checked="${@registrySecurity.isDelegated(delegations, user.uuid, organization.uuid, roleName)}" th:disabled="!${#lists.contains(organization.roles, roleName)} or ${isReadOnly}"></input>
+																		<button th:if="${delegationRequested} and !${isReadOnly}" type="button" class="thumbdown btn btn-xs btn-default" th:title="#{popup.delegations.deny}" th:id="'DENY_' + ${roleName}" th:attr="userUuid=${user.uuid}, orgUuid=${organization.uuid}, roleName=${roleName}"><span class="fa fa-thumbs-down"></span></button>
+																	</td>
+																	<td th:with="roleName=('ROLE_MANAGER_' + ${register.uuid}), delegationRequested=(${@registrySecurity.isDelegationRequested(delegations, user.uuid, organization.uuid, roleName)})" th:classappend="${roleName} + ' ' + (${delegationRequested} ? 'info')" class="centered-cell">
+																		<input th:class="'DELEGATE_' + ${roleName}" type="checkbox" th:name="'DELEGATE_' + ${roleName} + '_TO_' + ${user.uuid}" th:checked="${@registrySecurity.isDelegated(delegations, user.uuid, organization.uuid, roleName)}" th:disabled="!${#lists.contains(organization.roles, roleName)} or ${isReadOnly}"></input>
+																		<button th:if="${delegationRequested} and !${isReadOnly}" type="button" class="thumbdown btn btn-xs btn-default" th:title="#{popup.delegations.deny}" th:id="'DENY_' + ${roleName}" th:attr="userUuid=${user.uuid}, orgUuid=${organization.uuid}, roleName=${roleName}"><span class="fa fa-thumbs-down"></span></button>
+																	</td>
+																	<td th:with="roleName=('ROLE_SUBMITTER_' + ${register.uuid}), delegationRequested=(${@registrySecurity.isDelegationRequested(delegations, user.uuid, organization.uuid, roleName)})" th:classappend="${roleName} + ' ' + (${delegationRequested} ? 'info')" class="centered-cell">
+																		<input th:class="'DELEGATE_' + ${roleName}" type="checkbox" th:name="'DELEGATE_' + ${roleName} + '_TO_' + ${user.uuid}" th:checked="${@registrySecurity.isDelegated(delegations, user.uuid, organization.uuid, roleName)}" th:disabled="!${#lists.contains(organization.roles, roleName)} or ${isReadOnly}"></input>
+																		<button th:if="${delegationRequested} and !${isReadOnly}" type="button" class="thumbdown btn btn-xs btn-default" th:title="#{popup.delegations.deny}" th:id="'DENY_' + ${roleName}" th:attr="userUuid=${user.uuid}, orgUuid=${organization.uuid}, roleName=${roleName}"><span class="fa fa-thumbs-down"></span></button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
+													</div>
+													<div class="modal-footer">
+														<button id="saveDelegations" class="btn btn-primary" data-dismiss="modal" th:text="#{button.ok}">Bestätigen</button>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					
+
+					<!-- Button -->
+					<div class="control-group">
+						<label class="control-label" for="save"/>
+						<div class="controls">
+							<button th:unless="${isReadOnly}" id="save" name="save" class="btn btn-primary" th:text="#{button.save}" th:attr="data-loading-text=#{button.saving}">Speichern</button>
+							<button id="cancel" onClick="goback();" type="button" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+						</div>
+					</div>
+					
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
+</body>
+
+<script type="text/javascript" th:inline="text">
+/* <![CDATA[ */
+
+	var denyRequest = function(user, organization, roleName, callback) {
+		var url = '[[@{__${basePath}__/management/poc/delegation}]]?userUuid=' + user + '&organizationUuid=' + organization + '&roleName=' + roleName;
+	
+		$.ajax({	
+			type: "DELETE",
+			url: url, 
+			success: function(msg) {
+				return callback();
+			}
+		});
+	}
+             
+	$(document).ready(function() {
+		$(".orgRole").click(function(event){
+	        var delegateClass = '.DELEGATE_' + event.target.id;
+	        //alert(delegateClass);
+	        if($(this).is(":checked")) {
+	        	$.each($(delegateClass), function(event) {
+	        		//alert(this.name);
+					$(this).prop('disabled', false);
+	        	})
+	       	} else {
+	        	$.each($(delegateClass), function(index, value) {
+	        		//alert(this.name);
+					$(this).prop('disabled', true);
+					$(this).prop('checked', false);
+	        	})
+	        }
+		});
+		
+		$("#save").click(function() {
+		    var $btn = $(this);
+		    $btn.button('loading');
+		});
+		
+		$('.thumbdown').click(function() {
+			$(this).find('span').removeClass('fa-thumbs-down');
+			$(this).find('span').addClass('fa-spinner');
+			$(this).find('span').addClass('fa-spin');
+			
+			var userUuid = $(this).attr('userUuid');
+			var orgUuid = $(this).attr('orgUuid');
+			var roleName = $(this).attr('roleName');
+			var roleClass = '.' + roleName;
+			var userBadgeClass = '.requestCount_' + userUuid;
+			var requestAlertClass = '.requestAlert_' + userUuid;
+
+			denyRequest(userUuid, orgUuid, roleName, function() {
+				$.each($(roleClass), function(event) {
+					$(this).removeClass('info');
+				});
+				
+			});
+
+			$.each($(userBadgeClass), function(event) {
+				var countStr = $(this).text();
+				var count = parseInt(countStr) - 1;
+				
+				if (count == 0) {
+					$(this).remove();
+					
+					$.each($(requestAlertClass), function(event) {
+						$(this).remove();
+					});
+				}
+				else {
+					$(this).text(count);
+				}
+			});
+
+			$(this).remove();
+		});
+
+	});
+/* ]]> */
+</script>
+</html>

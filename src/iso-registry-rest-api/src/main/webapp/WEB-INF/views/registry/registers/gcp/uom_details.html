@@ -1,0 +1,41 @@
+<div th:fragment="details">
+	<div class="row">
+		<div class="col-md-6"> <!-- LEFT -->
+			<div class="row" th:include="globals :: nameAndIdentifier" />
+			<div class="row">
+				<div class="col-md-12" th:with="property='symbol',inputType='text',label=#{form.label.symbol},placeholder=#{form.placeholder.symbol},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+			</div>
+			<div class="row" th:include="globals :: registerItemDefinition"/>
+			<div class="row" th:include="globals :: aliasesTable('uom')" />
+			<div class="row" th:unless="${isProposal}">
+				<div class="col-md-12" th:with="property='standardUnit',label=#{form.label.standardUnit},isRequired='false',noAddNew='true',ajaxPath='UnitOfMeasureItem'">
+					<div th:replace="globals :: selectIdentifiedItem"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" th:with="property='scaleToStandardUnitNumerator',inputType='number',step='any',label=#{form.label.factorB},placeholder=#{form.placeholder.factorB},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12" th:with="property='scaleToStandardUnitDenominator',inputType='number',step='any',label=#{form.label.factorC},placeholder=#{form.placeholder.factorC},isRequired='false'">
+					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
+				</div>
+			</div>
+		</div>	<!-- END OF LEFT -->
+		
+		<div class="col-md-6"> <!-- RIGHT -->
+			<div class="row">
+				<div class="col-md-12" th:with="property='measureType',label=#{form.label.measureType},type='org.iso.registry.core.model.iso19103.MeasureType',isRequired='true'">
+					<div th:replace="globals :: selectEnum"/>
+				</div>
+			</div>
+		
+			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
+			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
+		</div>	<!-- END OF RIGHT -->									
+	</div>
+</div>

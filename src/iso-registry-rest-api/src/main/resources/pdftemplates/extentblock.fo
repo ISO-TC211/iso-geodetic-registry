@@ -1,0 +1,3 @@
+<fo:block font-size="12pt" font-family="sans-serif" line-height="24pt" space-before.optimum="15pt" padding-top="3pt">Extent</fo:block>
+#set($extent = $item.domainOfValidity)
+#parse("pdftemplates/extent.fo")

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head th:include="layout :: headerFragment"/>
+	<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<div class="row">
+					<pre id="initLog"></pre>
+					<span id="spinner" class="fa fa-spin"></span>					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:include="layout :: foot"></div>
+	
+</body>
+
+<script type="text/javascript" th:inline="text">
+	$(document).ready(function() {
+		
+		var timer, delay = 1000;
+		
+		var basePath = '[[${basePath}]]';
+		if (basePath !== '') {
+			basePath = basePath.replace('~', '');
+		}
+		basePath = basePath + '/';
+
+		$.ajax({
+		      type    : 'GET',
+		      url     : basePath + 'init/start',
+		      success : function(data) {
+		                }
+		});
+		
+		timer = setInterval(function(){
+		    $.ajax({
+		      type    	 : 'GET',
+		      url     	 : basePath + 'init/status',
+		      statusCode : {
+		    	  206: function(data) {
+    	  					$('#initLog').text(data);
+    	  					$('#spinner').addClass('fa-spinner');
+    	  					
+    	  					var n = $(document).height();
+    	  				    $('html, body').animate({ scrollTop: n }, 50);
+		    	       },
+		    	  200: function(data) {
+	  						$('#initLog').text(data);
+    	  					$('#spinner').removeClass('fa-spinner');
+    	  					
+    	  					var n = $(document).height();
+    	  				    $('html, body').animate({ scrollTop: n }, 50);
+    	  					clearInterval(timer);
+		    	  	   },
+		    	  204: function(data) {
+		    		  		$('#initLog').text('Not initializing.');
+    	  					clearInterval(timer);
+		    	  	   },
+		      } 
+		    });
+		}, delay);
+	});
+</script>
+</html>

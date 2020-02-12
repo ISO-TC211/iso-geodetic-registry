@@ -1,0 +1,56 @@
+.strikethrough {
+    text-decoration: line-through;
+}
+
+.centered-cell {
+  text-align: center;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+			
+.footer {
+  position: fixed;
+  bottom: 0;
+  top: auto;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+  z-index: 10;
+}
+ 
+.footer > p {
+  margin: 20px 0;
+  padding-right: 15px;
+}
+
+.container {
+  overflow: auto;
+  padding-bottom: 150px; this needs to be bigger than footer height
+}
+ 
+.loading-modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+}
+ 
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .loading-modal {
+    display: block;
+}
+ 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-3">
+				<div th:include="layout :: navtree"></div>
+			</div>
+			<div class="col-md-9" role="main">
+				<h3 th:text="#{admin.users.content.header}">Benutzer</h3>
+
+				<div th:if="${createdUser}" class="alert alert-success">
+					<p>
+						<span th:text="#{alert.userCreated}">Der Benutzer wurde erfolgreich angelegt</span> (ID: <span th:text="${createdUser}">UUID</span>).
+					</p>
+				</div>
+
+				<div th:if="${deletedUser}" class="alert alert-warning">
+					<p th:text="#{admin.users.alert.userDeleted}">Der Benutzer wurde gelöscht.</p>
+				</div>
+
+				<form th:action="@{__${basePath}__/admin/user/new}" th:unless="${revision} or ${revisionDate}">
+					<button id="newuser" class="btn btn-primary" th:text="#{button.newUser}">Neuer Benutzer</button>
+				</form>
+
+				<div style="margin-top: 20px">
+					<table id="usersTable" class="datatable table table-striped">
+						<thead>
+							<tr>
+								<th th:text="#{tableheader.name}">Name</th>
+								<th th:text="#{tableheader.organization}">Organisation</th>
+								<th th:text="#{tableheader.emailAddress}">E-Mail-Adresse</th>
+								<th />
+							</tr>
+						</thead>
+						<tbody>
+	
+							<tr th:each="user : ${users}">
+								<td th:text="${user.name}"></td>
+								<td th:text="${user.organization.name}"></td>
+								<td th:text="${user.emailAddress}"></td>
+								<td>
+									<form th:action="@{__${basePath}__/admin/user/} + ${user.uuid}" method="get">
+										<button th:id="'edit-' + ${user.uuid}" class="btn btn-xs btn-default" type="submit" th:text="#{button.edit}">Bearbeiten</button>
+										<button type="button" td:id="'delete-' + ${user.uuid}" class="btn btn-xs btn-danger" th:href="'#confirmdelete-' + ${user.uuid}" data-toggle="modal" th:text="#{button.delete}">Löschen</button>
+									</form>
+									<div class="modal fade" th:id="'confirmdelete-' + ${user.uuid}" role="dialog">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 th:text="#{popup.deleteUser.header}">Benutzer löschen</h4>
+												</div>
+												<div class="modal-body">
+													<p th:text="#{popup.deleteUser.reallyDelete( ${user.name} )}">
+														Soll der Benutzer '<span th:text="${user.name}"></span>' gelöscht werden?
+													</p>
+												</div>
+												<div class="modal-footer">
+													<form th:action="@{__${basePath}__/admin/user/} + ${user.uuid}" method="post">
+														<input hidden="true" name="_method" value="DELETE" />
+														<button id="confirmdeletion" type="submit" class="btn btn-warning" th:text="#{button.yes}">Ja</button>
+														<button id="denydeletion" type="button" class="btn btn-default btn-primary" data-dismiss="modal" th:text="#{button.no}">Nein</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<!-- This example data will be removed by thmyeleafe during processing and replaced with the rows generated above -->
+							<tr th:remove="all">
+								<td>Testbenutzer</td>
+								<td>test@example.com</td>
+								<td>Testorganisation</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 				<div th:include="layout :: foot"></div> -->
+				<!-- 					</div>	 -->
+			</div>
+		</div>
+	</div>
+	
+	<div th:include="layout :: foot"></div>
+	
+	<script type="text/javascript" th:inline="text">
+		$(document).ready(function() {
+			var table;
+	
+			table = $('#usersTable').dataTable({
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 0, "asc" ]],
+				 aoColumns: [
+					null,
+					null,
+					{"bSortable" : false}
+				]
+			});	
+	
+			$('.datatable').each(function(){
+				var datatable = $(this);
+				// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+				var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+				search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+				search_input.addClass('form-control input-sm');
+				// LENGTH - Inline-Form control
+				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+				length_sel.addClass('form-control input-sm');
+			});
+		});
+	</script>
+</body>
+</html>

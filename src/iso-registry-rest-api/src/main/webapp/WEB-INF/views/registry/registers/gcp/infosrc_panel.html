@@ -1,0 +1,125 @@
+<div th:fragment="informationSourceDetailsPanel" id="informationSourceDetailsPanel" class="panel panel-default" th:if="${itemClass}">
+	<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#infosrcPanel"><span class="panel-title" th:text="#{header.informationSource}"></span></a>
+		<div class="pull-right">
+			<span class="glyphicon glyphicon-chevron-right"></span>
+		</div>
+	</div>
+	<div id="informationSourcePanel" class="panel-collapse">
+		<ul id="infosrc-tabs" class="nav nav-tabs">
+			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'li-infosrc-' + ${rowStat.index}" th:attr="data-index=${rowStat.index}">
+				<a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab">
+					<span th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"></span>
+					<button th:if="${isProposal}" th:id="'delete-infosrc-' + ${rowStat.index}" type="button" th:attr="data-index=${rowStat.index}" class="btn btn-xs btn-default button-close-infosrc"><span class="fa fa-times"></span></button>
+				</a>
+			</li>
+			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span>&nbsp;&nbsp;<span th:text="#{button.addNew}"></span></a></li>
+		</ul>
+		<div class="tab-content">
+			<div th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'infosrc-' + ${rowStat.index}" class="tab-pane in" style="padding-top: 10px">
+				<div class="panel-body" th:object="${proposal.informationSource[__${rowStat.index}__]}">
+					<div th:replace="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(__${rowStat.index}__)"/>
+				</div>								
+			</div>
+			<div id="afterTabs"/>
+		</div>
+		
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+			$('#button-addinformationsource').click(function(e) {
+				e.preventDefault();
+				var idx = $('#li-addinformationsource').prev().data('index');
+				if (idx === null) {
+					idx = 0;
+				}
+				else {
+					idx += 1;
+				}
+				$('<li id="li-infosrc-' + idx + '" data-index="' + idx + '"><a id="show-infosrc-' + idx + '" href="#infosrc-' + idx + '" data-toggle="tab">Source #' + (idx + 1) + ' <button id="delete-infosrc-' + idx + '" type="button" data-index="' + idx + '" class="btn btn-xs btn-default button-close-infosrc"><span class="fa fa-times"></span></button></a></li>').insertBefore('#li-addinformationsource');
+				
+				$('<div id="infosrc-' + idx + '" class="tab-pane" style="padding-top: 10px"/>').insertBefore('#afterTabs');
+				$('#infosrc-' + idx).append('<div id="infosrc-' + idx + '-content" class="panel-body"/>');
+				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource[' + idx + ']', null, function() {
+				    $("#publicationDate-informationSource-" + idx).rules("add", {
+				    	required: '#revisionDate-informationSource-' + idx + ':blank',
+// 				   	    required: function(element) {
+// 				   	    	alert($('#revisionDate-informationSource-' + idx).val());
+// 				   	    	return $('#revisionDate-informationSource-' + idx).is(':empty');
+// 				   	    },
+				   	    onkeyup: false
+				    });
+
+				    $("#revisionDate-informationSource-" + idx).rules("add", {
+				    	required: '#publicationDate-informationSource-' + idx + ':blank',
+// 				   	    required: function(element) {
+// 				   	    	alert($('#publicationDate-informationSource-' + idx).val());
+// 	 			   	    	return $('#publicationDate-informationSource-' + idx).is(':empty');
+// 				   	    },
+				   	    onkeyup: false
+				    });
+				})
+
+				$('#show-infosrc-' + idx).tab('show');
+			});	            
+		
+			$('body').on('click', '.button-close-infosrc', function() {
+				var idx = $(this).data('index');
+				$('#li-infosrc-' + idx).remove();
+				$('#infosrc-' + idx).remove();
+				var first = $('#infosrc-tabs').find('li:first').data('index');
+				if (first !== null) {
+					$('#show-infosrc-' + first).tab('show');
+				}
+			});
+		/* ]]> */		
+		</script>
+	</div>	
+</div>
+
+<div th:fragment="informationSourceDetails" class="form-group">
+	<label class="control-label" for="informationSource" th:text="#{form.label.informationSource}"></label>
+	<div th:unless="*{informationSource.isEmpty()}" th:each="infosrc,rowstat : *{informationSource}">
+		<span class="text-muted" th:text="${rowstat.index + 1} + '.'"></span>&nbsp;<a th:id="'informationSource-' + ${rowstat.index}" th:href="'#dialog-info-src-' + ${rowstat.index}" data-toggle="modal"><big th:text="${infosrc.title} ? ${infosrc.title} : ('[' + #{untitled} + ']')"/></a>
+		
+		<div class="modal fade" th:id="'dialog-info-src-' + ${rowstat.index}" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 th:text="#{popup.informationSource.header}"></h4>
+					</div>
+					<div th:unless="${isProposal}" class="modal-body" th:object="${item.informationSource[__${rowstat.index}__]}">
+						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
+					</div>
+					<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource[__${rowstat.index}__]}" th:with="isReadOnly='true'">
+						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+					</div>
+				</div>
+			</div>							
+		</div>
+	</div>
+	<div th:if="*{informationSource.isEmpty()}">
+		<p th:text="'[' + #{undefined} + ']'"/>
+	</div>	
+</div>
+
+<div th:fragment="citationPopup(index)" class="modal fade" th:id="'dialog-citation-' + ${index}" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 th:text="#{popup.informationSource.header}"></h4>
+			</div>
+			<div th:unless="${isProposal}" class="modal-body" th:object="${citation}">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div th:if="${isProposal}" class="modal-body" th:object="${citation}" th:with="isReadOnly='true'">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+			</div>
+		</div>
+	</div>							
+</div>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head th:include="layout :: headerFragment">
+</head>
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+	<div class="col-md-3">
+ 		<button id="topback" class="btn btn-default" onclick="history.back();" th:text="#{button.back}">Zurück</button>
+		<div th:include="layout :: navtree"></div>
+	</div>
+	<div th:replace="registry/proposal/group_details :: details"/>
+	
+	<div th:replace="layout :: footer"></div>
+	
+</body>
+</html>

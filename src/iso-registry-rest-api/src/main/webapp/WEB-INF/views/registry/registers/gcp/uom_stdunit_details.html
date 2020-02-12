@@ -1,0 +1,93 @@
+<div th:fragment="details">
+	<div class="row">
+	<div class="col-md-12 form-group">
+	<div th:replace="globals :: formLabel('standardUnit', #{form.label.selectUom})"/>
+	<div id="selectStandardUnitGroup" th:with="isClarification=${proposal.isClarification()}">
+		<input type="hidden" id="selectStandardUnit" style="width: 100%" th:field="*{standardUnit.referencedItemUuid}"/>
+		<script type="text/javascript" charset="utf-8" th:inline="text">
+		/* <![CDATA[ */
+			$(function() {
+				$('#selectStandardUnit').select2({
+					placeholder: "[[#{form.placeholder.selectStandardUnit}]]",
+				    allowClear: true,
+					multiple: false,
+					dropdownCssClass: "bigdrop",
+					ajax: {
+						url: "[[@{__${basePath}__/}]]entities/by-class/UnitOfMeasureItem",
+						dataType: "json",
+						data: function(term, page) {
+							return {
+								orderBy: 'description',
+								q: term
+							};
+						},
+						results: function (data) {
+							return { 
+								results : $.map(data, function (item) { 
+									return { 
+										id: item[0], 
+										text: '[' + item[1] + '] ' + item[2], 
+									} 
+								}) 
+							};
+						}
+		            },
+		            initSelection: function(element, callback) {
+	               		var result = [];
+	               		// Collect AJAX requests needed to resolve initially
+	               		// selected items
+	                	$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+	                    	dataType: "json"
+	                	}))
+	                	.done(function(data) {
+	                		item = data[0];
+	                		result.push({
+	                			id: item[0],
+	                			text: '[' + item[1] + '] ' + item[2], 
+	                		});
+			                callback(result[0]); 
+	                	});
+		            }						            
+		        });
+				
+				if ([[${proposal.isClarification()}]]) {
+					$('#selectStandardUnit').select2("readonly", true);
+				}
+			});
+		
+			$(document).ready(function() {
+				var setDatatypeVisibility = function(value) {
+					if (value === '') {
+						$('#unitofmeasure-standardunit-details').removeClass('hidden');
+						$('#unitofmeasure-standardunit-details .required').removeClass('hidden');
+					}
+					else {
+						$('#unitofmeasure-standardunit-details').addClass('hidden');
+ 								$('#unitofmeasure-standardunit-details .required').addClass('hidden');								
+					}							
+				};
+				
+				var datatypeRef = $('#selectStandardUnit').val();
+				setDatatypeVisibility(datatypeRef);
+				
+				$('#selectStandardUnit').change(function() {
+					var value = $(this).val();
+					setDatatypeVisibility(value);
+				});
+			});
+		/* ]]> */
+		</script>
+	</div>
+</div>
+	</div>
+	
+	<div class="row">
+<div class="col-md-12">
+	<strong><p th:text="#{form.label.orDefineNewUom}"/></strong>
+</div>
+	</div>
+	
+	<div th:if="${proposal}" id="unitofmeasure-standardunit-details" th:object="${proposal.standardUnit}" th:with="fieldPrefix='standardUnit.'">
+<div th:replace="registry/registers/gcp/uom_details :: details"/>
+	</div>
+</div>

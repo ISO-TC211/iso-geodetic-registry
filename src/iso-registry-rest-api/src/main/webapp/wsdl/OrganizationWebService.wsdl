@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="OrganizationWebServiceEndpointService" targetNamespace="http://ws.registry.gdide.bkg.bund.de/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.registry.gdide.bkg.bund.de/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://ws.registry.gdide.bkg.bund.de/" schemaLocation="OrganizationWebService.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="count">
+    <wsdl:part name="parameters" element="tns:count">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part name="Exception" element="tns:Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countResponse">
+    <wsdl:part name="parameters" element="tns:countResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="OrganizationWebService">
+    <wsdl:operation name="count">
+      <wsdl:input name="count" message="tns:count">
+    </wsdl:input>
+      <wsdl:output name="countResponse" message="tns:countResponse">
+    </wsdl:output>
+      <wsdl:fault name="Exception" message="tns:Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OrganizationWebServiceEndpointServiceSoapBinding" type="tns:OrganizationWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="count">
+      <soap:operation soapAction="urn:Count" style="document"/>
+      <wsdl:input name="count">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="countResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="OrganizationWebServiceEndpointService">
+    <wsdl:port name="OrganizationWebServiceEndpointPort" binding="tns:OrganizationWebServiceEndpointServiceSoapBinding">
+      <soap:address location="http://localhost:8080/services/OrganizationWebService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

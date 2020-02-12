@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="layout :: headerFragment" />
+<body>
+	<div th:include="layout :: navbarFragment"></div>
+
+	<div class="container">
+		<ul class="nav nav-pills">
+<!-- 			<li th:class="(${state.step} eq 'supersededItems') ? 'active' : ''"><a href="#superseded" data-toggle="tab" th:text="#{header.supersededItems}">Ersetzte Einträge</a></li> -->
+			<li th:class="(${state.step} eq 'supersedingItems') ? 'active' : ''"><a href="#superseding" data-toggle="tab" th:text="#{header.supersedingItems}">Nachfolger</a></li>
+			<li th:class="(${state.step} eq 'additionalData') ? 'active' : ''"><a href="#additionalData" data-toggle="tab" th:text="#{header.additionalData}">Weitere Daten</a></li>
+			<li th:class="(${state.step} eq 'overview') ? 'active' : ''"><a href="#overview" data-toggle="tab" th:text="#{header.overview}">Übersicht</a></li>
+		</ul>
+	
+		<div class="tab-content">
+<!-- 			<div id="superseded" class="tab-pane" th:classappend="(${state.step} eq 'supersededItems') ? 'active' : ''"> -->
+<!-- 				<div class="row clearfix" style="margin-top: 20px"> -->
+<!-- 					<div class="col-md-12 column"> -->
+<!-- 						<div th:if="${noSupersededItems}" class="alert alert-danger"> -->
+<!-- 							<p> -->
+<!-- 								<span th:text="#{alert.noSupersededItems}">Es muss mindestens ein zu ersetzender Eintrag ausgewählt werden..</span> -->
+<!-- 							</p> -->
+<!-- 						</div> -->
+<!-- 						<div class="panel panel-primary"> -->
+<!-- 							<form id="addSupersededItemsForm" method="post"> -->
+<!-- 								<div style="padding: 10px"> -->
+<!-- 									<table id="supersededItemsTable" class="datatable table table-striped"> -->
+<!-- 										<thead> -->
+<!-- 											<tr> -->
+<!-- 												<th></th> -->
+<!-- 												<th th:text="#{tableheader.itemIdentifier}">ID</th> -->
+<!-- 												<th th:text="#{tableheader.name}">Name</th> -->
+<!-- 												<th th:text="#{tableheader.itemClassName}">Klasse</th> -->
+<!-- 											</tr> -->
+<!-- 										</thead> -->
+<!-- 										<tbody> -->
+<!-- 											<tr th:each="item : ${state.validItems}"> -->
+<!-- 												<td><input type="checkbox" th:name="'supersede_' + ${item.uuid}"></input></td> -->
+<!-- 												<td th:text="${item.itemIdentifier}"></td> -->
+<!-- 												<td th:text="${item.name}"></td> -->
+<!-- 												<td th:text="${item.itemClassName}"></td> -->
+<!-- 											</tr> -->
+<!-- 										</tbody> -->
+<!-- 									</table> -->
+<!-- 								</div>	 -->
+<!-- 								<div class="panel-footer"> -->
+<!-- 									<button type="submit" name="addSupersededItems" class="btn btn-info" th:text="#{button.addSupersededItems}">Zu ersetzende Einträge wählen</button> -->
+<!-- 								</div> -->
+<!-- 							</form> -->
+
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+
+			<div id="superseding" class="tab-pane" th:classappend="(${state.step} eq 'supersedingItems') ? 'active' : ''">
+				<div class="row clearfix" style="margin-top: 20px">
+					<div class="col-md-12 column">
+						<div th:if="${noSupersedingItems}" class="alert alert-danger">
+							<p>
+								<span th:text="#{alert.noSupersedingItems}">Es muss mindestens ein Nachfolger angelegt werden.</span>
+							</p>
+						</div>
+						<div class="panel panel-success">
+<!-- 							<div class="panel-heading"> -->
+<!-- 								<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3> -->
+<!-- 							</div> -->
+							<div class="panel-body">
+								<button id="addNewItemButton" class="btn btn-info" href="#addNewItem" data-toggle="modal" th:text="#{button.addNewSuccessor}">Neuen Eintrag hinzufügen</button>
+
+								<div class="modal fade" th:id="addNewItem" role="dialog">
+									<div class="modal-dialog">
+										<form method="post">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 th:text="#{popup.itemClass.header}">Itemklasse wählen</h4>
+												</div>
+												<div class="modal-body">
+	
+													<div class="form-group">
+														<label class="form-label" for="itemClass" th:text="#{form.label.itemClass}">Item-Klasse</label>
+														<div class="controls">
+															<div class="input-group">
+																<select id="itemClass" name="itemClass" required="true">
+	<!-- 																<option th:text="#{form.select.choose}" value=""/> -->
+																	<option th:each="anItemClass : ${@itemClassRepository.findAllOrderByName()}"
+																			th:value="${anItemClass[0]}"
+																			th:text="#{${anItemClass[1]}}"></option>
+																</select>
+															</div>
+														</div>
+													</div>
+	
+												</div>
+												<div class="modal-footer">
+													<button type="submit" name="addNew" class="btn btn-info" th:text="#{button.addNewSuccessor}">Neuen Eintrag hinzufügen</button>
+													<button type="button" name="cancel" data-dismiss="modal" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							
+							
+<!-- 								<form method="post"> -->
+<!-- 									<button type="submit" name="addNew" class="btn btn-info" th:text="#{button.addNew}">Neuen Eintrag hinzufügen</button> -->
+<!-- 									<button class="btn btn-info" th:text="#{button.addExistingSuccessor}">Vorhandenen Eintrag hinzufügen</button> -->
+<!-- 								</form> -->
+							</div>							
+
+							<div style="padding: 10px">							
+								<table id="supersedingItemsTable" class="datatable table table-striped">
+									<thead>
+										<tr>
+											<th th:text="#{tableheader.name}">Name</th>
+											<th th:text="#{tableheader.definition}">Klasse</th>
+											<th th:text="#{tableheader.description}">Klasse</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item : ${state.newSupersedingItems}">
+											<td th:text="${item.name}"></td>
+											<td th:text="${item.definition}"></td>
+											<td th:text="${item.description}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<form method="post">
+							<div class="form-group">
+								<div class="controls">
+									<button id="saveSupersedingItems" name="saveSupersedingItems" class="btn btn-primary" th:text="#{button.next}">Weiter</button>
+								</div>
+							</div>						
+						</form>				
+					</div>
+				</div>
+			</div>
+
+			<div id="additionalData" class="tab-pane" th:classappend="(${state.step} eq 'additionalData') ? 'active' : ''">
+				<form class="form-horizontal" role="form" id="additionalData" method="post">
+					<fieldset>
+						<!-- Text input-->
+						<div class="form-group">
+							<label class="form-label" for="justification" th:text="#{form.label.justification}">Vorschlagsbegründung</label>
+							<div class="controls">
+								<textarea id="justification" name="justification" rows="6" cols="120" th:placeholder="#{form.placeholder.justification}" class="form-control" type="text" required="required"/> 
+							</div>
+						</div>
+
+						<!-- Text input-->
+						<div class="form-group">
+							<label class="form-label" for="description" th:text="#{form.label.registerManagerNotes}">Anmerkungen für den Register-Manager</label>
+							<div class="controls">
+								<textarea id="registerManagerNotes" name="registerManagerNotes" rows="6" cols="120" th:placeholder="#{form.placeholder.registerManagerNotes}" class="form-control" type="text"/> 
+							</div>
+						</div>
+
+						<!-- Text input-->
+						<div class="form-group">
+							<label class="form-label" for="controlBodyNotes" th:text="#{form.label.controlBodyNotes}">Anmerkungen für den Control-Body</label>
+							<div class="controls">
+								<textarea id="controlBodyNotes" name="controlBodyNotes" rows="6" cols="120" th:placeholder="#{form.placeholder.controlBodyNotes}" class="form-control" type="text"/> 
+							</div>
+						</div>
+	
+						<!-- Button -->
+						<div class="form-group">
+							<div class="controls">
+								<button id="saveAdditionalData" name="saveAdditionalData" class="btn btn-primary" th:text="#{button.next}">Weiter</button>
+							</div>
+						</div>						
+					</fieldset>	
+				</form>
+			</div>
+
+			<div id="overview" class="tab-pane" th:classappend="(${state.step} eq 'overview') ? 'active' : ''">
+				<div class="row clearfix">
+					<div class="col-md-12 column">
+					
+						<div class="panel panel-danger">
+							<div class="panel-heading">
+								<h3 class="panel-title" th:text="#{header.supersededItems}">Superseded items</h3>
+							</div>
+							
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.definition}">Klasse</th>
+										<th th:text="#{tableheader.description}">Klasse</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${state.supersededItems}">
+										<td th:text="${item.name}"></td>
+										<td th:text="${item.definition}"></td>
+										<td th:text="${item.description}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								<h3 class="panel-title" th:text="#{header.supersedingItems}">Superseding items</h3>
+							</div>
+							
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th th:text="#{tableheader.name}">Name</th>
+										<th th:text="#{tableheader.definition}">Klasse</th>
+										<th th:text="#{tableheader.description}">Klasse</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="item : ${state.newSupersedingItems}">
+										<td th:text="${item.name}"></td>
+										<td th:text="${item.definition}"></td>
+										<td th:text="${item.description}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="pull-right">
+<!-- 							<button class="btn btn-default" th:text="#{button.back}" th:onclick="history.back();">Zurück</button> -->
+							<form method="post">
+								<button class="btn btn-primary" name="submit" th:text="#{button.save}">Vorschlag einreichen</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		
+	</div>	
+
+	<div th:include="layout :: foot"></div>
+	
+	<script type="text/javascript" th:inline="text">
+		$(document).ready(function() {
+			$('#supersededItemsTable').dataTable({
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 2, "asc" ]],
+				 aoColumns: [
+					{"bSortable" : false},
+					null,
+					null,
+					null
+				]
+			});	
+
+			$('#supersedingItemsTable').dataTable({
+				"sPaginationType": "bs_normal",
+				"oLanguage": {
+					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
+					  "sInfo": "[[#{datatable.sInfo}]]",
+					  "sInfoEmpty": "[[#{datatable.sInfoEmpty}]]",
+					  "sInfoFiltered": "[[#{datatable.sInfoFiltered}]]",
+					  "sLengthMenu": "[[#{datatable.sLengthMenu}]]",
+					  "sLoadingRecords": "[[#{datatable.sLoadingRecords}]]",
+					  "sProcessing": "[[#{datatable.sProcessing}]]",
+					  "sZeroRecords": "[[#{datatable.sZeroRecords}]]",
+					  "oPaginate": {
+					        "sFirst":    "[[#{datatable.oPaginate.sFirst}]]",
+					        "sLast":     "[[#{datatable.oPaginate.sLast}]]",
+					        "sNext":     "[[#{datatable.oPaginate.sNext}]]",
+					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
+					    }
+					},
+				 "aaSorting": [[ 2, "asc" ]],
+				 aoColumns: [
+					null,
+					null,
+					null
+				]
+			});	
+
+			$('.datatable').each(function(){
+				var datatable = $(this);
+				// SEARCH - Add the placeholder for Search and Turn this into in-line form control
+				var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+				search_input.attr('placeholder', '[[#{datatable.searchPlaceholder}]]');
+				search_input.addClass('form-control input-sm');
+				// LENGTH - Inline-Form control
+				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+				length_sel.addClass('form-control input-sm');
+			});
+		});
+	</script>
+</body>
+</html>

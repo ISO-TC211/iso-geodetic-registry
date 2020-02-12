@@ -1,0 +1,9 @@
+#set($convitem = $item)
+
+#set($itemdetails = "pdftemplates/singleoperation.fo")
+#set($itemafter = "pdftemplates/conversionafter.fo")
+#parse("pdftemplates/itempage.fo")
+
+#set($item = $convitem.method)
+#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
+
