@@ -27,18 +27,18 @@ import de.geoinfoffm.registry.client.web.AbstractWebMvcConfigurerAdapter;
 @EnableAsync
 @Configuration
 @EnableSpringDataWebSupport
-public class IsoClientConfiguration extends AbstractWebMvcConfigurerAdapter
-{
-	@Override
-	protected Locale defaultLocale() {
-		return StringUtils.parseLocaleString("en");
-	}
+public class IsoClientConfiguration { //} extends AbstractWebMvcConfigurerAdapter
 
-	@Bean
-	public MultipartResolver multipartResolver() {
-		CommonsMultipartResolver result = new CommonsMultipartResolver();
-		result.setDefaultEncoding("UTF-8");
-
-		return result;
-	}
+//	@Override
+//	protected Locale defaultLocale() {
+//		return StringUtils.parseLocaleString("en");
+//	}
+//
+//	@Bean
+//	public MultipartResolver multipartResolver() {
+//		CommonsMultipartResolver result = new CommonsMultipartResolver();
+//		result.setDefaultEncoding("UTF-8");
+//
+//		return result;
+//	}
 }

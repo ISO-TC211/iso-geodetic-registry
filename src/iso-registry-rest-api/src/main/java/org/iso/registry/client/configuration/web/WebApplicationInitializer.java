@@ -15,12 +15,12 @@ import java.sql.*;
 
 /**
  * Initializer for the Spring web application.
- * 
+ *
  * @author Florian Esser
  *
  */
 @Configuration
-public class WebApplicationInitializer extends AbstractWebApplicationInitializer 
+public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 {
 
 	@Override
@@ -37,7 +37,7 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
-	
+
 	@Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
@@ -69,7 +69,7 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 		}
 
 
-		servletContext.addListener(new SessionListener());
+//		servletContext.addListener(new SessionListener());
     }
 
 	public boolean isDbConnected(Connection connection) {

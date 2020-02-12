@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.iso.registry.client.configuration.security;
 
@@ -8,7 +8,7 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
 
 /**
  * Application initializer for a secure web application.
- * 
+ *
  * @author Florian Esser
  *
  */

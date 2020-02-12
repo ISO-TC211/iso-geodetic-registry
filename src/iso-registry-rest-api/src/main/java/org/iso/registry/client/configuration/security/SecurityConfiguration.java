@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.iso.registry.client.configuration.security;
 
@@ -49,9 +49,9 @@ import de.geoinfoffm.registry.persistence.jpa.HibernateConfiguration;
 
 /**
  * Spring security configuration class for the GDI-DE Registry Client.
- * 
+ *
  * @author Florian Esser
- * 
+ *
  */
 @Configuration
 @ComponentScan(basePackages = { "org.iso.registry", "de.bespire.registry", "de.geoinfoffm.registry" })
@@ -61,25 +61,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
 	@Autowired
 	private HibernateConfiguration configuration;
-	
+
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new RegistryUserDetailsManager();
 	}
-	
+
     @Autowired
     public void registerSharedAuthentication(AuthenticationManagerBuilder auth) throws Exception {
     	AuthenticationProvider authProvider = new RegistryAuthenticationProvider(userDetailsService());
-    	auth.authenticationProvider(authProvider); 
+    	auth.authenticationProvider(authProvider);
     }
-    
+
 	/* (non-Javadoc)
 	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.WebSecurity)
 	 */
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**");
-	}
+//	@Override
+//	public void configure(WebSecurity web) throws Exception {
+//		web.ignoring().antMatchers("/resources/**");
+//	}
 
 	/* (non-Javadoc)
 	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
@@ -92,77 +92,77 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 			.logout()
 				.logoutSuccessHandler(new BasePathUrlLogoutSuccessHandler())
 			.and()
-			.formLogin()
-				.successHandler(new BasePathUrlAuthenticationSuccessHandler())
-				.failureHandler(new BasePathUrlAuthenticationFailureHandler())
-				.loginPage("/login")
-			.and()
+//			.formLogin()
+//				.successHandler(new BasePathUrlAuthenticationSuccessHandler())
+//				.failureHandler(new BasePathUrlAuthenticationFailureHandler())
+//				.loginPage("/login")
+//			.and()
 			.exceptionHandling()
 				.accessDeniedPage("/403")
 			.and()
 			.csrf().disable();
 	}
-	
+
 	@Bean
 	public EhCacheFactoryBean ehCacheFactoryBean() {
 		EhCacheFactoryBean result = new EhCacheFactoryBean();
-		
+
 		EhCacheManagerFactoryBean manager = new EhCacheManagerFactoryBean();
 		manager.setCacheManagerName("aclCache");
-		
+
 		result.setCacheManager(manager.getObject());
-		
+
 		return result;
 	}
-	
+
 	@Bean
 	public AclCache aclCache() {
-		return new EhCacheBasedAclCache(ehCacheFactoryBean().getObject(), permissionGrantingStrategy(), aclAuthorizationStrategy());		
+		return new EhCacheBasedAclCache(ehCacheFactoryBean().getObject(), permissionGrantingStrategy(), aclAuthorizationStrategy());
 	}
-	
+
 	@Bean
 	public PermissionGrantingStrategy permissionGrantingStrategy() {
 		AuditLogger auditLogger = new ConsoleAuditLogger();
 		return new DefaultPermissionGrantingStrategy(auditLogger);
 	}
-	
+
 	@Bean
 	public AclAuthorizationStrategy aclAuthorizationStrategy() {
 		GrantedAuthority admin = new SimpleGrantedAuthority("ROLE_ADMIN");
 		return new AclAuthorizationStrategyImpl(admin, admin, admin);
 	}
-	
+
 	@Bean
 	public LookupStrategy lookupStrategy() {
 		DataSource dataSource = configuration.dataSource();
 		return new RegistryLookupStrategy(dataSource, aclCache(), aclAuthorizationStrategy(), permissionGrantingStrategy());
 	}
-	
+
 	@Bean
 	public MutableAclService mutableAclService() {
 		return new RegistryMutableAclService(configuration.dataSource(), lookupStrategy(), aclCache());
 	}
-	
+
 	@Bean
 	public AclService aclService() {
 		return mutableAclService();
 	}
-	
+
 	@Bean
 	public RoleVoter roleVoter() {
 		return new RoleVoter();
 	}
-	
+
 	@Bean
 	public PermissionFactory permissionFactory() {
 		return new DefaultPermissionFactory(RegistryPermission.class);
 	}
-	
+
 	@Bean
 	public AclPermissionEvaluator aclPermissionEvaluator() {
 		AclPermissionEvaluator result = new AclPermissionEvaluator(aclService());
 		result.setPermissionFactory(permissionFactory());
-		
+
 		return result;
 	}
 }
