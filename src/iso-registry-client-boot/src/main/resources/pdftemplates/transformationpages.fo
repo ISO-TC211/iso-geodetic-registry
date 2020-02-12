@@ -1,9 +1,0 @@
-#set($xfitem = $item)
-
-#set($itemdetails = "pdftemplates/singleoperation.fo")
-#set($itemafter = "pdftemplates/transformationafter.fo")
-#parse("pdftemplates/itempage.fo")
-
-#set($item = $xfitem.method)
-#parse("pdftemplates/${item.itemClassName.toLowerCase()}pages.fo")
-

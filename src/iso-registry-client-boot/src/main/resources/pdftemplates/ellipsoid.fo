@@ -1,3 +1,0 @@
-#set($pages = "pdftemplates/ellipsoidpages.fo")
-## no $itemafter
-#parse("pdftemplates/itemmaster.fo")

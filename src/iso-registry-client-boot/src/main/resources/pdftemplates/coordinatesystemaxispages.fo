@@ -1,5 +1,0 @@
-#set($axisitem = $item)
-
-#set($itemdetails = "pdftemplates/csaxis_details.fo")
-## no itemafter
-#parse("pdftemplates/itempage.fo")

@@ -1,2 +1,0 @@
-#set($pages = "pdftemplates/geodeticdatumpages.fo")
-#parse("pdftemplates/itemmaster.fo")
