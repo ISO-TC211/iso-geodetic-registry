@@ -42,6 +42,7 @@ import de.geoinfoffm.registry.api.security.RegistryUserDetailsManager;
 import de.geoinfoffm.registry.client.web.BasePathUrlAuthenticationFailureHandler;
 import de.geoinfoffm.registry.client.web.BasePathUrlAuthenticationSuccessHandler;
 import de.geoinfoffm.registry.client.web.BasePathUrlLogoutSuccessHandler;
+import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import de.geoinfoffm.registry.core.security.RegistryLookupStrategy;
 import de.geoinfoffm.registry.core.security.RegistryMutableAclService;
 import de.geoinfoffm.registry.core.security.RegistryPermission;
@@ -62,9 +63,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	@Autowired
 	private HibernateConfiguration configuration;
 	
+	@Autowired
+	private RegistryUserRepository userRepository;
+
+	@Override
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new RegistryUserDetailsManager();
+		return new RegistryUserDetailsManager(userRepository);
 	}
 	
     @Autowired
