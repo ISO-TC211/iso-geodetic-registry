@@ -23,3 +23,6 @@ build-ignoreme
 setenv.sh
 **/*ignoreme*/
 node_modules
+.vscode
+launch.json
+settings.json
