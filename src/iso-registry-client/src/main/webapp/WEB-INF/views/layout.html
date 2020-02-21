@@ -410,8 +410,10 @@
                         th:if="${@registrySecurity.getControlBodyTodoCount()}"
                         th:text="${@registrySecurity.getControlBodyTodoCount()}"></span></a></li>
                 <li id="managementowner" sec:authorize="@registrySecurity.hasRoleWith('ROLE_OWNER_')">
-                  <a th:href="@{__${basePath}__/management/owner}"
-                     th:text="#{navbar.registerOwner}">Register-Inhaber</a></li>
+                  <a th:href="@{__${basePath}__/management/owner}"><span th:text="#{navbar.registerOwner}">Register-Inhaber</span>
+                  <span class="badge"
+                          th:if="${@registrySecurity.getRegisterOwnerTodoCount()}"
+                          th:text="${@registrySecurity.getRegisterOwnerTodoCount()}"></span></a></li>
                 <li id="managementpoc" sec:authorize="@registrySecurity.hasRoleWith('ROLE_POINTOFCONTACT_')">
                   <a th:href="@{__${basePath}__/management/poc}"><span th:text="#{navbar.pointOfContact}">Organisationsverwalter</span>
                     <span class="badge"
