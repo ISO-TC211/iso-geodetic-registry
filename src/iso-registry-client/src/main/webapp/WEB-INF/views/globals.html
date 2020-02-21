@@ -399,7 +399,7 @@
 </div>
 
 <div th:fragment="aliasesTable(modifier)">
-	<div class="col-md-12" th:unless="!*{aliases} or ${isProposal}">
+	<div class="col-md-12" th:if="*{aliases} and (${isReadOnly} or !${isProposal})">
 		<div class="panel">
 			<div class="panel-body">
 				<table th:id="'aliasesTable_' + ${modifier}" class="datatable table table-condensed table-striped">
@@ -416,7 +416,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<button th:if="${isProposal} and !${proposal.isClarification()}" th:id="'addAlias_' + ${modifier}" type="button" th:attr="data-modifier=${modifier}" th:text="#{button.addAlias}" class="btn btn-sm btn-default button-addalias">Add new</button>
+				<button th:if="${isProposal} and !${proposal.isClarification()} and !${isReadOnly}" th:id="'addAlias_' + ${modifier}" type="button" th:attr="data-modifier=${modifier}" th:text="#{button.addAlias}" class="btn btn-sm btn-default button-addalias">Add new</button>
 			</div>
 		</div>
 
@@ -454,7 +454,7 @@
 		</script>
 	</div>
 	
-	<div th:if="${isProposal}">
+	<div th:if="${isProposal} and !${isReadOnly}">
 		<div class="col-md-12 form-group">
 			<label class="control-label" th:for="'aliases_' + ${modifier}" th:text="#{form.label.aliases}"></label>
 			<input type="hidden" style="width: 100%" th:id="'aliases_' + ${modifier}" th:field="*{aliases}"/>
@@ -651,7 +651,7 @@
 </div>
 
 <div th:fragment="informationSource (cssClass)">
-	<div th:if="!${isProposal} or ${proposal.isClarification()}" th:class="${cssClass}">
+	<div th:if="!${isProposal} or ${proposal.isClarification()} or ${isReadOnly}" th:class="${cssClass}">
 		<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetails"/>
 	</div>
 </div>

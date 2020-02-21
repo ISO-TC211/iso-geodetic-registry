@@ -347,6 +347,7 @@ public class ProposalsController extends AbstractController
 		String viewName;
 		if (itemClassConfiguration != null && !StringUtils.isEmpty(itemClassConfiguration.getViewProposalTemplate())) {
 			viewName = itemClassConfiguration.getViewProposalTemplate();
+			model.addAttribute("isReadOnly", !workflowManager.isEditable(proposal));
 		}
 		else {
 			StringBuilder viewNameBuilder = new StringBuilder("registry/proposal/");
