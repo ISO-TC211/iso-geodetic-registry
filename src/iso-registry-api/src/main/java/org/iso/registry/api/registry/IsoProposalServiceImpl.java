@@ -257,6 +257,7 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 		
 		List<RE_RegisterItem> itemsToDelete = new ArrayList<>();
 		List<RE_ProposalManagementInformation> pmisToDelete = new ArrayList<>();
+		List<ProposalNote> notesToDelete = new ArrayList<>();
 		
 		for (RE_ProposalManagementInformation pmi : proposal.getProposalManagementInformations()) {
 			if (pmi.getItem() != null && RE_ItemStatus.NOT_VALID.equals(pmi.getItem().getStatus())) {
@@ -268,9 +269,18 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 			pmisToDelete.add(pmi);
 		}
 		
+		for (ProposalNote note : noteRepository.findByProposal(proposal)) {
+			note.setProposal(null);
+			notesToDelete.add(note);
+		}
+
 		proposal.delete();
 		repository().delete(proposal);
 		
+		for (ProposalNote note : notesToDelete) {
+			noteRepository.delete(note);
+		}
+
 		for (RE_ProposalManagementInformation pmi : pmisToDelete) {
 			pmiRepository.delete(pmi);
 		}
