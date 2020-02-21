@@ -7,9 +7,10 @@
 		<input type="hidden" th:field="*{proposalType}"/>					
 	
 		<div class="controls">
-			<button id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+			<button th:unless="${isReadOnly}" id="cancel" type="button" onClick="history.back();" name="cancel" class="btn btn-default" th:text="#{button.cancel}">Abbrechen</button>
+			<button th:if="${isReadOnly}" id="back" type="button" onClick="history.back();" name="back" class="btn btn-default" th:text="#{button.back}">Zurück</button>
 			<div class="pull-right">
-				<button id="saveProposal" th:unless="${proposalChangeRequest}" name="saveProposal" class="btn btn-default" th:text="#{button.saveProposal}">Speichern</button>
+				<button id="saveProposal" th:unless="${proposalChangeRequest} or ${isReadOnly}" name="saveProposal" class="btn btn-default" th:text="#{button.saveProposal}">Speichern</button>
 				<button id="submitProposal" th:if="${isNew}" th:unless="${partOfSupersession} or ${isEdit}" name="submitProposal" class="btn btn-primary" th:text="#{button.submitProposal}">Speichern</button>
 				<div class="row">
 					<div id="pleaseWait" class="pull-right"><img th:src="@{__${basePath}__/resources/images/loader.gif}"/></div>

@@ -1,5 +1,5 @@
 <div th:fragment="extentPanelContent">
-	<div th:if="${isProposal}">
+	<div th:if="${isProposal} and !${isReadOnly}">
 
 		<div th:replace="globals :: formLabel('extent', #{form.label.selectExtent})"/>
 		<div id="selectExtentGroup" th:with="isClarification=${proposal.isClarification()}">
@@ -81,7 +81,7 @@
 		<div id="geographicExtent" class="tab-pane in active" style="padding-top: 10px">
 			<div class="row">
 				<div class="col-md-12">
-					<table id="bboxTable" class="datatable table table-striped" th:with="isEditable=(${isProposal} and !${proposal.isClarification()})">
+					<table id="bboxTable" class="datatable table table-striped" th:with="isEditable=(${isProposal} and !${proposal.isClarification()} and !${isReadOnly})">
 						<thead>
 							<tr>
 								<th th:text="#{form.label.northernLatitude}"/>
@@ -89,7 +89,7 @@
 								<th th:text="#{form.label.southernLatitude}"/>
 								<th th:text="#{form.label.westernLongitude}"/>
 								<th>
-									<a th:unless="!${isProposal} or ${proposal.isClarification()}" href="#dialog-boundingbox" id="addBoundingBox" data-toggle="modal" class="btn btn-default btn-sm" th:text="#{button.addBoundingBox}"/>
+									<a th:unless="!${isProposal} or ${isReadOnly} or ${proposal.isClarification()}" href="#dialog-boundingbox" id="addBoundingBox" data-toggle="modal" class="btn btn-default btn-sm" th:text="#{button.addBoundingBox}"/>
 <!-- 											<button th:if="${isEditable}" th:text="#{button.addRow}" id="addRow" type="button" name="addRow" class="btn btn-sm btn-default">Add row</button> -->
 								</th>
 							</tr>

@@ -10,10 +10,10 @@
 			<li th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'li-infosrc-' + ${rowStat.index}" th:attr="data-index=${rowStat.index}">
 				<a th:href="'#infosrc-' + ${rowStat.index}" data-toggle="tab">
 					<span th:text="${infosrc.title} ? ${infosrc.title} : ('Source #' + (${rowStat.index} + 1))"></span>
-					<button th:if="${isProposal}" th:id="'delete-infosrc-' + ${rowStat.index}" type="button" th:attr="data-index=${rowStat.index}" class="btn btn-xs btn-default button-close-infosrc"><span class="fa fa-times"></span></button>
+					<button th:if="${isProposal} and !${isReadOnly}" th:id="'delete-infosrc-' + ${rowStat.index}" type="button" th:attr="data-index=${rowStat.index}" class="btn btn-xs btn-default button-close-infosrc"><span class="fa fa-times"></span></button>
 				</a>
 			</li>
-			<li id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span>&nbsp;&nbsp;<span th:text="#{button.addNew}"></span></a></li>
+			<li th:unless="${isReadOnly}" id="li-addinformationsource"><a id="button-addinformationsource" href="#"><span class="fa fa-plus"></span>&nbsp;&nbsp;<span th:text="#{button.addNew}"></span></a></li>
 		</ul>
 		<div class="tab-content">
 			<div th:each="infosrc,rowStat : *{informationSource}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'infosrc-' + ${rowStat.index}" class="tab-pane in" style="padding-top: 10px">
@@ -87,10 +87,10 @@
 					<div class="modal-header">
 						<h4 th:text="#{popup.informationSource.header}"></h4>
 					</div>
-					<div th:unless="${isProposal}" class="modal-body" th:object="${item.informationSource[__${rowstat.index}__]}">
+					<div th:if="!${isProposal} or ${isReadOnly}" class="modal-body" th:object="${item.informationSource[__${rowstat.index}__]}">
 						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
 					</div>
-					<div th:if="${isProposal}" class="modal-body" th:object="${proposal.informationSource[__${rowstat.index}__]}" th:with="isReadOnly='true'">
+					<div th:if="${isProposal} and !${isReadOnly}" class="modal-body" th:object="${proposal.informationSource[__${rowstat.index}__]}" th:with="isReadOnly='true'">
 						<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${rowstat.index})"/>
 					</div>
 					<div class="modal-footer">
