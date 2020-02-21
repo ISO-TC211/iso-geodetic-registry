@@ -274,7 +274,7 @@ public class ProposalsController extends AbstractController
 		model.addAttribute("proposal", dto);
 		model.addAttribute("itemClass", dto.getItemClassUuid());
 		
-		if (!StringUtils.isEmpty("role")) {
+		if (!StringUtils.isEmpty(role)) {
 			model.addAttribute("_userRole", role);
 		}
 		else {
@@ -485,7 +485,7 @@ public class ProposalsController extends AbstractController
 			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 			
 			proposalService.updateProposal(proposalDto);
-			if (role != null) {
+			if (!StringUtils.isEmpty(role)) {
 				return "redirect:/management/" + role;
 			}
 			else {
