@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.iso.registry.api.ProposalListItemAppealDecorator;
 import org.iso.registry.api.ProposalListItemNotesDecorator;
 import org.iso.registry.client.controller.registry.ProposalNotFoundException;
 import org.iso.registry.core.model.ProposalNoteRepository;
@@ -168,11 +169,12 @@ public class ManagementController
 		List<ProposalListItem> appealListItems = new ArrayList<ProposalListItem>();
 		for (Appeal appeal : appeals) {
 			if (appeal.isPending()) {
-				appealListItems.add(new ProposalListItemImpl(appeal, messageSource, locale, workflowManager, pcrRepository));
+				ProposalListItem pli = new ProposalListItemImpl(appeal, messageSource, locale, workflowManager, pcrRepository);
+				appealListItems.add(new ProposalListItemAppealDecorator(pli, appeal));
 			}
 		}
 
-		DatatablesResult result = new DatatablesResult(appeals.getTotalElements(), appeals.getTotalElements(), dtParameters.sEcho, appealListItems);
+		DatatablesResult result = new DatatablesResult(appealListItems.size(), appealListItems.size(), dtParameters.sEcho, appealListItems);
 		return result;
 	}
 
