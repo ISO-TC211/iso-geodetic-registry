@@ -81,60 +81,6 @@
 									<th></th>
 								</tr>
 							</thead>
-<!-- 							<tbody> -->
-<!-- 								<tr th:each="item : ${proposals}"> -->
-<!-- 									<div class="modal fade" th:id="'dialog-submit-' + ${item.proposalUuid}" role="dialog"> -->
-<!-- 										<div th:include="mgmt/submitter_popup_submit :: popup"/> -->
-<!-- 									</div> -->
-<!-- 									<div class="modal fade" th:id="'dialog-withdraw-' + ${item.proposalUuid}" role="dialog"> -->
-<!-- 										<div th:include="mgmt/submitter_popup_withdraw :: popup"/> -->
-<!-- 									</div> -->
-<!-- 									<div class="modal fade" th:id="'dialog-delete-' + ${item.proposalUuid}" role="dialog"> -->
-<!-- 										<div th:include="mgmt/submitter_popup_delete :: popup"/> -->
-<!-- 									</div> -->
-
-<!-- 									<td th:text="${item.name}"></td> -->
-<!-- 									<td><span th:unless="${#strings.isEmpty(item.itemClassName)}" th:text="#{${item.itemClassName}}"></span></td> -->
-<!-- 									<td th:utext="#{${item.proposalType}}"></td>											 -->
-<!-- 									<td> -->
-<!-- 										<span th:text="#{${item.proposalStatus}}"></span>&nbsp;&nbsp;<a th:unless="${#lists.isEmpty(@proposalNoteRepository.findByProposalUuid(item.proposalUuid))}" class="fa fa-envelope" data-toggle="modal" th:href="'#dialog-notes-' + ${item.proposalUuid}" th:title="#{tooltip.proposalNotes}"></a> -->
-<!-- 										<div class="modal fade" th:id="'dialog-notes-' + ${item.proposalUuid}" role="dialog" th:unless="${#lists.isEmpty(@proposalNoteRepository.findByProposalUuid(item.proposalUuid))}"> -->
-<!-- 											<div th:include="mgmt/submitter_popup_notes :: popup"/> -->
-<!-- 										</div>										 -->
-<!-- 									</td> -->
-<!-- 									<td> -->
-<!-- 										<div class="btn-group"> -->
-<!-- 											<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"> -->
-<!-- 												<span th:text="#{button.action}">Aktion</span> <span class="caret"></span> -->
-<!-- 											</button> -->
-<!-- 											<ul class="dropdown-menu" role="menu"> -->
-<!-- 												<li th:unless="${item.isRetirement()} or ${item.isSupersession()}"><div style="margin: 5px;"> -->
-<!-- 													<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="${item.isEditable()} ? #{button.edit} : #{button.details}">Details</button>												 -->
-<!-- 												</div></li> -->
-<!-- 												<li th:if="${item.isNotSubmitted()} or ${#strings.startsWith(item.proposalStatus, 'RETURNED_BY_')}"> -->
-<!-- 													<div style="margin: 5px;"> -->
-<!-- 														<a th:href="@{__${basePath}__/discussion/SUBMITTER/__${item.proposalUuid}__}" th:id="'discuss_' + ${item.uuid}" class="btn btn-primary btn-xs" th:text="#{button.discussProposal}">Diskussion</a> -->
-<!-- 													</div> -->
-<!-- 													<div style="margin: 5px;"> -->
-<!-- 														<a th:href="'#dialog-submit-' + ${item.proposalUuid}" th:id="'submit_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-success btn-xs" th:text="#{button.submitProposal}">Einreichen</a> -->
-<!-- 													</div> -->
-<!-- 													<div style="margin: 5px;"> -->
-<!-- 														<a th:href="'#dialog-delete-' + ${item.proposalUuid}" th:id="'delete_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-danger btn-xs" th:text="#{button.deleteProposal}"></a> -->
-<!-- 													</div> -->
-<!-- 												</li> -->
-<!-- 												<li th:if="${item.isUnderReview()} or ${item.isPending()}"> -->
-<!-- 													<div style="margin: 5px;"> -->
-<!-- 														<a th:href="'#dialog-withdraw-' + ${item.proposalUuid}" th:id="'withdraw_' + ${item.proposalUuid}" data-toggle="modal" class="btn btn-warning btn-xs" th:text="#{button.withdrawProposal}">Einreichen</a> -->
-<!-- 													</div> -->
-<!-- 												</li> -->
-<!-- 												<li th:if="${item.isAppealable()}"><div style="margin: 5px"> -->
-<!-- 													<button th:id="'appeal_' + ${item.uuid}" th:if="${item.isAppealable()}" class="btn btn-primary btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/appeal'} + '\''" th:text="#{button.appealProposal}">Einspruch einreichen</button> -->
-<!-- 												</div></li> -->
-<!-- 											</ul> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 							</tbody> -->
 						</table>
 					</div>
 				</div>
@@ -240,44 +186,6 @@
 					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
 					    }
 					},
-				"fnRowCallback": function(nRow, aData, iDisplayIndex) {
-//	 	            $('#proposalsTable tbody tr').each(function () {
-//	 	                if (jQuery.inArray(aData[0], selected) != -1) {
-//	 	                    $(this).addClass('row-selected');
-//	 	                }
-//	 	            });
-//	 	            return nRow;
-		        },
-				"fnDrawCallback": function( oSettings ) {
-//	 		           $('#proposalsTable tbody tr').each( function () {
-//	 		                var iPos = table.fnGetPosition( this );
-//	 		                if (iPos != null) {
-//	 		                    var aData = table.fnGetData( iPos );
-//	 		                    if (jQuery.inArray(aData[0], selected) != -1)
-//	 		                        $(this).addClass('row-selected');
-//	 		                }
-//	 		                $(this).click( function () {
-//	 		                    var iPos = table.fnGetPosition(this);
-//	 		                    var aData = table.fnGetData(iPos);
-//	 		                    var iId = aData[0];
-//	 		                    is_in_array = jQuery.inArray(iId, selected);
-//	 		                    if (is_in_array == -1) {
-//	 		                        selected[selected.length] = iId;
-//	 		                    }
-//	 		                    else {
-//	 		                        selected = jQuery.grep(selected, function(value) {
-//	 		                            return value != iId;
-//	 		                        });
-//	 		                    }
-//	 		                    if ( $(this).hasClass('row-selected') ) {
-//	 		                        $(this).removeClass('row-selected');
-//	 		                    }
-//	 		                    else {
-//	 		                        $(this).addClass('row-selected');
-//	 		                    }
-//	 		                });
-//	 		            });				
-				},				
 				"aaSorting": [[ 3, "asc" ]],
 				"aoColumns": [
 					{
@@ -409,12 +317,8 @@
 			});
 
 			$('body').on('click', '.button-addition', function() {
-// 				location.href = '[[@{__${basePath}__/register/}]]' + $('#register').val() + '?itemClass= + ' $('#itemClass').val();
 				location.href = '[[@{__${basePath}__/register/}]]' + $('#register').val() + '/proposal/addition?itemClass=' + $('#itemClass').val();
 			});
-
-			
-// 			th:onclick="'location.href = \'' + @{${basePath} + '/register/' + ${register.uuid} + '/proposal/addition'} + '\''"
 		});
 		
 	/* ]]> */
