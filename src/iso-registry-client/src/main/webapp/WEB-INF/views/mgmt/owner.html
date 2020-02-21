@@ -26,22 +26,6 @@
 									<th></th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="item : ${appealedItems}">
-									<td th:text="${item.proposalDate}"></td>
-									<td th:text="${item.name}"></td>
-									<td th:text="${item.itemClassName}"></td>
-									<td th:text="#{${item.proposalType}}"></td>											
-									<td th:text="#{${item.appealDisposition}}"></td>
-									<td>
-										<div class="control-group">
-											<button th:id="'details_' + ${item.uuid}" class="btn btn-default btn-xs" th:onclick="'location.href = \'' + @{${basePath} + '/proposals/' + ${item.proposalUuid}} + '\''" th:text="#{button.details}">Details</button>												
-											<button th:id="'acceptAppeal_' + ${item.uuid}" class="btn btn-success btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/acceptAppeal'} + '\', function() { location.reload(); });'" th:text="#{button.acceptAppeal}">Einspruch annehmen</button>
-											<button th:id="'rejectAppeal_' + ${item.uuid}" class="btn btn-danger btn-xs" th:onclick="'post(\'' + @{${basePath} + '/proposals/' + ${item.proposalUuid} + '/rejectAppeal'} + '\', function() { location.reload(); });'" th:text="#{button.rejectAppeal}">Einspruch abweisen</button>
-										</div>
-									</td>
-								</tr>
-							</tbody>
 						</table>
 					</div>
 				</div>
@@ -50,12 +34,52 @@
 	</div>
 	
 	<div th:include="layout :: foot"></div>
+
+	<div th:replace="globals-lists :: js-lists"/>
 	
 	<script type="text/javascript" th:inline="text">
 		$(document).ready(function() {
 			var table;
 	
+			$('#proposalsTable').on('click', '.button-details', function(e) {
+				var uuid = $(this).data('uuid');
+				location.href = '[[@{__${basePath}__/proposals/}]]' + uuid + '?role=owner';
+			});
+
+			$('body').on('click', '.button-acceptappeal', function() {
+			    $(this).button('loading');
+			    $('body').addClass('loading');
+				var uuid = $(this).data('uuid');
+				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/acceptAppeal', null, function(success, errorThrown) {
+					if (success) {
+						location.href = '[[@{__${basePath}__/management/owner}]]';
+					}
+					else {
+						showError(errorThrown, '[[@{__${basePath}__}]]');
+					}
+				});
+			});
+
+			$('body').on('click', '.button-rejectappeal', function() {
+			    $(this).button('loading');
+			    $('body').addClass('loading');
+				var uuid = $(this).data('uuid');
+				postForm('[[@{__${basePath}__/proposals/}]]' + uuid + '/rejectAppeal', null, function(success, errorThrown) {
+					if (success) {
+						location.href = '[[@{__${basePath}__/management/owner}]]';
+					}
+					else {
+						showError(errorThrown, '[[@{__${basePath}__}]]');
+					}
+				});
+			});
+
 			table = $('#proposalsTable').dataTable({
+				"sAjaxSource": "[[@{__${basePath}__/}]]management/owner/appeals",
+				"bProcessing": true,
+				"bServerSide": true,
+				"bStateSave": true,
+				"bInfo": true,
 				"sPaginationType": "bs_normal",
 				"oLanguage": {
 					  "sEmptyTable": "[[#{datatable.sEmptyTable}]]",
@@ -73,15 +97,70 @@
 					        "sPrevious": "[[#{datatable.oPaginate.sPrevious}]]"
 					    }
 					},
-				 "aaSorting": [[ 2, "asc" ]],
-				 aoColumns: [
-					null,
-					null,
-					null,
-					null,
-					null,
-					{"bSortable" : false}
-				]
+				 "aaSorting": [[ 0, "asc" ]],
+				 "aoColumns": [
+					{
+						"mDataProp": "appealedProposal.dateSubmitted",
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{
+						"mDataProp": "appealedProposal.title",
+						"sWidth": "50%",
+						"bSortable": true
+					},
+					{
+						"mDataProp": "appealedProposal.itemClassName",
+						"sWidth": "10%",
+						"bSearchable": true,
+						"bSortable": false
+					},
+					{
+						"mDataProp": "appealedProposal.proposalType",
+						"sWidth": "10%",
+						"bSortable": false
+					},
+					{
+						"mData": function(source, type, val) {
+							switch (type) {
+								case "display":
+									return $.ajax({
+										url: '[[@{__${basePath}__/entities/message/}]]' + source.appealDisposition,
+										async: false,
+										dataType: 'text'
+									}).responseText;
+								default:
+									return source.appealDisposition;
+							}
+						},
+						"sWidth": "10%",
+						"bSortable": true
+					},
+					{
+						"sWidth": "10%",
+						"bSortable": false
+					},
+				],
+				"aoColumnDefs": [
+					{ "aTargets": [5],
+					  "mData": null,
+					  "mRender": function (data, type, full) {
+						  var actions = "";
+						  var dropdownActions = [];
+						  dropdownActions.push(detailsButton(full.proposalUuid));
+						  if (full.appealDisposition === 'pending') {
+							  dropdownActions.push(acceptAppealButton(full));
+							  actions += acceptAppealPopup(full);
+							  dropdownActions.push(rejectAppealButton(full));
+							  actions += rejectAppealPopup(full);
+						  }
+
+						  actions += dropdownMenu(full.proposalUuid, dropdownActions);
+
+						  return actions;
+					  }
+					}
+				]				
 			});	
 	
 			$('.datatable').each(function(){
