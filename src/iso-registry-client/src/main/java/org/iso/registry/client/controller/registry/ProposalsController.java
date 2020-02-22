@@ -893,6 +893,30 @@ public class ProposalsController extends AbstractController
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/{uuid}/appeal/end", method = RequestMethod.POST)
+	@Transactional
+	public ResponseEntity<Void> endAppealPeriod(@PathVariable("uuid") UUID proposalUuid,
+			final Model model) throws ProposalNotFoundException, UnauthorizedException, IllegalOperationException, InvalidProposalException {
+		logger.debug("POST /proposal/{}/appeal/end", proposalUuid);
+		
+		Proposal proposal = proposalRepository.findOne(proposalUuid);
+		if (proposal == null) {
+			throw new ProposalNotFoundException(proposalUuid);
+		}
+		
+		security.assertHasEntityRelatedRoleForAll(MANAGER_ROLE_PREFIX, proposal.getAffectedRegisters());
+		
+		Appeal appeal = proposalService.findAppeal(proposal);
+		if (appeal != null) {
+			throw new IllegalOperationException("Cannot end appeal period: the proposal has already been appealed");
+		}
+		
+		proposalService.concludeProposal(proposal);
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
 
 	@RequestMapping(value = "/{uuid}/acceptAppeal", method = RequestMethod.POST)
 	@Transactional

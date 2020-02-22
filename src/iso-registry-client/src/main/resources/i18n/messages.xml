@@ -184,6 +184,7 @@
 	<entry key="button.review">Accept proposal for decision</entry>
 	<entry key="button.accept">Accept proposal</entry>
 	<entry key="button.reject">Reject proposal</entry>
+	<entry key="button.endAppealPeriod">End appeal period</entry>
 	<entry key="button.return">Return to submitter</entry>
 	<entry key="button.addNew">Add new</entry>
 	<entry key="button.addNewSuccessor">Create new successor</entry>
