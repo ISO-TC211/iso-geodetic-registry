@@ -16,13 +16,6 @@ public class HelloWorld {
     @Resource
     private RegisterRepository registerRepository;
 
-    @Resource
-    private MappingJackson2HttpMessageConverter jsonMapper;
-
-    @GetMapping("/findAll2")
-    public String findAll2() throws JsonProcessingException {
-        return jsonMapper.getObjectMapper().writeValueAsString(registerRepository.findAll());
-    }
 
     @GetMapping("/findAll")
     public List<RE_Register> findAll() {

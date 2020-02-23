@@ -63,15 +63,15 @@ import javax.persistence.EntityManagerFactory;
 //@Profile("web")
 public class IsoClientConfiguration extends WebMvcConfigurerAdapter {
 
-//    @Autowired
-//    private SessionFactory sessionFactory;
-//
-//    @Autowired
-//    private EntityManagerFactory emFactory;
-//
-//    @Autowired
-//    private MappingJackson2HttpMessageConverter jsonMapper;
-//
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    private EntityManagerFactory emFactory;
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jsonMapper;
+
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {
 ////        registry.addInterceptor(localeChangeInterceptor());
@@ -84,7 +84,7 @@ public class IsoClientConfiguration extends WebMvcConfigurerAdapter {
 //        emInterceptor.setEntityManagerFactory(emFactory);
 //        registry.addWebRequestInterceptor(emInterceptor);
 //    }
-//
+
 //    @Override
 //    public void addFormatters(FormatterRegistry registry) {
 //        registry.addConverter(new Converter<CharacterString, String>() {
@@ -103,29 +103,29 @@ public class IsoClientConfiguration extends WebMvcConfigurerAdapter {
 //            }
 //        });
 //    }
-//
-//    @Override
-//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-//        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
-//        resolver.setFallbackPageable(new PageRequest(1, 5));
-//        argumentResolvers.add(resolver);
-//    }
-//
-//    public AbstractHttpMessageConverter<?> jaxbConverter() {
-//        return new Jaxb2RootElementHttpMessageConverter();
-//    }
-//
-//    @Override
-//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        converters.add(this.jsonMapper);
-//        converters.add(jaxbConverter());
-//    }
-//
-//    @Bean
-//    public BeanNameUrlHandlerMapping beanNameUrlHandlerMapping() {
-//        return new BeanNameUrlHandlerMapping();
-//    }
-//
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+        resolver.setFallbackPageable(new PageRequest(1, 5));
+        argumentResolvers.add(resolver);
+    }
+
+    public AbstractHttpMessageConverter<?> jaxbConverter() {
+        return new Jaxb2RootElementHttpMessageConverter();
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(this.jsonMapper);
+        converters.add(jaxbConverter());
+    }
+
+    @Bean
+    public BeanNameUrlHandlerMapping beanNameUrlHandlerMapping() {
+        return new BeanNameUrlHandlerMapping();
+    }
+
 //    @Bean
 //    public SpringSecurityDialect springSecurityDialect() {
 //        return new SpringSecurityDialect();
