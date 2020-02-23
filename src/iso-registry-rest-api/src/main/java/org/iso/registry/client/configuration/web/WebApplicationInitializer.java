@@ -42,6 +42,8 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
 
+        servletContext.setInitParameter("spring.profiles.active", "web");
+
 		HibernateConfigurationImpl conf = new HibernateConfigurationImpl();
 
 		try {

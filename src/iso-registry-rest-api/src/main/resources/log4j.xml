@@ -9,7 +9,7 @@
 			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
 		</layout>
 	</appender>
-	
+
 	<!-- Application Loggers -->
 	<logger name="de.geoinfoffm.registry">
 		<level value="debug" />
@@ -18,11 +18,11 @@
 	<logger name="org.iso.registry">
 		<level value="debug" />
 	</logger>
-	
+
 	<!-- Root Logger -->
 	<root>
-		<priority value="warn" />
+		<priority value="info" />
 		<appender-ref ref="console" />
 	</root>
-	
+
 </log4j:configuration>

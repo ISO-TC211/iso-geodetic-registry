@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.PageRequest;
@@ -59,83 +60,85 @@ import javax.persistence.EntityManagerFactory;
 @EnableAsync
 @Configuration
 @EnableSpringDataWebSupport
+//@Profile("web")
 public class IsoClientConfiguration extends WebMvcConfigurerAdapter {
-    @Autowired
-    private SessionFactory sessionFactory;
 
-    @Autowired
-    private EntityManagerFactory emFactory;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jsonMapper;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(localeChangeInterceptor());
-
-        OpenSessionInViewInterceptor sessionIntercepetor = new OpenSessionInViewInterceptor();
-        sessionIntercepetor.setSessionFactory(sessionFactory);
-        registry.addWebRequestInterceptor(sessionIntercepetor);
-
-        OpenEntityManagerInViewInterceptor emInterceptor = new OpenEntityManagerInViewInterceptor();
-        emInterceptor.setEntityManagerFactory(emFactory);
-        registry.addWebRequestInterceptor(emInterceptor);
-    }
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new Converter<CharacterString, String>() {
-
-            @Override
-            public String convert(CharacterString cs) {
-                return CharacterString.asString(cs);
-            }
-        });
-
-        registry.addConverter(new Converter<String, CharacterString>() {
-
-            @Override
-            public CharacterString convert(String s) {
-                return new CharacterString(s);
-            }
-        });
-    }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
-        resolver.setFallbackPageable(new PageRequest(1, 5));
-        argumentResolvers.add(resolver);
-    }
-
-    public AbstractHttpMessageConverter<?> jaxbConverter() {
-        return new Jaxb2RootElementHttpMessageConverter();
-    }
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(this.jsonMapper);
-        converters.add(jaxbConverter());
-    }
-
-    @Bean
-    public BeanNameUrlHandlerMapping beanNameUrlHandlerMapping() {
-        return new BeanNameUrlHandlerMapping();
-    }
-
-    @Bean
-    public SpringSecurityDialect springSecurityDialect() {
-        return new SpringSecurityDialect();
-    }
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
-    @Bean
-    @Autowired
-    public DomainClassConverter<?> domainClassConverter(FormattingConversionService conversionService) {
-        return new DomainClassConverter<>(conversionService);
-    }
+//    @Autowired
+//    private SessionFactory sessionFactory;
+//
+//    @Autowired
+//    private EntityManagerFactory emFactory;
+//
+//    @Autowired
+//    private MappingJackson2HttpMessageConverter jsonMapper;
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+////        registry.addInterceptor(localeChangeInterceptor());
+//
+//        OpenSessionInViewInterceptor sessionIntercepetor = new OpenSessionInViewInterceptor();
+//        sessionIntercepetor.setSessionFactory(sessionFactory);
+//        registry.addWebRequestInterceptor(sessionIntercepetor);
+//
+//        OpenEntityManagerInViewInterceptor emInterceptor = new OpenEntityManagerInViewInterceptor();
+//        emInterceptor.setEntityManagerFactory(emFactory);
+//        registry.addWebRequestInterceptor(emInterceptor);
+//    }
+//
+//    @Override
+//    public void addFormatters(FormatterRegistry registry) {
+//        registry.addConverter(new Converter<CharacterString, String>() {
+//
+//            @Override
+//            public String convert(CharacterString cs) {
+//                return CharacterString.asString(cs);
+//            }
+//        });
+//
+//        registry.addConverter(new Converter<String, CharacterString>() {
+//
+//            @Override
+//            public CharacterString convert(String s) {
+//                return new CharacterString(s);
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+//        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+//        resolver.setFallbackPageable(new PageRequest(1, 5));
+//        argumentResolvers.add(resolver);
+//    }
+//
+//    public AbstractHttpMessageConverter<?> jaxbConverter() {
+//        return new Jaxb2RootElementHttpMessageConverter();
+//    }
+//
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        converters.add(this.jsonMapper);
+//        converters.add(jaxbConverter());
+//    }
+//
+//    @Bean
+//    public BeanNameUrlHandlerMapping beanNameUrlHandlerMapping() {
+//        return new BeanNameUrlHandlerMapping();
+//    }
+//
+//    @Bean
+//    public SpringSecurityDialect springSecurityDialect() {
+//        return new SpringSecurityDialect();
+//    }
+//
+//    @Override
+//    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+//        configurer.enable();
+//    }
+//
+//    @Bean
+//    @Autowired
+//    public DomainClassConverter<?> domainClassConverter(FormattingConversionService conversionService) {
+//        return new DomainClassConverter<>(conversionService);
+//    }
 }
