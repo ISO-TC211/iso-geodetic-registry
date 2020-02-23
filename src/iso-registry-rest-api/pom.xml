@@ -436,7 +436,7 @@
 		<profile>
 			<id>aws</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
             <dependencies>
                 <dependency>
