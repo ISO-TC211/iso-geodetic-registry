@@ -311,14 +311,13 @@
 					  "mRender": function (data, type, full) {
 						  var actions = "";
 						  var dropdownActions = [];
+						  dropdownActions.push(detailsButton(full.proposalUuid));
 						  if (full.notSubmitted) {
 							  if (full.group) {
-								  dropdownActions.push(detailsButton(full.proposalUuid));
 								  dropdownActions.push(dissolveGroupButton(full));
 								  actions += dissolveGroupPopup(full);
 							  }
 							  else {
-								  dropdownActions.push(detailsButton(full.proposalUuid));
 								  dropdownActions.push(addToGroupButton(full));
 								  actions += addToGroupPopup(full);
 							  }
@@ -331,14 +330,12 @@
 							  }
 						  }
 						  if (full.underReview || full.pending || full.pendingChangeRequest) {
-							  dropdownActions.push(detailsButton(full.proposalUuid));
 							  if (full.submitter) {
 								  dropdownActions.push(withdrawButton(full));
 							  }
 							  actions += withdrawPopup(full);
 						  }
 						  if (full.appealable && full.submitter) {
-							  dropdownActions.push(detailsButton(full.proposalUuid));
 							  dropdownActions.push(appealButton(full));
 						  }
 						  
