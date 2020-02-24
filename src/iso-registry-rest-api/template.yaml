@@ -16,12 +16,38 @@ Resources:
             MemorySize: 1512
             Policies: AWSLambdaBasicExecutionRole
             Timeout: 60
+            Environment:
+                Variables:
+                    hibernate.connection.url: !Ref hibernate.connection.url
+                    hibernate.connection.username: !Ref hibernate.connection.username
+                    hibernate.connection.password: !Ref hibernate.connection.password
+                    hibernate.connection.dialect: !Ref hibernate.connection.dialect
+                    hibernate.connection.hbm2ddl.driver_class: !Ref hibernate.connection.driver_class
+                    hibernate.hbm2ddl.auto: !Ref hibernate.hbm2ddl.auto
+                    flyway.migration: !Ref flyway.migration
+#                    registry.demoMode: !Ref registry.demoMode
             Events:
                 GetResource:
                     Type: Api
                     Properties:
                         Path: /{proxy+}
                         Method: any
+
+Parameters:
+    hibernate.connection.url:
+        Default: jdbc:postgresql://db:5432/isoreg
+    hibernate.connection.username:
+        Default: isoreg
+    hibernate.connection.password:
+        Default: isoreg
+    hibernate.connection.dialect:
+        Default: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate.connection.driver_class:
+        Default: org.postgresql.Driver
+    hibernate.hbm2ddl.auto:
+        Default: validate
+    flyway.migration:
+        Default: repairAndMigrate
 
 Outputs:
     IsoRegistryApi:

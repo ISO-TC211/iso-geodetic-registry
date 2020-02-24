@@ -63,11 +63,11 @@ import javax.persistence.EntityManagerFactory;
 //@Profile("web")
 public class IsoClientConfiguration extends WebMvcConfigurerAdapter {
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    @Autowired
-    private EntityManagerFactory emFactory;
+//    @Autowired
+//    private SessionFactory sessionFactory;
+//
+//    @Autowired
+//    private EntityManagerFactory emFactory;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jsonMapper;
