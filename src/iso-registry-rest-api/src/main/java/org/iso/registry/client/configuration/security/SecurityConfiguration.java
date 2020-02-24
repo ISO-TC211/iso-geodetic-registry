@@ -5,6 +5,7 @@ package org.iso.registry.client.configuration.security;
 
 import javax.sql.DataSource;
 
+import de.geoinfoffm.registry.core.model.RegistryUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -63,8 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 	private HibernateConfiguration configuration;
 
 	@Bean
-	public UserDetailsService userDetailsService() {
-		return new RegistryUserDetailsManager();
+	public UserDetailsService userDetailsService(RegistryUserRepository userRepository) {
+		return new RegistryUserDetailsManager(userRepository);
 	}
 
     @Autowired
