@@ -35,19 +35,19 @@ Resources:
 
 Parameters:
     hibernate.connection.url:
-        Default: jdbc:postgresql://db:5432/isoreg
+        Default: "jdbc:postgresql://db:5432/isoreg"
     hibernate.connection.username:
-        Default: isoreg
+        Default: "isoreg"
     hibernate.connection.password:
-        Default: isoreg
+        Default: "isoreg"
     hibernate.connection.dialect:
-        Default: org.hibernate.dialect.PostgreSQL9Dialect
+        Default: "org.hibernate.dialect.PostgreSQL9Dialect"
     hibernate.connection.driver_class:
-        Default: org.postgresql.Driver
+        Default: "org.postgresql.Driver"
     hibernate.hbm2ddl.auto:
-        Default: validate
+        Default: "validate"
     flyway.migration:
-        Default: repairAndMigrate
+        Default: "repairAndMigrate"
 
 Outputs:
     IsoRegistryApi:
