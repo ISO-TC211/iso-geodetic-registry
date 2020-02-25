@@ -11,7 +11,7 @@ ecs-registry-creds_*
 .project
 .settings
 .idea
-*ignore*
+*.ignoreme*
 .DS_Store
 *.iml
 build-dist.sh

@@ -1,0 +1,19 @@
+FROM alpine:3.10
+
+RUN apk update
+
+# Install base and dev packages
+RUN apk add --no-cache --virtual .build-deps && \
+    apk add bash && \
+    apk add make && \
+    apk add curl && \
+    apk add openssh && \
+    apk -Uuv add groff less python py-pip && \
+    pip install awscli && \
+    apk --purge -v del py-pip
+
+# Set timezone to UTC by default
+RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
+RUN rm /var/cache/apk/*
+
+CMD ["/bin/bash"]

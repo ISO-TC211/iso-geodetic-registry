@@ -1,0 +1,9 @@
+.git
+Dockerfile*
+.DS_Store
+.gitignore
+
+# To prevent storing dev/temporary container data
+.ignoreme
+target
+dist

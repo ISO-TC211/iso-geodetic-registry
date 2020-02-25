@@ -231,7 +231,7 @@
         <plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
+				<version>3.1.0</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
 					<nonFilteredFileExtensions>
@@ -258,22 +258,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
 					<encoding>UTF-8</encoding>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
       		<plugin>
@@ -288,25 +280,25 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-			    <groupId>org.flywaydb</groupId>
-			    <artifactId>flyway-maven-plugin</artifactId>
-			    <version>3.1</version>
-			    <configuration>
-			    	<driver>org.postgresql.Driver</driver>
-			    	<url>${hibernate.connection.url}</url>
-			        <user>${hibernate.connection.username}</user>
-			        <password>${hibernate.connection.password}</password>
-			        <schemas>
-			            <schema>${hibernate.connection.schema}</schema>
-			        </schemas>
-			        <locations>
-			        	<location>classpath:db</location>
-			        </locations>
-			        <encoding>UTF-8</encoding>
-			        <baselineOnMigrate>true</baselineOnMigrate>
-			    </configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--			    <groupId>org.flywaydb</groupId>-->
+<!--			    <artifactId>flyway-maven-plugin</artifactId>-->
+<!--			    <version>3.1</version>-->
+<!--			    <configuration>-->
+<!--			    	<driver>org.postgresql.Driver</driver>-->
+<!--			    	<url>${hibernate.connection.url}</url>-->
+<!--			        <user>${hibernate.connection.username}</user>-->
+<!--			        <password>${hibernate.connection.password}</password>-->
+<!--			        <schemas>-->
+<!--			            <schema>${hibernate.connection.schema}</schema>-->
+<!--			        </schemas>-->
+<!--			        <locations>-->
+<!--			        	<location>classpath:db</location>-->
+<!--			        </locations>-->
+<!--			        <encoding>UTF-8</encoding>-->
+<!--			        <baselineOnMigrate>true</baselineOnMigrate>-->
+<!--			    </configuration>-->
+<!--			</plugin>-->
 
 <!-- 			<plugin> -->
 <!-- 				<groupId>org.codehaus.mojo</groupId> -->
