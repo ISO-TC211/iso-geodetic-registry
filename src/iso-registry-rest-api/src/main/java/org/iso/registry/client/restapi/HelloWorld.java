@@ -22,7 +22,7 @@ public class HelloWorld {
         return registerRepository.findAll();
     }
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public String working() {
         return "i m working";
     }
