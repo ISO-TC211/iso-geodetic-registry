@@ -14,6 +14,10 @@ RUN apk update && \
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN rm /var/cache/apk/*
 
-ADD ./build /app
+ADD ./build /app/build.sh
 
-RUN aws --version
+RUN aws s3 cp /app/build.sh s3://my-bucket/
+
+
+#aws s3 mb s3://bucket-name
+#aws s3 cp file.txt s3://my-bucket/
