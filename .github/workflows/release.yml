@@ -2,11 +2,8 @@ name: docker
 
 on:
   push:
-    # Sequence of patterns matched against refs/heads
     branches:
-      - docker
       - 'releases/**'
-    tags:
 
 jobs:
   build-and-publish:
