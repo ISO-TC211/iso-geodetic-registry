@@ -1,4 +1,4 @@
-name: Test Infra
+name: public docker container in context .ci-build
 
 on:
    push:
