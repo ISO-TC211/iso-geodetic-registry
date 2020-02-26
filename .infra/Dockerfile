@@ -1,5 +1,8 @@
 FROM maven:3-jdk-8-alpine
 
+ENV USER app
+ENV PARAMS "-p aws -b git_branch"
+
 RUN apk update && \
     # install awscli
     apk add --no-cache --virtual .build-deps && \
@@ -18,12 +21,12 @@ RUN apk update && \
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN rm /var/cache/apk/*
 
-VOLUME /dist
+WORKDIR /app
 
-COPY ./build.sh /build.sh
-RUN chmod +x /build.sh
+COPY ./build.sh build.sh
+RUN chmod +x build.sh
 
-CMD bash /build.sh ${PARAMS}
+CMD bash build.sh ${PARAMS}
 
 #RUN aws s3 cp /app/build.sh s3://my-bucket/
 

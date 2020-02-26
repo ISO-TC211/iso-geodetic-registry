@@ -17,7 +17,7 @@ do
 done
 
 BASEDIR="$(pwd)"
-APPDIR="${BASEDIR}/app"
+APPDIR="${BASEDIR}/git"
 DISTDIR="${BASEDIR}/dist"
 
 while getopts p:b: option; do

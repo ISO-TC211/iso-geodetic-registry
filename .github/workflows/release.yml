@@ -19,4 +19,3 @@ jobs:
         name: ${{github.repository}}/iso-registry
         username: ${{github.actor}}
         password: ${{github.token}}
-#        //:owner/:repo_name/:image_name.
