@@ -18,6 +18,8 @@ RUN apk update && \
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN rm /var/cache/apk/*
 
+VOLUME /dist
+
 COPY ./build.sh /build.sh
 RUN chmod +x /build.sh
 

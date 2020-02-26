@@ -16,7 +16,7 @@ do
     fi
 done
 
-BASEDIR="."
+BASEDIR="$(pwd)"
 APPDIR="${BASEDIR}/app"
 DISTDIR="${BASEDIR}/dist"
 
@@ -44,7 +44,7 @@ git clone \
 
 cd ${APPDIR}
 mvn package -DskipTests ${PROFILE}
-cd ${BASEDIR}
+cd -
 
 find -type f \( -name "*.war" -o -name "*.zip" \) | xargs -i cp -f {} ${DISTDIR}/
 rm -f ${DISTDIR}/Titillium_Web.zip ## delete redundant files
