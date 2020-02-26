@@ -26,7 +26,7 @@ b) BRANCH=${OPTARG};;
 esac
 done
 
-if [ -z "${PROFILE}" ]; then
+if [ ! -z "${PROFILE}" ]; then
     PROFILE="-P${PROFILE}"
 fi
 
