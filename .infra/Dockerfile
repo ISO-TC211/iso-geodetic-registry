@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM maven:3-jdk-8-alpine
 
 RUN apk update && \
     # install awscli
@@ -18,8 +18,10 @@ RUN apk update && \
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN rm /var/cache/apk/*
 
-ADD ./build.sh /app/build.sh
+COPY ./build.sh /build.sh
+RUN chmod +x /build.sh
 
+CMD bash /build.sh ${PARAMS}
 
 #RUN aws s3 cp /app/build.sh s3://my-bucket/
 

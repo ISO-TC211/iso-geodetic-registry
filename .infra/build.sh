@@ -16,8 +16,9 @@ do
     fi
 done
 
-APPDIR="$(pwd)/app"
-DISTDIR="$(pwd)/dist"
+BASEDIR=${PWD%/*}
+APPDIR="${BASEDIR}/app"
+DISTDIR="${BASEDIR}/dist"
 
 while getopts p:b: option; do
 case "${option}"
