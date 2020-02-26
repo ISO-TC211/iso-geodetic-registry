@@ -18,6 +18,6 @@ jobs:
             with:
                context: .ci-build
                registry: docker.pkg.github.com
-               name: $REPOSITORY_NAME/iso-geodetic-registry-cibuild
+               name: ${{env.REPOSITORY_NAME}}/iso-geodetic-registry-cibuild
                username: ${{github.actor}}
                password: ${{github.token}}
