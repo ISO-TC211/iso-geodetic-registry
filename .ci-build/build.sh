@@ -56,4 +56,5 @@ rm -f ${DISTDIR}/Titillium_Web.zip ## delete redundant files
 
 if [ ! -z "${S3BUCKET}" ]; then
     echo "upload ${DISTDIR}/isoreg-lambda.zip to ${S3BUCKET}"
+    aws s3 cp ${DISTDIR}/isoreg-lambda.zip s3://${S3BUCKET}/
 fi

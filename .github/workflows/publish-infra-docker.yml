@@ -3,16 +3,17 @@ name: Test Infra
 on:
    push:
       branches:
-         - 'test-infra'
+         - 'ci-build/**'
+
 jobs:
-   build-infra-docker:
+   build-app-docker:
       runs-on: ubuntu-latest
       steps:
          -  uses: actions/checkout@v1
          -  uses: elgohr/Publish-Docker-Github-Action@master
             with:
-               context: .infra
+               context: .ci-build
                registry: docker.pkg.github.com
-               name: ${{github.repository}}/build
+               name: ${{github.repository}}/iso-geodetic-registry-cibuild
                username: ${{github.actor}}
                password: ${{github.token}}
