@@ -1,6 +1,7 @@
 FROM alpine:3.10
 
 RUN apk update && \
+    # install awscli
     apk add --no-cache --virtual .build-deps && \
     apk add bash && \
     apk add make && \
@@ -8,15 +9,19 @@ RUN apk update && \
     apk add openssh && \
     apk -Uuv add groff less python py-pip && \
     pip install awscli && \
-    apk --purge -v del py-pip
+    apk --purge -v del py-pip && \
+    # install bash+git
+    apk upgrade && \
+    apk add bash git
 
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN rm /var/cache/apk/*
 
-ADD ./build /app/build.sh
+ADD ./build.sh /app/build.sh
 
-RUN aws s3 cp /app/build.sh s3://my-bucket/
+
+#RUN aws s3 cp /app/build.sh s3://my-bucket/
 
 
 #aws s3 mb s3://bucket-name
