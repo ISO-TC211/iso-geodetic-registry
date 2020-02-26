@@ -25,3 +25,4 @@ node_modules
 
 .infra/app
 .infra/dist
+.infra/git

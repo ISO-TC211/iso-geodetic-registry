@@ -13,7 +13,7 @@ do
         echo "Usage: [build.sh] -p {maven_profile_id} -b {git_branch_clone} -s3 {aws_s3_bucket_name}"
         echo "  -p  {maven_profile_id} (default: \"${PROFILE}\") - build with maven profile id"
         echo "  -b  {git_branch_clone} (default: \"${BRANCH}\") - git clone branch name"
-        echo "  -s3 {aws_s3_bucket_name} (default: \"${S3BUCKET}\") - upload final_isoregistry.zip to s3-bucket used by aws-lambda-function"
+        echo "  -s {aws_s3_bucket_name} (default: \"${S3BUCKET}\") - upload final_isoregistry.zip to s3-bucket used by aws-lambda-function"
         exit 0
     fi
 done
@@ -22,11 +22,12 @@ BASEDIR="$(pwd)"
 APPDIR="${BASEDIR}/git"
 DISTDIR="${BASEDIR}/dist"
 
-while getopts p:b: option; do
+while getopts p:b:s: option; do
 case "${option}"
 in
 p) PROFILE=${OPTARG};;
 b) BRANCH=${OPTARG};;
+s) S3BUCKET=${OPTARG};;
 esac
 done
 
