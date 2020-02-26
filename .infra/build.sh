@@ -1,7 +1,7 @@
 #! /bin/bash
 
 APPDIR="$(pwd)/app"
-DISTDIR="$(pwd)/dist"
+DISTDIR="${APPDIR}/dist"
 
 rm -Rf ${APPDIR} && mkdir -p ${APPDIR}
 rm -Rf ${DISTDIR} && mkdir -p ${DISTDIR}

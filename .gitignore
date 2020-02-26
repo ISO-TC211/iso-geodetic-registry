@@ -22,3 +22,6 @@ build-ignoreme
 setenv.sh
 **/*ignoreme*/
 node_modules
+
+.infra/app
+.infra/dist
