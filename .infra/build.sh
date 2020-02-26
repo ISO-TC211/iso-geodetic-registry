@@ -41,13 +41,10 @@ git clone \
     -j8 \
     https://github.com/ISO-TC211/iso-geodetic-registry.git ${APPDIR}
 
-cd app
-mvn package -DskipTests ${PROFILE}
-cd -
-
-find -type f \( -name "*.war" -o -name "*.zip" \) | xargs -i cp -f {} ${DISDIR}/
-rm -f ${DISDIR}/Titillium_Web.zip ## delete redundant files
+mvn package -DskipTests ${PROFILE} -f ${APPDIR}/pom.xml
+find ${APPDIR} -type f \( -name "*.war" -o -name "*.zip" \) | xargs -i cp -f {} ${DISTDIR}/
+rm -f ${DISTDIR}/Titillium_Web.zip ## delete redundant files
 
 if [ ! -z "${S3BUCKET}" ]; then
-    echo "upload dist/iso.zip to ${S3BUCKET}"
+    echo "upload ${DISTDIR}/isoreg-lambda.zip to ${S3BUCKET}"
 fi
