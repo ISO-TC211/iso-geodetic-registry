@@ -32,8 +32,8 @@ if [ ! -z "${PROFILE}" ]; then
     PROFILE="-P${PROFILE}"
 fi
 
-rm -Rf ${APPDIR} && mkdir -p ${APPDIR}
-rm -Rf ${DISTDIR} && mkdir -p ${DISTDIR}
+rm -Rf ${APPDIR} || mkdir -p ${APPDIR}
+rm -Rf ${DISTDIR} || mkdir -p ${DISTDIR}
 
 git clone \
     --depth=10 \
