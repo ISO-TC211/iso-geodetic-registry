@@ -14,5 +14,4 @@ git clone \
     https://github.com/ISO-TC211/iso-geodetic-registry.git ${APPDIR}
 
 cd app && mvn package -DskipTests && cd -
-
 find "${APPDIR}/src/" -type f \( -name "*.war" -o -name "*.zip" \) | xargs -i cp {} ${DISDIR}
