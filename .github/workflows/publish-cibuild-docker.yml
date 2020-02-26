@@ -10,7 +10,7 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          -  uses: actions/checkout@v1
-         -  run: echo ::set-env name=REPOSITORY_NAME::$(echo "${{github.repository}}" | awk -F / '{print $2}' awk '{print tolower($0)}')
+         -  run: echo ::set-env name=REPOSITORY_NAME::$(echo ${{github.repository}} | awk '{print tolower($0)}')
             name: set env.REPOSITORY_NAME
          -  run: echo $REPOSITORY_NAME
             name: test running context
