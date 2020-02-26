@@ -1,5 +1,7 @@
 #! /bin/bash
 
+## clone-and-build iso-geodetic-registry from GITHUB
+
 PROFILE=""
 BRANCH="master"
 S3BUCKET=""

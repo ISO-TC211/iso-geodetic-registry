@@ -13,6 +13,6 @@ jobs:
             with:
                context: .infra
                registry: docker.pkg.github.com
-               name: ${{github.repository}}/iso-registry
+               name: ${{github.repository}}/build
                username: ${{github.actor}}
                password: ${{github.token}}

@@ -1,6 +1,5 @@
 FROM maven:3-jdk-8-alpine
 
-ENV USER app
 ENV PARAMS "-p aws -b git_branch"
 
 RUN apk update && \
