@@ -16,7 +16,7 @@ do
     fi
 done
 
-BASEDIR=${PWD%/*}
+BASEDIR="."
 APPDIR="${BASEDIR}/app"
 DISTDIR="${BASEDIR}/dist"
 
@@ -42,8 +42,11 @@ git clone \
     -j8 \
     https://github.com/ISO-TC211/iso-geodetic-registry.git ${APPDIR}
 
-mvn package -DskipTests ${PROFILE} -f ${APPDIR}/pom.xml
-find ${APPDIR} -type f \( -name "*.war" -o -name "*.zip" \) | xargs -i cp -f {} ${DISTDIR}/
+cd ${APPDIR}
+mvn package -DskipTests ${PROFILE}
+cd ${BASEDIR}
+
+find -type f \( -name "*.war" -o -name "*.zip" \) | xargs -i cp -f {} ${DISTDIR}/
 rm -f ${DISTDIR}/Titillium_Web.zip ## delete redundant files
 
 if [ ! -z "${S3BUCKET}" ]; then
