@@ -1,5 +1,5 @@
-name: public docker container in context .ci-build
-
+name: dockernize ".ci-build"
+description: public docker container in context .ci-build
 on:
    push:
       branches:
@@ -10,10 +10,14 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          -  uses: actions/checkout@v1
+         -  run: echo ::set-env name=REPOSITORY_NAME::$(echo "${{github.repository}}" | awk -F / '{print $2}' awk '{print tolower($0)}')
+            name: set env.REPOSITORY_NAME
+         -  run: echo $REPOSITORY_NAME
+            name: test running context
          -  uses: elgohr/Publish-Docker-Github-Action@master
             with:
                context: .ci-build
                registry: docker.pkg.github.com
-               name: ${{github.repository}}/iso-geodetic-registry-cibuild
+               name: $REPOSITORY_NAME/iso-geodetic-registry-cibuild
                username: ${{github.actor}}
                password: ${{github.token}}
