@@ -525,5 +525,38 @@
 			});
 		});	
 	};
+
+	var showNotesButton = function(item) {
+		return '<a href="#notespopup-' + item.proposalUuid + '" id="notes-' + item.proposalUuid + '" data-toggle="modal" class="action-' + item.proposalUuid + '" data-uuid="' + item.proposalUuid + '"><span class="fa fa-envelope"></span></a>';
+	}
+
+	var notesPopup = function(item) {
+		var result =
+			'<div class="modal fade" id="notespopup-' + item.proposalUuid + '" role="dialog">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<h4>[[#{popup.proposalNotes.header}]]</h4>' +
+						'</div>' +
+						'<div class="modal-body">';
+		$.each(item.additionalData['notes'], function(idx, note) {
+			result +=
+				'<blockquote>' +
+				  '<p>' + note.note + '</p>' +
+				  '<footer>' + note.authorName + '</footer>' +
+				'</blockquote>';
+		});
+
+		result +=
+					'</div>' +
+						'<div class="modal-footer">' +
+							'<button type="button" id="close" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+
+		return result;
+	}
 	/* ]]> */
 </script>
