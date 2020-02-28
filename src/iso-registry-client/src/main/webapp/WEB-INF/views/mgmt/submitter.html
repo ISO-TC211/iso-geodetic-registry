@@ -78,6 +78,7 @@
 									<th th:text="#{tableheader.proposalType}">Vorschlagstyp</th>
 									<th th:text="#{tableheader.proposalStatus}">Status</th>
 									<th></th>
+									<th></th>
 								</tr>
 							</thead>
 <!-- 							<tbody> -->
@@ -279,34 +280,50 @@
 				},				
 				"aaSorting": [[ 3, "asc" ]],
 				"aoColumns": [
-					{ 
+					{
 						"mDataProp": "title",
-						"sWidth": "50%",
+						"sWidth": "45%",
 						"bSortable": true
 					},
-					{ 
+					{
 						"mDataProp": "itemClassName",
 						"sWidth": "15%",
 						"bSearchable": true,
 						"bSortable": false
 					},
-					{ 	
+					{
 						"mDataProp": "proposalType",
 						"sWidth": "15%",
 					 	"bSortable": false
 					},
-					{ 
+					{
 						"mDataProp": "proposalStatus",
 						"sWidth": "10%",
 						"bSortable": true
 					},
-					{ 
+					{
+						"sWidth": "5%",
+						"bSortable": false
+					},
+					{
 						"sWidth": "10%",
 						"bSortable": false
 					},
 				],
 				"aoColumnDefs": [
 					{ "aTargets": [4],
+					  "mData": null,
+					  "mRender": function (data, type, full) {
+						  var icons = "";
+						  if (full.hasNotes) {
+							  icons += showNotesButton(full);
+							  icons += notesPopup(full);
+						  }
+
+						  return icons;
+					  }
+					},
+					{ "aTargets": [5],
 					  "mData": null,
 					  "mRender": function (data, type, full) {
 						  var actions = "";

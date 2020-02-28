@@ -3,10 +3,7 @@
  */
 package org.iso.registry.client.controller;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.CONTROLBODY_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.MANAGER_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.POINTOFCONTACT_ROLE_PREFIX;
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +14,9 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.iso.registry.api.ProposalListItemNotesDecorator;
 import org.iso.registry.client.controller.registry.ProposalNotFoundException;
+import org.iso.registry.core.model.ProposalNoteRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -130,6 +129,9 @@ public class ManagementController
 
 	@Autowired
 	private ProposalChangeRequestRepository pcrRepository;
+
+	@Autowired
+	private ProposalNoteRepository noteRepository;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -355,7 +357,7 @@ public class ManagementController
 		for (Proposal proposal : proposals) {
 			ProposalListItem rvb = new ProposalListItemImpl(proposal, messageSource, locale, workflowManager, pcrRepository);
 			rvb.setSubmitter(security.hasEntityRelatedRoleForAll(SUBMITTER_ROLE_PREFIX, proposal.getAffectedRegisters()));
-			proposalViewBeans.add(rvb);
+			proposalViewBeans.add(new ProposalListItemNotesDecorator(rvb, noteRepository));
 		}
 		DatatablesResult result = new DatatablesResult(proposals.getTotalElements(), proposals.getTotalElements(), dtParameters.sEcho, proposalViewBeans);
 
