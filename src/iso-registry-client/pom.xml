@@ -37,7 +37,7 @@
 		<gml.identifier.baseurl></gml.identifier.baseurl>		
 		<gml.identifier.pathpattern>register/geodetic/items/%d</gml.identifier.pathpattern>
 		<register.aliases>geodetic:ISO Geodetic Register</register.aliases>
-		<slf4j.scope>provided</slf4j.scope>
+		<log4j.scope>provided</log4j.scope>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -71,40 +71,22 @@
 			<version>${org.slf4j-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j-version}</version>
+			<scope>${log4j.scope}</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>${slf4j.scope}</scope>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j-version}</version>
+			<scope>${log4j.scope}</scope>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.jms</groupId>
-					<artifactId>jms</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jdmk</groupId>
-					<artifactId>jmxtools</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jmx</groupId>
-					<artifactId>jmxri</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>${slf4j.scope}</scope>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j-version}</version>
+			<scope>${log4j.scope}</scope>
 		</dependency>
 
 		<!-- @Inject -->
@@ -466,7 +448,7 @@
 				<client.signup.sendConfirmationMails>false</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>http://localhost:8080/signup/confirmation</client.signup.confirmationUrl>
 				<gml.identifier.baseurl>http://localhost:8080</gml.identifier.baseurl>		
-				<slf4j.scope>runtime</slf4j.scope>
+				<log4j.scope>runtime</log4j.scope>
 			</properties>
 		</profile>
 		<profile>
