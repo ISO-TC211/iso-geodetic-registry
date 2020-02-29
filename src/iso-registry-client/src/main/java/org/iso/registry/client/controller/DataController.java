@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hsqldb.lib.StringUtil;
 import org.iso.registry.api.registry.IsoProposalService;
@@ -22,6 +23,8 @@ import org.iso.registry.core.model.operation.OperationParameterItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -52,7 +55,10 @@ public class DataController
 	
 	@Autowired
 	private IsoProposalService isoProposalService;
-	
+
+	@Autowired
+	private MessageSource messageSource;
+
 	@RequestMapping(value = "/by-class/{className}", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody List<Object[]> findAll(@PathVariable("className") String className, 
@@ -306,5 +312,12 @@ public class DataController
 			this.uuid = uuid;
 			this.name = name;
 		}
+	}
+
+	@RequestMapping(value = "/message/{code:.+}", produces = "text/plain", method = RequestMethod.GET)
+	public @ResponseBody String getMessage(final HttpServletResponse response, @PathVariable("code") final String code) {
+		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
+		return messageSource.getMessage(code, null, "<invalid code>", LocaleContextHolder.getLocale());
 	}
 }
