@@ -102,10 +102,9 @@
 						<th th:text="#{tableheader.parameter}">Parameter</th>
 						<th th:text="#{tableheader.value}">Value</th>
 						<th th:text="#{tableheader.uom}">UoM</th>
-						<th th:text="#{tableheader.citation}">Citation</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody th:unless="${isProposal}">
 					<tr th:each="parameterValue,row : *{parameterValues}">
 						<td th:text="${parameterValue.parameterName}"></td>
 						<td>
@@ -114,15 +113,24 @@
 							</div>
 						</td>
 						<td>
-							<input th:if="${isProposal}" type="hidden" th:id="'paramValue_' + ${row.index}" class="select-uom" th:value="${parameterValue.uomUuid}" required="required" style="width: 100%"/>
 							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name} + ' [' + ${parameterValue.unitOfMeasure.identifier} + ']'"></a>
-						</td>							
+						</td>
+					</tr>
+				</tbody>
+				<tbody th:if="${isProposal}">
+					<tr th:each="parameterValue,row : *{parameterValues}">
 						<td>
-							<div th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
-								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
-								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
+							<span th:text="${@dataController.getParameterName(parameterValue.parameter.referencedItemUuid).body.name}"></span>
+							<input type="hidden" th:name="'parameterValues[' + ${row.index} + '].parameter.referencedItemUuid'" th:value="${parameterValue.parameter.referencedItemUuid}"/>
+						</td>
+						<td>
+							<div class="form-group">
+								<input type="text" class="form-control required" th:id="'parameter-value-' + ${row.index}" th:name="'parameterValues[' + ${row.index} + '].value'" th:value="${parameterValue.value}" th:disabled="${proposal.isClarification()}" th:readonly="${proposal.isClarification()}" th:required="!${proposal.isClarification()}"/>
 							</div>
-						</td>							
+						</td>
+						<td>
+							<input type="hidden" th:id="'parameterUom_' + ${row.index}" th:name="'parameterValues[' + ${row.index} + '].parameterUnit.referencedItemUuid'" class="select-uom" th:value="${parameterValue.parameterUnit?.referencedItemUuid}" required="required" style="width: 100%"/>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -199,9 +207,9 @@
             	.done(function (data) {
             		$.each(data, function(idx, item) {
         				table.fnAddData([
-        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
+        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameter.referencedItemUuid' value='" + item[0] + "'/>",
         					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
-    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>"
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].parameterUnit.referencedItemUuid' required='required' style='width: 100%'/>"
 						]);
         				uomSelect($('#parameterUom_' + idx));
             		});

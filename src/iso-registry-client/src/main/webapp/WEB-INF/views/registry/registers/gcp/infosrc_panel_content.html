@@ -67,18 +67,20 @@
 		</div>
 	</div>
 	<div th:class="'alternate-title-row-' + ${index}" th:attr="data-count=${objectPath} ? '0' : *{alternateTitle.size()}"/>
-	<div th:unless="${objectPath}" th:each="altTitle,rowStat : *{alternateTitle}" th:id="'altTitleRow-' + ${rowStat.index}" class="row alternate-title-row">
-		<div class="form-group col-md-12">
-			<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
-			<div class="input-group">
-				<input th:if="${isProposal}" th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
-				<span th:unless="${isProposal}" class="text-muted" th:text="${rowStat.index + 1} + '.'"></span>&nbsp;<big th:unless="${isProposal}" th:text="${altTitle}"/>
-				<span class="input-group-btn" th:if="${isProposal}">
-					<button type="button" class="btn btn-default button-delete-alt-title" th:id="'delete-alt-title-' + ${rowStat.index}"><span class="glyphicon glyphicon-remove"/></button>
-				</span>
+	<th:block th:unless="${objectPath}">
+		<div th:each="altTitle,rowStat : *{alternateTitle}" th:id="'altTitleRow-' + ${rowStat.index}" class="row alternate-title-row">
+			<div class="form-group col-md-12">
+				<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
+				<div class="input-group">
+					<input th:if="${isProposal}" th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
+					<span th:unless="${isProposal}" class="text-muted" th:text="${rowStat.index + 1} + '.'"></span>&nbsp;<big th:unless="${isProposal}" th:text="${altTitle}"/>
+					<span class="input-group-btn" th:if="${isProposal}">
+						<button type="button" class="btn btn-default button-delete-alt-title" th:id="'delete-alt-title-' + ${rowStat.index}"><span class="glyphicon glyphicon-remove"/></button>
+					</span>
+				</div>
 			</div>
 		</div>
-	</div>
+	</th:block>
 	<div th:if="${isProposal}" th:unless="${isReadOnly}" class="row">
 		<div class="form-group col-md-4">
 			<button th:id="'addAlternateTitle-' + ${index}" type="button" th:attr="data-index=${index}" class="btn btn-default button-add-alternate-title" th:text="#{button.addAlternateTitle}"/>
@@ -153,7 +155,12 @@
 			$('body').on('click', '.button-add-alternate-title', function() {
 				var idx = $(this).data('index');
 				var count = $('.alternate-title-row-' + idx).data('count');
-				$('.alternate-title-row-' + idx).last().after("<div class='row alternate-title-row'><div class='form-group col-md-12'><div class='control-label' for='alternateTitle'><label class='control-label' for='alternateTitle'><span>[[#{form.label.alternateTitle}]]</span></label></div><div class='input-group'><input class='form-control' name='informationSource[" + idx + "].alternateTitle[" + count + "]' value=''/><span class='input-group-btn'><button type='button' class='btn btn-default button-delete-alt-title' id='delete-alt-title-" + count + "'><span class='glyphicon glyphicon-remove'/></button></span></div></div></div>");
+				if ([[${altTitlePrefix} ? 'true' : 'false']]) {
+					$('.alternate-title-row-' + idx).last().after("<div class='row alternate-title-row'><div class='form-group col-md-12'><div class='control-label' for='alternateTitle'><label class='control-label' for='alternateTitle'><span>[[#{form.label.alternateTitle}]]</span></label></div><div class='input-group'><input class='form-control' name='[[${altTitlePrefix}]].alternateTitle[" + count + "]' value=''/><span class='input-group-btn'><button type='button' class='btn btn-default button-delete-alt-title' id='delete-alt-title-" + count + "'><span class='glyphicon glyphicon-remove'/></button></span></div></div></div>");
+				}
+				else {
+					$('.alternate-title-row-' + idx).last().after("<div class='row alternate-title-row'><div class='form-group col-md-12'><div class='control-label' for='alternateTitle'><label class='control-label' for='alternateTitle'><span>[[#{form.label.alternateTitle}]]</span></label></div><div class='input-group'><input class='form-control' name='informationSource[" + idx + "].alternateTitle[" + count + "]' value=''/><span class='input-group-btn'><button type='button' class='btn btn-default button-delete-alt-title' id='delete-alt-title-" + count + "'><span class='glyphicon glyphicon-remove'/></button></span></div></div></div>");
+				}
 				$('.alternate-title-row-' + idx).data('count', ++count);
 			});
 			
