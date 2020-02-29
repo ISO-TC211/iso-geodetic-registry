@@ -246,16 +246,22 @@ public class SingleOperationItemProposalDTO extends CoordinateOperationItemPropo
 			else if (paramValue instanceof Collection) {
 				throw new UnsupportedOperationException("Parameter lists are not yet supported");
 			}
+
 			ParameterValueDTO value;
 			if (uom == null) {
 				OperationParameterItemProposalDTO a = new OperationParameterItemProposalDTO(opv.getParameter());
-				value = new ParameterValueDTO(a, opv.getParameterType(), paramValue.toString());
+				value = new ParameterValueDTO(a, opv.getParameterType(), paramValue == null ? null : paramValue.toString());
 			}
 			else {
 				OperationParameterItemProposalDTO a = new OperationParameterItemProposalDTO(opv.getParameter());
-				value = new ParameterValueDTO(a, paramValue.toString(), new UnitOfMeasureItemProposalDTO(uom));
+				value = new ParameterValueDTO(a, paramValue == null ? null : paramValue.toString(), new UnitOfMeasureItemProposalDTO(uom));
 			}
-	
+
+			if (opv.getReferenceFileCitation() != null) {
+				CitationDTO valueFileCitation = new CitationDTO(opv.getReferenceFileCitation());
+				value.setValueFileCitation(valueFileCitation);
+			}
+
 			this.parameterValues.add(value);
 		}
 	}

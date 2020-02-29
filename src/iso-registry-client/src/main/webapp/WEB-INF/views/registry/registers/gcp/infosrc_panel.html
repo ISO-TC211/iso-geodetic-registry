@@ -39,7 +39,7 @@
 				
 				$('<div id="infosrc-' + idx + '" class="tab-pane" style="padding-top: 10px"/>').insertBefore('#afterTabs');
 				$('#infosrc-' + idx).append('<div id="infosrc-' + idx + '-content" class="panel-body"/>');
-				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource[' + idx + ']', null, function() {
+				$('#infosrc-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/informationsource}]]?index=' + idx + '&objectPath=informationSource%5B' + idx + '%5D', null, function() {
 				    $("#publicationDate-informationSource-" + idx).rules("add", {
 				    	required: '#revisionDate-informationSource-' + idx + ':blank',
 // 				   	    required: function(element) {
@@ -111,10 +111,26 @@
 			<div class="modal-header">
 				<h4 th:text="#{popup.informationSource.header}"></h4>
 			</div>
-			<div th:unless="${isProposal}" class="modal-body" th:object="${citation}">
+			<div th:unless="${isProposal}" class="modal-body" th:object="${citation}" th:with="isReadOnly='true'">
 				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
 			</div>
-			<div th:if="${isProposal}" class="modal-body" th:object="${citation}" th:with="isReadOnly='true'">
+			<div th:if="${isProposal}" class="modal-body" th:object="${citation}">
+				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="infosrcPopup_ok" class="btn btn-default" data-dismiss="modal" th:text="#{button.ok}">Ok</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="citationPopupValueReference(index)" class="modal fade" th:id="'dialog-citation-' + ${index}" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 th:text="#{popup.informationSource.header}"></h4>
+			</div>
+			<div class="modal-body" th:object="${proposal.parameterValues[__${index}__].valueFileCitation}" th:with="altTitlePrefix='parameterValues[' + ${index} + '].valueFileCitation'">
 				<div th:include="registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(${index})"/>
 			</div>
 			<div class="modal-footer">

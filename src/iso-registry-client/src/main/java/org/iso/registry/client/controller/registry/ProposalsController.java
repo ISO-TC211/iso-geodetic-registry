@@ -19,14 +19,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.EntityExistsException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.iso.registry.api.registry.IsoProposalService;
+import org.iso.registry.api.registry.registers.gcp.operation.OperationMethodItemProposalDTO;
+import org.iso.registry.api.registry.registers.gcp.operation.SingleOperationItemProposalDTO;
 import org.iso.registry.client.controller.registry.RegisterController.SupersessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -42,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -179,6 +178,8 @@ public class ProposalsController extends AbstractController
 			   @PathVariable("property") String propertyName,
 			   final Model model) throws Exception {
 
+		security.assertIsLoggedIn();
+
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
 			throw new ProposalNotFoundException(proposalUuid);
@@ -264,6 +265,8 @@ public class ProposalsController extends AbstractController
 							   @RequestParam(value = "edit", required = false) String forceEdit,
 							   @RequestParam(value = "role", required = false) String role,
 							   final Model model) throws ProposalNotFoundException, UnauthorizedException {
+
+		security.assertIsLoggedIn();
 
 		Proposal proposal = proposalRepository.findOne(proposalUuid);
 		if (proposal == null) {
@@ -481,9 +484,16 @@ public class ProposalsController extends AbstractController
 			return "redirect:/registry/proposal/edit_supersession"; 
 		}
 		else {
-			proposalDto = proposalDtoFactory.getProposalDto(proposal);
 			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
-			
+
+			// TODO HACK ServletRequestDataBinder does not bind "method.referencedItemUuid" if present, doing it manually
+			if (allParams.containsKey("method.referencedItemUuid") && proposalDto instanceof SingleOperationItemProposalDTO) {
+				SingleOperationItemProposalDTO opDto = (SingleOperationItemProposalDTO)proposalDto;
+				OperationMethodItemProposalDTO methodDto = new OperationMethodItemProposalDTO();
+				methodDto.setReferencedItemUuid(UUID.fromString(allParams.get("method.referencedItemUuid").toString()));
+				opDto.setMethod(methodDto);
+			}
+
 			proposalService.updateProposal(proposalDto);
 			if (!StringUtils.isEmpty(role)) {
 				return "redirect:/management/" + role;

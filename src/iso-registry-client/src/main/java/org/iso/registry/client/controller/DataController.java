@@ -12,14 +12,16 @@ import javax.persistence.Query;
 
 import org.hsqldb.lib.StringUtil;
 import org.iso.registry.api.registry.IsoProposalService;
-import org.iso.registry.core.model.cs.CoordinateSystemItemRepository;
-import org.iso.registry.core.model.datum.DatumItemRepository;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
 import org.iso.registry.core.model.iso19115.extent.ExtentRepository;
 import org.iso.registry.core.model.operation.GeneralOperationParameterItem;
 import org.iso.registry.core.model.operation.OperationMethodItem;
 import org.iso.registry.core.model.operation.OperationMethodItemRepository;
+import org.iso.registry.core.model.operation.OperationParameterItem;
+import org.iso.registry.core.model.operation.OperationParameterItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -38,7 +40,10 @@ public class DataController
 {
 	@Autowired
 	private OperationMethodItemRepository methodRepository;
-	
+
+	@Autowired
+	private OperationParameterItemRepository parameterRepository;
+
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -236,6 +241,19 @@ public class DataController
 //		return entityManager.createQuery(jpql).getResultList();
 	}
 
+	@RequestMapping(value = "/parameter/{parameterUuid}", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<OperationParameterInfo> getParameterName(@PathVariable("parameterUuid") UUID parameterUuid) {
+		OperationParameterItem parameter = parameterRepository.findOne(parameterUuid);
+
+		if (parameter == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		OperationParameterInfo result = new OperationParameterInfo(parameter.getUuid(), parameter.getName());
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/identifier/next-available", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public @ResponseBody Integer findNextAvailableIdentifier() {
@@ -270,4 +288,23 @@ public class DataController
 		return "registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(index='" + index + "')";
 	}
 
+	@RequestMapping(value = "/fragments/citationpopup")
+	public String getCitationPopupFragment(@RequestParam("index") String index, @RequestParam(value = "objectPath", required = false) String objectPath, final Model model) {
+		if (!StringUtils.isEmpty(objectPath)) {
+			model.addAttribute("objectPath", objectPath);
+		}
+		model.addAttribute("isProposal", "true");
+
+		return "registry/registers/gcp/infosrc_panel :: citationPopup(index='" + index + "')";
+	}
+
+	public static class OperationParameterInfo {
+		public final UUID uuid;
+		public final String name;
+
+		public OperationParameterInfo(UUID uuid, String name) {
+			this.uuid = uuid;
+			this.name = name;
+		}
+	}
 }
