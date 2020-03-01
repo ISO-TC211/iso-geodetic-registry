@@ -121,32 +121,52 @@
 						<th th:text="#{tableheader.citation}">Citation</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody th:unless="${isProposal}">
 					<tr th:each="parameterValue,row : *{parameterValues}">
 						<td th:text="${parameterValue.parameterName}"></td>
 						<td>
-							<input th:if="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" required="required" th:readonly="${proposal.isClarification()}" style="width: 100%"/>
-							<input th:unless="${isProposal}" type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" readonly="readonly" style="width: 100%"/>
+							<input type="hidden" th:id="'paramValueType_' + ${row.index}" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" readonly="readonly" style="width: 100%"/>
 						</td>
 						<td>
-							<div class="form-group" th:if="${isProposal}">
-								<input type="text" class="form-control input-sm required" th:value="${parameterValue.value}" th:disabled="${proposal.isClarification()}" th:readonly="${proposal.isClarification()}" th:required="!${proposal.isClarification()}"/>
-							</div>
-							<span th:unless="${isProposal}" th:text="${parameterValue.value}"></span>
+							<span th:text="${parameterValue.value}"></span>
 						</td>
 						<td th:with="isMeasure=(${parameterValue.parameterType} eq 'MEASURE')">
-							<input th:if="${isProposal}" type="hidden" th:id="'parameterUom_' + ${row.index}" class="select-uom" th:value="${parameterValue.parameterUnit.uuid}" th:disabled="!${isMeasure} or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
-							<a th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name}"></a>&nbsp;<span th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" class="text-muted" th:text="'[' + ${parameterValue.unitOfMeasure.identifier} + ']'"></span>
+							<a th:unless="!${parameterValue.unitOfMeasure}" th:href="@{__${basePath}__/item/__${parameterValue.unitOfMeasure.uuid}__}" th:text="${parameterValue.unitOfMeasure.name}"></a>&nbsp;<span th:unless="${isProposal} or !${parameterValue.unitOfMeasure}" class="text-muted" th:text="'[' + ${parameterValue.unitOfMeasure.identifier} + ']'"></span>
 						</td>							
 						<td th:with="isFile=(${parameterValue.parameterType} eq 'FILE')">
-							<div th:if="${isProposal}">
-								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="#{button.edit}"/>
-								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
-							</div>
-							<div th:unless="${isProposal}" th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
+							<div th:if="${parameterValue.referenceFileCitation}" th:with="citation=${parameterValue.referenceFileCitation}"> 
 								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="${parameterValue.referenceFileCitation.title} ? ${parameterValue.referenceFileCitation.title} : ('[' + #{untitled} + ']')"/>
-								<div th:replace="registry/registers/gcp/infosrc_panel :: citationPopup(${row.index})"/>
 							</div>
+						</td>
+						<td th:text="${row.index}"/>			
+					</tr>
+				</tbody>
+				<tbody th:if="${isProposal}">
+					<tr th:each="parameterValue,row : *{parameterValues}">
+						<td>
+							<span th:text="${@dataController.getParameterName(parameterValue.parameter.referencedItemUuid).body.name}"></span>
+							<input type="hidden" th:name="'parameterValues[' + ${row.index} + '].parameter.referencedItemUuid'" th:value="${parameterValue.parameter.referencedItemUuid}"/>
+						</td>
+						<td>
+							<input type="hidden" th:id="'paramValueType_' + ${row.index}" th:name="'parameterValues[' + ${row.index} + '].parameterType'" th:attr="data-index=${row.index}" class="select-paramtype" th:value="${parameterValue.parameterType}" required="required" th:readonly="${proposal.isClarification()}" style="width: 100%"/>
+						</td>
+						<td>
+							<div class="form-group">
+								<input type="text" class="form-control input-sm required" th:id="'parameter-value-' + ${row.index}" th:name="'parameterValues[' + ${row.index} + '].value'" th:value="${parameterValue.value}" th:disabled="${proposal.isClarification()}" th:readonly="${proposal.isClarification()}" th:required="!${proposal.isClarification()}"/>
+							</div>
+						</td>
+						<td th:with="isMeasure=(${parameterValue.parameterType.toString()} eq 'MEASURE')">
+							<input th:if="${isMeasure}" type="hidden" th:id="'parameterUom_' + ${row.index}" th:name="'parameterValues[' + ${row.index} + '].parameterUnit.referencedItemUuid'" class="select-uom" th:value="${parameterValue.parameterUnit?.referencedItemUuid}" th:disabled="${parameterValue.parameterType} eq 'MEASURE' or ${proposal.isClarification()}" th:required="${isMeasure}" style="width: 100%"/>
+							<input th:unless="${isMeasure}" type="hidden" th:id="'parameterUom_' + ${row.index}" th:name="'parameterValues[' + ${row.index} + '].parameterUnit.referencedItemUuid'" class="select-uom" th:disabled="disabled" style="width: 100%"/>
+						</td>
+						<td th:with="isFile=(${parameterValue.parameterType.toString()} eq 'FILE')">
+							<th:block th:if="${isFile}">
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal" th:text="#{button.edit}"/>
+								<div th:id="'x-dialog-citation-' + ${row.index}" th:replace="registry/registers/gcp/infosrc_panel :: citationPopupValueReference(${row.index})"/>
+							</th:block>
+							<th:block th:unless="${isFile}">
+								<a th:id="'citation-' + ${row.index}" th:href="'#dialog-citation-' + ${row.index}" data-toggle="modal"/><div th:id="'x-dialog-citation-' + ${row.index}"/>
+							</th:block>
 						</td>
 						<td th:text="${row.index}"/>			
 					</tr>
@@ -237,28 +257,25 @@
        		
        		$('#parametersTable').on('change', '.select-paramtype', function(e) {
        			var idx = $(this).data('index');
+       			
        			if ($(this).val() == 'MEASURE') {
        				$('#parameterUom_' + idx).removeAttr('disabled');
        				$('#parameterUom_' + idx).select2('enable', true);
        				$('#parameterUom_' + idx).select2('readonly', false);
+       				$('#parameterUom_' + idx).select2('val', '');
        				$('#parameterUom_' + idx).attr('required', 'required');
+       				$('#parameter-value-' + idx).val('');
+    				$('#citation-' + idx).empty();
+    				$('#x-dialog-citation-' + idx).empty();
        			}
        			else {
        				$('#parameterUom_' + idx).val('');
        				$('#parameterUom_' + idx).select2('enable', false);
+       				$('#parameterUom_' + idx).select2('val', '');
        				$('#parameterUom_' + idx).removeAttr('required');
-       			}
-
-       			if ($(this).val() == 'FILE') {
-       				$('#parameterUom_' + idx).removeAttr('disabled');
-       				$('#parameterUom_' + idx).select2('enable', true);
-       				$('#parameterUom_' + idx).select2('readonly', false);
-       				$('#parameterUom_' + idx).attr('required', 'required');
-       			}
-       			else {
-       				$('#parameterUom_' + idx).val('');
-       				$('#parameterUom_' + idx).select2('enable', false);
-       				$('#parameterUom_' + idx).removeAttr('required');
+       				$('#parameter-value-' + idx).val('');
+    				$('#citation-' + idx).text('[[#{button.edit}]]');
+    				$('#x-dialog-citation-' + idx).load('[[@{__${basePath}__/entities/fragments/citationpopup}]]?index=' + idx + '&objectPath=parameterValues%5B' + idx + '%5D.valueFileCitation', null, function() {});
        			}
        		});
 
@@ -271,11 +288,12 @@
             	.done(function (data) {
             		$.each(data, function(idx, item) {
         				table.fnAddData([
-        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameterUuid' value='" + item[0] + "'/>",
+        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameter.referencedItemUuid' value='" + item[0] + "'/>",
         					"<input type='hidden' id='paramValueType_" + idx + "' data-index='" + idx + "' class='select-paramtype' name='parameterValues[" + idx + "].parameterType' value='MEASURE' required='required' style='width: 100%'/>",
         					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
-    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].uomUuid' required='required' style='width: 100%'/>",
-    						"",
+    						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].parameterUnit.referencedItemUuid' required='required' style='width: 100%'/>",
+     						"<a id='citation-" + idx + "' href='#dialog-citation-" + idx + "' data-toggle='modal'></a><div id='x-dialog-citation-" + idx + "'/>",
+							"",
     						idx
 						]);
         				uomSelect($('#parameterUom_' + idx));
