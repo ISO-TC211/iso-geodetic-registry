@@ -1,0 +1,115 @@
+<div>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button
+        id="collapsenavbar"
+        type="button"
+        class="navbar-toggle"
+        data-toggle="collapse"
+        data-target=".navbar-ex1-collapse"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span> <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <img
+        src="@{__${basePath}__/resources/images/iso.png}"
+        alt="ISO"
+        id="logo"
+        class="img-responsive pull-left"
+        style="padding-top: 10px; padding-left: 10px"
+      />
+      <!--  <a style="padding-top:15px"
+         class="test navbar-brand"
+         href="@{__${basePath}__/}"
+         text="#{application.header}">Geodetic Codes and Parameters Registry</a> -->
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div
+      class="collapse navbar-collapse navbar-ex1-collapse"
+      style="margin-top: 40px"
+    >
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <li class="navbar-text" sec:authorize="isAuthenticated()"><span th:text="#{navbar.loggedInAs}"></span> <span
+            sec:authentication="principal.emailAddress">Nutzer</span></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.help}">Help</span> <span
+              class="caret"></span></a>
+          <ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
+            <li>
+              <a href="https://iso-tc211.github.io/iso-geodetic-register-docs/"
+                 target="_blank"
+                 th:text="#{navbar.help.userguide}"></a>
+            </li>
+          </ul>
+        </li>
+        <li sec:authorize="isAuthenticated()"><a th:href="@{__${basePath}__/logout}"
+                                                 th:text="#{navbar.logout}">Abmelden</a></li>
+        <li class="dropdown" sec:authorize="!isAuthenticated()">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{navbar.login}">Anmelden</span>
+            <span class="caret"></span></a>
+          <ul class="dropdown-menu" style="padding: 15px; min-width: 250px;">
+            <li>
+              <div class="row">
+                <div class="col-md-12">
+                  <form class="form login-form"
+                        role="form"
+                        method="post"
+                        th:action="@{__${basePath}__/login}"
+                        accept-charset="UTF-8"
+                        id="login-nav">
+
+                    <div class="form-group">
+                      <label class="sr-only"
+                             for="inputEmail"
+                             th:text="#{navbar.login.label.email}">E-Mail-Adresse</label>
+                      <input type="text"
+                             class="form-control"
+                             name="username"
+                             id="inputEmail"
+                             th:placeholder="#{navbar.login.label.email}"
+                             required="required"></input>
+                    </div>
+                    <div class="form-group">
+                      <label class="sr-only"
+                             for="inputPassword"
+                             th:text="#{navbar.login.label.password}">Password</label>
+                      <input type="password"
+                             class="form-control"
+                             name="password"
+                             id="inputPassword"
+                             th:placeholder="#{navbar.login.label.password}"
+                             required="required"></input>
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success btn-block" th:text="#{navbar.login}">Anmelden
+                      </button>
+                      <button th:if="${T(de.geoinfoffm.registry.client.web.ClientConfiguration).isSignupEnabled()}"
+                              type="button"
+                              class="btn btn-primary btn-block"
+                              th:text="#{navbar.login.button.register}"
+                              th:onclick="'location.href = \'' + @{${basePath} + '/signup'} + '\''">Registrieren
+                      </button>
+                      <button type="button"
+                              class="btn btn-default btn-block"
+                              th:onclick="'location.href = \'' + @{${basePath} + '/forgot-password'} + '\''">Forgot
+                        password
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a th:href="@{__${basePath}__/feedback}" class="dropdown-toggle">
+            <span>Feedback</span><span></span></a>
+        </li> -->
+      </ul>
+    </div>
+  </nav>
+</div>
