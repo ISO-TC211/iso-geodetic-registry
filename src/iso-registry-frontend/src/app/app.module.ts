@@ -4,18 +4,12 @@ import { NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { FooterComponent } from './footer/footer.component';
-import { HomeComponent } from './home/home.component';
-<<<<<<< HEAD
-import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from "./footer/footer.component";
+import { HomeComponent } from "./home/home.component";
+import { HeaderComponent } from "./header/header.component";
 
 @NgModule({
   declarations: [AppComponent, FooterComponent, HomeComponent, HeaderComponent],
-=======
-
-@NgModule({
-  declarations: [AppComponent, FooterComponent, HomeComponent],
->>>>>>> upstream/ang8
   imports: [NgbModule, BrowserModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent]
