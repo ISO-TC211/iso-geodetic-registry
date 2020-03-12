@@ -23,6 +23,12 @@ public class HelloWorld {
         return registerRepository.findAll();
     }
 
+    @CrossOrigin
+    @GetMapping("/version")
+    public String version() {
+        return "beta";
+    }
+
     @GetMapping("/test")
     public String working() {
         return "i m working";

@@ -11,4 +11,8 @@ export class RegisterRepositoryService {
   getData() {
     return this.http.get(`${environment.apiRoot}/findAll`);
   }
+
+  getVersion() {
+    return this.http.get<{ version: string }>(`${environment.apiRoot}/version`);
+  }
 }
