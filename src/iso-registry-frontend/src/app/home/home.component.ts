@@ -12,14 +12,9 @@ export class HomeComponent implements OnInit {
     this.getData();
   }
 
-  getData = () => {
+  private getData = () => {
     this.registerRepositoryService.getData().subscribe((response: any) => {
       this.restAPIResults = response;
     });
   };
-}
-
-export interface Result {
-  goldenCrosses: [];
-  totalCount: 0;
 }
