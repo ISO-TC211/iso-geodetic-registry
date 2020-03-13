@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-public class HelloWorld {
+public class HomePageController {
 
     @Resource
     private RegisterRepository registerRepository;
