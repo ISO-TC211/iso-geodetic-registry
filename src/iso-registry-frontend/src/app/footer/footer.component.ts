@@ -14,7 +14,6 @@ export class FooterComponent implements OnInit {
 
   private getVersion() {
     this.registeryService.getVersion().subscribe((response: any) => {
-      debugger;
       this.version = response;
     });
   }
