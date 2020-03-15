@@ -27,6 +27,8 @@
 	<entry key="navbar.login.button.register">Register</entry>
 	<entry key="navbar.help">Documentation</entry>	
 	<entry key="navbar.help.userguide">User Guide</entry>
+	<entry key="navbar.administration">Additional Administration</entry>
+	<entry key="navbar.fixes">Fixes</entry>
 
 	<entry key="mgmt.submitter.content.header">Submitting organization: List of proposals</entry>
 	<entry key="mgmt.manager.content.header">Register manager: List of pending proposals</entry>
@@ -41,6 +43,7 @@
 	<entry key="admin.organization.main.header">Master data</entry>
 	<entry key="admin.organization.roles.header">Roles</entry>
 	<entry key="admin.organization.users.header">Users</entry>
+	<entry key="admin.fixes.content.header">Registry Fixes</entry>
 	<entry key="proposal.discussion.content.header">Discuss proposal</entry>
 	
 	<entry key="tableheader.name">Name</entry>
@@ -84,6 +87,7 @@
 	<entry key="tableheader.axisDirection">Axis direction</entry>
 	<entry key="tableheader.citation">Citation</entry>
 	<entry key="tableheader.scope">Scope</entry>
+	<entry key="tableheader.ticket">Related issue</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -223,6 +227,7 @@
 	<entry key="button.gml">Show GML</entry>
 	<entry key="button.uploadProposals">Upload proposals</entry>
 	<entry key="button.downloadExcel">Excel export</entry>
+	<entry key="button.applyFix">Apply fix</entry>
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>

@@ -146,6 +146,11 @@ public class AdministrationController
 //		binder.setValidator(new AdministrationValidator(userService, organizationService));
 	}
 	
+	@RequestMapping(value = "/fixes", method = RequestMethod.GET)
+	public String showRegistryFixes() {
+		return "admin/fixes";
+	}
+
 	/**
 	 * Fetches all {@link RegistryUser}s from the repository and puts them
 	 * in the view model.
