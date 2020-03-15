@@ -432,6 +432,11 @@
                                                th:text="#{navbar.userManagement.organizations}">Organisationen</a></li>
               </ul>
             </li>
+			<li id="nav_administration" sec:authorize="hasRole('ROLE_ADMIN')"><a href="#" th:text="#{navbar.administration}"></a>
+				<ul>
+					<li id="adminfixes" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{__${basePath}__/admin/fixes}" th:text="#{navbar.fixes}"></a></li>
+				</ul>
+			</li>
             <!-- 							<li id="adminproposals" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{__${basePath}__/admin/proposals}" th:text="#{navbar.proposalManagement}">Vorschlagsverwaltung</a></li> -->
           </ul>
         </div>
