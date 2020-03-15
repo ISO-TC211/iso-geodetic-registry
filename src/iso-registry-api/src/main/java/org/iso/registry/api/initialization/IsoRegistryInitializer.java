@@ -243,8 +243,7 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 			log(String.format("> Adding item class '%s' to register '%s'...\n", name, r.getName()));
 			ic = new RE_ItemClass();
 			ic.setName(name);
-			r.getContainedItemClasses().add(ic);
-			ic.getRegisters().add(r);
+			r.addContainedItemClass(ic);
 			ic = itemClassRepository.save(ic);
 			r = registerRepository.save(r);
 		}
