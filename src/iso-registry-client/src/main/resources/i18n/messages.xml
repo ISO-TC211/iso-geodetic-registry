@@ -424,10 +424,10 @@
 	<entry key="form.label.isoA2Code">ISO Alpha-2 Code</entry>
 	<entry key="form.label.isoA3Code">ISO Alpha-3 Code</entry>
 	<entry key="form.label.isoNCode">ISO num. Code</entry>
-	<entry key="form.label.northernLatitude">Northern Lat</entry>
-	<entry key="form.label.southernLatitude">Southern Lat</entry>
-	<entry key="form.label.easternLongitude">Eastern Lon</entry>
-	<entry key="form.label.westernLongitude">Western Lon</entry>
+	<entry key="form.label.northernLatitude">North-bound Lat</entry>
+	<entry key="form.label.southernLatitude">South-bound Lat</entry>
+	<entry key="form.label.easternLongitude">East-bound Lon</entry>
+	<entry key="form.label.westernLongitude">West-bound Lon</entry>
 	<entry key="form.label.remarks">Remarks</entry>
 	<entry key="form.label.anchorDefinition">Anchor Definition</entry>
 	<entry key="form.label.informationSource">Information Source</entry>

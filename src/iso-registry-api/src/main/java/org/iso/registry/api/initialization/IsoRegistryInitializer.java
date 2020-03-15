@@ -146,6 +146,7 @@ public class IsoRegistryInitializer extends AbstractRegistryInitializer implemen
 			addItemClass("OperationParameter", r);
 			addItemClass("PrimeMeridian", r);
 			addItemClass("UnitOfMeasure", r);
+			addItemClass("Extent", r);
 		}
 		catch (Throwable t) {
 			throw new RuntimeException(t.getMessage(), t);
