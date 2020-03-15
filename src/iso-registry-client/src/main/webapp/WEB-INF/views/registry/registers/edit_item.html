@@ -36,7 +36,7 @@
 							<div th:if="${showExtentPanel}" th:unless="${proposal.isClarification()}">
 								<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
 							</div>
-							<div th:unless="${proposal.isClarification()}">
+							<div th:if="${showInformationSourcePanel}" th:unless="${proposal.isClarification()}">
 								<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetailsPanel"/>
 							</div>
 							<div th:replace="globals :: proposalDetailsPanel (isCollapsible='true')"/>

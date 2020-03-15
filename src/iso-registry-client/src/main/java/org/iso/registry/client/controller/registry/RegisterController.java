@@ -316,6 +316,7 @@ public class RegisterController extends AbstractController
 				addItemClassToList("OperationParameter", itemClasses);
 				addItemClassToList("PrimeMeridian", itemClasses);
 				addItemClassToList("UnitOfMeasure", itemClasses);
+				addItemClassToList("Extent", itemClasses);
 			}
 			else {
 				addItemClassToList(itemClassParam, itemClasses);
