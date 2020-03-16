@@ -13,6 +13,9 @@
 @import "node_modules/bootstrap/scss/transitions";
 @import "node_modules/bootstrap/scss/card";
 
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
 @import url("https://fonts.googleapis.com/css?family=Titillium+Web&display=swap");
 @import "~angular-tree-component/dist/angular-tree-component.css";
 body {

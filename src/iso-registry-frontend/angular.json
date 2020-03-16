@@ -24,11 +24,7 @@
             "tsConfig": "tsconfig.app.json",
             "aot": false,
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "node_modules/font-awesome/css/font-awesome.min.css",
-              "src/styles.scss",
-              "node_modules/jstree/dist/themes/default/style.min.css"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           },
           "configurations": {
