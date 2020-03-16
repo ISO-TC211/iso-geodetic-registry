@@ -11,8 +11,10 @@ import {
   NgbDropdownModule,
   NgbCollapseModule
 } from "@ng-bootstrap/ng-bootstrap";
+import { TreeModule } from "angular-tree-component";
+import { TreeComponent } from './tree/tree.component';
 @NgModule({
-  declarations: [AppComponent, FooterComponent, HomeComponent, HeaderComponent],
+  declarations: [AppComponent, FooterComponent, HomeComponent, HeaderComponent, TreeComponent],
   imports: [
     NgbDropdownModule,
     NgbCollapseModule,
@@ -20,7 +22,8 @@ import {
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TreeModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

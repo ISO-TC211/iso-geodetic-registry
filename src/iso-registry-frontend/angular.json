@@ -26,9 +26,13 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/font-awesome/css/font-awesome.min.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/jstree/dist/themes/default/style.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jstree/dist/jstree.min.js"
+            ]
           },
           "configurations": {
             "production": {
