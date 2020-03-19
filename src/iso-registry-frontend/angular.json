@@ -62,7 +62,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "iso-registry-frontend:build"
+            "browserTarget": "iso-registry-frontend:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
