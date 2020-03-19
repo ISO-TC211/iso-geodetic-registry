@@ -16,14 +16,12 @@ public class HomePageController {
 
     @Resource
     private RegisterRepository registerRepository;
-
-    @CrossOrigin
+    
     @GetMapping("/findAll")
     public List<RE_Register> findAll() {
         return registerRepository.findAll();
     }
 
-    @CrossOrigin
     @GetMapping("/version")
     public String version() {
         return "beta";
