@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { RegisterRepositoryService } from "../services/register-repository.service";
 
 @Component({
@@ -7,7 +7,11 @@ import { RegisterRepositoryService } from "../services/register-repository.servi
   styleUrls: ["./tree.component.scss"]
 })
 export class TreeComponent implements OnInit {
-  constructor(private registerRepositoryService: RegisterRepositoryService) {}
+  @Output() loading = new EventEmitter<boolean>();
+
+  constructor(private registerRepositoryService: RegisterRepositoryService) {
+    this.loading.emit(true);
+  }
   restAPIResults = "";
 
   private options = {};
@@ -17,10 +21,17 @@ export class TreeComponent implements OnInit {
   }
 
   private getData = () => {
-    this.registerRepositoryService.getData().subscribe((response: any) => {
-      this.restAPIResults = response;
+    this.registerRepositoryService.getData().subscribe(
+      (response: any) => {
+        this.loading.emit(false);
+        this.restAPIResults = response;
 
-      this.restAPIResults[0]["children"] = response[0]["containedItemClasses"];
-    });
+        this.restAPIResults[0]["children"] =
+          response[0]["containedItemClasses"];
+      },
+      error => {
+        this.loading.emit(false);
+      }
+    );
   };
 }

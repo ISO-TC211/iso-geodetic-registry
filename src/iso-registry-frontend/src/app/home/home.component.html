@@ -1,9 +1,68 @@
-<div class="tree-wrapper">
-  <div class="row">
-    <div class="col-md-3">
+<div class="container" [hidden]="!loading">
+  <div class="row h-100 justify-content-center align-items-center">
+    <img src="../../assets/ajax-loader.gif" />
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <div [hidden]="loading" class="tree-wrapper">
       <div class="card card-body bg-light" style="height:200px; overflow:auto">
-        <app-tree></app-tree>
+        <app-tree (loading)="onLoading($event)"></app-tree>
       </div>
     </div>
+  </div>
+
+  <div [hidden]="loading" class="col-md-8" style="padding-top: 5px;">
+    <div class="alert alert-danger">
+      <p class="text-center">
+        <strong>*** DEMONSTRATION VERSION ONLY ***</strong>
+      </p>
+      <p class="text-center">
+        This Registry is for demonstration purposes only. The current content of
+        the Registry is provided only to demonstrate the features and
+        capabilities of the Registry software.
+        <br />
+        The Registry content should NOT be used for any other purposes.
+        <br />
+        In no way should the content be considered valid data!
+      </p>
+    </div>
+    <p>
+      The ISO Geodetic Registry is a structured database of coordinate reference
+      systems and transformations that is accessible through this on-line
+      registry system. The Register includes only systems and transformations of
+      international application. It does not include all possible coordinate
+      reference systems and transformations.
+    </p>
+    <p>
+      This Registry is provided under the auspices of ISO Technical Committee
+      211 on geographic information/geomatics and conforms to ISO standards ISO
+      19111:2007 (Spatial referencing by coordinates), the soon to be published
+      ISO/TS 19127 (Geodetic register), ISO 19135:2005 (Procedures for item
+      registration) and its soon to be published revision ISO 19135-1
+      (Procedures for item registration - Part 1: Fundamentals), and ISO
+      19135-2:2012 (Procedures for item registration -- Part 2: XML schema
+      implementation).
+    </p>
+    <p>
+      The Registry may be used free of charge but its use is subject to
+      acceptance of the
+      <a href="https://geodetic-staging.isotc211.org/terms" target="_blank"
+        >Terms of Use</a
+      >. Use of the Registry implies acceptance of these Terms of Use. Users of
+      the Registry may query and view data and generate reports via anonymous
+      guest access. Users may also submit proposals for new additions or
+      clarifications to the registry.
+    </p>
+    <p>
+      The Registry also provides a web service interface, allowing geospatial
+      software to query and retrieve information from the Register. Information
+      on using the web services is available in the
+      <a
+        href="https://iso-tc211.github.io/iso-geodetic-register-docs/"
+        target="_blank"
+        >Registry user's guide.</a
+      >
+    </p>
   </div>
 </div>

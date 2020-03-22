@@ -1,4 +1,10 @@
-.tree-wrapper {
-  padding-left: 30px;
-  padding-top: 20px;
+@media (min-width: 992px) {
+  .tree-wrapper {
+    padding-left: 30px;
+    padding-top: 20px;
+  }
+}
+
+.container {
+  height: 50vh;
 }
