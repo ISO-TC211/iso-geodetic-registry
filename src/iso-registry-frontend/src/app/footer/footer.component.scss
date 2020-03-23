@@ -1,1 +1,43 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  top: auto;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+  z-index: 10;
+}
 
+.footer > p {
+  margin: 20px 10px;
+  padding-right: 15px;
+}
+
+.powered-by {
+  flex: 1;
+  width: 112px;
+  padding-top: 0.5em;
+}
+
+.powered-by .powered-by-text {
+  font-size: 0.5em;
+  text-transform: uppercase;
+  font-weight: 600;
+  display: block;
+}
+
+.powered-by img {
+  width: 100px;
+  display: block;
+}
+
+.loading-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}

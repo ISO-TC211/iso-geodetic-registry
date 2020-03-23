@@ -2,7 +2,7 @@ package org.iso.registry.client;
 
 import de.geoinfoffm.registry.persistence.PersistenceConfiguration;
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
-import org.iso.registry.client.restapi.HelloWorld;
+import org.iso.registry.client.restapi.HomePageController;
 import org.iso.registry.core.IsoCoreConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableTransactionManagement
-@Import({ PersistenceConfiguration.class, SecurityConfiguration.class, IsoCoreConfiguration.class, HelloWorld.class })
+@Import({ PersistenceConfiguration.class, SecurityConfiguration.class, IsoCoreConfiguration.class, HomePageController.class })
 @Profile("aws")
 public class AwsLambdaConfig {
 

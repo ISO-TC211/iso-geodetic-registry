@@ -4,6 +4,8 @@
 - Database Postgres 9+ ; `db` is default database hostname
 - Tomcat8 installed
 - Run `[root]/bash build` to get final `war` file to deploy to tomcat for test
+    - Use isoreg.war in /iso-geodetic-registry/src/iso-registry-rest-api/target
+
 
 ### AWS LAMBDA LOCAL Dev Setup
 

@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {Observable} from "rxjs";
-
+import { Component, OnInit } from "@angular/core";
+import { RegisterRepositoryService } from "../services/register-repository.service";
 @Component({
-  selector: 'app-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  selector: "app-footer",
+  templateUrl: "./footer.component.html",
+  styleUrls: ["./footer.component.scss"]
 })
 export class FooterComponent implements OnInit {
-
-  public response: Observable<{version: string}>;
-
-  constructor(private httpClient: HttpClient) { }
-
+  constructor(private registeryService: RegisterRepositoryService) {}
+  public version = "";
   ngOnInit() {
-    this.response = this.httpClient.get<{version: string}>(`${environment.apiRoot}/version`, );
+    this.getVersion();
   }
 
+  private getVersion() {
+    this.registeryService.getVersion().subscribe((response: any) => {
+      this.version = response;
+    });
+  }
 }
