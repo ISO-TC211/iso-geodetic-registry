@@ -1,6 +1,7 @@
 package org.iso.registry.core.model.operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 
 import org.apache.commons.collections.iterators.AbstractListIteratorDecorator;
 import org.hibernate.envers.Audited;
+import org.iso.registry.core.model.ObjectDomain;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -30,13 +32,11 @@ public abstract class SingleOperationItem extends CoordinateOperationItem
 
 	protected SingleOperationItem() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public SingleOperationItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
-			RE_AdditionInformation additionInformation) {
-		super(register, itemClass, name, definition, additionInformation);
-		// TODO Auto-generated constructor stub
+			RE_AdditionInformation additionInformation, Collection<ObjectDomain> domains) {
+		super(register, itemClass, name, definition, additionInformation, domains);
 	}
 
 	public OperationMethodItem getMethod() {

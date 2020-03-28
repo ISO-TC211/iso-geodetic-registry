@@ -1,6 +1,7 @@
 package org.iso.registry.core.model.operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
 import org.hibernate.envers.Audited;
+import org.iso.registry.core.model.ObjectDomain;
 
 import de.geoinfoffm.registry.core.ItemClass;
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
@@ -28,8 +30,8 @@ public class ConcatenatedOperationItem extends CoordinateOperationItem
 	}
 
 	public ConcatenatedOperationItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
-			RE_AdditionInformation additionInformation) {
-		super(register, itemClass, name, definition, additionInformation);
+			RE_AdditionInformation additionInformation, Collection<ObjectDomain> domains) {
+		super(register, itemClass, name, definition, additionInformation, domains);
 	}
 
 	public List<SingleOperationItem> getCoordinateOperations() {

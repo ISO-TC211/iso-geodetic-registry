@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import org.iso.registry.api.IdentifiedItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemWithObjectUsageProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemProposalDTO;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemProposalDTO;
 import org.iso.registry.core.model.UnitOfMeasureItem;
@@ -32,7 +33,7 @@ import de.geoinfoffm.registry.core.model.Proposal;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
 
-public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemProposalDTO
+public abstract class CoordinateOperationItemProposalDTO extends IdentifiedItemWithObjectUsageProposalDTO
 {
 	private String operationVersion;
 	private ExtentDTO domainOfValidity;

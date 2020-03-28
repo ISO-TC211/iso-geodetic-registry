@@ -7,7 +7,7 @@ import org.iso.registry.api.AbstractCoordinateOperationItem_Type;
 import org.iso.registry.api.CoordinateReferenceSystemItem_PropertyType;
 import org.iso.registry.api.GcoConverter;
 import org.iso.registry.api.registry.registers.gcp.ExtentDTO;
-import org.iso.registry.api.registry.registers.gcp.IdentifiedItemViewBean;
+import org.iso.registry.api.registry.registers.gcp.IdentifiedItemWithObjectUsageViewBean;
 import org.iso.registry.api.registry.registers.gcp.UnitOfMeasureItemViewBean;
 import org.iso.registry.api.registry.registers.gcp.crs.CoordinateReferenceSystemItemViewBean;
 import org.iso.registry.core.model.UnitOfMeasureItem;
@@ -29,7 +29,7 @@ import de.geoinfoffm.registry.core.model.SimpleProposal;
 import de.geoinfoffm.registry.core.model.Supersession;
 import de.geoinfoffm.registry.core.model.iso19135.RE_RegisterItem;
 
-public class CoordinateOperationItemViewBean extends IdentifiedItemViewBean
+public class CoordinateOperationItemViewBean extends IdentifiedItemWithObjectUsageViewBean
 {
 	private static final ObjectFactory gmdObjectFactory = new ObjectFactory(); 
 	

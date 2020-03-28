@@ -1,14 +1,9 @@
-<div th:fragment="details">
+<div th:fragment="details" th:with="isClarification=${isProposal} ? ${proposal.isClarification()} : 'false'">
 	<div class="row">
 		<div class="col-md-6"> <!-- LEFT -->
 			<div class="row" th:include="globals :: nameAndIdentifier" />
 			<div class="row" th:include="globals :: registerItemDefinition"/>
 			<div class="row" th:include="globals :: aliasesTable('conv')" />
-			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
-				<div class="col-md-12" th:with="isClarification=${isProposal} ? ${proposal.isClarification()} : 'false'">
-					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
-				</div>
-			</div>
 			<div class="row">
 				<div class="col-md-12" th:with="property='sourceCrs',label=#{form.label.sourceCrs},isRequired='true',noAddNew='true',ajaxPath='CoordinateReferenceSystemItem'">
 					<div th:replace="globals :: selectIdentifiedItem2"/>
@@ -103,12 +98,12 @@
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row" th:include="globals :: scopeTable('transformation')" />
 			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->
 	</div>
+	<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}" th:include="globals :: domainsTable('transformation')" />
 	<div class="row">
 		<div class="col-md-12">
 			<table id="parametersTable" class="table table-striped">
