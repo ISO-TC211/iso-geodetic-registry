@@ -236,12 +236,12 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	
 	private void assignItemIdentifier(Addition addition) {
 		RE_RegisterItem proposedItem = addition.getItem();
+		Integer identifier = this.findNextAvailableIdentifier();
+		proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
 		if (proposedItem instanceof IdentifiedItem) {
-			Integer identifier = this.findNextAvailableIdentifier();
 			((IdentifiedItem)proposedItem).setIdentifier(identifier);
-			proposedItem.setItemIdentifier(BigInteger.valueOf(identifier.longValue()));
-			logger.debug(">>> Assigned identifier {} to item '{}'", identifier, proposedItem.getName());
 		}
+		logger.debug(">>> Assigned identifier {} to item '{}'", identifier, proposedItem.getName());
 	}
 
 	@Override
@@ -336,8 +336,8 @@ public class IsoProposalServiceImpl extends ProposalServiceImpl implements IsoPr
 	
 	@Override
 	public Integer findNextAvailableIdentifier() {
-		String jpql = "SELECT MAX(i.identifier) FROM IdentifiedItem i";
-		Integer maxCode = (Integer)entityManager.createQuery(jpql).getResultList().get(0);
-		return (maxCode == null || maxCode < 1) ? 1 : maxCode + 1;
+		String jpql = "SELECT MAX(i.itemIdentifier) FROM RE_RegisterItem i";
+		BigInteger maxCode = (BigInteger)entityManager.createQuery(jpql).getResultList().get(0);
+		return (maxCode == null || maxCode.intValueExact() < 1) ? 1 : maxCode.intValueExact() + 1;
 	}
 }
