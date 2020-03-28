@@ -64,16 +64,28 @@ public class DataController
 	public @ResponseBody List<Object[]> findAll(@PathVariable("className") String className, 
 												@RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
 												@RequestParam(value = "where", required = false) String where,
-												@RequestParam(value = "q", required = false) String search) {
+												@RequestParam(value = "q", required = false) String search,
+												@RequestParam(value = "isIdentifiedItem", defaultValue = "true") boolean isIdentifiedItem) {
 		StringBuilder q = new StringBuilder();
 		if (StringUtils.isEmpty(orderBy) || "null".equals(orderBy)) {
 			orderBy = "name";
 		}
 		
-		q.append("SELECT i.uuid, i.identifier, i.name, i.description FROM " + className + " i WHERE i.status = 'VALID'");
+		q.append("SELECT i.uuid, ");
+		if (isIdentifiedItem) {
+			q.append("i.identifier, ");
+		}
+		else {
+			q.append("-1 AS identifier, ");
+		}
+		q.append("i.name, i.description FROM " + className + " i WHERE i.status = 'VALID'");
+
 		if (!StringUtil.isEmpty(search)) {
 			search = "%" + search + "%";
-			q.append(" AND (LOWER(i.name) LIKE '" + search.toLowerCase() + "' OR CAST(i.identifier AS text) LIKE '" + search + "')");
+			q.append(" AND (LOWER(i.name) LIKE '" + search.toLowerCase() + "')");
+			if (isIdentifiedItem) {
+				q.append(" OR CAST(i.identifier AS text) LIKE '" + search + "')");
+			}
 		}
 		if (!StringUtils.isEmpty(where)) {
 			q.append(" AND (");
