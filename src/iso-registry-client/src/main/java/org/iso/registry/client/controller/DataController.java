@@ -303,6 +303,7 @@ public class DataController
 			model.addAttribute("objectPath", objectPath);
 		}
 		model.addAttribute("isProposal", "true");
+		model.addAttribute("useWeakBinding", "true");
 		return "registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(index='" + index + "')";
 	}
 

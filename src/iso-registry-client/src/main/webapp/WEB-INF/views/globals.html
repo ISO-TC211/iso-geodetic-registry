@@ -30,18 +30,41 @@
 
 <div th:fragment="textField (property, inputType, label, placeholder, isRequired)" class="form-group" th:classappend="${isRequired} ? 'has-feedback'">
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
-	<input th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
-	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
-	<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+	<th:block th:if="!${isReadOnly} and ${isProposal}">
+		<th:block th:if="${useWeakBinding}">
+			<input th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${objectPath} + '.' + ${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+			<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:name="${property}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+		</th:block>
+		<th:block th:unless="${useWeakBinding}">
+			<input th:if="${objectPath}" th:id="${modifier} ? ${objectPath} + '-' + ${property} + '-' + ${modifier} : ${objectPath} + '-' + ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${objectPath} + '.' + ${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+			<input th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:type="${inputType}" th:step="${step}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"></input>
+		</th:block>
+	</th:block>
+	<th:block th:unless="!${isReadOnly} and ${isProposal}">
+		<p th:if="${objectPath}" th:id="${modifier} ? ${objectPath} + '-' + ${property} + '-' + ${modifier} : ${objectPath} + '-' + ${property}"><big th:text="*{____${objectPath} + '.' + ${property}__}"/></p>
+		<p th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
+	</th:block>
 	<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
 <!-- Parameters: property, rows, cols, inputType, label, placeholder, isRequired -->
 <div th:fragment="textArea" class="form-group" th:classappend="${isRequired} ? 'has-feedback'"> 
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
-	<textarea th:unless="${objectPath}" th:if="!${isReadOnly} and ${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
-	<p th:unless="${objectPath}" th:if="${isReadOnly} or !${isProposal}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
-	<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:readonly="${isReadOnly}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+	<th:block th:if="!${isReadOnly} and ${isProposal}">
+		<th:block th:if="${useWeakBinding}">
+			<textarea th:if="!${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+			<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+		</th:block>
+		<th:block th:unless="${useWeakBinding}">
+			<textarea th:if="!${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+			<textarea th:if="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}" th:name="${objectPath} + '.' + ${property}" th:rows="${rows}" th:cols="${cols}" th:placeholder="${placeholder}" class="form-control" th:classappend="${isRequired} ? 'required'" th:required="${isRequired}" th:field="*{__${objectPath} + '.' + ${property}__}" th:attr="data-label=${label},data-label-parent=${parentLabel}"/>
+		</th:block>
+	</th:block>
+	<th:block th:unless="!${isReadOnly} and ${isProposal}">
+		<p th:if="${objectPath}" th:id="${modifier} ? ${objectPath} + '-' + ${property} + '-' + ${modifier} : ${objectPath} + '-' + ${property}"><big th:text="*{__${objectPath} + '.' + ${property}__}"/></p>
+		<p th:unless="${objectPath}" th:id="${modifier} ? ${property} + '-' + ${modifier} : ${property}"><big th:text="*{__${property}__}"/></p>
+	</th:block>
+
 	<span th:if="${isProposal} and ${isRequired}" class="feedback glyphicon glyphicon-hand-left form-control-feedback" th:title="#{mandatoryField}"></span>
 </div>
 
@@ -150,9 +173,10 @@
 
 <div th:fragment="selectIdentifiedItem2" class="form-group">
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
-	<div th:if="${isProposal}" th:id="${property} + 'Group'" th:with="isClarification=${proposal.isClarification()}">
-		<input type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
-		<script type="text/javascript" charset="utf-8" th:inline="text">
+	<div th:if="${isProposal}" th:id="${property} + 'Group'">
+		<input th:unless="${useWeakBinding}" type="hidden" th:id="${property}" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
+		<input th:if="${useWeakBinding}" type="hidden" th:id="${property}" class="select-identified-item" style="width: 100%" th:name="__${property}__.referencedItemUuid" th:required="${isRequired}" th:attr="data-ajax-path='__${ajaxPath}__',data-base-path='__${basePath}__'"/>
+		<script th:id="'select2-' + ${property}" type="text/javascript" charset="utf-8" th:inline="text">
 		/* <![CDATA[ */
 			$(function() {
 				$('#[[${property}]]').select2({
@@ -197,7 +221,7 @@
 		            }						            
 		        });
 				
-				if ([[${proposal.isClarification()}]]) {
+				if ([[${isClarification}]]) {
 					$('#[[${property}]]').select2("readonly", true);
 				}
 			});
