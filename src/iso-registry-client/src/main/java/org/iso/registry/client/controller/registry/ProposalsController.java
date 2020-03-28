@@ -484,6 +484,17 @@ public class ProposalsController extends AbstractController
 			
 			return "redirect:/registry/proposal/edit_supersession"; 
 		}
+		else if (proposal instanceof ProposalGroup) {
+			ProposalGroup group = (ProposalGroup)proposal;
+			proposalService.updateProposalGroup(group, group.getProposals(), proposalDto.getName());
+
+			if (allParams.containsKey("redirectTo")) {
+				return "redirect:" + allParams.get("redirectTo");
+			}
+			else {
+				return "redirect:/management/" + role;
+			}
+		}
 		else {
 			proposalDto = bindAdditionalAttributes(proposalDto, servletRequest, itemClassRepository, itemClassRegistry, conversionService);
 
