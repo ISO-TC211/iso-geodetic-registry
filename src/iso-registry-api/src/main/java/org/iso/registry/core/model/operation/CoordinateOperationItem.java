@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.envers.Audited;
 import org.iso.registry.core.model.IdentifiedItem;
+import org.iso.registry.core.model.IdentifiedItemWithObjectUsage;
+import org.iso.registry.core.model.ObjectDomain;
+import org.iso.registry.core.model.ObjectUsage;
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.core.model.iso19115.dataquality.DQ_PositionalAccuracy;
 import org.iso.registry.core.model.iso19115.extent.EX_Extent;
@@ -25,15 +28,17 @@ import de.geoinfoffm.registry.core.model.iso19135.RE_Register;
 
 @Access(AccessType.FIELD)
 @Audited @Entity
-public abstract class CoordinateOperationItem extends IdentifiedItem
+public abstract class CoordinateOperationItem extends IdentifiedItemWithObjectUsage
 {
 	private static final long serialVersionUID = -2482111385843464273L;
 
 	private String operationVersion;
-	
+
+	@Deprecated
 	@ManyToOne(cascade = CascadeType.ALL)
 	private EX_Extent domainOfValidity;
 	
+	@Deprecated
 	@ElementCollection
 	private List<String> scope;
 	
@@ -50,9 +55,9 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 	}
 
 	public CoordinateOperationItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
-			RE_AdditionInformation additionInformation) {
+			RE_AdditionInformation additionInformation, Collection<ObjectDomain> domains) {
 
-		super(register, itemClass, name, definition, additionInformation);
+		super(register, itemClass, name, definition, additionInformation, domains);
 	}
 
 	public String getOperationVersion() {
@@ -63,22 +68,27 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 		this.operationVersion = operationVersion;
 	}
 
+	@Deprecated
 	public EX_Extent getDomainOfValidity() {
 		return domainOfValidity;
 	}
-
+	
+	@Deprecated
 	public void setDomainOfValidity(EX_Extent domainOfValidity) {
 		this.domainOfValidity = domainOfValidity;
 	}
 
+	@Deprecated
 	public List<String> getScope() {
 		return scope;
 	}
 	
+	@Deprecated
 	public void setScope(List<String> scope) {
 		this.scope = scope;
 	}
 	
+	@Deprecated
 	public void addScope(String scope) {
 		if (this.scope == null) {
 			this.scope = new ArrayList<>();
@@ -86,6 +96,7 @@ public abstract class CoordinateOperationItem extends IdentifiedItem
 		this.scope.add(scope);
 	}
 
+	@Deprecated
 	public void addScopes(Collection<String> scopes) {
 		if (this.scope == null) {
 			this.scope = new ArrayList<>();

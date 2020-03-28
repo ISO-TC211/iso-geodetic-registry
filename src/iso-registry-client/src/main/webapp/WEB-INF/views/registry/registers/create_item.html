@@ -36,6 +36,9 @@
 							<div th:if="${showExtentPanel}" th:unless="${proposal.isClarification()}">
 								<div th:replace="registry/registers/gcp/extent_panel :: extentDetailsPanel"/>
 							</div>
+							<div th:if="${showObjectUsagePanel}" th:unless="${proposal.isClarification()}">
+								<div th:replace="registry/registers/gcp/objectusage_panel :: objectUsageDetailsPanel"/>
+							</div>
 							<div th:if="${showInformationSourcePanel}" th:unless="${proposal.isClarification()}">
 								<div th:replace="registry/registers/gcp/infosrc_panel :: informationSourceDetailsPanel"/>
 							</div>

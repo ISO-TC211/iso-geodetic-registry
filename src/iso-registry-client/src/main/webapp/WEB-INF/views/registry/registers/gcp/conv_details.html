@@ -4,11 +4,6 @@
 			<div class="row" th:include="globals :: nameAndIdentifier" />
 			<div class="row" th:include="globals :: registerItemDefinition"/>
 			<div class="row" th:include="globals :: aliasesTable('conv')" />
-			<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}">
-				<div class="col-md-12">
-					<div th:replace="registry/registers/gcp/extent_panel :: extentDetails"/>
-				</div>
-			</div>
 			<div class="row">
 				<div class="col-md-4" th:with="property='accuracy',inputType='number',label=#{form.label.accuracy},placeholder=#{form.placeholder.accuracy},isRequired='false'">
 					<div th:replace="globals :: textField(${property}, ${inputType}, ${label}, ${placeholder}, ${isRequired})"/>
@@ -88,12 +83,12 @@
 		</div>	<!-- END OF LEFT -->
 		
 		<div class="col-md-6"> <!-- RIGHT -->
-			<div class="row" th:include="globals :: scopeTable('conversion')" />
 			<div class="row" th:include="globals :: remarks (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: informationSource (cssClass='col-md-12')" />
 			<div class="row" th:include="globals :: dataSource (cssClass='col-md-12')" />
 		</div>	<!-- END OF RIGHT -->
 	</div>
+	<div class="row" th:if="!${isProposal} or ${proposal.isClarification()}" th:include="globals :: domainsTable('conversion')" />
 	<div class="row">
 		<div class="col-md-12">
 			<table id="parametersTable" class="table table-striped">

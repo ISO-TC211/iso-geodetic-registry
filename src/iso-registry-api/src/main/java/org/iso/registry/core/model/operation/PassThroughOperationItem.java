@@ -1,8 +1,11 @@
 package org.iso.registry.core.model.operation;
 
+import java.util.Collection;
+
 import javax.persistence.Entity;
 
 import org.hibernate.envers.Audited;
+import org.iso.registry.core.model.ObjectDomain;
 
 import de.geoinfoffm.registry.core.model.iso19135.RE_AdditionInformation;
 import de.geoinfoffm.registry.core.model.iso19135.RE_ItemClass;
@@ -16,8 +19,8 @@ public class PassThroughOperationItem extends CoordinateOperationItem
 	}
 
 	public PassThroughOperationItem(RE_Register register, RE_ItemClass itemClass, String name, String definition,
-			RE_AdditionInformation additionInformation) {
-		super(register, itemClass, name, definition, additionInformation);
+			RE_AdditionInformation additionInformation, Collection<ObjectDomain> domains) {
+		super(register, itemClass, name, definition, additionInformation, domains);
 	}
 
 }
