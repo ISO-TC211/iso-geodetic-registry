@@ -71,6 +71,83 @@
 	
 </div>
 
+<div th:fragment="selectRegisterItem" class="form-group">
+	<div th:replace="globals :: formLabel(${property}, ${label})"/>
+	<div th:if="${isProposal}" th:id="${property} + 'Group'">
+		<th:block th:if="${objectPath}">
+			<input th:if="${useWeakBinding}" type="hidden" class="select-register-item" style="width: 100%" th:name="__${objectPath}__.__${property}__.referencedItemUuid" th:required="${isRequired}" th:attr="data-property=${property},data-ajax-path='__${ajaxPath}__'"/>
+			<input th:unless="${useWeakBinding}" type="hidden" class="select-register-item" style="width: 100%" th:field="*{__${objectPath} + '.' + ${property}__.referencedItemUuid}" th:required="${isRequired}" th:attr="data-property=${property},data-ajax-path='__${ajaxPath}__'"/>
+		</th:block>
+		<th:block th:unless="${objectPath}">
+			<input th:if="${useWeakBinding}" type="hidden" th:id="${property}" class="select-register-item" style="width: 100%" th:name="__${property}__.referencedItemUuid" th:required="${isRequired}" th:attr="data-property=${property},data-ajax-path='__${ajaxPath}__'"/>
+			<input th:unless="${useWeakBinding}" type="hidden" th:id="${property}" th:attr="data-property=${property}" class="select-register-item" style="width: 100%" th:field="*{__${property}__.referencedItemUuid}" th:required="${isRequired}"/>
+		</th:block>
+		<script th:id="'select2-' + ${property}" type="text/javascript" charset="utf-8" th:inline="text">
+		/* <![CDATA[ */
+			$(function() {
+				$('.select-register-item').select2({
+					multiple: false,
+					dropdownCssClass: "bigdrop",
+					ajax: {
+						url: "[[@{__${basePath}__/}]]entities/by-class/[[${ajaxPath}]]",
+						dataType: "json",
+						data: function(term, page) {
+							return {
+								orderBy: 'name',
+								q: term,
+								isIdentifiedItem: 'false',
+								where: "[[${where} ? ${where} : '']]"
+							};
+						},
+						results: function (data) {
+							return {
+								results : $.map(data, function (item) {
+									return {
+										id: item[0],
+										text: item[2],
+									}
+								})
+							};
+						}
+					},
+					initSelection: function(element, callback) {
+						var result = [];
+						// Collect AJAX requests needed to resolve initially
+						// selected items
+						$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+							dataType: "json"
+						}))
+						.done(function(data) {
+							item = data[0];
+							result.push({
+								id: item[0],
+								text: item[2],
+							});
+							callback(result[0]);
+						});
+					}
+				});
+
+				if ([[${isClarification}]]) {
+					$('#[[${property}]]').select2("readonly", true);
+				}
+			});
+
+		/* ]]> */
+		</script>
+	</div>
+	<div th:unless="${isProposal}">
+		<!-- form-backing bean: RegisterItemViewBean -->
+		<div th:if="*{__${property}__}" th:with="uuid=*{__${property}__.uuid}">
+			<a th:href="@{__${basePath}__/item/__${uuid}__}" th:title="*{__${property}__.name}"><big th:text="*{__${property}__.name}"/></a>&nbsp;<big class="text-muted" th:text="'[' + *{__${property}__.itemIdentifier} + ']'"/>
+		</div>
+		<div th:unless="*{__${property}__}">
+			<big>[<span class="text-muted" th:text="#{undefined}"></span>]</big>
+		</div>
+	</div>
+
+</div>
+
 <div th:fragment="selectIdentifiedItem2" class="form-group">
 	<div th:replace="globals :: formLabel(${property}, ${label})"/>
 	<div th:if="${isProposal}" th:id="${property} + 'Group'" th:with="isClarification=${proposal.isClarification()}">
@@ -484,6 +561,39 @@
 		/* ]]> */
 		</script>
 	</div>	
+</div>
+
+<!-- Table showing the object usage, i.e. the scopes with their respective extents -->
+<div th:fragment="domainsTable(modifier)">
+	<div class="col-md-12" th:unless="!*{domains} or ${isProposal}">
+		<div class="panel">
+			<div class="panel-body">
+				<table th:id="'domainsTable_' + ${modifier}" class="datatable table table-condensed table-striped">
+					<thead>
+						<tr>
+							<th th:text="#{tableheader.scope}" />
+							<th th:text="#{form.label.northernLatitude}" />
+							<th th:text="#{form.label.easternLongitude}" />
+							<th th:text="#{form.label.southernLatitude}" />
+							<th th:text="#{form.label.westernLongitude}" />
+						</tr>
+					</thead>
+					<tbody>
+						<th:block th:each="domain : *{domains}">
+							<tr th:each="gbb,iterStat : ${domain.domainOfValidity.geographicBoundingBoxes}">
+								<td th:if="${iterStat.first}" th:rowspan="${domain.domainOfValidity.geographicBoundingBoxes.size()}" th:text="${domain.scope}" />
+								<td th:text="${gbb.northBoundLatitude}" />
+								<td th:text="${gbb.eastBoundLongitude}" />
+								<td th:text="${gbb.southBoundLatitude}" />
+								<td th:text="${gbb.westBoundLongitude}" />
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+				<button th:if="${isProposal} and !${proposal.isClarification()}" th:id="'addScope_' + ${modifier}" type="button" th:attr="data-modifier=${modifier}" th:text="#{button.addScope}" class="btn btn-sm btn-default button-addalias">Add new</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div th:fragment="scopeTable(modifier)">

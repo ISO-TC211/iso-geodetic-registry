@@ -88,6 +88,7 @@
 	<entry key="tableheader.citation">Citation</entry>
 	<entry key="tableheader.scope">Scope</entry>
 	<entry key="tableheader.ticket">Related issue</entry>
+	<entry key="tableheader.objectUsage">Object usage</entry>
 
 	<entry key="header.supersededItems">Superseded items</entry>	
 	<entry key="header.supersedingItems">Successors</entry>
@@ -140,6 +141,7 @@
 	<entry key="header.ungroupedProposals">Ungrouped proposals that may be added</entry>
 	<entry key="header.groupProposal">Group proposal</entry>
 	<entry key="header.terms">Terms of Use</entry>
+	<entry key="header.objectUsage">Object usage</entry>
 	
 	<entry key="button.reviewProposal">Review</entry>
 	<entry key="button.decideProposal">Decide</entry>
@@ -474,6 +476,7 @@
 	<entry key="form.label.horizontalCrs">Horizontal CRS</entry>
 	<entry key="form.label.verticalCrs">Vertical CRS</entry>
 	<entry key="form.label.selectExtent">Import existing extent</entry>
+	<entry key="form.label.selectExtentItem">Extent</entry>
 	<entry key="form.label.autoAssigned">Will be assigned automatically</entry>
 	<entry key="form.label.title">Title</entry>
 	<entry key="form.label.alternateTitle">Alternate title</entry>

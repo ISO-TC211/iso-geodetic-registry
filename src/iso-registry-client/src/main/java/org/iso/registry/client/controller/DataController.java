@@ -294,6 +294,17 @@ public class DataController
 		return "registry/registers/gcp/infosrc_panel_content :: informationSourcePanelContent(index='" + index + "')";
 	}
 
+	@RequestMapping(value = "/fragments/objectusage")
+	public String getObjectUsageFragment(@RequestParam("index") String index, @RequestParam(value = "objectPath", required = false) String objectPath, final Model model) {
+		if (!StringUtils.isEmpty(objectPath)) {
+			model.addAttribute("objectPath", objectPath);
+		}
+
+		model.addAttribute("isProposal", "true");
+		model.addAttribute("useWeakBinding", "true");
+		return "registry/registers/gcp/objectusage_panel_content :: objectUsagePanelContent(index='" + index + "')";
+	}
+
 	@RequestMapping(value = "/fragments/citationpopup")
 	public String getCitationPopupFragment(@RequestParam("index") String index, @RequestParam(value = "objectPath", required = false) String objectPath, final Model model) {
 		if (!StringUtils.isEmpty(objectPath)) {

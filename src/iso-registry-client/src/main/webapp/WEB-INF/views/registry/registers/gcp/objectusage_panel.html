@@ -1,0 +1,102 @@
+<div th:fragment="objectUsageDetailsPanel" id="objectUsageDetailsPanel" class="panel panel-default" th:if="${itemClass}">
+	<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#objectUsagePanel"><span class="panel-title" th:text="#{header.objectUsage}"></span></a>
+	</div>
+	<div id="objectUsagePanel" class="panel-collapse">
+		<ul id="objusage-tabs" class="nav nav-tabs">
+			<li th:each="usage,rowStat : *{domains}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'li-objusage-' + ${rowStat.index}" th:attr="data-index=${rowStat.index}">
+				<a th:href="'#objusage-' + ${rowStat.index}" data-toggle="tab">
+					<span th:text="'Object usage #' + (${rowStat.index} + 1)"></span>
+					<button th:if="${isProposal} and !${isReadOnly}" th:id="'delete-objusage-' + ${rowStat.index}" type="button" th:attr="data-index=${rowStat.index}" class="btn btn-xs btn-default button-close-objusage"><span class="fa fa-times"></span></button>
+				</a>
+			</li>
+			<li th:unless="${isReadOnly}" id="li-addobjectusage"><a id="button-addobjectusage" href="#"><span class="fa fa-plus"></span>&nbsp;&nbsp;<span th:text="#{button.addNew}"></span></a></li>
+		</ul>
+		<div class="tab-content">
+			<div th:each="usage,rowStat : *{domains}" th:classappend="(${rowStat.index} eq 0) ? 'active'" th:id="'objusage-' + ${rowStat.index}" class="tab-pane in" style="padding-top: 10px">
+				<div class="panel-body" th:with="objectPath='domains[__${rowStat.index}__]'">
+					<div th:replace="registry/registers/gcp/objectusage_panel_content :: objectUsagePanelContent(__${rowStat.index}__)"/>
+				</div>
+			</div>
+			<div id="objusage-tabs-after"/>
+		</div>
+
+		<script type="text/javascript" th:inline="text">
+		/* <![CDATA[ */
+			$('#button-addobjectusage').click(function(e) {
+				e.preventDefault();
+				var idx = $('#li-addobjectusage').prev().data('index');
+				if (idx === null) {
+					idx = 0;
+				}
+				else {
+					idx += 1;
+				}
+				$('<li id="li-objusage-' + idx + '" data-index="' + idx + '"><a id="show-objusage-' + idx + '" href="#objusage-' + idx + '" data-toggle="tab">Object usage #' + (idx + 1) + ' <button id="delete-objusage-' + idx + '" type="button" data-index="' + idx + '" class="btn btn-xs btn-default button-close-objusage"><span class="fa fa-times"></span></button></a></li>').insertBefore('#li-addobjectusage');
+
+				$('<div id="objusage-' + idx + '" class="tab-pane" style="padding-top: 10px"/>').insertBefore('#objusage-tabs-after');
+				$('#objusage-' + idx).append('<div id="objusage-' + idx + '-content" class="panel-body"/>');
+				$('#objusage-' + idx + '-content').load('[[@{__${basePath}__/entities/fragments/objectusage}]]?index=' + idx + '&objectPath=domains%5B' + idx + '%5D', null, function() {
+					$('.select-register-item').each(function() {
+						$(this).select2({
+							multiple: false,
+							dropdownCssClass: "bigdrop",
+							ajax: {
+								url: "[[@{__${basePath}__/}]]entities/by-class/" + $(this).data('ajax-path'),
+								dataType: "json",
+								data: function(term, page) {
+									return {
+										orderBy: 'name',
+										q: term,
+										isIdentifiedItem: 'false',
+										where: "[[${where} ? ${where} : '']]"
+									};
+								},
+								results: function (data) {
+									return {
+										results : $.map(data, function (item) {
+											return {
+												id: item[0],
+												text: item[2],
+											}
+										})
+									};
+								}
+							},
+							initSelection: function(element, callback) {
+								var result = [];
+								// Collect AJAX requests needed to resolve initially
+								// selected items
+
+								$.when($.ajax("[[@{__${basePath}__/}]]entities/by-uuid/" + $(element).val(), {
+									dataType: "json"
+								}))
+									.done(function(data) {
+										item = data[0];
+										result.push({
+										id: item[0],
+										text: item[2],
+									});
+									callback(result[0]);
+								});
+							}
+						});
+					});
+				});
+
+				$('#show-objusage-' + idx).tab('show');
+			});
+
+			$('body').on('click', '.button-close-objusage', function() {
+				var idx = $(this).data('index');
+				$('#li-objusage-' + idx).remove();
+				$('#objusage-' + idx).remove();
+				var first = $('#objusage-tabs').find('li:first').data('index');
+				if (first !== null) {
+					$('#show-objusage-' + first).tab('show');
+				}
+			});
+		/* ]]> */
+		</script>
+	</div>
+</div>
