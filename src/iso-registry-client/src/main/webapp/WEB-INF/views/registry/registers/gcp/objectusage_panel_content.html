@@ -1,0 +1,15 @@
+<div th:fragment="objectUsagePanelContent(index)">
+	<div th:if="${isProposal} and !${isReadOnly}">
+		<div class="row">
+			<div class="col-md-12" th:with="property='domainOfValidity',label=#{form.label.selectExtentItem},isRequired='true',noAddNew='true',ajaxPath='ExtentItem'">
+				<div th:replace="globals :: selectRegisterItem" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12" th:with="property='scope',inputType='text',label=#{form.label.scope},placeholder=#{form.placeholder.scope},isRequired='true'">
+				<div th:replace="globals :: textArea" />
+			</div>
+		</div>
+	</div>
+</div>
