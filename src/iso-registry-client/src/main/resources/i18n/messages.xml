@@ -390,6 +390,7 @@
 	
 	<entry key="form.label.itemClass">Item class</entry>
 	<entry key="form.label.targetRegister">Target register</entry>
+	<entry key="form.label.groupName">Group name</entry>
 	<entry key="form.label.name">Name</entry>
 	<entry key="form.label.definition">Definition</entry>
 	<entry key="form.label.description">Description</entry>
@@ -513,6 +514,7 @@
 	
 	<entry key="form.help.cannotDeleteOrganization">There are still users associated with this organization. Please reassign all users of this organization before deleting it.</entry>
 	
+	<entry key="form.placeholder.groupName"></entry>
 	<entry key="form.placeholder.name"></entry>
 	<entry key="form.placeholder.definition"></entry>
 	<entry key="form.placeholder.description"></entry>

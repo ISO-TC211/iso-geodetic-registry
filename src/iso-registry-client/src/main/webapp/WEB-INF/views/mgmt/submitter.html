@@ -25,6 +25,7 @@
 					<div style="padding: 10px">
 						<div class="control-group" style="margin-top: 10px; margin-bottom: 10px">
 							<button id="proposeNew" class="btn btn-success" data-toggle="modal" href="#addNewItem" th:text="#{button.addition}">Item registrieren</button>
+							<button id="createGroup" class="btn btn-default" data-toggle="modal" href="#createProposalGroup" th:text="#{button.createGroup}"/>
 
 								<div class="modal fade" th:id="addNewItem" role="dialog">
 									<div class="modal-dialog">
@@ -68,7 +69,23 @@
 									</div>
 								</div>
 
-
+							<div class="modal fade" id="createProposalGroup" role="dialog">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 th:text="#{popup.createGroup.header}"/>
+										</div>
+										<div class="modal-body">
+											<label class="control-label" for="groupName" th:text="#{form.label.groupName}"/>
+											<input id="groupName" name="groupName" th:placeholder="#{form.placeholder.groupName}" class="form-control" required="required"></input>
+										</div>
+										<div class="modal-footer">
+											<button type="button" id="creategroup" class="btn btn-success button-creategroup" th:text="#{button.createGroup}"/>
+											<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<table id="proposalsTable" class="datatable table table-striped">
 							<thead>

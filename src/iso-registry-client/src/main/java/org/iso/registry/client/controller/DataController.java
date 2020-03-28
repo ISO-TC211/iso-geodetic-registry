@@ -1,6 +1,7 @@
 package org.iso.registry.client.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,10 +22,10 @@ import org.iso.registry.core.model.operation.OperationMethodItemRepository;
 import org.iso.registry.core.model.operation.OperationParameterItem;
 import org.iso.registry.core.model.operation.OperationParameterItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -36,6 +37,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.geoinfoffm.registry.core.Entity;
+import de.geoinfoffm.registry.core.model.Organization;
+import de.geoinfoffm.registry.core.model.Proposal;
+import de.geoinfoffm.registry.core.model.ProposalGroup;
+import de.geoinfoffm.registry.core.model.iso19135.RE_SubmittingOrganization;
+import de.geoinfoffm.registry.core.security.RegistrySecurity;
+import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 
 @Controller
 @RequestMapping("/entities")
@@ -49,12 +56,15 @@ public class DataController
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private ExtentRepository extentRepository;
-	
+
 	@Autowired
 	private IsoProposalService isoProposalService;
+
+	@Autowired
+	private RegistrySecurity security;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -296,7 +306,37 @@ public class DataController
 		String jpql = "SELECT i.uuid, i.identifier, i.name FROM RE_RegisterItem i WHERE uuid = '" + uuid.toString() + "' ORDER BY i." + orderBy;
 		return entityManager.createQuery(jpql).getResultList();
 	}
-	
+
+	/**
+	 * Search proposal groups
+	 * 
+	 * @param search Search term
+	 * @return A list of proposal groups as an Object array (fields: <code>uuid, title, sponsorUuid</code>) ordered by <code>title</code>
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/proposalgroups", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public @ResponseBody List<Object[]> findProposalGroups(@RequestParam(value = "q", required = false) String search) {
+		Organization currentOrg = security.getCurrentUser().getOrganization();
+		RE_SubmittingOrganization sponsor = currentOrg.getSubmittingOrganization();
+
+		StringBuilder q = new StringBuilder();
+
+		q.append("SELECT g.uuid, g.title FROM ProposalGroup g WHERE TYPE(g) IN :classes AND g.status = '");
+		q.append(ProposalWorkflowManager.STATUS_NOT_SUBMITTED);
+		q.append("' AND g.sponsor.uuid = '");
+		q.append(sponsor.getUuid().toString());
+		q.append("'");
+		if (!StringUtils.isEmpty(search)) {
+			search = "%" + search + "%";
+			q.append(" AND (LOWER(g.title) LIKE '" + search.toLowerCase() + "')");
+		}
+		q.append(" ORDER BY g.title");
+
+		Query query = entityManager.createQuery(q.toString()).setParameter("classes", Arrays.asList(ProposalGroup.class));
+		return query.getResultList();
+	}
+
 	@RequestMapping(value = "/fragments/informationsource")
 	public String getInformationSourceFragment(@RequestParam("index") String index, @RequestParam(value = "objectPath", required = false) String objectPath, final Model model) {
 		if (!StringUtils.isEmpty(objectPath)) {
