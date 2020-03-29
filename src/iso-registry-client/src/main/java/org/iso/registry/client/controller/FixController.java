@@ -167,6 +167,9 @@ public class FixController extends AbstractController
 					case "create-extent-item-class":
 						fixer.createExtentItemClass(initLog);
 						break;
+					case "migrate-operations":
+						fixer.migrateCoordinateOperationExtents(initLog);
+						break;
 					default:
 						message = String.format("Unknown fix: '%s'", fix);
 						initLog.append(message);
