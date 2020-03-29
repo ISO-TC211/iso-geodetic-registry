@@ -401,7 +401,8 @@ public class RegisterController extends AbstractController
 		}
 		model.addAttribute("register", register);
 
-		List<RE_RegisterItem> items = itemRepository.findByRegisterAndItemIdentifierAndStatusIn(register, itemIdentifier, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED));
+		List<RE_RegisterItem> items = itemRepository.findByRegisterAndItemIdentifierAndStatusIn(register, itemIdentifier,
+				Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED, RE_ItemStatus.INVALID));
 		if (items.isEmpty()) {
 			throw new ItemNotFoundException(register, itemIdentifier);
 		}
@@ -1232,7 +1233,7 @@ public class RegisterController extends AbstractController
 
 		List<RE_ItemStatus> acceptedStatus;
 		if (status == null) {
-			acceptedStatus = Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED);
+			acceptedStatus = Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.INVALID);
 		}
 		else {
 			acceptedStatus = Arrays.asList(status);
@@ -1268,8 +1269,8 @@ public class RegisterController extends AbstractController
 					.createQuery()
 					.forEntitiesAtRevision(RE_RegisterItem.class, revision)
 					.add(AuditEntity.property("register").eq(register))
-					.add(AuditEntity.property("status")
-							.in(Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED)));
+					.add(AuditEntity.property("status").in(
+							Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.RETIRED, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.INVALID)));
 
 			if (!StringUtils.isEmpty(sSearch)) {
 				aq = aq.add(AuditEntity.or(AuditEntity.property("name").ilike("%" + sSearch + "%"),
