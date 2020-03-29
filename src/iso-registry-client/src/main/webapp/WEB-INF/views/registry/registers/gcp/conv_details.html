@@ -106,7 +106,9 @@
 				</thead>
 				<tbody th:unless="${isProposal}">
 					<tr th:each="parameterValue,row : *{parameterValues}">
-						<td th:text="${parameterValue.parameterName}"></td>
+						<td>
+							<a th:href="@{__${basePath}__/item/__${parameterValue.parameter.uuid}__}" target="_blank"><span th:text="${parameterValue.parameterName}"></span></a> <span class="text-muted" th:text="'[' + ${parameterValue.parameter.identifier} + ']'"></span>
+						</td>
 						<td>
 							<div class="form-group">
 								<input type="text" class="form-control required" th:value="${parameterValue.value}" th:disabled="!${isProposal}" th:readonly="!${isProposal}" th:required="${isProposal}"/>
@@ -120,7 +122,7 @@
 				<tbody th:if="${isProposal}">
 					<tr th:each="parameterValue,row : *{parameterValues}">
 						<td>
-							<span th:text="${@dataController.getParameterName(parameterValue.parameter.referencedItemUuid).body.name}"></span>
+							<a th:href="@{__${basePath}__/item/__${parameterValue.parameter.referencedItemUuid}__}" target="_blank"><span th:text="${@dataController.getParameterName(parameterValue.parameter.referencedItemUuid).body.name}"></span></a>
 							<input type="hidden" th:name="'parameterValues[' + ${row.index} + '].parameter.referencedItemUuid'" th:value="${parameterValue.parameter.referencedItemUuid}"/>
 						</td>
 						<td>
@@ -207,7 +209,7 @@
             	.done(function (data) {
             		$.each(data, function(idx, item) {
         				table.fnAddData([
-        					"<span>" + item[2] + "</span><input type='hidden' name='parameterValues[" + idx + "].parameter.referencedItemUuid' value='" + item[0] + "'/>",
+        					"<a href='[[@{__${basePath}__/item/}]]" + item[0] + "' target='_blank'><span>" + item[2] + "</span></a><input type='hidden' name='parameterValues[" + idx + "].parameter.referencedItemUuid' value='" + item[0] + "'/>",
         					"<div class='form-group'><input type='text' class='form-control input-sm col-md-12' name='parameterValues[" + idx + "].value' required='required'/></div>",
     						"<input type='hidden' class='form-control' id='parameterUom_" + idx + "' name='parameterValues[" + idx + "].parameterUnit.referencedItemUuid' required='required' style='width: 100%'/>"
 						]);
