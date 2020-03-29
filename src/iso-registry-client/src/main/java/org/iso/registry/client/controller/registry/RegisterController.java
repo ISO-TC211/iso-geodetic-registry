@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -57,7 +58,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -80,7 +80,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -321,22 +320,49 @@ public class RegisterController extends AbstractController
 				addItemClassToList(itemClassParam, itemClasses);
 			}
 		}
-		
+
+		Set<RE_ItemStatus> statusFilter = new HashSet<>();
+		if (parameters.containsKey("statusFilter")) {
+			try {
+				statusFilter =  StringUtils.commaDelimitedListToSet(parameters.get("statusFilter")).stream().map(s -> {
+					return RE_ItemStatus.valueOf(s.toUpperCase());
+				}).collect(Collectors.toSet());
+			}
+			catch (Throwable t) {
+				// ignore invalid status values
+				logger.error(t.getMessage(), t);
+			}
+		}
+
+		if (statusFilter.isEmpty()) {
+			// fallback, e.g. if invalid status values were passed in the statusFilter parameter
+			statusFilter = new HashSet<>(
+					Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED, RE_ItemStatus.INVALID));
+		}
+
 		Page<RE_RegisterItem> items;
 		if (itemClasses.isEmpty()) { 
 			if (!StringUtils.isEmpty(sSearch)) {
-				items = itemRepository.findByRegisterAndStatusIn(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+				items = itemRepository.findByRegisterAndStatusIn(register,
+						statusFilter,
+						"%" + sSearch + "%", pageable);
 			}
 			else {
-				items = itemRepository.findByRegisterAndStatusIn(register, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);
+				items = itemRepository.findByRegisterAndStatusIn(register,
+						statusFilter,
+						pageable);
 			}
 		}
 		else {
 			if (!StringUtils.isEmpty(sSearch)) {
-				items = itemRepository.findByRegisterAndItemClassInAndStatusInFiltered(register, itemClasses, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), "%" + sSearch + "%", pageable);
+				items = itemRepository.findByRegisterAndItemClassInAndStatusInFiltered(register, itemClasses,
+						statusFilter,
+						"%" + sSearch + "%", pageable);
 			}
 			else {
-				items = itemRepository.findByRegisterAndItemClassInAndStatusIn(register, itemClasses, Arrays.asList(RE_ItemStatus.VALID, RE_ItemStatus.SUPERSEDED, RE_ItemStatus.RETIRED), pageable);				
+				items = itemRepository.findByRegisterAndItemClassInAndStatusIn(register, itemClasses,
+						statusFilter,
+						pageable);
 			}
 		}
 		List<RegisterItemViewBean> viewBeans = new ArrayList<RegisterItemViewBean>();

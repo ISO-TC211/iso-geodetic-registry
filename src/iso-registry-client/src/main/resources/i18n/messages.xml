@@ -226,6 +226,7 @@
 
 	<entry key="NOT_VALID">not valid</entry>
 	<entry key="VALID">valid</entry>
+	<entry key="INVALID">invalid</entry>
 	<entry key="SUPERSEDED">superseded</entry>
 	<entry key="RETIRED">retired</entry>
 	
