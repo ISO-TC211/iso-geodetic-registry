@@ -127,7 +127,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" id="addtogroup-' + item.proposalUuid + '" class="btn btn-success button-addtogroup" disabled="disabled" data-uuid="' + item.proposalUuid + '">[[#{button.addToGroup}]]</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -151,7 +151,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" id="doremovefromgroup-' + item.proposalUuid + '" class="btn btn-danger button-doremovefromgroup" data-uuid="' + item.proposalUuid + '">[[#{button.removeFromGroup}]]</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -182,7 +182,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-danger button-dissolvegroup" data-uuid="' + item.proposalUuid + '">[[#{button.dissolveGroup}]]</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -206,7 +206,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-' + okType + ' button-popup-' + action + '" data-uuid="' + itemUuid + '">' + okText + '</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="[[#{button.cancel}]]">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -230,7 +230,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-success button-submitproposal" data-uuid="' + item.proposalUuid + '">[[#{button.submitProposal}]]</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -254,7 +254,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-warning button-withdrawproposal" data-uuid="' + item.proposalUuid + '">[[#{button.withdrawProposal}]]</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -278,7 +278,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-danger button-deleteproposal" data-uuid="' + item.proposalUuid + '">[[#{button.deleteProposal}]]</button>' +
-							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelaccept" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -302,7 +302,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-warning button-startdiscussion" data-uuid="' + item.proposalUuid + '">[[#{button.startProposalDiscussion}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -326,7 +326,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-warning button-enddiscussion" data-uuid="' + item.proposalUuid + '">[[#{button.endProposalDiscussion}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -350,7 +350,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-warning button-startballot" data-uuid="' + item.proposalUuid + '">[[#{button.startProposalBallot}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -374,7 +374,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-warning button-endballot" data-uuid="' + item.proposalUuid + '">[[#{button.endProposalBallot}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -398,7 +398,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-warning button-endappeal" data-uuid="' + item.proposalUuid + '">[[#{button.endAppealPeriod}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -422,7 +422,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-success button-acceptappeal" data-uuid="' + item.proposalUuid + '">[[#{button.acceptAppeal}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -446,7 +446,7 @@
 						'</div>' +
 						'<div class="modal-footer">' +
 							'<button type="button" class="btn btn-danger button-rejectappeal" data-uuid="' + item.proposalUuid + '">[[#{button.rejectAppeal}]]</button>' +
-							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal" th:text="#{button.cancel}">Abbrechen</button>' +
+							'<button type="button" id="cancelstart" class="btn btn-default" data-dismiss="modal">[[#{button.cancel}]]</button>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
