@@ -596,6 +596,7 @@
 					<thead>
 						<tr>
 							<th th:text="#{tableheader.scope}" />
+							<th th:text="#{tableheader.description}" />
 							<th th:text="#{form.label.northernLatitude}" />
 							<th th:text="#{form.label.easternLongitude}" />
 							<th th:text="#{form.label.southernLatitude}" />
@@ -606,6 +607,7 @@
 						<th:block th:each="domain : *{domains}">
 							<tr th:each="gbb,iterStat : ${domain.domainOfValidity.geographicBoundingBoxes}">
 								<td th:if="${iterStat.first}" th:rowspan="${domain.domainOfValidity.geographicBoundingBoxes.size()}" th:text="${domain.scope}" />
+								<td th:text="${domain.domainOfValidity.name}" />
 								<td th:text="${gbb.northBoundLatitude}" />
 								<td th:text="${gbb.eastBoundLongitude}" />
 								<td th:text="${gbb.southBoundLatitude}" />
