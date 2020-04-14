@@ -1,0 +1,23 @@
+name: release new package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-package:
+    runs-on: ubuntu-latest
+    steps:
+      -  uses: actions/checkout@v2
+      -  run: echo ::set-env name=REPOSITORY_NAME::$(echo ${{github.repository}} | awk '{print tolower($0)}')
+         name: set env.REPOSITORY_NAME
+      - uses: olegtarasov/get-tag@v2
+        id: tagName
+      -  uses: elgohr/Publish-Docker-Github-Action@2.12
+         with:
+           dockerfile: Dockerfile-aws
+           tags: ${{env.GIT_TAG_NAME}}
+           registry: docker.pkg.github.com
+           name: ${{env.REPOSITORY_NAME}}/webapp-aws
+           username: ${{github.actor}}
+           password: ${{github.token}}
