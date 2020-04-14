@@ -15,7 +15,7 @@ jobs:
         id: tagName
       -  uses: elgohr/Publish-Docker-Github-Action@2.12
          with:
-           dockerfile: Dockerfile-aws
+           dockerfile: Dockerfile
            tags: ${{env.GIT_TAG_NAME}}
            registry: docker.pkg.github.com
            name: ${{env.REPOSITORY_NAME}}/webapp-aws
