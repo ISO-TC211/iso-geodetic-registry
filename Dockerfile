@@ -1,8 +1,8 @@
 FROM maven:3-jdk-8-alpine as APP
 WORKDIR /app
 ADD . /app
+RUN mvn clean install -DskipTests -Paws
 RUN mkdir -p dist
-RUN mvn clean install -DskipTests
 RUN cp -f src/iso-registry-client/target/*.war dist
 RUN cp -f src/iso-registry-soap/target/*.war dist
 
