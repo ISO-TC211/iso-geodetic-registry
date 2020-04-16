@@ -518,7 +518,7 @@
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<hibernate.show_sql>false</hibernate.show_sql>
 				<flyway.migration>true</flyway.migration>
-				<client.basepath>~/~~ClientProxyBasePathGui~~</client.basepath>
+				<client.basepath></client.basepath>
 				<mail.enabled>~~MailEnabled~~</mail.enabled>
 				<mail.from.name>~~MailFromName~~</mail.from.name>
 				<mail.from.address>~~MailFromAddress~~</mail.from.address>
