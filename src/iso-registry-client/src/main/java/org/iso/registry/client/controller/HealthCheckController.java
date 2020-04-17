@@ -19,6 +19,6 @@ public class HealthCheckController {
     @RequestMapping(value = "/ping", method = RequestMethod.GET)
     public void ping(HttpServletResponse response) {
         logger.debug("Pinging me. I m OK.");
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }
