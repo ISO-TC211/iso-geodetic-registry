@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-	<Appenders>
-		<Console name="console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%-5p: %c - %m%n" />
-		</Console>
-	</Appenders>
-	<Loggers>
-		<Root level="warn">
-			<AppenderRef ref="console" />
-		</Root>
-	</Loggers>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-5p: %c - %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.hibernate" level="error" additivity="false">
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+        <Root level="${LOG_LEVEL:-ERROR}" additivity="false">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
 </Configuration>

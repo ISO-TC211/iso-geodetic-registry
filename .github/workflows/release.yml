@@ -16,10 +16,10 @@ jobs:
          name: set env.REPOSITORY_NAME
       - uses: olegtarasov/get-tag@v2
         id: tagName
-      -  uses: elgohr/Publish-Docker-Github-Action@2.12
+      -  uses: elgohr/Publish-Docker-Github-Action@master
          with:
            dockerfile: Dockerfile
-           tags: ${{env.GIT_TAG_NAME}}
+           tags: "latest,${{env.GIT_TAG_NAME}}"
            registry: docker.pkg.github.com
            name: ${{env.REPOSITORY_NAME}}/webapp-aws
            username: ${{github.actor}}
