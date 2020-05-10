@@ -22,34 +22,34 @@
 								<span th:text="#{alert.noSupersededItems}">Es muss mindestens ein zu ersetzender Eintrag ausgewählt werden..</span>
 							</p>
 						</div>
-						<div class="panel panel-primary">
-							<form id="addSupersededItemsForm" method="post">
-								<div style="padding: 10px">
-									<table id="supersededItemsTable" class="datatable table table-striped">
-										<thead>
-											<tr>
-												<th></th>
-												<th th:text="#{tableheader.itemIdentifier}">ID</th>
-												<th th:text="#{tableheader.name}">Name</th>
-												<th th:text="#{tableheader.itemClassName}">Klasse</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr th:each="item : ${state.validItems}">
-												<td><input type="checkbox" th:name="'supersede_' + ${item.uuid}"></input></td>
-												<td th:text="${item.itemIdentifier}"></td>
-												<td th:text="${item.name}"></td>
-												<td th:text="${item.itemClassName}"></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>	
-								<div class="panel-footer">
-									<button type="submit" name="addSupersededItems" class="btn btn-info" th:text="#{button.addSupersededItems}">Zu ersetzende Einträge wählen</button>
-								</div>
-							</form>
-
-						</div>
+						<!-- Note: phuonghqh "validItems not found in state" -->
+<!--						<div class="panel panel-primary">-->
+<!--							<form id="addSupersededItemsForm" method="post">-->
+<!--								<div style="padding: 10px">-->
+<!--									<table id="supersededItemsTable" class="datatable table table-striped">-->
+<!--										<thead>-->
+<!--											<tr>-->
+<!--												<th></th>-->
+<!--												<th th:text="#{tableheader.itemIdentifier}">ID</th>-->
+<!--												<th th:text="#{tableheader.name}">Name</th>-->
+<!--												<th th:text="#{tableheader.itemClassName}">Klasse</th>-->
+<!--											</tr>-->
+<!--										</thead>-->
+<!--										<tbody>-->
+<!--											<tr th:each="item : ${state.validItems}">-->
+<!--												<td><input type="checkbox" th:name="'supersede_' + ${item.uuid}"></input></td>-->
+<!--												<td th:text="${item.itemIdentifier}"></td>-->
+<!--												<td th:text="${item.name}"></td>-->
+<!--												<td th:text="${item.itemClassName}"></td>-->
+<!--											</tr>-->
+<!--										</tbody>-->
+<!--									</table>-->
+<!--								</div>	-->
+<!--								<div class="panel-footer">-->
+<!--									<button type="submit" name="addSupersededItems" class="btn btn-info" th:text="#{button.addSupersededItems}">Zu ersetzende Einträge wählen</button>-->
+<!--								</div>-->
+<!--							</form>-->
+<!--						</div>-->
 					</div>
 				</div>
 			</div>
