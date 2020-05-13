@@ -1348,7 +1348,6 @@ public class RegisterController extends AbstractController
 		private ProposalWorkflowManager workflowManager;
 
 		private String step;
-//		private Set<RegisterItemViewBean> validItems;
 		private RE_SubmittingOrganization sponsor;
 		private final Set<RegisterItemProposalDTO> newSupersedingItems = new HashSet<RegisterItemProposalDTO>();
 		private final Set<RegisterItemViewBean> existingSupersedingItems = new HashSet<RegisterItemViewBean>();
@@ -1356,25 +1355,25 @@ public class RegisterController extends AbstractController
 		private String justification;
 		private String registerManagerNotes;
 		private String controlBodyNotes;
-		
+
 		public SupersessionState(RE_Register register, RE_SubmittingOrganization sponsor, ProposalWorkflowManager workflowManager) {
 			this.sponsor = sponsor;
 			this.workflowManager = workflowManager;
-			
+
 			step = "supersedingItems";
 		}
-		
+
 		public SupersessionState(Supersession proposal, RegisterItemService itemService) {
 			this.sponsor = proposal.getSponsor();
 			step = "supersedingItems";
-		
+
 			for (RE_RegisterItem supersededItem : proposal.getSupersededItems()) {
 				this.addSupersededItem(supersededItem);
 			}
 			for (RE_RegisterItem supersedingItem : proposal.getSupersedingItems()) {
 				this.addExistingSupersedingItem(supersedingItem);
 			}
-			
+
 			this.justification = proposal.getJustification();
 			this.registerManagerNotes = proposal.getRegisterManagerNotes();
 			this.controlBodyNotes = proposal.getControlBodyNotes();
@@ -1393,20 +1392,6 @@ public class RegisterController extends AbstractController
 		public void setStep(String step) {
 			this.step = step;
 		}
-
-//		/**
-//		 * @return the validItems
-//		 */
-//		public Set<RegisterItemViewBean> getValidItems() {
-//			return validItems;
-//		}
-//
-//		/**
-//		 * @param validItems the validItems to set
-//		 */
-//		public void setValidItems(Set<RegisterItemViewBean> validItems) {
-//			this.validItems = validItems;
-//		}
 
 		/**
 		 * @return the sponsor
@@ -1428,11 +1413,11 @@ public class RegisterController extends AbstractController
 		public Set<RegisterItemProposalDTO> getNewSupersedingItems() {
 			return Collections.unmodifiableSet(newSupersedingItems);
 		}
-		
+
 		public void addNewSupersedingItem(RegisterItemProposalDTO newItem) {
 			this.newSupersedingItems.add(newItem);
 		}
-		
+
 		public Set<RegisterItemViewBean> getExistingSupersedingItems() {
 			return Collections.unmodifiableSet(existingSupersedingItems);
 		}
@@ -1440,7 +1425,7 @@ public class RegisterController extends AbstractController
 		public void addExistingSupersedingItem(RE_RegisterItem existingItem) {
 			this.existingSupersedingItems.add(RegisterItemViewBean.forItem(existingItem, true, workflowManager));
 		}
-		
+
 		public void removeSupersedingItem(UUID uuid) {
 			for (RegisterItemProposalDTO newItem : this.newSupersedingItems) {
 				if (newItem.getItemUuid().equals(uuid)) {
@@ -1448,7 +1433,7 @@ public class RegisterController extends AbstractController
 					return;
 				}
 			}
-			
+
 			for (RegisterItemViewBean existingItem : this.existingSupersedingItems) {
 				if (existingItem.getUuid().equals(uuid)) {
 					this.existingSupersedingItems.remove(existingItem);
@@ -1456,33 +1441,33 @@ public class RegisterController extends AbstractController
 				}
 			}
 		}
-		
+
 		public void removeAllSupersededItems() {
 			this.supersededItems.clear();
 		}
-		
+
 		/**
 		 * @return the supersededItems
 		 */
 		public Set<RegisterItemViewBean> getSupersededItems() {
 			return Collections.unmodifiableSet(supersededItems);
 		}
-		
+
 		public List<UUID> getSupersededItemUuids() {
 			List<UUID> result = new ArrayList<UUID>();
 			for (RegisterItemViewBean rvb : supersededItems) {
 				result.add(rvb.getUuid());
 			}
-			
+
 			return Collections.unmodifiableList(result);
 		}
-		
+
 		public void addSupersededItem(RE_RegisterItem supersededItem) {
 			if (!this.getSupersededItemUuids().contains(supersededItem.getUuid())) {
 				supersededItems.add(RegisterItemViewBean.forItem(supersededItem, true, workflowManager));
 			}
 		}
-		
+
 		public void removeSupersededItem(UUID uuid) {
 			supersededItems.remove(uuid);
 		}
