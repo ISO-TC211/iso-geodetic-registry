@@ -3,13 +3,14 @@
  */
 package org.iso.registry.client.controller.registry;
 
-import static de.geoinfoffm.registry.core.security.RegistrySecurity.SUBMITTER_ROLE_PREFIX;
+import static de.geoinfoffm.registry.core.security.RegistrySecurity.*;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,6 @@ import org.iso.registry.client.controller.registry.RegisterController.Supersessi
 import org.iso.registry.core.model.crs.CoordinateReferenceSystemItem;
 import org.iso.registry.persistence.io.gml.GmlExporter;
 import org.iso.registry.persistence.io.wkt.WktExporter;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.convert.ConversionService;
@@ -52,8 +52,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +63,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import de.geoinfoffm.registry.api.EntityNotFoundException;
 import de.geoinfoffm.registry.api.ItemNotFoundException;
 import de.geoinfoffm.registry.api.ProposalDtoFactory;
 import de.geoinfoffm.registry.api.ProposalService;
@@ -98,6 +99,7 @@ import de.geoinfoffm.registry.core.security.RegistrySecurity;
 import de.geoinfoffm.registry.core.security.RegistryUserUtils;
 import de.geoinfoffm.registry.core.workflow.ProposalWorkflowManager;
 import de.geoinfoffm.registry.persistence.ItemClassRepository;
+import de.geoinfoffm.registry.persistence.RegisterItemRepository;
 import de.geoinfoffm.registry.persistence.xml.exceptions.XmlSerializationException;
 
 /**
@@ -110,6 +112,9 @@ public class RegisterItemController extends AbstractController
 {
 	@Autowired
 	private RegisterItemService itemService;
+
+	@Autowired
+	private RegisterItemRepository itemRepository;
 
 	@Autowired
 	private ProposalService proposalService;
@@ -401,10 +406,10 @@ public class RegisterItemController extends AbstractController
 	@Transactional
 	public String addNewItemToProposalPost(WebRequest request,
 			@PathVariable("uuid") UUID itemUuid, 
-			@RequestParam(value = "itemClass", required = false) String itemClassUuid,
+			@RequestParam(value = "itemClass", required = false) UUID itemClassUuid,
 			final Model model,
 			final RedirectAttributes redirectAttributes) throws UnauthorizedException {
-		
+
 		return addNewItemToProposal(request, itemUuid, itemClassUuid, model, redirectAttributes);
 	}
 
@@ -412,10 +417,10 @@ public class RegisterItemController extends AbstractController
 	@Transactional
 	public String addNewItemToProposal(WebRequest request,
 			@PathVariable("uuid") UUID itemUuid, 
-			@RequestParam(value = "itemClass", required = false) String itemClassUuid,
+			@RequestParam(value = "itemClass", required = false) UUID itemClassUuid,
 			final Model model,
 			final RedirectAttributes redirectAttributes) throws UnauthorizedException { 
-		
+
 		SupersessionState state = (SupersessionState)request.getAttribute("supersession", WebRequest.SCOPE_SESSION);
 		if (state == null) {
 			throw new IllegalStateException("State not initialized");
@@ -432,19 +437,30 @@ public class RegisterItemController extends AbstractController
 			return "registry/register_notfound";
 		}
 		model.addAttribute("register", targetRegister);
-		
+
+		Assert.notNull(itemClassUuid, "Item class UUID must not be null");
+		RE_ItemClass itemClass = itemClassRepository.findOne(itemClassUuid);
+		if (itemClass == null) {
+			throw new EntityNotFoundException(String.format("Item class with UUID %s does not exist", itemClassUuid));
+		}
+
 		RE_SubmittingOrganization suborg = RegistryUserUtils.getUserSponsor(userRepository);
 
 		model.addAttribute("isNew", "true");
 
-		RegisterItemProposalDTO newItem = new RegisterItemProposalDTO();
-		newItem.setProposalType(ProposalType.ADDITION);		
+		RegisterItemProposalDTO newItem = proposalDtoFactory.getProposalDto(itemClass);
+		newItem.setProposalType(ProposalType.ADDITION);
 		newItem.setSponsorUuid(suborg.getUuid());
 		newItem.setTargetRegisterUuid(targetRegister.getUuid());
 
+		RE_RegisterItem singlePredecessor = findSinglePredecessor(itemClassUuid, state);
+		if (singlePredecessor != null) {
+			newItem.copyProperties(singlePredecessor);
+		}
+
 		model.addAttribute("proposal", newItem);
 		model.addAttribute("partOfSupersession", "true");
-		
+
 		return createProposal(targetRegister, itemClassUuid, newItem, model, redirectAttributes);
 	}
 
@@ -673,7 +689,7 @@ public class RegisterItemController extends AbstractController
 	}
 
 	public String createProposal(RE_Register register,
-			String itemClassUuid,
+			UUID itemClassUuid,
 			RegisterItemProposalDTO proposal, final Model model,
 			final RedirectAttributes redirectAttributes) throws UnauthorizedException {
 
@@ -683,16 +699,16 @@ public class RegisterItemController extends AbstractController
 
 		Collection<RE_ItemClass> itemClasses = register.getContainedItemClasses();
 		if (itemClasses.size() == 1) {
-			itemClassUuid = itemClasses.toArray(new RE_ItemClass[] {})[0].getUuid().toString();
+			itemClassUuid = itemClasses.toArray(new RE_ItemClass[] {})[0].getUuid();
 			model.addAttribute("itemClassUuid", itemClassUuid);
 		}
 		model.addAttribute("itemClasses", itemClasses);
 
 		ItemClassConfiguration itemClassConfiguration = null;
-		if (!StringUtils.isEmpty(itemClassUuid)) {
+		if (itemClassUuid != null) {
 			RE_ItemClass selectedItemClass = null;
 			for (RE_ItemClass itemClass : itemClasses) {
-				if (itemClass.getUuid().toString().toLowerCase().equals(itemClassUuid.toLowerCase())) {
+				if (itemClass.getUuid().toString().toLowerCase().equals(itemClassUuid.toString().toLowerCase())) {
 					selectedItemClass = itemClass;
 					break;
 				}
@@ -708,12 +724,15 @@ public class RegisterItemController extends AbstractController
 				model.addAttribute("itemClassConfiguration", itemClassConfiguration);
 			}
 
-			proposal = proposalDtoFactory.getProposalDto(selectedItemClass);
+			if (proposal == null || !proposal.getClass().equals(proposalDtoFactory.getProposalDto(selectedItemClass).getClass())) {
+				proposal = proposalDtoFactory.getProposalDto(selectedItemClass);
+			}
+
 			if (proposal.getClass().getCanonicalName().equals(RegisterItemProposalDTO.class.getCanonicalName())) {
 				model.addAttribute("itemClassNotConfigured", "true");
 			}
 
-			proposal.setItemClassUuid(UUID.fromString(itemClassUuid));
+			proposal.setItemClassUuid(itemClassUuid);
 			model.addAttribute("itemClass", selectedItemClass.getUuid().toString());
 			model.addAttribute("itemClassName", selectedItemClass.getName());
 		}
@@ -736,5 +755,24 @@ public class RegisterItemController extends AbstractController
 		}
 
 		return viewName;
+	}
+
+	private RE_RegisterItem findSinglePredecessor(UUID itemClassUuid, SupersessionState state) {
+		RE_RegisterItem singlePredecessor = null;
+		Map<UUID, UUID> itemClassToSingleItemMap = new HashMap<>();
+		for (RegisterItemViewBean supersededItem : state.getSupersededItems()) {
+			if (itemClassToSingleItemMap.containsKey(supersededItem.getItemClassUuid())) {
+				itemClassToSingleItemMap.put(supersededItem.getItemClassUuid(), null);
+			}
+			else {
+				itemClassToSingleItemMap.put(supersededItem.getItemClassUuid(), supersededItem.getUuid());
+			}
+		}
+
+		if (itemClassToSingleItemMap.get(itemClassUuid) != null) {
+			UUID supersededItemUuid = itemClassToSingleItemMap.get(itemClassUuid);
+			singlePredecessor = itemRepository.findOne(supersededItemUuid);
+		}
+		return singlePredecessor;
 	}
 }
