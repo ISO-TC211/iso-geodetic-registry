@@ -749,7 +749,17 @@
 	 			$('button').each(function() {
 					$(this).attr('disabled', 'disabled');
 				});
-				
+
+				var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+				if (isSafari) {
+					var submitButtonName =  $(this.submitButton).attr("name");
+					$('<input>').attr({ //fix for Safari
+						type: 'hidden',
+						id: submitButtonName,
+						name: submitButtonName
+					}).appendTo(form);
+				}
+
 				form.submit();
 				return false;
 			},
