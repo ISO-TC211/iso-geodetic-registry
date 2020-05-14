@@ -253,6 +253,10 @@ public class IdentifiedItemProposalDTO extends RegisterItemProposalDTO
 		}
 	}
 
+	protected static boolean hasReferencedItem(RegisterItemProposalDTO dto) {
+		return dto != null && dto.getReferencedItemUuid() != null;
+	}
+
 //	public String getNameCodespace() {
 //		return nameCodespace;
 //	}
