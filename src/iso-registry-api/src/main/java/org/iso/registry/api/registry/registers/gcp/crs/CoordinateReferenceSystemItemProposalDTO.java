@@ -252,24 +252,21 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				item.setDomainOfValidity(itemExtent);
 			}
 			
-			if (this.getCoordinateSystem() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
+			if (hasReferencedItem(this.getCoordinateSystem()) && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
 				SingleCoordinateReferenceSystemItem<?> singleCrs = (SingleCoordinateReferenceSystemItem<?>)registerItem;
 				CoordinateSystemItem cs = entityManager.find(CoordinateSystemItem.class, this.getCoordinateSystem().getReferencedItemUuid());
 				singleCrs.setCoordinateSystem(cs);
 			}
 			
-			if (this.getDatum() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
+			if (hasReferencedItem(this.getDatum()) && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
 				SingleCoordinateReferenceSystemItem<DatumItem> singleCrs = (SingleCoordinateReferenceSystemItem<DatumItem>)registerItem;
 				DatumItem datum = entityManager.find(DatumItem.class, this.getDatum().getReferencedItemUuid());
 				singleCrs.setDatum(datum);
 			}
 			
-			if (this.getSourceCrs() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
+			if (hasReferencedItem(this.getSourceCrs()) && (registerItem instanceof SingleCoordinateReferenceSystemItem<?>)) {
 				SingleCoordinateReferenceSystemItem<DatumItem> singleCrs = (SingleCoordinateReferenceSystemItem<DatumItem>)registerItem;
 				CoordinateReferenceSystemItem crs = entityManager.find(CoordinateReferenceSystemItem.class, this.getSourceCrs().getReferencedItemUuid());
-				if (crs == null) {
-					new Object();
-				}
 //				if (crs instanceof SingleCoordinateReferenceSystemItem<?>) {
 //					singleCrs.setBaseCrs((SingleCoordinateReferenceSystemItem<DatumItem>)crs);
 //				}
@@ -278,7 +275,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 //				}
 			}
 			
-			if (this.getHorizontalCrs() != null && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
+			if (hasReferencedItem(this.getHorizontalCrs()) && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
 				// By convention, the first CRS is the horizontal component
 				CompoundCoordinateReferenceSystemItem compoundCrs = (CompoundCoordinateReferenceSystemItem)registerItem;
 				CoordinateReferenceSystemItem horizontalCrs = entityManager.find(CoordinateReferenceSystemItem.class, this.getHorizontalCrs().getReferencedItemUuid());
@@ -290,7 +287,7 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 					throw new RuntimeException(String.format("Illegal CRS used as part of Compound CRS: %d is not a Single CRS", horizontalCrs.getIdentifier()));
 				}
 			}
-			if (this.getVerticalCrs() != null && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
+			if (hasReferencedItem(this.getVerticalCrs()) && (registerItem instanceof CompoundCoordinateReferenceSystemItem)) {
 				// By convention, the second CRS is the vertical component
 				CompoundCoordinateReferenceSystemItem compoundCrs = (CompoundCoordinateReferenceSystemItem)registerItem;
 				CoordinateReferenceSystemItem verticalCrs = entityManager.find(CoordinateReferenceSystemItem.class, this.getVerticalCrs().getReferencedItemUuid());
@@ -302,13 +299,13 @@ public class CoordinateReferenceSystemItemProposalDTO extends ReferenceSystemIte
 				}
 			}
 			
-			if (this.getBaseCrs() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
+			if (hasReferencedItem(this.getBaseCrs()) && this.getBaseCrs().getReferencedItemUuid() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
 				SingleCoordinateReferenceSystemItem singleCrs = (SingleCoordinateReferenceSystemItem)registerItem;
 				SingleCoordinateReferenceSystemItem baseCrs = entityManager.find(SingleCoordinateReferenceSystemItem.class, this.getBaseCrs().getReferencedItemUuid());
 				singleCrs.setBaseCrs(baseCrs);
 			}
 			
-			if (this.getOperation() != null && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
+			if (hasReferencedItem(this.getOperation()) && (registerItem instanceof SingleCoordinateReferenceSystemItem)) {
 				SingleCoordinateReferenceSystemItem singleCrs = (SingleCoordinateReferenceSystemItem)registerItem;
 				SingleOperationItem operation = entityManager.find(SingleOperationItem.class, this.getOperation().getReferencedItemUuid());
 				singleCrs.setOperation(operation);
