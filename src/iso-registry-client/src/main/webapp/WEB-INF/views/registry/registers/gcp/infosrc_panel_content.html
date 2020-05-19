@@ -72,9 +72,9 @@
 			<div class="form-group col-md-12">
 				<div th:replace="globals :: formLabel('alternateTitle-' + ${rowStat.index}, #{form.label.alternateTitle})"/>
 				<div class="input-group">
-					<input th:if="${isProposal}" th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
-					<span th:unless="${isProposal}" class="text-muted" th:text="${rowStat.index + 1} + '.'"></span>&nbsp;<big th:unless="${isProposal}" th:text="${altTitle}"/>
-					<span class="input-group-btn" th:if="${isProposal}">
+					<input th:if="${isProposal} and !${isReadOnly}" th:name="'informationSource[__${index}__].alternateTitle[' + ${rowStat.index} + ']'" th:value="${altTitle}" class="form-control"/>
+					<span th:unless="${isProposal} and !${isReadOnly}" class="text-muted" th:text="${rowStat.index + 1} + '.'"></span>&nbsp;<big th:unless="${isProposal} and !${isReadOnly}" th:text="${altTitle}"/>
+					<span class="input-group-btn" th:if="${isProposal} and !${isReadOnly}">
 						<button type="button" class="btn btn-default button-delete-alt-title" th:id="'delete-alt-title-' + ${rowStat.index}"><span class="glyphicon glyphicon-remove"/></button>
 					</span>
 				</div>
