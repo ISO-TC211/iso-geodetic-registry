@@ -37,7 +37,7 @@
 		<gml.identifier.baseurl></gml.identifier.baseurl>		
 		<gml.identifier.pathpattern>register/geodetic/items/%d</gml.identifier.pathpattern>
 		<register.aliases>geodetic:ISO Geodetic Register</register.aliases>
-		<log4j.scope>provided</log4j.scope>
+		<log4j.scope>runtime</log4j.scope>
 	</properties>
 	<dependencies>
 		<!-- Spring -->

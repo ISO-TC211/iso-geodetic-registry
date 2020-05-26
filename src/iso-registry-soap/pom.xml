@@ -8,11 +8,11 @@
         <version>1.6.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>	
-    <groupId>org.iso.registry</groupId>
+
     <artifactId>iso-registry-soap</artifactId>
     <packaging>war</packaging>
     <name>iso-registry-soap</name>
-    <url>http://www.springframework.org/spring-ws</url>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
 		<org.springframework-version>4.0.2.RELEASE</org.springframework-version>
