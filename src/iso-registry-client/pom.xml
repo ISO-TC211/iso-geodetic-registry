@@ -512,12 +512,13 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-				<hibernate.connection.username>~~PgUser~~</hibernate.connection.username>
-				<hibernate.connection.password>~~PgPassword~~</hibernate.connection.password>
-				<hibernate.connection.url>jdbc:postgresql://~~PgHost~~:~~PgPort~~/~~PgDatabase~~</hibernate.connection.url>
+				<hibernate.connection.username>isoreg</hibernate.connection.username>
+				<hibernate.connection.password>isoreg</hibernate.connection.password>
+				<hibernate.connection.url>jdbc:postgresql://db:5432/isoreg</hibernate.connection.url>
 				<hibernate.hbm2ddl.auto>validate</hibernate.hbm2ddl.auto>
 				<hibernate.show_sql>false</hibernate.show_sql>
 				<flyway.migration>true</flyway.migration>
+				<registry.demoMode>false</registry.demoMode>
 				<client.basepath></client.basepath>
 				<mail.enabled>~~MailEnabled~~</mail.enabled>
 				<mail.from.name>~~MailFromName~~</mail.from.name>
@@ -530,6 +531,7 @@
 				<mail.smtp.port>~~MailSmtpPort~~</mail.smtp.port>
 				<client.signup.sendConfirmationMails>~~ClientSignupSendConfirmationMails~~</client.signup.sendConfirmationMails>
 				<client.signup.confirmationUrl>~~ClientProxyScheme~~://~~ClientProxyName~~:~~ClientProxyPort~~/~~ClientProxyBasePathGui~~/signup/confirmation</client.signup.confirmationUrl>
+				<log4j.scope>runtime</log4j.scope>
 			</properties>
 			<build>
 				<finalName>isoreg</finalName>
