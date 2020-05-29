@@ -4,6 +4,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfigurationImpl;
+import net.opengis.gml32.GMLPackage;
+import net.opengis.gml32.impl.GMLPackageImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +43,10 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
 	@Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
+
+		GMLPackage eINSTANCE = net.opengis.gml32.impl.GMLPackageImpl.init();
+		System.out.println(123);
+		System.out.println(eINSTANCE);
 
 		HibernateConfigurationImpl conf = new HibernateConfigurationImpl();
 
