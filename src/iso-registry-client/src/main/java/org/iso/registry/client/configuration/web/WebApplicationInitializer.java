@@ -44,9 +44,9 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
 
-		GMLPackage eINSTANCE = net.opengis.gml32.impl.GMLPackageImpl.init();
+//		GMLPackage eINSTANCE = net.opengis.gml32.impl.GMLPackageImpl.init();
 		System.out.println(123);
-		System.out.println(eINSTANCE);
+//		System.out.println(eINSTANCE);
 
 		HibernateConfigurationImpl conf = new HibernateConfigurationImpl();
 
