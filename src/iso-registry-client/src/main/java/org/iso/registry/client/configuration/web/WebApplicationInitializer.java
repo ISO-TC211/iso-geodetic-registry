@@ -44,17 +44,6 @@ public class WebApplicationInitializer extends AbstractWebApplicationInitializer
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
 
-        try {
-					GMLPackage eINSTANCE = GMLPackageImpl.init();
-			System.out.println(123);
-		System.out.println(eINSTANCE);
-		}
-        catch (Exception e) {
-			System.out.println("class-not-found");
-		}
-
-
-
 		HibernateConfigurationImpl conf = new HibernateConfigurationImpl();
 
 		try {
