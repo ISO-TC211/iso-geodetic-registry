@@ -1,19 +1,17 @@
 package org.iso.registry.client.configuration.web;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-
+import de.geoinfoffm.registry.client.web.AbstractWebApplicationInitializer;
+import de.geoinfoffm.registry.persistence.PersistenceConfiguration;
 import de.geoinfoffm.registry.persistence.jpa.HibernateConfigurationImpl;
-import net.opengis.gml32.GMLPackage;
-import net.opengis.gml32.impl.GMLPackageImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.iso.registry.client.configuration.security.SecurityConfiguration;
 import org.springframework.context.annotation.Configuration;
 
-import de.geoinfoffm.registry.client.web.AbstractWebApplicationInitializer;
-import de.geoinfoffm.registry.persistence.PersistenceConfiguration;
-
-import java.sql.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * Initializer for the Spring web application.
