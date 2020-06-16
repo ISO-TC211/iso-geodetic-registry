@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Context>
+    <Loader loaderClass="org.iso.registry.client.tc8.WebappOrderedClassLoader" />
+    <Resources className="org.iso.registry.client.tc8.OrderedStandardRoot"/>
+</Context>
