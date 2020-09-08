@@ -209,12 +209,6 @@
 															<th th:text="#{changedValue}"></th>
 														</thead>
 														<tbody>
-<!--														<tr th:each="attr : ${#servletContext.getAttributeNames()}">-->
-<!--															<td th:text="${attr}">javax.servlet.context.tempdir</td>-->
-<!--															<td th:text="${#servletContext.getAttribute(attr)}">/tmp</td>-->
-<!--														</tr>-->
-<!--<tr th:each="change : ${pmi.fromJson('__*{proposedChange}__')}">-->
-
 															<tr th:each="change : ${pmi.fromProposedChangeJson()}">
 																<td th:text="#{${change.key}}"></td>
 																<td th:text="${change.value}"></td>
