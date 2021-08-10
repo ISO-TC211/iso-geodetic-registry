@@ -47,12 +47,45 @@
 								<a th:href="@{__${basePath}__/init}" class="btn btn-primary btn-lg" role="button" th:text="#{home.initializeRegistry}">GDI-DE Registry initialisieren</a>
 							</p>
 						</div>
-						
-						<p>The ISO Geodetic Registry is a structured database of coordinate reference systems and transformations that is accessible through this on-line registry system. The Register includes only systems and transformations of international application. It does not include all possible coordinate reference systems and transformations.</p>
-						<p>This Registry is provided under the auspices of ISO Technical Committee 211 on geographic information/geomatics and conforms to ISO standards ISO 19111:2007 (Spatial referencing by coordinates), the soon to be published ISO/TS 19127 (Geodetic register), ISO 19135:2005 (Procedures for item registration) and its soon to be published revision ISO 19135-1 (Procedures for item registration - Part 1: Fundamentals), and ISO 19135-2:2012 (Procedures for item registration -- Part 2: XML schema implementation).</p>
-						<p>The Registry may be used free of charge but its use is subject to acceptance of the <a th:href="@{__${basePath}__/terms}">Terms of Use</a>. Use of the Registry implies acceptance of these Terms of Use. Users of the Registry may query and view data and generate reports via anonymous guest access. Users may also submit proposals for new additions or clarifications to the registry.</p>
-						<p>The Registry also provides a web service interface, allowing geospatial software to query and retrieve information from the Register. Information on using the web services is available in the <a href="https://iso-tc211.github.io/iso-geodetic-register-docs/" target="_blank" th:title="#{navbar.help.userguide}">Registry user's guide.</a></p>
-					</div>
+
+						<p>The ISO Geodetic Registry is a structured database of coordinate reference systems (CRS) and transformations that is accessible through this online registry system. The Register includes only systems and transformations of international application. It does not include all possible coordinate reference systems and transformations.</p>
+						<p>
+							<span>This Registry is provided under the auspices of </span>
+							<span><a href="https://committee.iso.org/home/tc211" target="_blank" title="ISO Technical Committee 211">ISO Technical Committee 211</a> </span>
+							<span>on geographic information/geomatics and conforms to ISO standards </span>
+							<span><a href="https://committee.iso.org/home/tc211" target="_blank" title="ISO 19111:2007">ISO 19111:2007</a> (Spatial referencing by coordinates), </span>
+							<span><a href="https://www.iso.org/standard/67252.html" target="_blank" title="ISO 19127:2019">ISO 19127:2019</a> (Geodetic register) </span>
+							<span>and </span>
+							<span><a href="https://www.iso.org/standard/54721.html" target="_blank" title="ISO 19135-1:2015">ISO 19135-1:2015</a> (Procedures for item registration -- Part 1: Fundamentals).</span>
+						</p>
+
+					<h3>Usage and license</h3>
+					<p>The Registry may be used free of charge but its use is subject to acceptance of the <a th:href="@{__${basePath}__/terms}">Terms of Use</a>. Use of the Registry implies acceptance of these Terms of Use. Users of the Registry may query and view data and generate reports via anonymous guest access. Users may also submit proposals for new additions or clarifications to the registry.</p>
+					<p>The Registry also provides a web service interface, allowing geospatial software to query and retrieve information from the Register. Information on using the web services is available in the <a href="https://iso-tc211.github.io/iso-geodetic-register-docs/" target="_blank" th:title="#{navbar.help.userguide}">Registry user's guide.</a></p>
+
+					<h3>Sponsors and supporters</h3>
+					<p>The ISO Geodetic Register is made available to the public free-of-charge with financial support given by the following sponsors, including:</p>
+					<ul>
+						<li>NRCan</li>
+						<li>Institut national de l'information géographique et forestière</li>
+						<li>Kartverket</li>
+						<li>Ribose</li>
+					</ul>
+
+					<a href="https://www.iso.org/standard/67252.html" target="_blank" title="ISO 19127">ISO 19127</a>
+
+					<h3>Contacting us</h3>
+					<p>If you encounter issues or have any questions about the ISO Geodetic Register, please use the <a href="https://geodetic.isotc211.org/feedback" target="_blank" title="Feedback">Feedback</a> page to submit them. A member of the team will reach out to you directly.</p>
+
+					<h3>Registration Authority</h3>
+					<p>
+						<span>Ribose is appointed as Registration Authority of the ISO Geodetic Register by ISO in 2019 in accordance to ISO/TMB resolution 4/2019 and ISO/TC 211 Resolution 912. </span>
+						<span>As Registration Authority, Ribose is responsible for providing registration services for the ISO Geodetic Register in relation to the </span>
+						<span><a href="https://www.iso.org/standard/67252.html" target="_blank" title="ISO 19127">ISO 19127</a> </span>
+						<span>International Standard.</span>
+					</p>
+
+				</div>
 				</div>
 		</div>
 	</div>
