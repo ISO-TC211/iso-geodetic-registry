@@ -8,19 +8,4 @@ jobs:
   publish-package:
     runs-on: ubuntu-latest
     steps:
-      -  uses: actions/checkout@v2
-         with:
-           submodules: recursive
-           fetch-depth: 50
-      -  run: echo ::set-env name=REPOSITORY_NAME::$(echo ${{github.repository}} | awk '{print tolower($0)}')
-         name: set env.REPOSITORY_NAME
-      - uses: olegtarasov/get-tag@v2
-        id: tagName
-      -  uses: elgohr/Publish-Docker-Github-Action@master
-         with:
-           dockerfile: Dockerfile
-           tags: "latest,${{env.GIT_TAG_NAME}}"
-           registry: docker.pkg.github.com
-           name: ${{env.REPOSITORY_NAME}}/webapp-aws
-           username: ${{github.actor}}
-           password: ${{github.token}}
+      -  run: echo "no thing to run"

@@ -1,0 +1,36 @@
+name: manual-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        required: true
+        description: tag name for the release
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  TAG_NAME: ${{github.event.inputs.tag_name}}
+
+jobs:
+  make-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone it
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 50
+
+      - name: setup env vars
+        run: |
+          REPOSITORY_NAME="${{github.repository}}"
+          echo "REPOSITORY_NAME=$REPOSITORY_NAME" >> ${GITHUB_ENV}
+
+      - name: make new release
+        uses: softprops/action-gh-release@v0.1.7
+        with:
+          token: ${{ env.GITHUB_TOKEN }}
+          tag_name: ${{env.TAG_NAME}}
+          body: "#release-by-ci for v${{env.TAG_NAME}}"
+          draft: false
+          prerelease: false
