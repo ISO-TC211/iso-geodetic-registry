@@ -37,5 +37,11 @@ public class HealthCheckController {
         logger.info("heapFreeSize= {}", heapFreeSize);
         logger.info("totalMemory= {}", runtime.totalMemory());
         logger.info("availableProcessors= {}", runtime.availableProcessors());
+
+        System.out.println("heapSize= " + heapSize);
+        System.out.println("heapMaxSize= " + heapMaxSize);
+        System.out.println("heapFreeSize= " + heapFreeSize);
+        System.out.println("totalMemory= " + runtime.totalMemory());
+        System.out.println("availableProcessors= " + runtime.availableProcessors());
     }
 }
