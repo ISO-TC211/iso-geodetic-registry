@@ -21,4 +21,21 @@ public class HealthCheckController {
         logger.debug("Pinging me. I m OK.");
         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
+
+    @ResponseStatus(OK)
+    @RequestMapping(value = "/lrt", method = RequestMethod.GET)
+    public void logRuntime() {
+        Runtime runtime = Runtime.getRuntime();
+        // Get current size of heap in bytes
+        long heapSize = runtime.totalMemory();
+        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+        long heapMaxSize = runtime.maxMemory();
+        // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
+        long heapFreeSize = runtime.freeMemory();
+        logger.info("heapSize= {}", heapSize);
+        logger.info("heapMaxSize= {}", heapMaxSize);
+        logger.info("heapFreeSize= {}", heapFreeSize);
+        logger.info("totalMemory= {}", runtime.totalMemory());
+        logger.info("availableProcessors= {}", runtime.availableProcessors());
+    }
 }
