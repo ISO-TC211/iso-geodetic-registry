@@ -21,7 +21,7 @@
 
 			
 				<div class="row">
-					<h3 th:text="#{application.title}">Registry</h3>
+					<h3 th:text="#{application.title}">Registry (ISOGR)</h3>
 					
 					<div th:if="${signedUp}" class="alert alert-success">
 						<p>
@@ -50,13 +50,14 @@
 
 						<p>The ISO Geodetic Registry is a structured database of coordinate reference systems (CRS) and transformations that is accessible through this online registry system. The Register includes only systems and transformations of international application. It does not include all possible coordinate reference systems and transformations.</p>
 						<p>
-							<span>This Registry is provided under the auspices of </span>
-							<span><a href="https://committee.iso.org/home/tc211" target="_blank" title="ISO Technical Committee 211">ISO Technical Committee 211</a> </span>
-							<span>on geographic information/geomatics and conforms to ISO standards </span>
-							<span><a href="https://committee.iso.org/home/tc211" target="_blank" title="ISO 19111:2007">ISO 19111:2007</a> (Spatial referencing by coordinates), </span>
-							<span><a href="https://www.iso.org/standard/67252.html" target="_blank" title="ISO 19127:2019">ISO 19127:2019</a> (Geodetic register) </span>
-							<span>and </span>
-							<span><a href="https://www.iso.org/standard/54721.html" target="_blank" title="ISO 19135-1:2015">ISO 19135-1:2015</a> (Procedures for item registration -- Part 1: Fundamentals).</span>
+							This Registry is provided under the auspices of
+							<a href="https://committee.iso.org/home/tc211" target="_blank" title="ISO Technical Committee 211">ISO Technical Committee 211</a>
+							on geographic information/geomatics and conforms to the following ISO standards:
+						<ul>
+							<li><a href="https://committee.iso.org/home/tc211" target="_blank" title="ISO 19111:2007">ISO 19111:2007</a> (Spatial referencing by coordinates)</li>
+							<li><a href="https://www.iso.org/standard/67252.html" target="_blank" title="ISO 19127:2019">ISO 19127:2019</a> (Geodetic register)</li>
+							<li><a href="https://www.iso.org/standard/54721.html" target="_blank" title="ISO 19135-1:2015">ISO 19135-1:2015</a> (Procedures for item registration -- Part 1: Fundamentals)</li>
+						</ul>
 						</p>
 
 					<h3>Usage and license</h3>
