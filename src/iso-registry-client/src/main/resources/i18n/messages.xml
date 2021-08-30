@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment />
-	<entry key="application.title">ISO Geodetic Registry</entry>
+	<entry key="application.title">ISO Geodetic Registry (ISOGR)</entry>
 	<entry key="application.header">Geodetic Registry</entry>
 	<entry key="application.welcome">Welcome</entry>
 	<entry key="application.version">${git.commit.id.describe}-${git.commit.id.abbrev}</entry>
