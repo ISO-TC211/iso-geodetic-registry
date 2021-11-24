@@ -9,6 +9,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_PUSH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   TAG_NAME: ${{github.event.inputs.tag_name}}
 
 jobs:
@@ -29,10 +30,22 @@ jobs:
       - name: make new release
         uses: softprops/action-gh-release@v0.1.7
         with:
+          token: ${{ env.GITHUB_PUSH_TOKEN }}
           tag_name: ${{env.TAG_NAME}}
           body: "#release-by-ci for ${{env.TAG_NAME}}"
           draft: false
           prerelease: false
+
+
+      #            - name: make new release
+      #              uses: softprops/action-gh-release@v0.1.7
+      #              with:
+      #                token: ${{ env.GITHUB_PUSH_TOKEN }}
+      #                tag_name: ${{env.API_TAG_NAME}}
+      #                body: for Relation Gem v${{env.GEM_VERSION}}
+      #                draft: false
+      #                prerelease: false
+
 
       - uses: elgohr/Publish-Docker-Github-Action@master
         with:
