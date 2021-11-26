@@ -9,7 +9,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GITHUB_PUSH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_PUSH_TOKEN: ${{ secrets.ISOGR_CI_PAT_TOKEN }}
   TAG_NAME: ${{github.event.inputs.tag_name}}
 
 jobs:
