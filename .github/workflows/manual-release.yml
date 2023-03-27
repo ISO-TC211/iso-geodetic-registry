@@ -47,7 +47,7 @@ jobs:
       #                prerelease: false
 
 
-      - uses: elgohr/Publish-Docker-Github-Action@master
+      - uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           dockerfile: Dockerfile
           tags: "latest,${{env.TAG_NAME}}"
